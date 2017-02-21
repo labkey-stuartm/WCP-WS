@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>StudyMetaData</display-name>
+	<servlet>
+		<servlet-name>StudyMetaDataController REST Service</servlet-name>
+		<servlet-class>com.studymetadata.web.servlet.StudyMetaDataController</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>StudyMetaData REST Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>com.studymetadata.service,com.studymetadata.dto,com.studymetadata.corn,org.codehaus.jackson.jaxrs</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StudyMetaData REST Service</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- <servlet-mapping> <servlet-name>fdahpStudyDesignerWS REST Service</servlet-name> 
+		<url-pattern>/*</url-pattern> </servlet-mapping> -->
+	<!-- Added for Quartz scheduler : Starts -->
+	<!-- <servlet> <servlet-name>InitializeServlet</servlet-name> <servlet-class>com.fdahpStudyDesignerWS.corn.InitializeServlet</servlet-class> 
+		<load-on-startup>1</load-on-startup> </servlet> -->
+	<!-- Added for Quartz scheduler : Ends -->
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Permitted Actions</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+		</web-resource-collection>
+	</security-constraint>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<context-param>
+		<param-name>SMTPHostName</param-name>
+		<param-value>smtp.gmail.com</param-value>
+	</context-param>
+	<context-param>
+		<param-name>SMTPPort</param-name>
+		<param-value>587</param-value>
+	</context-param>
+	<context-param>
+		<param-name>SSLFACTORY</param-name>
+		<param-value>javax.net.ssl.SSLSocketFactory</param-value>
+	</context-param>
+	<context-param>
+		<param-name>FromEmailAddress</param-name>
+		<param-value>apps@boston-technology.com</param-value>
+	</context-param>
+	<context-param>
+		<param-name>FromEmailPassword</param-name>
+		<param-value>password789</param-value>
+	</context-param>
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<!-- RESTful Services HTTP basic Authentication -->
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>com.studymetadata.web.servlet.RestAuthenticationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>
