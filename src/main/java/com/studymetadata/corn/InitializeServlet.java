@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
-import com.studymetadata.web.servlet.StudyMetaDataController;
-
 public class InitializeServlet extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(InitializeServlet.class);
 	private static final long serialVersionUID = 1L;

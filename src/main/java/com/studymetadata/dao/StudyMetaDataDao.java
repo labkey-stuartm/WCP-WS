@@ -133,7 +133,7 @@ public class StudyMetaDataDao {
 					for(ResourcesDto resource : resourcesList){
 						ResourcesBean resourceBean = new ResourcesBean();
 						resourceBean.setTitle(StringUtils.isEmpty(resource.getTitle())==true?"":resource.getTitle());
-						if(StringUtils.isNoneEmpty(resource.getTextOrPdf())){
+						if(StringUtils.isNotEmpty(resource.getTextOrPdf())){
 							if(resource.getTextOrPdf().equals(1)){
 								resourceBean.setType("html");
 								resourceBean.setContent(resource.getRichText());
