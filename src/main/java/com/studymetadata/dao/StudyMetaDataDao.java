@@ -296,16 +296,21 @@ public class StudyMetaDataDao {
 					}
 					eligibilityConsentResponse.setComprehension(comprehensionList);
 				}
+				
+				//Sharing
+				SharingBean sharingBean = new SharingBean();
+				sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getHtmlConsent())==true?"":consentDto.getHtmlConsent());
+				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getAffirmationText())==true?"":consentDto.getAffirmationText());
+				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getDenialText())==true?"":consentDto.getDenialText());
+				eligibilityConsentResponse.setSharing(sharingBean);
+				
+				//Review
+				ReviewBean reviewBean = new ReviewBean();
+				reviewBean.setSignatureContent("");
+				reviewBean.setSignatureTitle("");
+				reviewBean.setTitle("");
+				eligibilityConsentResponse.setReview(reviewBean);
 			}
-			
-			//Sharing
-			SharingBean sharingBean = new SharingBean();
-			eligibilityConsentResponse.setSharing(sharingBean);
-			
-			//Review
-			ReviewBean reviewBean = new ReviewBean();
-			eligibilityConsentResponse.setReview(reviewBean);
-			
 			eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
