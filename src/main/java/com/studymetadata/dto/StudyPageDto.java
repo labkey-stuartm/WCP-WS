@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "study_page")
 @NamedQueries({
-	@NamedQuery(name="studyImageByStudyId", query="from StudyPageDto SPDTO where SPDTO.studyId =:studyId"),
+	@NamedQuery(name="studyPageDetailsByStudyId", query="from StudyPageDto SPDTO where SPDTO.studyId =:studyId"),
 })
 public class StudyPageDto implements Serializable{
 

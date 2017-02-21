@@ -28,6 +28,7 @@ import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.StudyDashboardResponse;
+import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.SuccessResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
@@ -211,12 +212,12 @@ public class StudyMetaDataService {
 	@Path("studyInfo")
 	public Object studyInfo(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
-		StudyResponse studyResponse = new StudyResponse();
+		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		try{
 			if(StringUtils.isNotEmpty(authorization)){
 				if(StringUtils.isNotEmpty(studyId)){
-					studyResponse = studyMetaDataOrchestration.studyInfo(studyId);
-					if(!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
+					if(!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 					}
@@ -235,7 +236,7 @@ public class StudyMetaDataService {
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Ends");
-		return studyResponse;
+		return studyInfoResponse;
 	}
 	
 	
