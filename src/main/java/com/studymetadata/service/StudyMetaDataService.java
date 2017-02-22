@@ -1,5 +1,7 @@
 package com.studymetadata.service;
 
+import java.util.HashMap;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -34,7 +36,12 @@ import com.studymetadata.bean.TermsPolicyResponse;
 
 @Path("/")
 public class StudyMetaDataService {
+	
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataService.class);
+	
+	@SuppressWarnings("unchecked")
+	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
 	StudyMetaDataOrchestration studyMetaDataOrchestration = new StudyMetaDataOrchestration();
 
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/

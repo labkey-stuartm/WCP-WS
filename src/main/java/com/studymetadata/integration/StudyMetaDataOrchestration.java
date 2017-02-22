@@ -19,10 +19,11 @@ import com.studymetadata.bean.TermsPolicyResponse;
 
 public class StudyMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
-	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 	
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
+	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 	
 	/**
 	 * @author Mohan

@@ -2,6 +2,7 @@ package com.studymetadata.dao;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -57,11 +58,15 @@ public class StudyMetaDataDao {
 
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
 
+	@SuppressWarnings("unchecked")
+	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
 	Transaction transaction = null;
 	Query query = null;
 	String queryString = "";
+	String fdaSmdImagePath = propMap.get("fda.smd.currentPath")+propMap.get("fda.smd.study.imagePath");
 
 	/**
 	 * @author Mohan
@@ -119,7 +124,7 @@ public class StudyMetaDataDao {
 					for(GatewayWelcomeInfoDto gatewayWelcomeInfo : gatewayWelcomeInfoList){
 						InfoBean infoBean = new InfoBean();
 						infoBean.setTitle(StringUtils.isEmpty(gatewayWelcomeInfo.getAppTitle())==true?"":gatewayWelcomeInfo.getAppTitle());
-						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())==true?"":gatewayWelcomeInfo.getImagePath());
+						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())==true?"":fdaSmdImagePath+gatewayWelcomeInfo.getImagePath());
 						infoBean.setText(StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())==true?"":gatewayWelcomeInfo.getDescription());
 						infoBean.setFdaLink(StringUtils.isEmpty(gatewayInfo.getFdaWebsiteUrl())==true?"":gatewayInfo.getFdaWebsiteUrl());
 						if(infoBeanList.size() == 0){
@@ -198,7 +203,7 @@ public class StudyMetaDataDao {
 						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor())==true?"":studyDto.getResearchSponsor());
 						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
-						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":studyDto.getThumbnailImage());
+						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":fdaSmdImagePath+studyDto.getThumbnailImage());
 						studyBeanList.add(studyBean);
 					}
 					studyResponse.setStudies(studyBeanList);
@@ -381,7 +386,7 @@ public class StudyMetaDataDao {
 							info.setLink("");
 						}
 						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())==true?"":studyPageInfo.getTitle());
-						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":studyPageInfo.getImagePath());
+						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":fdaSmdImagePath+studyPageInfo.getImagePath());
 						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())==true?"":studyPageInfo.getDescription());
 					}
 				}
@@ -393,7 +398,7 @@ public class StudyMetaDataDao {
 			if(null != brandingDto){
 				BrandingBean branding = new BrandingBean();
 				branding.setBgColor(StringUtils.isEmpty(brandingDto.getBackground())==true?"":brandingDto.getBackground());
-				branding.setLogo(StringUtils.isEmpty(brandingDto.getLogoImagePath())==true?"":brandingDto.getLogoImagePath());
+				branding.setLogo(StringUtils.isEmpty(brandingDto.getLogoImagePath())==true?"":fdaSmdImagePath+brandingDto.getLogoImagePath());
 				branding.setTintColor(StringUtils.isEmpty(brandingDto.getTint())==true?"":brandingDto.getTint());
 				branding.setTitleFont(StringUtils.isEmpty(brandingDto.getFont())==true?"":brandingDto.getFont());
 				studyInfoResponse.setBranding(branding);

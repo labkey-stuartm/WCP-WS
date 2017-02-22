@@ -32,6 +32,10 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_PLATFORM_TYPE_IOS = "I";
 	public static final String STUDY_PLATFORM_TYPE_ANDROID = "A";
 	
+	public static final String STUDY_STATUS_1 = "active";
+	public static final String STUDY_STATUS_2 = "upcoming";
+	public static final String STUDY_STATUS_3 = "closed";
+	
 	//Authorization
 	public static final String ANDROID_APP_TOKEN = "a7296a62-44e8-4a06-8d85-50bc861d6c64";
 	public static final String IOS_APP_TOKEN = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
