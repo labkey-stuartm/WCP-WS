@@ -68,7 +68,7 @@
 		<param-value>true</param-value>
 	</context-param>
 	
-	<!-- RESTful Services HTTP basic Authentication -->
+	<!-- RESTful Services HTTP basic Authentication filter-->
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.studymetadata.web.servlet.RestAuthenticationFilter</filter-class>

@@ -1,6 +1,7 @@
 package com.studymetadata.bean.appendix;
 
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -16,7 +17,7 @@ public class QuestionStepStructureBean {
 	private boolean skippable=false;
 	private String groupName="";
 	private String phi="";
-	private JSONObject destinations = new JSONObject(); //Dictionary; nil if branching is false
+	private Map<String, Object> destinations = new HashMap<String, Object>(); //Dictionary; nil if branching is false
 	private FormatStructureBean format= new FormatStructureBean(); //Dictionary; specific to each question type, nil in case of no formatting or	validation required
 	
 	public String getTitle() {
@@ -67,10 +68,10 @@ public class QuestionStepStructureBean {
 	public void setPhi(String phi) {
 		this.phi = phi;
 	}
-	public JSONObject getDestinations() {
+	public Map<String, Object> getDestinations() {
 		return destinations;
 	}
-	public void setDestinations(JSONObject destinations) {
+	public void setDestinations(Map<String, Object> destinations) {
 		this.destinations = destinations;
 	}
 	public FormatStructureBean getFormat() {

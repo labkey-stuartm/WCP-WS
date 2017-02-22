@@ -50,11 +50,11 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("gatewayInfo")
-	public Object gatewayAppResourcesInfo(@HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object gatewayAppResourcesInfo(@Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - gatewayAppResourcesInfo() :: Starts");
 		GatewayInfoResponse gatewayInfo = new GatewayInfoResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
+			/*if(StringUtils.isNotEmpty(authorization)){
 				gatewayInfo = studyMetaDataOrchestration.gatewayAppResourcesInfo();
 				if(!gatewayInfo.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
@@ -63,6 +63,11 @@ public class StudyMetaDataService {
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}*/
+			gatewayInfo = studyMetaDataOrchestration.gatewayAppResourcesInfo();
+			if(!gatewayInfo.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - gatewayAppResourcesInfo() :: ERROR ", e);
@@ -90,15 +95,10 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				studyResponse = studyMetaDataOrchestration.studyList(authorization);
-				if(!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-				}
-			}else{
-				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			studyResponse = studyMetaDataOrchestration.studyList(authorization);
+			if(!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
@@ -123,24 +123,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("eligibilityConsent")
-	public Object eligibilityConsentMetadata(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object eligibilityConsentMetadata(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
-					if(!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
+				if(!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - eligibilityConsentMetadata() :: ERROR", e);
@@ -167,24 +162,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("resources")
-	public Object resourcesForStudy(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object resourcesForStudy(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
-					if(!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
+				if(!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
@@ -209,24 +199,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyInfo")
-	public Object studyInfo(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
-					if(!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
+				if(!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
@@ -252,24 +237,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activityList")
-	public Object studyActivityList(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityList(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					activityResponse = studyMetaDataOrchestration.studyActivityList(studyId);
-					if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				activityResponse = studyMetaDataOrchestration.studyActivityList(studyId);
+				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityList() :: ERROR", e);
@@ -297,24 +277,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activity")
-	public Object studyActivityMetadata(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityMetadata(@HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
-					activityResponse = studyMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
-					if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
+				activityResponse = studyMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
+				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityMetadata() :: ERROR", e);
@@ -339,24 +314,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyDashboard")
-	public Object studyDashboardInfo(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyDashboardInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					studyDashboardResponse = studyMetaDataOrchestration.studyDashboardInfo(studyId);
-					if(!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				studyDashboardResponse = studyMetaDataOrchestration.studyDashboardInfo(studyId);
+				if(!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyDashboardInfo() :: ERROR", e);
@@ -381,24 +351,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("termsPolicy")
-	public Object termsPolicy(@HeaderParam("Authorization") String authorization, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object termsPolicy(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(studyId)){
-					termsPolicyResponse = studyMetaDataOrchestration.termsPolicy(studyId);
-					if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(studyId)){
+				termsPolicyResponse = studyMetaDataOrchestration.termsPolicy(studyId);
+				if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - termsPolicy() :: ERROR", e);
@@ -423,24 +388,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("notifications")
-	public Object notifications(@HeaderParam("Authorization") String authorization, @HeaderParam("skip") String skip, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object notifications(@HeaderParam("skip") String skip, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try{
-			if(StringUtils.isNotEmpty(authorization)){
-				if(StringUtils.isNotEmpty(skip)){
-					notificationsResponse = studyMetaDataOrchestration.notifications(skip);
-					if(!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+			if(StringUtils.isNotEmpty(skip)){
+				notificationsResponse = studyMetaDataOrchestration.notifications(skip);
+				if(!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - notifications() :: ERROR", e);

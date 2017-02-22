@@ -1,7 +1,9 @@
 package com.studymetadata.bean.appendix;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -18,7 +20,7 @@ public class StepsStructureBean {
 	private String text="";
 	private String image="";
 	private boolean skippable=false;
-	private JSONObject destinations = new JSONObject();
+	private Map<String, Object> destinations = new HashMap<String, Object>();
 	private String groupName="";
 	private String phi="";
 	private boolean repeatable=false;
@@ -68,10 +70,10 @@ public class StepsStructureBean {
 	public void setSkippable(boolean skippable) {
 		this.skippable = skippable;
 	}
-	public JSONObject getDestinations() {
+	public Map<String, Object> getDestinations() {
 		return destinations;
 	}
-	public void setDestinations(JSONObject destinations) {
+	public void setDestinations(Map<String, Object> destinations) {
 		this.destinations = destinations;
 	}
 	public String getGroupName() {
