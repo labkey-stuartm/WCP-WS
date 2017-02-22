@@ -1,5 +1,7 @@
 package com.studymetadata.bean;
 
+import com.studymetadata.bean.appendix.QuestionStepStructureBean;
+
 public class ComprehensionBean {
 	private QuestionStepStructureBean questionStepStructureBean = new QuestionStepStructureBean(); //<refer Appendix 3 for choice question format>
 

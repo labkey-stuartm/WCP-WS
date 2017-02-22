@@ -70,5 +70,4 @@ public class StudyMetaDataController extends HttpServlet {
 		}
 		LOGGER.info("INFO: StudyMetaDataController - doPost() :: Ends ");
 	}
-
 }

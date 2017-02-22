@@ -1,4 +1,7 @@
-package com.studymetadata.bean;
+package com.studymetadata.bean.appendix;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -14,8 +17,8 @@ public class QuestionStepStructureBean {
 	private boolean skippable=false;
 	private String groupName="";
 	private String phi="";
-	private String destinations=""; //Dictionary; nil if branching is false
-	private String format=""; //Dictionary; specific to each question type, nil in case of no formatting or	validation required
+	private Map<String, Object> destinations = new HashMap<String, Object>(); //Dictionary; nil if branching is false
+	private FormatStructureBean format= new FormatStructureBean(); //Dictionary; specific to each question type, nil in case of no formatting or	validation required
 	
 	public String getTitle() {
 		return title;
@@ -65,18 +68,17 @@ public class QuestionStepStructureBean {
 	public void setPhi(String phi) {
 		this.phi = phi;
 	}
-	public String getDestinations() {
+	public Map<String, Object> getDestinations() {
 		return destinations;
 	}
-	public void setDestinations(String destinations) {
+	public void setDestinations(Map<String, Object> destinations) {
 		this.destinations = destinations;
 	}
-	public String getFormat() {
+	public FormatStructureBean getFormat() {
 		return format;
 	}
-	public void setFormat(String format) {
+	public void setFormat(FormatStructureBean format) {
 		this.format = format;
 	}
-	
 	
 }

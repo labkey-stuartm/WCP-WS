@@ -13,15 +13,17 @@ import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.StudyDashboardResponse;
+import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 
 public class StudyMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
-	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 	
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
+	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 	
 	/**
 	 * @author Mohan
@@ -122,17 +124,17 @@ public class StudyMetaDataOrchestration {
 	 * @return StudyResponse
 	 * @throws OrchestrationException
 	 */
-	public StudyResponse studyInfo(String studyId) throws OrchestrationException{
+	public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Starts");
-		StudyResponse studyResponse = new StudyResponse();
+		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		try{
-			//studyResponse = studyMetaDataDao.studyInfo(studyId);
+			studyInfoResponse = studyMetaDataDao.studyInfo(studyId);
 		}catch(Exception e){
 			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyInfo() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Ends");
-		return studyResponse;
+		return studyInfoResponse;
 	}
 	
 	/**

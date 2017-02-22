@@ -2,18 +2,22 @@ package com.studymetadata.dao;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.persistence.Column;
-
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.json.JSONObject;
 
+import com.studymetadata.dto.ActiveTaskDto;
+import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
@@ -22,38 +26,47 @@ import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
+import com.studymetadata.dto.StudyPageDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
+import com.studymetadata.bean.ActivitiesBean;
 import com.studymetadata.bean.ActivityResponse;
+import com.studymetadata.bean.BrandingBean;
 import com.studymetadata.bean.ComprehensionBean;
+import com.studymetadata.bean.ConfigurationBean;
 import com.studymetadata.bean.ConsentBean;
 import com.studymetadata.bean.EligibilityBean;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
 import com.studymetadata.bean.NotificationsResponse;
-import com.studymetadata.bean.QuestionStepStructureBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
 import com.studymetadata.bean.SharingBean;
 import com.studymetadata.bean.StudyBean;
 import com.studymetadata.bean.StudyDashboardResponse;
+import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class StudyMetaDataDao {
 
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
 
+	@SuppressWarnings("unchecked")
+	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
 	Transaction transaction = null;
 	Query query = null;
 	String queryString = "";
+	String fdaSmdImagePath = propMap.get("fda.smd.currentPath")+propMap.get("fda.smd.study.imagePath");
 
 	/**
 	 * @author Mohan
@@ -111,7 +124,7 @@ public class StudyMetaDataDao {
 					for(GatewayWelcomeInfoDto gatewayWelcomeInfo : gatewayWelcomeInfoList){
 						InfoBean infoBean = new InfoBean();
 						infoBean.setTitle(StringUtils.isEmpty(gatewayWelcomeInfo.getAppTitle())==true?"":gatewayWelcomeInfo.getAppTitle());
-						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())==true?"":gatewayWelcomeInfo.getImagePath());
+						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())==true?"":fdaSmdImagePath+gatewayWelcomeInfo.getImagePath());
 						infoBean.setText(StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())==true?"":gatewayWelcomeInfo.getDescription());
 						infoBean.setFdaLink(StringUtils.isEmpty(gatewayInfo.getFdaWebsiteUrl())==true?"":gatewayInfo.getFdaWebsiteUrl());
 						if(infoBeanList.size() == 0){
@@ -133,7 +146,7 @@ public class StudyMetaDataDao {
 					for(ResourcesDto resource : resourcesList){
 						ResourcesBean resourceBean = new ResourcesBean();
 						resourceBean.setTitle(StringUtils.isEmpty(resource.getTitle())==true?"":resource.getTitle());
-						if(StringUtils.isNoneEmpty(resource.getTextOrPdf())){
+						if(StringUtils.isNotEmpty(resource.getTextOrPdf())){
 							if(resource.getTextOrPdf().equals(1)){
 								resourceBean.setType("html");
 								resourceBean.setContent(resource.getRichText());
@@ -190,7 +203,7 @@ public class StudyMetaDataDao {
 						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor())==true?"":studyDto.getResearchSponsor());
 						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
-						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":studyDto.getThumbnailImage());
+						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":fdaSmdImagePath+studyDto.getThumbnailImage());
 						studyBeanList.add(studyBean);
 					}
 					studyResponse.setStudies(studyBeanList);
@@ -288,16 +301,21 @@ public class StudyMetaDataDao {
 					}
 					eligibilityConsentResponse.setComprehension(comprehensionList);
 				}
+				
+				//Sharing
+				SharingBean sharingBean = new SharingBean();
+				sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getHtmlConsent())==true?"":consentDto.getHtmlConsent());
+				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getAffirmationText())==true?"":consentDto.getAffirmationText());
+				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getDenialText())==true?"":consentDto.getDenialText());
+				eligibilityConsentResponse.setSharing(sharingBean);
+				
+				//Review
+				ReviewBean reviewBean = new ReviewBean();
+				reviewBean.setSignatureContent("");
+				reviewBean.setSignatureTitle("");
+				reviewBean.setTitle("");
+				eligibilityConsentResponse.setReview(reviewBean);
 			}
-			
-			//Sharing
-			SharingBean sharingBean = new SharingBean();
-			eligibilityConsentResponse.setSharing(sharingBean);
-			
-			//Review
-			ReviewBean reviewBean = new ReviewBean();
-			eligibilityConsentResponse.setReview(reviewBean);
-			
 			eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
@@ -340,11 +358,53 @@ public class StudyMetaDataDao {
 	 * @return StudyResponse
 	 * @throws DAOException
 	 */
-	public StudyResponse studyInfo(String studyId) throws DAOException{
+	@SuppressWarnings("unchecked")
+	public StudyInfoResponse studyInfo(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
-		StudyResponse studyResponse = new StudyResponse();
+		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
+		StudyDto studyDto = null;
+		List<StudyPageDto> StudyPageDtoList = null;
+		BrandingDto brandingDto = null;
 		try{
+			session = sessionFactory.openSession();
+			//get study welcome info and page details by studyId
+			query = session.getNamedQuery("studyDetailsByStudyId").setInteger("id", Integer.valueOf(studyId));
+			//query = session.createQuery(" from StudyDto SDTO where SDTO.id="+studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(null != studyDto){
+				query = session.getNamedQuery("studyPageDetailsByStudyId").setInteger("studyId", Integer.valueOf(studyId));
+				StudyPageDtoList = query.list();
+				if( null != StudyPageDtoList && StudyPageDtoList.size() > 0){
+					List<InfoBean> infoList = new ArrayList<InfoBean>();
+					for(StudyPageDto studyPageInfo : StudyPageDtoList){
+						InfoBean info = new InfoBean();
+						if(infoList.size() == 0){
+							info.setType("video");
+							info.setLink("");
+						}else{
+							info.setType("text");
+							info.setLink("");
+						}
+						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())==true?"":studyPageInfo.getTitle());
+						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":fdaSmdImagePath+studyPageInfo.getImagePath());
+						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())==true?"":studyPageInfo.getDescription());
+					}
+				}
+			}
 			
+			//get branding details by studyId
+			query = session.getNamedQuery("brandingDetailsByStudyId").setInteger("studyId", Integer.valueOf(studyId));
+			brandingDto = (BrandingDto) query.uniqueResult();
+			if(null != brandingDto){
+				BrandingBean branding = new BrandingBean();
+				branding.setBgColor(StringUtils.isEmpty(brandingDto.getBackground())==true?"":brandingDto.getBackground());
+				branding.setLogo(StringUtils.isEmpty(brandingDto.getLogoImagePath())==true?"":fdaSmdImagePath+brandingDto.getLogoImagePath());
+				branding.setTintColor(StringUtils.isEmpty(brandingDto.getTint())==true?"":brandingDto.getTint());
+				branding.setTitleFont(StringUtils.isEmpty(brandingDto.getFont())==true?"":brandingDto.getFont());
+				studyInfoResponse.setBranding(branding);
+			}
+			
+			studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyInfo() :: ERROR", e);
 			e.printStackTrace();
@@ -354,7 +414,7 @@ public class StudyMetaDataDao {
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Ends");
-		return studyResponse;
+		return studyInfoResponse;
 	}
 	
 	/**
@@ -363,11 +423,36 @@ public class StudyMetaDataDao {
 	 * @return ActivityResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ActivityResponse studyActivityList(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
+		List<ActiveTaskDto> activeTaskDtoList = null;
 		try{
-			
+			session = sessionFactory.openSession();
+			query = session.getNamedQuery("activeTaskByStudyId").setInteger("studyId", Integer.valueOf(studyId));
+			activeTaskDtoList = query.list();
+			if( null != activeTaskDtoList && activeTaskDtoList.size() > 0){
+				List<ActivitiesBean> activitiesBeanList = new ArrayList<ActivitiesBean>();
+				for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
+					ActivitiesBean activityBean = new ActivitiesBean();
+					activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getTaskName())==true?"":activeTaskDto.getTaskName());
+					activityBean.setType("active task");
+					activityBean.setFrequency(StringUtils.isEmpty(activeTaskDto.getDuration())==true?"":activeTaskDto.getDuration());
+					
+					//set configuration details
+					ConfigurationBean configurationBean = new ConfigurationBean();
+					configurationBean.setStartTime("");
+					configurationBean.setEndTime("");
+					configurationBean.setLifetime("");
+					configurationBean.setRunLifetime("");
+					activityBean.setConfiguration(configurationBean);
+					
+					activitiesBeanList.add(activityBean);
+				}
+				activityResponse.setActivities(activitiesBeanList);
+			}
+			activityResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyActivityList() :: ERROR", e);
 			e.printStackTrace();
