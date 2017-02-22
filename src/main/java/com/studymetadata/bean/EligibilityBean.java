@@ -3,6 +3,8 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.studymetadata.bean.appendix.QuestionStepStructureBean;
+
 public class EligibilityBean {
 	/*/eligibilityConsent*/
 	private String type = "";

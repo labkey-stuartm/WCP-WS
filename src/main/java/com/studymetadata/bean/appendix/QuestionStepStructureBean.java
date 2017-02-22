@@ -1,4 +1,6 @@
-package com.studymetadata.bean;
+package com.studymetadata.bean.appendix;
+
+import org.json.JSONObject;
 
 /**
  * 
@@ -14,8 +16,8 @@ public class QuestionStepStructureBean {
 	private boolean skippable=false;
 	private String groupName="";
 	private String phi="";
-	private String destinations=""; //Dictionary; nil if branching is false
-	private String format=""; //Dictionary; specific to each question type, nil in case of no formatting or	validation required
+	private JSONObject destinations = new JSONObject(); //Dictionary; nil if branching is false
+	private FormatStructureBean format= new FormatStructureBean(); //Dictionary; specific to each question type, nil in case of no formatting or	validation required
 	
 	public String getTitle() {
 		return title;
@@ -65,18 +67,17 @@ public class QuestionStepStructureBean {
 	public void setPhi(String phi) {
 		this.phi = phi;
 	}
-	public String getDestinations() {
+	public JSONObject getDestinations() {
 		return destinations;
 	}
-	public void setDestinations(String destinations) {
+	public void setDestinations(JSONObject destinations) {
 		this.destinations = destinations;
 	}
-	public String getFormat() {
+	public FormatStructureBean getFormat() {
 		return format;
 	}
-	public void setFormat(String format) {
+	public void setFormat(FormatStructureBean format) {
 		this.format = format;
 	}
-	
 	
 }

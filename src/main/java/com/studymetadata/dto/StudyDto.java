@@ -12,8 +12,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-import com.studymetadata.util.StudyMetaDataConstants;
-
 /**
  * 
  * @author Mohan

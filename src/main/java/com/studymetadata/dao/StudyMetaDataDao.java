@@ -5,8 +5,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.persistence.Column;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -15,7 +13,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.studymetadata.dto.ActiveTaskDto;
-import com.studymetadata.dto.ActiveTaskFrequencyDto;
 import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
@@ -42,7 +39,6 @@ import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
 import com.studymetadata.bean.NotificationsResponse;
-import com.studymetadata.bean.QuestionStepStructureBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
@@ -52,6 +48,7 @@ import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class StudyMetaDataDao {
 

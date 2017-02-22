@@ -10,14 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.studymetadata.exception.ErrorCodes;
 import com.studymetadata.util.StudyMetaDataConstants;
-import com.studymetadata.util.StudyMetaDataUtil;
 
 public class RestAuthenticationFilter implements Filter {
 	
