@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesList", query=" from ResourcesDto R "),
+	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId "),
 })
 public class ResourcesDto implements Serializable{
 	
@@ -38,7 +38,7 @@ public class ResourcesDto implements Serializable{
 	private String title;
 	
 	@Column(name="text_or_pdf")
-	private String textOrPdf;
+	private Integer textOrPdf;
 	
 	@Column(name="rich_text")
 	private String richText;
@@ -47,19 +47,19 @@ public class ResourcesDto implements Serializable{
 	private String pdfUrl;
 	
 	@Column(name="created_by")
-	private String createdBy;
+	private Integer createdBy;
 	
 	@Column(name="created_on")
 	private String createdOn;
 	
 	@Column(name="modified_by")
-	private String modifiedBy;
+	private Integer modifiedBy;
 	
 	@Column(name="modified_on")
 	private String modifiedOn;
 	
 	@Column(name="status")
-	private String status;
+	private Integer status;
 
 	public Integer getId() {
 		return id;
@@ -85,11 +85,11 @@ public class ResourcesDto implements Serializable{
 		this.title = title;
 	}
 
-	public String getTextOrPdf() {
+	public Integer getTextOrPdf() {
 		return textOrPdf;
 	}
 
-	public void setTextOrPdf(String textOrPdf) {
+	public void setTextOrPdf(Integer textOrPdf) {
 		this.textOrPdf = textOrPdf;
 	}
 
@@ -109,11 +109,11 @@ public class ResourcesDto implements Serializable{
 		this.pdfUrl = pdfUrl;
 	}
 
-	public String getCreatedBy() {
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -125,11 +125,11 @@ public class ResourcesDto implements Serializable{
 		this.createdOn = createdOn;
 	}
 
-	public String getModifiedBy() {
+	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -141,13 +141,12 @@ public class ResourcesDto implements Serializable{
 		this.modifiedOn = modifiedOn;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
-	
+
 }

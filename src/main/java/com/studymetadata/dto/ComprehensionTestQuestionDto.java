@@ -20,7 +20,8 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "comprehension_test_question")
 @NamedQueries({
-	@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),
+	/*@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),*/
+	@NamedQuery(name="comprehensionQuestionByStudyId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId"),
 })
 public class ComprehensionTestQuestionDto implements Serializable{
 	
@@ -34,8 +35,8 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	@Column(name = "question_text")
 	private String questionText;
 	
-	@Column(name = "consent_id")
-	private Integer consentId;
+	@Column(name = "study_id")
+	private Integer studyId;
 	
 	@Column(name = "order")
 	private Integer order;
@@ -70,13 +71,13 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-
-	public Integer getConsentId() {
-		return consentId;
+	
+	public Integer getStudyId() {
+		return studyId;
 	}
 
-	public void setConsentId(Integer consentId) {
-		this.consentId = consentId;
+	public void setStudyId(Integer studyId) {
+		this.studyId = studyId;
 	}
 
 	public Integer getOrder() {

@@ -3,9 +3,9 @@ package com.studymetadata.util;
 import java.text.SimpleDateFormat;
 
 public interface StudyMetaDataConstants {
-	String SUCCESS = "SUCCESS";
-	String FAILURE = "FAILURE";
-	String INACTIVE = "INACTIVE";
+	public static final String SUCCESS = "SUCCESS";
+	public static final String FAILURE = "FAILURE";
+	public static final String INACTIVE = "INACTIVE";
 	
 	public final String SESSION_EXPIRED_MSG = "Session expired.";
 	public final String CONNECTION_ERROR_MSG = "Oops, something went wrong. Please try again after sometime.";
@@ -49,5 +49,20 @@ public interface StudyMetaDataConstants {
 	public static final String INVALID_AUTHORIZATION = "Invalid Authorization key";
 	public static final String INVALID_INPUT = "Invalid inputs";
 	public static final String NO_RECORD = "No records found";
+	
+	//type constants
+	public static final String TYPE_VIDEO = "video";
+	public static final String TYPE_TEXT = "text";
+	public static final String TYPE_HTML = "html";
+	public static final String TYPE_PDF = "pdf";
+	
+	public static final String TYPE_TOKEN = "token";
+	public static final String TYPE_BOTH = "both";
+	public static final String TYPE_TEST = "test";
+	
+	public static final String TYPE_ACTIVE_TASK = "active task";
+	public static final String TYPE_QUESTIONNAIRE = "questionnaire";
+	
+	public static final String TYPE_UTF8 = "UTF-8";
 	
 }
