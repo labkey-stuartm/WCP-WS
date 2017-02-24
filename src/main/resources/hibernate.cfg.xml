@@ -52,6 +52,11 @@
 		<mapping class="com.studymetadata.dto.ActiveTaskDto" />
 		<mapping class="com.studymetadata.dto.ActiveTaskFrequencyDto" />
 		<mapping class="com.studymetadata.dto.ActiveTaskStepsDto" />
+		
+		<mapping class="com.studymetadata.dto.LineChartDto" />
+		<mapping class="com.studymetadata.dto.LineChartDatasourceDto" />
+		<mapping class="com.studymetadata.dto.LineChartXAxisDto" />
+		<mapping class="com.studymetadata.dto.StatisticsDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>
