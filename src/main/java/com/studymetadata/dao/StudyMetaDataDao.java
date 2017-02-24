@@ -24,6 +24,7 @@ import com.studymetadata.dto.ConsentInfoDto;
 import com.studymetadata.dto.EligibilityDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
+import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyPageDto;
@@ -196,12 +197,25 @@ public class StudyMetaDataDao {
 					List<StudyBean> studyBeanList = new ArrayList<StudyBean>();
 					for(StudyDto studyDto : studiesList){
 						StudyBean studyBean = new StudyBean();
-						studyBean.setCategory(StringUtils.isEmpty(studyDto.getCategory())==true?"":studyDto.getCategory());
 						studyBean.setDescription(StringUtils.isEmpty(studyDto.getDescription())==true?"":studyDto.getDescription());
-						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor())==true?"":studyDto.getResearchSponsor());
 						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
 						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":fdaSmdImagePath+studyDto.getThumbnailImage());
+						//get category and sponser details
+						if(StringUtils.isNotEmpty(studyDto.getCategory()) && StringUtils.isNotEmpty(studyDto.getResearchSponsor())){
+							List<ReferenceTablesDto> referenceTablesList = null;
+							query = session.createQuery(" from ReferenceTablesDto RTDTO where RTDTO.id IN ("+studyDto.getCategory()+","+studyDto.getResearchSponsor()+")");
+							referenceTablesList = query.list();
+							if(null != referenceTablesList && referenceTablesList.size() > 0){
+								for(ReferenceTablesDto reference : referenceTablesList){
+									if(reference.getCategory().equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)){
+										studyBean.setCategory(StringUtils.isEmpty(reference.getValue())==true?"":reference.getValue());
+									}else{
+										studyBean.setSponsorName(StringUtils.isEmpty(reference.getValue())==true?"":reference.getValue());
+									}
+								}
+							}
+						}
 						studyBeanList.add(studyBean);
 					}
 					studyResponse.setStudies(studyBeanList);

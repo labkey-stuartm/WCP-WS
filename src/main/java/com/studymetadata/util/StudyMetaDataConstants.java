@@ -32,9 +32,15 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_PLATFORM_TYPE_IOS = "I";
 	public static final String STUDY_PLATFORM_TYPE_ANDROID = "A";
 	
-	public static final String STUDY_STATUS_1 = "active";
-	public static final String STUDY_STATUS_2 = "upcoming";
-	public static final String STUDY_STATUS_3 = "closed";
+	//Study Status
+    public static final String STUDY_PRE_LAUNCH = "Pre-launch";
+    public static final String STUDY_ACTIVE = "Active";
+    public static final String STUDY_PAUSED = "Paused";
+    public static final String STUDY_DEACTIVATED = "Deactivated";
+    
+     //Study Category type
+    public static final String STUDY_REF_CATEGORIES = "Categories";
+    public static final String STUDY_REF_SPONSERS = "Research Sponsors";
 	
 	//Authorization
 	public static final String ANDROID_APP_TOKEN = "a7296a62-44e8-4a06-8d85-50bc861d6c64";

@@ -57,6 +57,8 @@
 		<mapping class="com.studymetadata.dto.LineChartDatasourceDto" />
 		<mapping class="com.studymetadata.dto.LineChartXAxisDto" />
 		<mapping class="com.studymetadata.dto.StatisticsDto" />
+		
+		<mapping class="com.studymetadata.dto.ReferenceTablesDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>
