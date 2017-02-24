@@ -21,14 +21,14 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name="consent_info")
 @NamedQueries({
 	/*@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),*/
-	@NamedQuery(name="consentInfoDtoByStudyId", query="from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId"),
+	@NamedQuery(name="consentInfoDtoByStudyId", query=" from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId "),
 })
 public class ConsentInfoDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	private Integer id;
 	
@@ -59,8 +59,8 @@ public class ConsentInfoDto implements Serializable{
 	@Column(name = "visual_step")
 	private String visualStep;
 	
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "order_type")
+	private Integer orderType;
 	
 	@Column(name = "created_on")
 	private String createdOn;
@@ -154,12 +154,12 @@ public class ConsentInfoDto implements Serializable{
 		this.visualStep = visualStep;
 	}
 
-	public Integer getOrder() {
-		return order;
+	public Integer getOrderType() {
+		return orderType;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
 	}
 
 	public String getCreatedOn() {

@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name="consent")
 @NamedQueries({
-	@NamedQuery(name="consentDtoByStudyId", query="from ConsentDto CDTO where CDTO.studyId =:studyId"),
+	@NamedQuery(name="consentDtoByStudyId", query=" from ConsentDto CDTO where CDTO.studyId =:studyId "),
 })
 public class ConsentDto implements Serializable{
 	

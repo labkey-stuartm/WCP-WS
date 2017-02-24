@@ -7,14 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.json.JSONObject;
 
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.BrandingDto;
@@ -334,7 +332,6 @@ public class StudyMetaDataDao {
 			eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();

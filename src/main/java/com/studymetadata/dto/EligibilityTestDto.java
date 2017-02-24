@@ -37,8 +37,8 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name = "response_format")
 	private String responseFormat;
 
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "eligibility_test")
+	private Integer orderType;
 
 	@Column(name = "status")
 	private Integer status;
@@ -83,12 +83,12 @@ public class EligibilityTestDto implements Serializable{
 		this.responseFormat = responseFormat;
 	}
 
-	public Integer getOrder() {
-		return order;
+	public Integer getOrderType() {
+		return orderType;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
 	}
 
 	public Integer getStatus() {

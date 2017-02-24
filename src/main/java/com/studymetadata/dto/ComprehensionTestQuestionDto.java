@@ -21,14 +21,14 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name = "comprehension_test_question")
 @NamedQueries({
 	/*@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),*/
-	@NamedQuery(name="comprehensionQuestionByStudyId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId"),
+	@NamedQuery(name="comprehensionQuestionByStudyId", query=" from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId "),
 })
 public class ComprehensionTestQuestionDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Integer id;
 	
@@ -38,8 +38,8 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	@Column(name = "study_id")
 	private Integer studyId;
 	
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "order_type")
+	private Integer orderType;
 	
 	@Column(name = "structure_of_correct_ans")
 	private Integer structureOfCorrectAns;
@@ -79,13 +79,13 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setStudyId(Integer studyId) {
 		this.studyId = studyId;
 	}
-
-	public Integer getOrder() {
-		return order;
+	
+	public Integer getOrderType() {
+		return orderType;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
 	}
 
 	public Integer getStructureOfCorrectAns() {
