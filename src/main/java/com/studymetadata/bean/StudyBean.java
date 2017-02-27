@@ -8,6 +8,7 @@ public class StudyBean {
 	private String description = "";
 	private String status = "";
 	private String logo = "";
+	private String studyId = "";
 	
 	public String getTitle() {
 		return title;
@@ -44,6 +45,12 @@ public class StudyBean {
 	}
 	public void setLogo(String logo) {
 		this.logo = logo;
+	}
+	public String getStudyId() {
+		return studyId;
+	}
+	public void setStudyId(String studyId) {
+		this.studyId = studyId;
 	}
 	
 	

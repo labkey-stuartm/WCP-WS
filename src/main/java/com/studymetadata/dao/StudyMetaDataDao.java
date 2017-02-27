@@ -199,6 +199,9 @@ public class StudyMetaDataDao {
 						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
 						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":fdaSmdImagePath+studyDto.getThumbnailImage());
+						if(null != studyDto.getId()){
+							studyBean.setStudyId(String.valueOf(studyDto.getId()));
+						}
 						//get category and sponser details
 						if(StringUtils.isNotEmpty(studyDto.getCategory()) && StringUtils.isNotEmpty(studyDto.getResearchSponsor())){
 							List<ReferenceTablesDto> referenceTablesList = null;
