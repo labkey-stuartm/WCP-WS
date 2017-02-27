@@ -38,8 +38,8 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	@Column(name = "study_id")
 	private Integer studyId;
 	
-	@Column(name = "order_type")
-	private Integer orderType;
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
 	
 	@Column(name = "structure_of_correct_ans")
 	private Integer structureOfCorrectAns;
@@ -80,12 +80,12 @@ public class ComprehensionTestQuestionDto implements Serializable{
 		this.studyId = studyId;
 	}
 	
-	public Integer getOrderType() {
-		return orderType;
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
 	public Integer getStructureOfCorrectAns() {

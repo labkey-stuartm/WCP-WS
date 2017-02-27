@@ -34,8 +34,8 @@ public class ActiveTaskStepsDto implements Serializable{
 	@Column(name="sd_live_form_id")
 	private String sdLiveFormId;
 	
-	@Column(name="order_type")
-	private Integer orderType;
+	@Column(name="sequence_no")
+	private Integer sequenceNo;
 
 	public Integer getStep_id() {
 		return step_id;
@@ -69,12 +69,12 @@ public class ActiveTaskStepsDto implements Serializable{
 		this.sdLiveFormId = sdLiveFormId;
 	}
 
-	public Integer getOrderType() {
-		return orderType;
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 	
 }

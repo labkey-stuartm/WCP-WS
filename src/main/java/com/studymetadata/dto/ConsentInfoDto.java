@@ -59,8 +59,8 @@ public class ConsentInfoDto implements Serializable{
 	@Column(name = "visual_step")
 	private String visualStep;
 	
-	@Column(name = "order_type")
-	private Integer orderType;
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
 	
 	@Column(name = "created_on")
 	private String createdOn;
@@ -153,13 +153,13 @@ public class ConsentInfoDto implements Serializable{
 	public void setVisualStep(String visualStep) {
 		this.visualStep = visualStep;
 	}
-
-	public Integer getOrderType() {
-		return orderType;
+	
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
 	public String getCreatedOn() {

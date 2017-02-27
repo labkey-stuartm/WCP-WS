@@ -37,12 +37,15 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name = "response_format")
 	private String responseFormat;
 
-	@Column(name = "eligibility_test")
-	private Integer orderType;
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
 
 	@Column(name = "status")
 	private Integer status;
 
+	@Column(name="eligibility_test")
+	private Integer eligibilityTest;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -83,12 +86,20 @@ public class EligibilityTestDto implements Serializable{
 		this.responseFormat = responseFormat;
 	}
 
-	public Integer getOrderType() {
-		return orderType;
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
+	}
+
+	public Integer getEligibilityTest() {
+		return eligibilityTest;
+	}
+
+	public void setEligibilityTest(Integer eligibilityTest) {
+		this.eligibilityTest = eligibilityTest;
 	}
 
 	public Integer getStatus() {

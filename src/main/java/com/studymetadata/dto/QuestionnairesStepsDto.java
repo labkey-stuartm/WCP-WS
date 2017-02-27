@@ -37,8 +37,8 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="randomization")
 	private String randomization;
 
-	@Column(name="order_type")
-	private Integer orderType;
+	@Column(name="sequence_no")
+	private Integer sequenceNo;
 
 	public Integer getStepId() {
 		return stepId;
@@ -80,13 +80,12 @@ public class QuestionnairesStepsDto implements Serializable{
 		this.randomization = randomization;
 	}
 
-	public Integer getOrderType() {
-		return orderType;
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
-	
 }

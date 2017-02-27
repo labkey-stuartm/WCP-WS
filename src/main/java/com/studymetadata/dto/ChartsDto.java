@@ -35,8 +35,8 @@ public class ChartsDto implements Serializable{
 	@Column(name="chart_title")
 	private String chartTitle;
 	
-	@Column(name="order_type")
-	private Integer orderType;
+	@Column(name="sequence_no")
+	private Integer sequenceNo;
 	
 	@Column(name="chart_type")
 	private String chartType;
@@ -78,14 +78,13 @@ public class ChartsDto implements Serializable{
 	public void setChartTitle(String chartTitle) {
 		this.chartTitle = chartTitle;
 	}
-	
 
-	public Integer getOrderType() {
-		return orderType;
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrderType(Integer orderType) {
-		this.orderType = orderType;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
 	public String getChartType() {
