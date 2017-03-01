@@ -300,11 +300,13 @@ public class StudyMetaDataDao {
 				List<ConsentBean> consentBeanList = new ArrayList<ConsentBean>();
 				for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
 					ConsentBean consentBean = new ConsentBean();
-					consentBean.setDescription(StringUtils.isEmpty(consentInfoDto.getBriefSummary())==true?"":consentInfoDto.getBriefSummary());
-					consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getTitle())==true?"":consentInfoDto.getTitle());
-					consentBean.setText(StringUtils.isEmpty(consentInfoDto.getElaborated())==true?"":consentInfoDto.getElaborated());
+					consentBean.setText(StringUtils.isEmpty(consentInfoDto.getBriefSummary())==true?"":consentInfoDto.getBriefSummary());
+					consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getDisplayTitle())==true?"":consentInfoDto.getDisplayTitle());
+					/*consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getTitle())==true?"":consentInfoDto.getTitle());*/
+					consentBean.setDescription(StringUtils.isEmpty(consentInfoDto.getElaborated())==true?"":consentInfoDto.getElaborated());
 					consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getHtmlContent())==true?"":consentInfoDto.getHtmlContent());
-					consentBean.setType(StringUtils.isEmpty(consentInfoDto.getContentType())==true?"":consentInfoDto.getContentType());
+					/*consentBean.setType(StringUtils.isEmpty(consentInfoDto.getContentType())==true?"":consentInfoDto.getContentType());*/
+					consentBean.setType(StringUtils.isEmpty(consentInfoDto.getConsentItemType())==true?"":consentInfoDto.getConsentItemType());
 					consentBean.setUrl(StringUtils.isEmpty(consentInfoDto.getUrl())==true?"":consentInfoDto.getUrl());
 					//Yes=true and No=false
 					if(StringUtils.isNotEmpty(consentInfoDto.getVisualStep()) && consentInfoDto.getVisualStep().equalsIgnoreCase(StudyMetaDataConstants.YES)){
@@ -418,10 +420,10 @@ public class StudyMetaDataDao {
 			//query = session.createQuery(" from StudyDto SDTO where SDTO.id="+studyId);
 			studyDto = (StudyDto) query.uniqueResult();
 			if(null != studyDto){
+				List<InfoBean> infoList = new ArrayList<InfoBean>();
 				query = session.getNamedQuery("studyPageDetailsByStudyId").setInteger("studyId", Integer.valueOf(studyId));
 				StudyPageDtoList = query.list();
 				if( null != StudyPageDtoList && StudyPageDtoList.size() > 0){
-					List<InfoBean> infoList = new ArrayList<InfoBean>();
 					for(StudyPageDto studyPageInfo : StudyPageDtoList){
 						InfoBean info = new InfoBean();
 						if(infoList.size() == 0){
@@ -434,8 +436,24 @@ public class StudyMetaDataDao {
 						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())==true?"":studyPageInfo.getTitle());
 						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":fdaSmdImagePath+studyPageInfo.getImagePath());
 						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())==true?"":studyPageInfo.getDescription());
+						infoList.add(info);
 					}
+				}else{
+					//for MS1 default value is added for study page1
+					InfoBean info = new InfoBean();
+					if(infoList.size() == 0){
+						info.setType(StudyMetaDataConstants.TYPE_VIDEO);
+						info.setLink(StringUtils.isEmpty(studyDto.getMediaLink())==true?"":studyDto.getMediaLink());
+					}else{
+						info.setType(StudyMetaDataConstants.TYPE_TEXT);
+						info.setLink("");
+					}
+					info.setTitle("A Study for Pregnent Women");
+					info.setImage("");
+					info.setText("Collection of participant-provided information through a mobile device app for use in drug safety research");
+					infoList.add(info);
 				}
+				studyInfoResponse.setInfo(infoList);
 			}
 			
 			//get branding details by studyId

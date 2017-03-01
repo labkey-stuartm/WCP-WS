@@ -73,6 +73,9 @@ public class ConsentInfoDto implements Serializable{
 	
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
+	
+	@Column(name = "display_title")
+	private String displayTitle;
 
 	public Integer getId() {
 		return id;
@@ -192,6 +195,14 @@ public class ConsentInfoDto implements Serializable{
 
 	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public String getDisplayTitle() {
+		return displayTitle;
+	}
+
+	public void setDisplayTitle(String displayTitle) {
+		this.displayTitle = displayTitle;
 	}
 	
 }
