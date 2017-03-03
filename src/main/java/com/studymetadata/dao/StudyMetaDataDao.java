@@ -280,9 +280,9 @@ public class StudyMetaDataDao {
 			if( null != consentDto){
 				//Sharing
 				SharingBean sharingBean = new SharingBean();
-				sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getHtmlConsent())==true?"":consentDto.getHtmlConsent());
-				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getAffirmationText())==true?"":consentDto.getAffirmationText());
-				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getDenialText())==true?"":consentDto.getDenialText());
+				sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())==true?"":consentDto.getLearnMoreText());
+				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())==true?"":consentDto.getLongDescription());
+				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())==true?"":consentDto.getShortDescription());
 				eligibilityConsentResponse.setSharing(sharingBean);
 				
 				//Review
