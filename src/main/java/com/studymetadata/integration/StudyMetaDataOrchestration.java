@@ -49,11 +49,11 @@ public class StudyMetaDataOrchestration {
 	 * @return GatewayInfoResponse
 	 * @throws OrchestrationException
 	 */
-	public GatewayInfoResponse gatewayAppResourcesInfo() throws OrchestrationException{
+	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Starts");
 		GatewayInfoResponse gatewayInfo = new GatewayInfoResponse();
 		try{
-			gatewayInfo = studyMetaDataDao.gatewayAppResourcesInfo();
+			gatewayInfo = studyMetaDataDao.gatewayAppResourcesInfo(authorization);
 		}catch(Exception e){
 			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: ERROR", e);

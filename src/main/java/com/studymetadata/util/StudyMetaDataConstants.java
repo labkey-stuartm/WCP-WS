@@ -66,10 +66,17 @@ public interface StudyMetaDataConstants {
 	public static final String TYPE_BOTH = "both";
 	public static final String TYPE_TEST = "test";
 	
+	public static final String CONSENT_DOC_TYPE_NEW = "New";
+	public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
+	
 	public static final String TYPE_ACTIVE_TASK = "active task";
 	public static final String TYPE_QUESTIONNAIRE = "questionnaire";
 	
 	public static final String TYPE_UTF8 = "UTF-8";
+	
+	//Consent related constants
+    public static final String CONSENT_TYPE_RESEARCHKIT = "ResearchKit/ResearchStack";
+    public static final String CONSENT_TYPE_CUSTOM = "Custom";
 	
 	//questionaire frequency schedule
 	public static final String FREQUENCY_TYPE_ONE_TIME = "One Time";

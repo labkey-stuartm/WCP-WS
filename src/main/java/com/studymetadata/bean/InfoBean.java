@@ -7,6 +7,7 @@ public class InfoBean {
 	private String text = "";
 	private String link = ""; //used for media link
 	private String fdaLink = "";
+	private String website = "";
 	
 	public String getType() {
 		return type;
@@ -43,6 +44,12 @@ public class InfoBean {
 	}
 	public void setFdaLink(String fdaLink) {
 		this.fdaLink = fdaLink;
+	}
+	public String getWebsite() {
+		return website;
+	}
+	public void setWebsite(String website) {
+		this.website = website;
 	}
 	
 }

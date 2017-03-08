@@ -106,12 +106,13 @@ public class StudyMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public GatewayInfoResponse gatewayAppResourcesInfo() throws DAOException{
+	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Starts");
 		GatewayInfoResponse gatewayInfoResponse = new GatewayInfoResponse();
 		GatewayInfoDto gatewayInfo = null;
 		List<GatewayWelcomeInfoDto> gatewayWelcomeInfoList = null;
 		List<ResourcesDto> resourcesList = null;
+		String platformType = "";
 		try{
 			session = sessionFactory.openSession();
 			query = session.getNamedQuery("getGatewayInfo");
@@ -138,9 +139,12 @@ public class StudyMetaDataDao {
 					}
 					gatewayInfoResponse.setInfo(infoBeanList);
 				}
-				
-				//get resources details
-				query = session.getNamedQuery("getResourcesList");
+			}
+			
+			//get resources details
+			platformType = StudyMetaDataUtil.platformType(authorization);
+			if(StringUtils.isNotEmpty(platformType)){
+				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
 				resourcesList = query.list();
 				if( null != resourcesList && resourcesList.size() > 0){
 					List<ResourcesBean> resourceBeanList = new ArrayList<ResourcesBean>();
@@ -154,8 +158,10 @@ public class StudyMetaDataDao {
 							resourceBean.setType(StudyMetaDataConstants.TYPE_PDF);
 							resourceBean.setContent(StringUtils.isEmpty(resource.getPdfUrl())==true?"":resource.getPdfUrl());
 						}
+						resourceBean.setResourceId(resource.getId() == null?"":String.valueOf(resource.getId()));
 						resourceBeanList.add(resourceBean);
 					}
+					gatewayInfoResponse.setResources(resourceBeanList);
 				}
 			}
 			gatewayInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
@@ -284,13 +290,6 @@ public class StudyMetaDataDao {
 				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())==true?"":consentDto.getLongDescription());
 				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())==true?"":consentDto.getShortDescription());
 				eligibilityConsentResponse.setSharing(sharingBean);
-				
-				//Review
-				ReviewBean reviewBean = new ReviewBean();
-				reviewBean.setSignatureContent("");
-				reviewBean.setSignatureTitle("");
-				reviewBean.setTitle("");
-				eligibilityConsentResponse.setReview(reviewBean);
 			}
 			
 			//get Consent Info details by consentId
@@ -334,6 +333,53 @@ public class StudyMetaDataDao {
 				eligibilityConsentResponse.setComprehension(comprehensionList);
 			}
 			
+			//Review
+			if( consentDto != null){
+				ReviewBean reviewBean = new ReviewBean();
+				if(!consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
+					reviewBean.setSignatureContent(StringUtils.isEmpty(consentDto.getConsentDocContent())==true?"":consentDto.getConsentDocContent());
+				}else{
+					String signatureContent = "";
+					if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
+						for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
+							if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
+								switch (consentInfoDto.getDisplayTitle()) {
+										case "overview": consentInfoDto.setDisplayTitle("Overview");
+														 break;
+										case "dataGathering": consentInfoDto.setDisplayTitle("Data Gathering");
+										 				 break;
+										case "privacy": consentInfoDto.setDisplayTitle("Privacy");
+										 				 break;
+										case "dataUse": consentInfoDto.setDisplayTitle("Data Use");
+										 				 break;
+										case "timeCommitment": consentInfoDto.setDisplayTitle("Time Commitment");
+										 				 break;
+										case "studySurvey": consentInfoDto.setDisplayTitle("Study Survey");
+										 				 break;
+										case "studyTasks": consentInfoDto.setDisplayTitle("Study Tasks");
+										 				 break;
+										case "withdrawing": consentInfoDto.setDisplayTitle("Withdrawing");
+										 				 break;
+										case "customService": consentInfoDto.setDisplayTitle("Custom Service");
+										 				 break;
+								}
+							}
+
+							//get the review content from the individual consents
+							signatureContent += "<span style=&#34;font-size:20px;&#34;><strong>"
+												+consentInfoDto.getDisplayTitle()
+												+"</strong></span><br/>"
+												+"<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
+												+consentInfoDto.getElaborated()
+												+"</span><br/>";
+						}
+					}
+					reviewBean.setSignatureContent(signatureContent);
+				}
+				reviewBean.setSignatureTitle("");
+				reviewBean.setTitle("");
+				eligibilityConsentResponse.setReview(reviewBean);
+			}
 			eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
@@ -374,6 +420,7 @@ public class StudyMetaDataDao {
 						resourcesBean.setType(StudyMetaDataConstants.TYPE_PDF);
 						resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getPdfUrl())==true?"":resourcesDto.getPdfUrl());
 					}
+					resourcesBean.setResourceId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
 					
 					//configuration details for the study
 					ConfigurationBean configuration = new ConfigurationBean();
@@ -436,6 +483,7 @@ public class StudyMetaDataDao {
 						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())==true?"":studyPageInfo.getTitle());
 						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":fdaSmdImagePath+studyPageInfo.getImagePath());
 						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())==true?"":studyPageInfo.getDescription());
+						info.setWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())==true?"":studyDto.getStudyWebsite());
 						infoList.add(info);
 					}
 				}else{
@@ -451,6 +499,7 @@ public class StudyMetaDataDao {
 					info.setTitle("A Study for Pregnent Women");
 					info.setImage("");
 					info.setText("Collection of participant-provided information through a mobile device app for use in drug safety research");
+					info.setWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())==true?"":studyDto.getStudyWebsite());
 					infoList.add(info);
 				}
 				studyInfoResponse.setInfo(infoList);

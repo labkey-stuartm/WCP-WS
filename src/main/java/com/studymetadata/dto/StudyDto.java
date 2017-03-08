@@ -104,6 +104,9 @@ public class StudyDto implements Serializable{
 	@Column(name="media_link")
 	private String mediaLink;
 	
+	@Column(name="study_website")
+	private String studyWebsite;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -302,6 +305,14 @@ public class StudyDto implements Serializable{
 
 	public void setMediaLink(String mediaLink) {
 		this.mediaLink = mediaLink;
+	}
+
+	public String getStudyWebsite() {
+		return studyWebsite;
+	}
+
+	public void setStudyWebsite(String studyWebsite) {
+		this.studyWebsite = studyWebsite;
 	}
 	
 }

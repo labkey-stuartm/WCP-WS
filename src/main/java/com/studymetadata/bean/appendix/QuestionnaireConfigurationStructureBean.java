@@ -1,5 +1,8 @@
 package com.studymetadata.bean.appendix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Mohan
@@ -8,7 +11,7 @@ package com.studymetadata.bean.appendix;
 public class QuestionnaireConfigurationStructureBean {
 	private boolean branching=false;
 	private boolean randomization=false;
-	private String frequency="";
+	private List<FrequencyBean> frequency= new ArrayList<FrequencyBean>();
 	
 	public boolean isBranching() {
 		return branching;
@@ -22,10 +25,10 @@ public class QuestionnaireConfigurationStructureBean {
 	public void setRandomization(boolean randomization) {
 		this.randomization = randomization;
 	}
-	public String getFrequency() {
+	public List<FrequencyBean> getFrequency() {
 		return frequency;
 	}
-	public void setFrequency(String frequency) {
+	public void setFrequency(List<FrequencyBean> frequency) {
 		this.frequency = frequency;
 	}
 	

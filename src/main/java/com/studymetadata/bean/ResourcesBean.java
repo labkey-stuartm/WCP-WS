@@ -11,6 +11,8 @@ public class ResourcesBean {
 	private String studyId = "";
 	private ConfigurationBean configuration = new ConfigurationBean();
 	
+	private String resourceId = "";
+	
 	public String getTitle() {
 		return title;
 	}
@@ -47,4 +49,11 @@ public class ResourcesBean {
 	public void setConfiguration(ConfigurationBean configuration) {
 		this.configuration = configuration;
 	}
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	
 }
