@@ -70,6 +70,21 @@ public class QuestionsDto implements Serializable{
 	@Column(name="form_id")
 	private Integer formId;
 
+	@Column(name="pass_fail")
+	private String passFail;
+	
+	@Column(name="created_by")
+	private Integer createdBy;
+	
+	@Column(name="created_on")
+	private String createdOn;
+	
+	@Column(name="modified_by")
+	private Integer modifiedBy;
+	
+	@Column(name="modified_on")
+	private String modifiedOn;
+
 	public Integer getId() {
 		return id;
 	}
@@ -196,6 +211,46 @@ public class QuestionsDto implements Serializable{
 
 	public void setFormId(Integer formId) {
 		this.formId = formId;
+	}
+
+	public String getPassFail() {
+		return passFail;
+	}
+
+	public void setPassFail(String passFail) {
+		this.passFail = passFail;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 	
 }

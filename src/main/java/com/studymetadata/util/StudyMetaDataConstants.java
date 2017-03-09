@@ -79,10 +79,18 @@ public interface StudyMetaDataConstants {
     public static final String CONSENT_TYPE_CUSTOM = "Custom";
 	
 	//questionaire frequency schedule
+    public static final String QUESTIONAIRE_STEP_TYPE_INSTRUCTION = "Instruction";
+    public static final String QUESTIONAIRE_STEP_TYPE_QUESTION = "Question";
+    public static final String QUESTIONAIRE_STEP_TYPE_FORM = "Form";
+    
 	public static final String FREQUENCY_TYPE_ONE_TIME = "One Time";
 	public static final String FREQUENCY_TYPE_WITHIN_A_DAY = "Within a day";
 	public static final String FREQUENCY_TYPE_DAILY = "Daily";
 	public static final String FREQUENCY_TYPE_WEEKLY = "Weekly";
 	public static final String FREQUENCY_TYPE_MONTHLY = "Monthly";
 	public static final String FREQUENCY_TYPE_MANUALLY_SCHEDULE = "Manually schedule";
+	
+	//Activity related constants
+	public static final String ACTIVITY_TYPE_ACTIVE_TASK = "AT";
+	public static final String ACTIVITY_TYPE_QUESTIONAIRE = "QR";
 }

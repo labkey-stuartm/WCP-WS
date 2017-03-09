@@ -39,6 +39,9 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	@Column(name="sequence_no")
 	private Integer sequenceNo;
+	
+	@Column(name="id")
+	private Integer id;
 
 	public Integer getStepId() {
 		return stepId;
@@ -86,6 +89,14 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setSequenceNo(Integer sequenceNo) {
 		this.sequenceNo = sequenceNo;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

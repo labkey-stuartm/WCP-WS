@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * 
  * @author Mohan
@@ -16,6 +19,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="questionnaires")
+@NamedQueries({
+	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO where QDTO.studyId =:studyId"),
+})
 public class QuestionnairesDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -39,6 +45,24 @@ public class QuestionnairesDto implements Serializable{
 	
 	@Column(name="study_lifetime_end")
 	private String studyLifetimeEnd;
+	
+	@Column(name="created_by")
+	private Integer createdBy;
+	
+	@Column(name="created_date")
+	private String createdDate;
+	
+	@Column(name="modified_by")
+	private Integer modifiedBy;
+	
+	@Column(name="modified_date")
+	private String modifiedDate;
+	
+	@Column(name="day_of_the_week")
+	private Integer dayOfTheWeek;
+	
+	@Column(name="repeat_questionnaire")
+	private Integer repeatQuestionnaire;
 
 	public Integer getId() {
 		return id;
@@ -87,6 +111,53 @@ public class QuestionnairesDto implements Serializable{
 	public void setStudyLifetimeEnd(String studyLifetimeEnd) {
 		this.studyLifetimeEnd = studyLifetimeEnd;
 	}
-	
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public Integer getDayOfTheWeek() {
+		return dayOfTheWeek;
+	}
+
+	public void setDayOfTheWeek(Integer dayOfTheWeek) {
+		this.dayOfTheWeek = dayOfTheWeek;
+	}
+
+	public Integer getRepeatQuestionnaire() {
+		return repeatQuestionnaire;
+	}
+
+	public void setRepeatQuestionnaire(Integer repeatQuestionnaire) {
+		this.repeatQuestionnaire = repeatQuestionnaire;
+	}
 	
 }

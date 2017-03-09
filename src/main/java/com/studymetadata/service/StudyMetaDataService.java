@@ -22,6 +22,7 @@ import com.studymetadata.exception.ErrorCodes;
 import com.studymetadata.integration.StudyMetaDataOrchestration;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
+import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.FailureResponse;
@@ -286,11 +287,11 @@ public class StudyMetaDataService {
 	@Path("activity")
 	public Object studyActivityMetadata(@HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
-		ActivityResponse activityResponse = new ActivityResponse();
+		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
 		try{
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
-				activityResponse = studyMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
-				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+				activityMetaDataResponse = studyMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
+				if(!activityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
@@ -305,7 +306,7 @@ public class StudyMetaDataService {
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Ends");
-		return activityResponse;
+		return activityMetaDataResponse;
 	}
 	
 	/**

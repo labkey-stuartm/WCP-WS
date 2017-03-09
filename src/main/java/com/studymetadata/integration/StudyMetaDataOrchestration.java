@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.studymetadata.dao.StudyMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
+import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
@@ -164,17 +165,17 @@ public class StudyMetaDataOrchestration {
 	 * @return ActivityResponse
 	 * @throws OrchestrationException
 	 */
-	public ActivityResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
+	public ActivityMetaDataResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Starts");
-		ActivityResponse activityResponse = new ActivityResponse();
+		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
 		try{
-			activityResponse = studyMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
+			activityMetaDataResponse = studyMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
 		}catch(Exception e){
 			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyActivityMetadata() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Ends");
-		return activityResponse;
+		return activityMetaDataResponse;
 	}
 	
 	/**
