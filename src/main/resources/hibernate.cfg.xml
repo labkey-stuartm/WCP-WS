@@ -59,6 +59,7 @@
 		<mapping class="com.studymetadata.dto.QuestionnairesCustomFrequenciesDto" />
 		<mapping class="com.studymetadata.dto.FormDto" />
 		<mapping class="com.studymetadata.dto.FormMappingDto" />
+		<mapping class="com.studymetadata.dto.InstructionsDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

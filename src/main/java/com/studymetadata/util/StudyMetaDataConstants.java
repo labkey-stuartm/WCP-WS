@@ -26,6 +26,12 @@ public interface StudyMetaDataConstants {
 	
 	public static final String PASSWORD_SALT = "BTCSoft";
 	
+	//Authorization
+	/*public static final String ANDROID_APP_TOKEN = "a7296a62-44e8-4a06-8d85-50bc861d6c64";
+	public static final String IOS_APP_TOKEN = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
+	public static final String IOS_BUNDLE_ID = "com.btc.FDA";
+	public static final String ANDROID_BUNDLE_ID = "com.harvard.fda";*/
+	
 	//Study related constants
 	public static final String STUDY_TYPE_GT = "GT";
 	public static final String STUDY_TYPE_SD = "SD";
@@ -33,20 +39,15 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_PLATFORM_TYPE_ANDROID = "A";
 	
 	//Study Status
-    public static final String STUDY_PRE_LAUNCH = "Pre-launch";
-    public static final String STUDY_ACTIVE = "Active";
-    public static final String STUDY_PAUSED = "Paused";
-    public static final String STUDY_DEACTIVATED = "Deactivated";
+    public static final String STUDY_STATUS_PRE_LAUNCH = "Pre-launch";
+    public static final String STUDY_STATUS_ACTIVE = "Active";
+    public static final String STUDY_STATUS_PAUSED = "Paused";
+    public static final String STUDY_STATUS_DEACTIVATED = "Deactivated";
+    public static final String STUDY_STATUS_COMPLETED = "Completed";
     
      //Study Category type
     public static final String STUDY_REF_CATEGORIES = "Categories";
     public static final String STUDY_REF_SPONSERS = "Research Sponsors";
-	
-	//Authorization
-	public static final String ANDROID_APP_TOKEN = "a7296a62-44e8-4a06-8d85-50bc861d6c64";
-	public static final String IOS_APP_TOKEN = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
-	public static final String IOS_BUNDLE_ID = "com.btc.FDA";
-	public static final String ANDROID_BUNDLE_ID = "com.harvard.fda";
 	
 	public static final String YES = "Yes";
 	public static final String NO = "No";

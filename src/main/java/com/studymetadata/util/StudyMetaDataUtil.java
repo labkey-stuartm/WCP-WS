@@ -34,6 +34,13 @@ public class StudyMetaDataUtil {
 	public static HashMap configMap = StudyMetaDataUtil.getAppProperties();
 	@SuppressWarnings("unchecked")	
 	private static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
+	//Authorization properties file
+	@SuppressWarnings("rawtypes")
+	public static HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
+	@SuppressWarnings("unchecked")	
+	private static HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+	
 
 	/**
 	 * @return HashMap
@@ -785,9 +792,9 @@ public class StudyMetaDataUtil {
 		logger.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Ends ");
 		return dateNow;
 	}
-	
+
 	/*---------------------------------------------FDA util methods------------------------------------------*/
-	
+
 	public static String platformType(String authCredentials) {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Starts");
 		String bundleIdAndAppToken = null;
@@ -802,9 +809,9 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(bundleId.equals(StudyMetaDataConstants.ANDROID_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.ANDROID_APP_TOKEN)){
+						if(bundleId.equals(authPropMap.get("android.app.token.pregnent.women")) && appToken.equals(authPropMap.get("ios.app.token.pregnent.women"))){
 							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
-						}else if(bundleId.equals(StudyMetaDataConstants.IOS_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.IOS_APP_TOKEN)){
+						}else if(bundleId.equals(authPropMap.get("android.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("ios.bundle.id.pregnent.women"))){
 							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
 						}
 					}
@@ -817,4 +824,23 @@ public class StudyMetaDataUtil {
 		return platform;
 	}
 	
+	/**
+	 * @author Mohan
+	 * @return HashMap
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static HashMap getAuthorizationProperties(){
+		logger.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
+		HashMap hashMap = new HashMap<String, String>();
+		ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
+		Enumeration<String> keys = rb.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			String value = rb.getString(key);
+			hashMap.put(key, value);
+		}
+		logger.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
+		return hashMap;
+	}
+
 }

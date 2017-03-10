@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,9 +21,14 @@ import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
 import com.studymetadata.dto.EligibilityDto;
+import com.studymetadata.dto.FormDto;
+import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
+import com.studymetadata.dto.InstructionsDto;
 import com.studymetadata.dto.QuestionnairesDto;
+import com.studymetadata.dto.QuestionnairesStepsDto;
+import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
@@ -60,6 +66,7 @@ import com.studymetadata.bean.appendix.InfoStructureBean;
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 import com.studymetadata.bean.appendix.QuestionnaireConfigurationStructureBean;
 import com.studymetadata.bean.appendix.ResourceContextStructureBean;
+import com.studymetadata.bean.appendix.StepsStructureBean;
 
 public class StudyMetaDataDao {
 
@@ -67,6 +74,9 @@ public class StudyMetaDataDao {
 
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	
+	@SuppressWarnings("unchecked")
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
 	
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
@@ -90,7 +100,7 @@ public class StudyMetaDataDao {
 			final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 			final String bundleId = tokenizer.nextToken();
 			final String appToken = tokenizer.nextToken();
-			if((bundleId.equals(StudyMetaDataConstants.ANDROID_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.ANDROID_APP_TOKEN)) || (bundleId.equals(StudyMetaDataConstants.IOS_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.IOS_APP_TOKEN))){
+			if((bundleId.equals(authPropMap.get("android.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("android.app.token.pregnent.women"))) || (bundleId.equals(authPropMap.get("ios.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("ios.app.token.pregnent.women")))){
 				hasValidAuthorization = true;
 			}
 		}catch(Exception e){
@@ -199,8 +209,8 @@ public class StudyMetaDataDao {
 				session = sessionFactory.openSession();
 				
 				//fetch all Gateway studies based on the platform supported (iOS/android)
-				//query = session.getNamedQuery("gatewayStudiesListByPlatform").setString("type", StudyMetaDataConstants.STUDY_TYPE_GT).setString("platform", platformType);
 				query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' ");
+				/*query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and SDTO.status !='"+StudyMetaDataConstants.STUDY_STATUS_PRE_LAUNCH+"' ");*/
 				studiesList = query.list();
 				if(null != studiesList && studiesList.size() > 0){
 					List<StudyBean> studyBeanList = new ArrayList<StudyBean>();
@@ -619,6 +629,7 @@ public class StudyMetaDataDao {
 	 * @return ActivityResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ActivityMetaDataResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyActivityMetadata() :: Starts");
 		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
@@ -627,14 +638,18 @@ public class StudyMetaDataDao {
 		InfoStructureBean infoBean = new InfoStructureBean();
 		QuestionnaireConfigurationStructureBean questionnaireConfig = new QuestionnaireConfigurationStructureBean();
 		List<String> randomizationSet = new ArrayList<String>();
+		
+		ActiveTaskDto activeTaskDto = null;
+		QuestionnairesDto questionnaireDto = null;
 		List<ResourceContextStructureBean> resourceContextList = new ArrayList<ResourceContextStructureBean>();
+		TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap = new TreeMap<Integer, StepsStructureBean>();
+		List<StepsStructureBean> steps = new ArrayList<StepsStructureBean>();
 		try{
 			//check whether the activityId is valid or not (i.e. delimeter '-')
 			if(activityId.contains("-")){
 				session = sessionFactory.openSession();
 				activityInfoArray = activityId.split("-");
 				if(activityInfoArray[0].equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
-					ActiveTaskDto activeTaskDto = null;
 					query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityInfoArray[1]);
 					activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 					if( activeTaskDto != null){
@@ -658,7 +673,6 @@ public class StudyMetaDataDao {
 						activityStructureBean.setResourceContext(resourceContextList);
 					}
 				}else{
-					QuestionnairesDto questionnaireDto = null;
 					query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id ="+activityInfoArray[1]);
 					questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 					if(questionnaireDto != null){
@@ -676,8 +690,69 @@ public class StudyMetaDataDao {
 						/*questionnaireConfig.setBranching();
 						questionnaireConfig.setFrequency();
 						questionnaireConfig.setRandomization();*/
-						activityStructureBean.setQuestionnaireConfiguration(questionnaireConfig);
 						
+						Map<String, Integer> sequenceNoMap = new HashMap<String, Integer>();
+						
+						List<QuestionnairesStepsDto> questionaireStepsList = null;
+						query = session.createQuery(" from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo ");
+						questionaireStepsList = query.list();
+						if(questionaireStepsList != null && questionaireStepsList.size() > 0){
+							List<Integer> instructionIdList = new ArrayList<Integer>();
+							List<Integer> questionIdList = new ArrayList<Integer>();
+							List<Integer> formIdList = new ArrayList<Integer>();
+							for(QuestionnairesStepsDto questionaireSteps : questionaireStepsList){
+								switch (questionaireSteps.getStepType()) {
+									case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION: instructionIdList.add(questionaireSteps.getInstructionFormId());
+										sequenceNoMap.put(String.valueOf(questionaireSteps.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, questionaireSteps.getSequenceNo());
+									break;
+									case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION: questionIdList.add(questionaireSteps.getInstructionFormId());
+										sequenceNoMap.put(String.valueOf(questionaireSteps.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, questionaireSteps.getSequenceNo());
+									break;
+									case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM: formIdList.add(questionaireSteps.getInstructionFormId());
+										sequenceNoMap.put(String.valueOf(questionaireSteps.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, questionaireSteps.getSequenceNo());
+									break;
+								}
+							}
+							
+							//get the instructionsList
+							if(instructionIdList.size() > 0){
+								List<InstructionsDto> instructionsDtoList = null;
+								query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+")");
+								instructionsDtoList = query.list();
+								if(instructionsDtoList != null && instructionsDtoList.size() > 0){
+									stepsSequenceTreeMap = getStepsInfoForQuestionaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, instructionsDtoList, null, null, sequenceNoMap, stepsSequenceTreeMap, session);
+								}
+							}
+							
+							//get the questionaire List
+							if(questionIdList.size() > 0){
+								List<QuestionsDto> questionsList = null;
+								query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+")");
+								questionsList = query.list();
+								if( questionsList != null && questionsList.size() > 0){
+									stepsSequenceTreeMap = getStepsInfoForQuestionaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, null, questionsList, null, sequenceNoMap, stepsSequenceTreeMap, session);
+								}
+							}
+							
+							//get the forms list
+							if(formIdList.size() > 0){
+								List<FormMappingDto> formList = null;
+								//query = session.createQuery(" from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdList, ",")+")");
+								query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId in ("+StringUtils.join(formIdList, ",")+")");
+								formList = query.list();
+								if(formList != null && formList.size() > 0){
+									stepsSequenceTreeMap = getStepsInfoForQuestionaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, null, null, formList, sequenceNoMap, stepsSequenceTreeMap, session);
+								}
+							}
+							
+							//iterate the treemap to get the activities based on the sequence order
+							for(Integer key : stepsSequenceTreeMap.keySet()){
+								steps.add(stepsSequenceTreeMap.get(key));
+							}
+							
+							activityStructureBean.setSteps(steps);
+						}
+						activityStructureBean.setQuestionnaireConfiguration(questionnaireConfig);
 						activityStructureBean.setRandomizationSets(randomizationSet);
 						activityStructureBean.setResourceContext(resourceContextList);
 					}
@@ -793,6 +868,130 @@ public class StudyMetaDataDao {
 		return notificationsResponse;
 	}
 	
+	/*-----------------------------Activity data methods starts----------------------------------*/
+	/**
+	 * @author Mohan
+	 * @param type
+	 * @param instructionsDtoList
+	 * @param questionsDtoList
+	 * @param formsList
+	 * @param sequenceNoMap
+	 * @param stepsSequenceTreeMap
+	 * @return
+	 * @throws Exception
+	 * 
+	 * This method is used to get the Activivty Steps details based on the sequence order no in quationaire steps
+	 */
+	@SuppressWarnings("unchecked")
+	public TreeMap<Integer, StepsStructureBean> getStepsInfoForQuestionaires(String type, List<InstructionsDto> instructionsDtoList, List<QuestionsDto> questionsDtoList, List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap, Session session) throws Exception{
+		LOGGER.info("INFO: StudyMetaDataDao - getStepsInfoForQuestionaires() :: Starts");
+		TreeMap<Integer, StepsStructureBean> stepsSequenceOrderTreeMap = new TreeMap<Integer, StepsStructureBean>();
+		try{
+			if(type.equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION)){
+				if( instructionsDtoList != null && instructionsDtoList.size() > 0){
+					for(InstructionsDto instructionsDto : instructionsDtoList){
+						StepsStructureBean instructionBean = new StepsStructureBean();
+						
+						instructionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION.toLowerCase());
+						instructionBean.setResultType("");
+						instructionBean.setKey("");
+						instructionBean.setTitle(StringUtils.isEmpty(instructionsDto.getInstructionTitle())==true?"":instructionsDto.getInstructionTitle());
+						instructionBean.setText(StringUtils.isEmpty(instructionsDto.getInstructionText())==true?"":instructionsDto.getInstructionText());
+						instructionBean.setImage("");
+						instructionBean.setSkippable(false);
+						Map<String, Object> destinations = new HashMap<String, Object>();
+						destinations.put("default", "dueDate");
+						instructionBean.setDestinations(destinations);
+						
+						stepsSequenceTreeMap.put(sequenceNoMap.get(String.valueOf(instructionsDto.getId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION), instructionBean);
+					}
+				}
+			}else if(type.equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)){
+				if(questionsDtoList != null && questionsDtoList.size() > 0){
+					for(QuestionsDto questionsDto : questionsDtoList){
+						StepsStructureBean questionBean = new StepsStructureBean();
+						
+						questionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
+						questionBean.setResultType("");
+						questionBean.setKey("");
+						questionBean.setTitle(StringUtils.isEmpty(questionsDto.getQuestion())==true?"":questionsDto.getQuestion());
+						questionBean.setSkippable(false);
+						questionBean.setGroupName("");
+						questionBean.setPhi("");
+						Map<String, Object> destinations = new HashMap<String, Object>();
+						destinations.put("true", "folicAcid");
+						destinations.put("false", "birthControlType");
+						questionBean.setDestinations(destinations);
+						
+						Map<String, List<Object>> format = new HashMap<String, List<Object>>();
+						List<Object> choices = new ArrayList<Object>();
+						choices.add("pills");
+						choices.add("tablets");
+						choices.add("others");
+						format.put("textChoices", choices);
+						
+						List<Object> obj = new ArrayList<Object>();
+						obj.add(1);
+						format.put("selectionStyle", obj);
+						questionBean.setFormat(format);
+						
+						stepsSequenceTreeMap.put(sequenceNoMap.get(String.valueOf(questionsDto.getId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION), questionBean);
+					}
+				}
+			}else{
+				if( formsList != null && formsList.size() > 0){
+					for(FormMappingDto formDto : formsList){
+						StepsStructureBean formBean = new StepsStructureBean();
+						List<StepsStructureBean> formSteps = new ArrayList<StepsStructureBean>();
+						formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
+						formBean.setResultType("");
+						formBean.setKey("");
+						formBean.setTitle("");
+						formBean.setSkippable(false);
+						
+						List<QuestionsDto> formQuestionsList = null;
+						query = session.createQuery("from QuestionsDto QDTO where QDTO.id="+formDto.getQuestionId());
+						formQuestionsList = query.list();
+						if(formQuestionsList != null && formQuestionsList.size() > 0){
+							for(QuestionsDto formQuestionDto : formQuestionsList){
+								StepsStructureBean formQuestionBean = new StepsStructureBean();
+								formQuestionBean.setResultType("");
+								formQuestionBean.setKey("");
+								formQuestionBean.setTitle(StringUtils.isEmpty(formQuestionDto.getQuestion())==true?"":formQuestionDto.getQuestion());
+								formQuestionBean.setSkippable(false);
+								
+								Map<String, List<Object>> format = new HashMap<String, List<Object>>();
+								List<Object> choices = new ArrayList<Object>();
+								choices.add("medicationA");
+								choices.add("medicationB");
+								choices.add("medicationC");
+								format.put("textChoices", choices);
+								formQuestionBean.setFormat(format);
+								formQuestionBean.setPhi("");
+								
+								formSteps.add(formQuestionBean);
+							}
+						}
+						formBean.setSteps(formSteps);
+						
+						formBean.setGroupName("");
+						formBean.setRepeatable(false);
+						formBean.setRepeatableText("");
+						
+						stepsSequenceTreeMap.put(sequenceNoMap.get(String.valueOf(formDto.getFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM), formBean);
+					}
+				}
+			}
+			
+			stepsSequenceOrderTreeMap = stepsSequenceTreeMap;
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - getStepsInfoForQuestionaires() :: ERROR", e);
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getStepsInfoForQuestionaires() :: Ends");
+		return stepsSequenceOrderTreeMap;
+	}
+	/*-----------------------------Activity data methods ends----------------------------------*/
 	/*-----------------------------Manipulate chart data methods starts----------------------------------*/
 	/**
 	 * @author Mohan
