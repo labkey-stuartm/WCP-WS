@@ -59,7 +59,7 @@ public class QuestionnairesDto implements Serializable{
 	private String modifiedDate;
 	
 	@Column(name="day_of_the_week")
-	private Integer dayOfTheWeek;
+	private String dayOfTheWeek;
 	
 	@Column(name="repeat_questionnaire")
 	private Integer repeatQuestionnaire;
@@ -144,11 +144,11 @@ public class QuestionnairesDto implements Serializable{
 		this.modifiedDate = modifiedDate;
 	}
 
-	public Integer getDayOfTheWeek() {
+	public String getDayOfTheWeek() {
 		return dayOfTheWeek;
 	}
 
-	public void setDayOfTheWeek(Integer dayOfTheWeek) {
+	public void setDayOfTheWeek(String dayOfTheWeek) {
 		this.dayOfTheWeek = dayOfTheWeek;
 	}
 

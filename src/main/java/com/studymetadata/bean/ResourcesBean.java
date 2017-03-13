@@ -9,6 +9,7 @@ public class ResourcesBean {
 	
 	private String audience = "";
 	private String studyId = "";
+	private String key = "";
 	private ConfigurationBean configuration = new ConfigurationBean();
 	
 	private String resourceId = "";
@@ -54,6 +55,12 @@ public class ResourcesBean {
 	}
 	public void setResourceId(String resourceId) {
 		this.resourceId = resourceId;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
 	}
 	
 }

@@ -809,9 +809,9 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(bundleId.equals(authPropMap.get("android.app.token.pregnent.women")) && appToken.equals(authPropMap.get("ios.app.token.pregnent.women"))){
+						if(bundleId.equals(authPropMap.get("android.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("android.app.token.pregnent.women"))){
 							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
-						}else if(bundleId.equals(authPropMap.get("android.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("ios.bundle.id.pregnent.women"))){
+						}else if(bundleId.equals(authPropMap.get("ios.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("ios.app.token.pregnent.women"))){
 							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
 						}
 					}

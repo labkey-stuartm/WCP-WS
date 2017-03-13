@@ -22,6 +22,7 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
 	//@NamedQuery(name="gatewayStudiesListByPlatform", query="from StudyDto SDTO where SDTO.type =:type and SDTO.platform like CONCAT('%',:platform,'%')"),
 	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO where SDTO.id =:id"),
+	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
 })
 public class StudyDto implements Serializable{
 	

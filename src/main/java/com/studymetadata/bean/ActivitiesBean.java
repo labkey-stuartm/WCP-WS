@@ -5,7 +5,6 @@ public class ActivitiesBean {
 	private String type = ""; //active task/questionnaire
 	private String frequency = "";
 	private ConfigurationBean configuration = new ConfigurationBean();
-	private String activityId = "";
 	
 	public String getTitle() {
 		return title;
@@ -31,11 +30,4 @@ public class ActivitiesBean {
 	public void setConfiguration(ConfigurationBean configuration) {
 		this.configuration = configuration;
 	}
-	public String getActivityId() {
-		return activityId;
-	}
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
-	
 }

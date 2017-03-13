@@ -94,4 +94,8 @@ public interface StudyMetaDataConstants {
 	//Activity related constants
 	public static final String ACTIVITY_TYPE_ACTIVE_TASK = "AT";
 	public static final String ACTIVITY_TYPE_QUESTIONAIRE = "QR";
+	
+	//study resource related
+	public static final String RESOURCE_AUDIENCE_TYPE_ALL = "All";
+	public static final String RESOURCE_AUDIENCE_TYPE_LIMITED = "Limited";
 }
