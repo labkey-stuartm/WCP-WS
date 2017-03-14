@@ -5,14 +5,12 @@ public class ResourcesBean {
 	private String title = "";
 	private String type = ""; //html/pdf
 	private String content = ""; //text/pdf link
-
+	private String resourcesId = "";
 	
 	private String audience = "";
 	private String studyId = "";
 	private String key = "";
 	private ConfigurationBean configuration = new ConfigurationBean();
-	
-	private String resourceId = "";
 	
 	public String getTitle() {
 		return title;
@@ -50,11 +48,11 @@ public class ResourcesBean {
 	public void setConfiguration(ConfigurationBean configuration) {
 		this.configuration = configuration;
 	}
-	public String getResourceId() {
-		return resourceId;
+	public String getResourcesId() {
+		return resourcesId;
 	}
-	public void setResourceId(String resourceId) {
-		this.resourceId = resourceId;
+	public void setResourcesId(String resourcesId) {
+		this.resourcesId = resourcesId;
 	}
 	public String getKey() {
 		return key;

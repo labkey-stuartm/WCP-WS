@@ -10,6 +10,8 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,6 +41,8 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.ActivitiesBean;
+import com.studymetadata.bean.ActivityFrequencyBean;
+import com.studymetadata.bean.ActivityFrequencyScheduleBean;
 import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.BrandingBean;
@@ -174,9 +178,10 @@ public class StudyMetaDataDao {
 							resourceBean.setContent(StringUtils.isEmpty(resource.getRichText())==true?"":resource.getRichText());
 						}else{
 							resourceBean.setType(StudyMetaDataConstants.TYPE_PDF);
-							resourceBean.setContent(StringUtils.isEmpty(resource.getPdfUrl())==true?"":resource.getPdfUrl());
+							resourceBean.setContent(StringUtils.isEmpty(resource.getPdfUrl())==true?"":propMap.get("fda.smd.resource.pdfPath")+resource.getPdfUrl());
 						}
-						resourceBean.setResourceId(resource.getId() == null?"":String.valueOf(resource.getId()));
+						resourceBean.setResourcesId(resource.getId() == null?"":String.valueOf(resource.getId()));
+						resourceBean.setKey(resource.getId() == null?"":String.valueOf(resource.getId()));
 						resourceBeanList.add(resourceBean);
 					}
 					gatewayInfoResponse.setResources(resourceBeanList);
@@ -219,7 +224,7 @@ public class StudyMetaDataDao {
 					List<StudyBean> studyBeanList = new ArrayList<StudyBean>();
 					for(StudyDto studyDto : studiesList){
 						StudyBean studyBean = new StudyBean();
-						studyBean.setDescription(StringUtils.isEmpty(studyDto.getDescription())==true?"":studyDto.getDescription());
+						studyBean.setTagline(StringUtils.isEmpty(studyDto.getDescription())==true?"":studyDto.getDescription());
 						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
 						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage());
@@ -459,7 +464,7 @@ public class StudyMetaDataDao {
 					List<ResourcesBean> resourcesBeanList = new ArrayList<ResourcesBean>();
 					for(ResourcesDto resourcesDto : resourcesDtoList){
 						ResourcesBean resourcesBean = new ResourcesBean();
-						studyDetails = (StudyDto) session.getNamedQuery("studyDetailsByStudyId").setInteger("studyId", actualStudyId).uniqueResult();
+						studyDetails = (StudyDto) session.getNamedQuery("studyDetailsByStudyId").setInteger("id", actualStudyId).uniqueResult();
 						if(studyDetails != null){
 							if(studyDetails.getType().equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)){
 								resourcesBean.setAudience(StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
@@ -476,9 +481,9 @@ public class StudyMetaDataDao {
 							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getRichText())==true?"":resourcesDto.getRichText());
 						}else{
 							resourcesBean.setType(StudyMetaDataConstants.TYPE_PDF);
-							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getPdfUrl())==true?"":resourcesDto.getPdfUrl());
+							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getPdfUrl())==true?"":propMap.get("fda.smd.resource.pdfPath")+resourcesDto.getPdfUrl());
 						}
-						resourcesBean.setResourceId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
+						resourcesBean.setResourcesId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
 						
 						//configuration details for the study
 						ConfigurationBean configuration = new ConfigurationBean();
@@ -493,6 +498,7 @@ public class StudyMetaDataDao {
 						}else{
 							configuration.setEnd(0);
 						}
+						resourcesBean.setStudyId(resourcesDto.getStudyId().toString());
 						resourcesBean.setConfiguration(configuration);
 						resourcesBeanList.add(resourcesBean);
 					}
@@ -628,14 +634,13 @@ public class StudyMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getTaskName())==true?"":activeTaskDto.getTaskName());
 						activityBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
-						activityBean.setFrequency(StringUtils.isEmpty(activeTaskDto.getDuration())==true?"":activeTaskDto.getDuration());
-						
-						ConfigurationBean configurationBean = new ConfigurationBean();
-						configurationBean.setStartTime("");
-						configurationBean.setEndTime("");
-						configurationBean.setLifetime("");
-						configurationBean.setRunLifetime("");
-						activityBean.setConfiguration(configurationBean);
+						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
+						List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+						frequencyDetails.setRuns(runDetailsBean);
+						activityBean.setFrequency(frequencyDetails);
+						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+						activityBean.setStartTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeStart())==true?"":activeTaskDto.getActiveTaskLifetimeStart());
+						activityBean.setEndTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())==true?"":activeTaskDto.getActiveTaskLifetimeEnd());
 						
 						activitiesBeanList.add(activityBean);
 					}
@@ -649,21 +654,17 @@ public class StudyMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(questionaire.getTitle())==true?"":questionaire.getTitle());
 						activityBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
-						activityBean.setFrequency(StringUtils.isEmpty(questionaire.getFrequency())==true?"":questionaire.getFrequency());
-						
-						ConfigurationBean configurationBean = new ConfigurationBean();
-						configurationBean.setStartTime("");
-						configurationBean.setEndTime("");
-						configurationBean.setLifetime("");
-						configurationBean.setRunLifetime("");
-						activityBean.setConfiguration(configurationBean);
+						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
+						List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+						frequencyDetails.setRuns(runDetailsBean);
+						activityBean.setFrequency(frequencyDetails);
+						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
+						activityBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())==true?"":questionaire.getStudyLifetimeStart());
+						activityBean.setEndTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())==true?"":questionaire.getStudyLifetimeEnd());
 						
 						activitiesBeanList.add(activityBean);
 					}
 				}
-				
-				//activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
-				//activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
 				
 				//check the activities list for the studyId
 				if(activitiesBeanList.size() > 0){
@@ -722,7 +723,8 @@ public class StudyMetaDataDao {
 							activityStructureBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
 							
 							infoBean.setStudyId(studyId);
-							infoBean.setqId("");
+							//infoBean.setqId("");
+							infoBean.setqId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
 							infoBean.setName(StringUtils.isEmpty(activeTaskDto.getTaskName())==true?"":activeTaskDto.getTaskName());
 							infoBean.setVersion(""); //column not there in the database
 							infoBean.setLastModified(""); //column not available in the database
@@ -745,7 +747,8 @@ public class StudyMetaDataDao {
 							activityStructureBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
 							
 							infoBean.setStudyId(studyId);
-							infoBean.setqId("");
+							//infoBean.setqId("");
+							infoBean.setqId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 							infoBean.setName(StringUtils.isEmpty(questionnaireDto.getTitle())==true?"":questionnaireDto.getTitle());
 							infoBean.setVersion(""); //column not there in the database
 							infoBean.setLastModified(StringUtils.isEmpty(questionnaireDto.getModifiedDate())==true?"":questionnaireDto.getModifiedDate());

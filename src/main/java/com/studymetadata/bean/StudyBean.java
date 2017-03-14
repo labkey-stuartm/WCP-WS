@@ -2,13 +2,13 @@ package com.studymetadata.bean;
 
 public class StudyBean {
 	/*/studyList*/
+	private String studyId = "";
 	private String title = "";
 	private String category = "";
 	private String sponsorName = "";
-	private String description = "";
+	private String tagline = "";
 	private String status = "";
 	private String logo = "";
-	private String studyId = "";
 	
 	public String getTitle() {
 		return title;
@@ -28,11 +28,11 @@ public class StudyBean {
 	public void setSponsorName(String sponsorName) {
 		this.sponsorName = sponsorName;
 	}
-	public String getDescription() {
-		return description;
+	public String getTagline() {
+		return tagline;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
 	}
 	public String getStatus() {
 		return status;
