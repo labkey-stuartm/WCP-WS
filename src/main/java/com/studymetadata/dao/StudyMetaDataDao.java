@@ -35,6 +35,7 @@ import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyPageDto;
+import com.studymetadata.dto.StudySequenceDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataConstants;
@@ -52,6 +53,8 @@ import com.studymetadata.bean.ComprehensionDetailsBean;
 import com.studymetadata.bean.ConfigurationBean;
 import com.studymetadata.bean.ConsentBean;
 import com.studymetadata.bean.ConsentDetailsBean;
+import com.studymetadata.bean.ConsentDocumentBean;
+import com.studymetadata.bean.ConsentDocumentResponse;
 import com.studymetadata.bean.DashboardBean;
 import com.studymetadata.bean.EligibilityBean;
 import com.studymetadata.bean.EligibilityConsentResponse;
@@ -106,7 +109,7 @@ public class StudyMetaDataDao {
 			final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 			final String bundleId = tokenizer.nextToken();
 			final String appToken = tokenizer.nextToken();
-			if((bundleId.equals(authPropMap.get("android.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("android.app.token.pregnent.women"))) || (bundleId.equals(authPropMap.get("ios.bundle.id.pregnent.women")) && appToken.equals(authPropMap.get("ios.app.token.pregnent.women")))){
+			if((bundleId.equals(authPropMap.get("android.bundleid.pregnent.women")) && appToken.equals(authPropMap.get("android.apptoken.pregnent.women"))) || (bundleId.equals(authPropMap.get("ios.bundleid.pregnent.women")) && appToken.equals(authPropMap.get("ios.apptoken.pregnent.women")))){
 				hasValidAuthorization = true;
 			}
 		}catch(Exception e){
@@ -166,7 +169,7 @@ public class StudyMetaDataDao {
 			platformType = StudyMetaDataUtil.platformType(authorization);
 			if(StringUtils.isNotEmpty(platformType)){
 				//query = session.createQuery(" from ResourcesDto RDTO where RDTO.status=1 and RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
-				query = session.createQuery(" from ResourcesDto RDTO where RDTO.customStudyId in ( select SDTO.customStudyId from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
+				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
 				resourcesList = query.list();
 				if( null != resourcesList && resourcesList.size() > 0){
 					List<ResourcesBean> resourceBeanList = new ArrayList<ResourcesBean>();
@@ -211,21 +214,29 @@ public class StudyMetaDataDao {
 		StudyResponse studyResponse = new StudyResponse();
 		List<StudyDto> studiesList = null;
 		String platformType = "";
+		String studyListQuery = "";
 		try{
 			platformType = StudyMetaDataUtil.platformType(authorization);
 			if(StringUtils.isNotEmpty(platformType)){
 				session = sessionFactory.openSession();
 				
 				//fetch all Gateway studies based on the platform supported (iOS/android)
-				query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' ");
+				//query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' ");
 				/*query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and SDTO.status !='"+StudyMetaDataConstants.STUDY_STATUS_PRE_LAUNCH+"' ");*/
+				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' "
+										+" and SDTO.id IN (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.basicInfo='Y' and SSDTO.overView='Y' and SSDTO.settingAdmins='Y' ) ";
+				query = session.createQuery(studyListQuery);
 				studiesList = query.list();
 				if(null != studiesList && studiesList.size() > 0){
 					List<StudyBean> studyBeanList = new ArrayList<StudyBean>();
 					for(StudyDto studyDto : studiesList){
 						StudyBean studyBean = new StudyBean();
-						studyBean.setTagline(StringUtils.isEmpty(studyDto.getDescription())==true?"":studyDto.getDescription());
-						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
+						studyBean.setTagline(StringUtils.isEmpty(studyDto.getStudyTagline())==true?"":studyDto.getStudyTagline());
+						
+						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
+						studyBean.setStatus(StudyMetaDataConstants.STUDY_STATUS_ACTIVE.toLowerCase());
+						//studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
+						
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
 						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage());
 						//set the primary key of studies table
@@ -437,6 +448,51 @@ public class StudyMetaDataDao {
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
+	}
+	
+	/**
+	 * 
+	 * @author Mohan
+	 * @param studyId
+	 * @param consentVersion
+	 * @param activityId
+	 * @param activityVersion
+	 * @return ConsentDocumentResponse
+	 * @throws DAOException
+	 */
+	@SuppressWarnings("unused")
+	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
+		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
+		ConsentDto consent = null;
+		Integer actualStudyId = null;
+		try{
+			session = sessionFactory.openSession();
+			//get studyId from studies table
+			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();
+			if(actualStudyId != null){
+				/*query = session.createQuery("");
+				consent = (ConsentDto) query.uniqueResult();*/
+				if( consent != null){
+					ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
+					consentDocumentBean.setContent("");
+					consentDocumentBean.setType(""); // text or html
+					consentDocumentBean.setVersion("");
+					consentDocumentResponse.setConsent(consentDocumentBean);
+				}
+				consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - consentDocument() :: ERROR", e);
+			e.printStackTrace();
+		}finally{
+			if(null != session){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Ends");
+		return consentDocumentResponse;
 	}
 	
 	/**
@@ -656,6 +712,9 @@ public class StudyMetaDataDao {
 						activityBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+						ActivityFrequencyScheduleBean aFSBean = new ActivityFrequencyScheduleBean();
+						runDetailsBean.add(aFSBean);
+						runDetailsBean.add(aFSBean);
 						frequencyDetails.setRuns(runDetailsBean);
 						activityBean.setFrequency(frequencyDetails);
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());

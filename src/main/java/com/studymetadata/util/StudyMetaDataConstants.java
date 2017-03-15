@@ -26,12 +26,6 @@ public interface StudyMetaDataConstants {
 	
 	public static final String PASSWORD_SALT = "BTCSoft";
 	
-	//Authorization
-	/*public static final String ANDROID_APP_TOKEN = "a7296a62-44e8-4a06-8d85-50bc861d6c64";
-	public static final String IOS_APP_TOKEN = "ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916";
-	public static final String IOS_BUNDLE_ID = "com.btc.FDA";
-	public static final String ANDROID_BUNDLE_ID = "com.harvard.fda";*/
-	
 	//Study related constants
 	public static final String STUDY_TYPE_GT = "GT";
 	public static final String STUDY_TYPE_SD = "SD";

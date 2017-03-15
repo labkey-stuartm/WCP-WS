@@ -60,6 +60,7 @@
 		<mapping class="com.studymetadata.dto.FormDto" />
 		<mapping class="com.studymetadata.dto.FormMappingDto" />
 		<mapping class="com.studymetadata.dto.InstructionsDto" />
+		<mapping class="com.studymetadata.dto.StudySequenceDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

@@ -9,6 +9,7 @@ import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
+import com.studymetadata.bean.ConsentDocumentResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.NotificationsResponse;
@@ -98,6 +99,29 @@ public class StudyMetaDataOrchestration {
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
+	}
+	
+	/**
+	 * 
+	 * @author Mohan
+	 * @param studyId
+	 * @param consentVersion
+	 * @param activityId
+	 * @param activityVersion
+	 * @return ConsentDocumentResponse
+	 * @throws OrchestrationException
+	 */
+	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws OrchestrationException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Starts");
+		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
+		try{
+			consentDocumentResponse = studyMetaDataDao.consentDocument(studyId, consentVersion, activityId, activityVersion);
+		}catch(Exception e){
+			e.printStackTrace();
+			LOGGER.error("StudyMetaDataOrchestration - consentDocument() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Ends");
+		return consentDocumentResponse;
 	}
 	
 	/**

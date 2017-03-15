@@ -108,6 +108,9 @@ public class StudyDto implements Serializable{
 	@Column(name="study_website")
 	private String studyWebsite;
 	
+	@Column(name="study_tagline")
+	private String studyTagline;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -314,6 +317,14 @@ public class StudyDto implements Serializable{
 
 	public void setStudyWebsite(String studyWebsite) {
 		this.studyWebsite = studyWebsite;
+	}
+
+	public String getStudyTagline() {
+		return studyTagline;
+	}
+
+	public void setStudyTagline(String studyTagline) {
+		this.studyTagline = studyTagline;
 	}
 	
 }
