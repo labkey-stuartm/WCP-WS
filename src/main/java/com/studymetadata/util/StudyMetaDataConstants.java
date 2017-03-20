@@ -92,4 +92,8 @@ public interface StudyMetaDataConstants {
 	//study resource related
 	public static final String RESOURCE_AUDIENCE_TYPE_ALL = "All";
 	public static final String RESOURCE_AUDIENCE_TYPE_LIMITED = "Limited";
+	
+	//Study Sequence status related
+	public static final String STUDY_SEQUENCE_Y = "Y";
+	public static final String STUDY_SEQUENCE_N = "N";
 }

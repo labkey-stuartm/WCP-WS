@@ -15,9 +15,9 @@ public class HibernateUtil {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
 			synchronized (obj) {
-				if(null == sessionFactory){
+				/*if(null == sessionFactory){*/
 					sessionFactory = new AnnotationConfiguration().configure("hibernate.cfg.xml").buildSessionFactory();
-				}
+				/*}*/
 			}
 		} catch (Throwable e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);

@@ -94,6 +94,9 @@ public class ConsentDto implements Serializable{
 	
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
+	
+	@Column(name = "version")
+	private Float version;
 
 	public Integer getId() {
 		return id;
@@ -270,6 +273,14 @@ public class ConsentDto implements Serializable{
 
 	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
 	}
 	
 }
