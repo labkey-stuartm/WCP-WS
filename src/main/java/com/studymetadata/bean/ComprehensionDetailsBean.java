@@ -6,6 +6,7 @@ import java.util.List;
 public class ComprehensionDetailsBean {
 	private Integer passScore = 0;
 	private List<ComprehensionBean> questions = new ArrayList<ComprehensionBean>();
+	private List<CorrectAnswersBean> correctAnswers = new ArrayList<CorrectAnswersBean>();
 	
 	public Integer getPassScore() {
 		return passScore;
@@ -18,6 +19,12 @@ public class ComprehensionDetailsBean {
 	}
 	public void setQuestions(List<ComprehensionBean> questions) {
 		this.questions = questions;
+	}
+	public List<CorrectAnswersBean> getCorrectAnswers() {
+		return correctAnswers;
+	}
+	public void setCorrectAnswers(List<CorrectAnswersBean> correctAnswers) {
+		this.correctAnswers = correctAnswers;
 	}
 	
 }

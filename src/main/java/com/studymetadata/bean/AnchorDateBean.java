@@ -6,7 +6,7 @@ package com.studymetadata.bean;
  *
  */
 public class AnchorDateBean {
-	private String type = "";
+	private String type = ""; //enrollment-date/date-question
 	private QuestionInfoBean questionInfo = new QuestionInfoBean();
 	
 	public String getType() {

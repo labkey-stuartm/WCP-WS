@@ -3,13 +3,27 @@ package com.studymetadata.bean;
 public class StudyBean {
 	/*/studyList*/
 	private String studyId = "";
+	private String studyVersion = "";
 	private String title = "";
 	private String category = "";
 	private String sponsorName = "";
 	private String tagline = "";
 	private String status = "";
 	private String logo = "";
+	private SettingsBean settings = new SettingsBean();
 	
+	public String getStudyId() {
+		return studyId;
+	}
+	public void setStudyId(String studyId) {
+		this.studyId = studyId;
+	}
+	public String getStudyVersion() {
+		return studyVersion;
+	}
+	public void setStudyVersion(String studyVersion) {
+		this.studyVersion = studyVersion;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -46,12 +60,11 @@ public class StudyBean {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	public String getStudyId() {
-		return studyId;
+	public SettingsBean getSettings() {
+		return settings;
 	}
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
+	public void setSettings(SettingsBean settings) {
+		this.settings = settings;
 	}
-	
 	
 }

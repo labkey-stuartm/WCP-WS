@@ -6,15 +6,15 @@ package com.studymetadata.bean;
  *
  */
 public class ReviewBean {
-	private String title = "";
+	private String reasonForConsent = "";
 	private String signatureTitle = "";
 	private String signatureContent = "";
 	
-	public String getTitle() {
-		return title;
+	public String getReasonForConsent() {
+		return reasonForConsent;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setReasonForConsent(String reasonForConsent) {
+		this.reasonForConsent = reasonForConsent;
 	}
 	public String getSignatureTitle() {
 		return signatureTitle;

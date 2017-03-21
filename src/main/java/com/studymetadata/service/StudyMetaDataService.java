@@ -402,16 +402,16 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
-			if(StringUtils.isNotEmpty(studyId)){
+			/*if(StringUtils.isNotEmpty(studyId)){*/
 				termsPolicyResponse = studyMetaDataOrchestration.termsPolicy(studyId);
 				if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
-			}else{
+			/*}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
-			}
+			}*/
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - termsPolicy() :: ERROR", e);
 			e.printStackTrace();

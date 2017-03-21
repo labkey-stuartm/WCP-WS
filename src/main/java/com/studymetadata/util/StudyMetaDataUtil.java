@@ -843,4 +843,34 @@ public class StudyMetaDataUtil {
 		return hashMap;
 	}
 
+	public static String getDayByDate(String input){
+		String actualDay = "";
+		try {
+			if(StringUtils.isNotEmpty(input)){
+				SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date MyDate = newDateFormat.parse(input);
+				newDateFormat.applyPattern(StudyMetaDataConstants.SDF_DAY);
+				actualDay = newDateFormat.format(MyDate);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return actualDay;
+	}
+	
+	public static String addDaysForDate(String input, int days){
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.DATE, days);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+	
 }

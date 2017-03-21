@@ -5,9 +5,7 @@ public class InfoBean {
 	private String image = ""; //link
 	private String title = "";
 	private String text = "";
-	private String link = ""; //used for media link
-	private String fdaLink = "";
-	private String website = "";
+	private String videoLink = "";
 	
 	public String getType() {
 		return type;
@@ -33,23 +31,11 @@ public class InfoBean {
 	public void setText(String text) {
 		this.text = text;
 	}
-	public String getLink() {
-		return link;
+	public String getVideoLink() {
+		return videoLink;
 	}
-	public void setLink(String link) {
-		this.link = link;
-	}
-	public String getFdaLink() {
-		return fdaLink;
-	}
-	public void setFdaLink(String fdaLink) {
-		this.fdaLink = fdaLink;
-	}
-	public String getWebsite() {
-		return website;
-	}
-	public void setWebsite(String website) {
-		this.website = website;
+	public void setVideoLink(String videoLink) {
+		this.videoLink = videoLink;
 	}
 	
 }

@@ -45,6 +45,7 @@ public interface StudyMetaDataConstants {
 	
 	public static final String YES = "Yes";
 	public static final String NO = "No";
+	public static final String ALL = "All";
 	
 	//Status messages
 	public static final String INVALID_AUTHORIZATION = "Invalid Authorization key";
@@ -68,6 +69,7 @@ public interface StudyMetaDataConstants {
 	public static final String TYPE_QUESTIONNAIRE = "questionnaire";
 	
 	public static final String TYPE_UTF8 = "UTF-8";
+	public static final String SDF_DAY = "EEEE";
 	
 	//Consent related constants
     public static final String CONSENT_TYPE_RESEARCHKIT = "ResearchKit/ResearchStack";
@@ -96,4 +98,14 @@ public interface StudyMetaDataConstants {
 	//Study Sequence status related
 	public static final String STUDY_SEQUENCE_Y = "Y";
 	public static final String STUDY_SEQUENCE_N = "N";
+	
+	//study platform type
+	public static final String STUDY_PLATFORM_IOS = "ios";
+	public static final String STUDY_PLATFORM_ANDROID = "android";
+	public static final String STUDY_PLATFORM_BOTH = "both";
+	
+	//study withdraw config
+	public static final String STUDY_WITHDRAW_CONFIG_DELETE_DATA = "delete_data";
+	public static final String STUDY_WITHDRAW_CONFIG_ASK_USER = "ask_user";
+	public static final String STUDY_WITHDRAW_CONFIG_NO_ACTION = "no_action";
 }

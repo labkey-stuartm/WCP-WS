@@ -3,6 +3,7 @@ package com.studymetadata.bean;
 public class TermsPolicyResponse {
 	private String message = "FAILURE";
 	private String terms = "";
+	private String privacy = "";
 	
 	public String getMessage() {
 		return message;
@@ -15,6 +16,12 @@ public class TermsPolicyResponse {
 	}
 	public void setTerms(String terms) {
 		this.terms = terms;
+	}
+	public String getPrivacy() {
+		return privacy;
+	}
+	public void setPrivacy(String privacy) {
+		this.privacy = privacy;
 	}
 	
 }

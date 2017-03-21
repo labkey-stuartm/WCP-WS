@@ -6,10 +6,25 @@ package com.studymetadata.bean;
  *
  */
 public class SharingBean {
+	private String title = "";
+	private String text = "";
 	private String shortDesc = "";
 	private String longDesc = "";
 	private String learnMore = "";
+	private boolean allowWithoutSharing = false;
 	
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
 	public String getShortDesc() {
 		return shortDesc;
 	}
@@ -28,4 +43,11 @@ public class SharingBean {
 	public void setLearnMore(String learnMore) {
 		this.learnMore = learnMore;
 	}
+	public boolean isAllowWithoutSharing() {
+		return allowWithoutSharing;
+	}
+	public void setAllowWithoutSharing(boolean allowWithoutSharing) {
+		this.allowWithoutSharing = allowWithoutSharing;
+	}
+	
 }

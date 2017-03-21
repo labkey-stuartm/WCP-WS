@@ -1,7 +1,9 @@
 package com.studymetadata.bean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
@@ -10,6 +12,7 @@ public class EligibilityBean {
 	private String type = "";
 	private String tokenTitle = "";
 	private List<QuestionStepStructureBean> test = new ArrayList<QuestionStepStructureBean>(); //<refer Appendix 3 for question structures>
+	private List<HashMap<String,Object>> correctAnswers = new ArrayList<HashMap<String,Object>>();
 	
 	public String getType() {
 		return type;
@@ -28,6 +31,12 @@ public class EligibilityBean {
 	}
 	public void setTest(List<QuestionStepStructureBean> test) {
 		this.test = test;
+	}
+	public List<HashMap<String, Object>> getCorrectAnswers() {
+		return correctAnswers;
+	}
+	public void setCorrectAnswers(List<HashMap<String, Object>> correctAnswers) {
+		this.correctAnswers = correctAnswers;
 	}
 	
 }
