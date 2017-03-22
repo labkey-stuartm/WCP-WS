@@ -11,7 +11,7 @@
 		<property name="show_sql">true</property>
 		<!-- <property name="hibernate.format_sql">true</property> -->
 		<!-- 50 Server -->
-		<property name="hibernate.connection.url">jdbc:mysql://192.168.0.50/fda_hphc</property>
+		<property name="hibernate.connection.url">jdbc:mysql://192.168.0.32/fda_hphc</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password">root</property>
 
@@ -61,6 +61,7 @@
 		<mapping class="com.studymetadata.dto.FormMappingDto" />
 		<mapping class="com.studymetadata.dto.InstructionsDto" />
 		<mapping class="com.studymetadata.dto.StudySequenceDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskCustomFrequenciesDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

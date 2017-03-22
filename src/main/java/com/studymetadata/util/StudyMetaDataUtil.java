@@ -34,13 +34,13 @@ public class StudyMetaDataUtil {
 	public static HashMap configMap = StudyMetaDataUtil.getAppProperties();
 	@SuppressWarnings("unchecked")	
 	private static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
-	
+
 	//Authorization properties file
 	@SuppressWarnings("rawtypes")
 	public static HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
 	@SuppressWarnings("unchecked")	
 	private static HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
-	
+
 
 	/**
 	 * @return HashMap
@@ -794,7 +794,7 @@ public class StudyMetaDataUtil {
 	}
 
 	/*---------------------------------------------FDA util methods------------------------------------------*/
-
+	/*-----------------------------------------FDA WCP WS related methods starts-----------------------------------------*/
 	public static String platformType(String authCredentials) {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Starts");
 		String bundleIdAndAppToken = null;
@@ -823,7 +823,7 @@ public class StudyMetaDataUtil {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Ends");
 		return platform;
 	}
-	
+
 	/**
 	 * @author Mohan
 	 * @return HashMap
@@ -857,7 +857,7 @@ public class StudyMetaDataUtil {
 		}
 		return actualDay;
 	}
-	
+
 	public static String addDaysForDate(String input, int days){
 		String output = "";
 		try {
@@ -872,5 +872,35 @@ public class StudyMetaDataUtil {
 		}
 		return output;
 	}
-	
+
+	public static String addWeeks(String input, int weeks){
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.WEEK_OF_MONTH, weeks);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+
+	public static String addMonths(String input, int months){
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.MONTH, months);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }

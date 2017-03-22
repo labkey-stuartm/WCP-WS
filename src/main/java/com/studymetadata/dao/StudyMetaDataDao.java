@@ -15,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
@@ -25,6 +26,7 @@ import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
 import com.studymetadata.dto.InstructionsDto;
+import com.studymetadata.dto.QuestionnairesCustomFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
@@ -522,25 +524,84 @@ public class StudyMetaDataDao {
 	 * @return ConsentDocumentResponse
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unused")
 	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		ConsentDto consent = null;
 		Integer actualStudyId = null;
+		String consentQuery = "from ConsentDto CDTO where CDTO.studyId=";
+		List<ConsentInfoDto> consentInfoDtoList = null;
 		try{
 			session = sessionFactory.openSession();
 			//get studyId from studies table
 			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			actualStudyId = (Integer) query.uniqueResult();
 			if(actualStudyId != null){
-				/*query = session.createQuery("");
-				consent = (ConsentDto) query.uniqueResult();*/
+				/*if(StringUtils.isNotEmpty(consentVersion)){
+					//get the consent details by consent version and studyId
+					query = session.createQuery(" from ConsentDto CDTO where CDTO.studyId="+actualStudyId+" and CDTO.version="+consentVersion);
+					consent = (ConsentDto) query.uniqueResult();
+				}else if(StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
+					//get the consent details by activityId and activity version
+				}*/
+				
+				if(StringUtils.isNotEmpty(consentVersion)){
+					consentQuery += actualStudyId+" and CDTO.version="+consentVersion;
+				}else{
+					consentQuery += actualStudyId;
+				}
+				query = session.createQuery(consentQuery);
+				consent = (ConsentDto) query.uniqueResult();
+				
+				//check the consentBo is empty or not
 				if( consent != null){
 					ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
-					consentDocumentBean.setContent("");
-					consentDocumentBean.setType(""); // text or html
-					consentDocumentBean.setVersion("");
+					consentDocumentBean.setType("text/html");
+					if(consent.getVersion() != null){
+						consentDocumentBean.setVersion(consent.getVersion().toString());
+					}
+					
+					if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
+						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())==true?"":consent.getConsentDocContent());
+					}else{
+						query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
+						consentInfoDtoList = query.list();
+						String content = "";
+						if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
+							for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
+								if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
+									switch (consentInfoDto.getDisplayTitle()) {
+											case "overview": consentInfoDto.setDisplayTitle("Overview");
+															 break;
+											case "dataGathering": consentInfoDto.setDisplayTitle("Data Gathering");
+											 				 break;
+											case "privacy": consentInfoDto.setDisplayTitle("Privacy");
+											 				 break;
+											case "dataUse": consentInfoDto.setDisplayTitle("Data Use");
+											 				 break;
+											case "timeCommitment": consentInfoDto.setDisplayTitle("Time Commitment");
+											 				 break;
+											case "studySurvey": consentInfoDto.setDisplayTitle("Study Survey");
+											 				 break;
+											case "studyTasks": consentInfoDto.setDisplayTitle("Study Tasks");
+											 				 break;
+											case "withdrawing": consentInfoDto.setDisplayTitle("Withdrawing");
+											 				 break;
+											case "customService": consentInfoDto.setDisplayTitle("Custom Service");
+											 				 break;
+									}
+								}
+
+								content += "<span style=&#34;font-size:20px;&#34;><strong>"
+													+consentInfoDto.getDisplayTitle()
+													+"</strong></span><br/>"
+													+"<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
+													+consentInfoDto.getElaborated()
+													+"</span><br/>";
+							}
+						}
+						consentDocumentBean.setContent(content);
+					}
 					consentDocumentResponse.setConsent(consentDocumentBean);
 				}
 				consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
@@ -616,7 +677,7 @@ public class StudyMetaDataDao {
 						}else{
 							configuration.setEnd(0);
 						}
-						resourcesBean.setStudyId(resourcesDto.getStudyId().toString());
+						resourcesBean.setStudyId(studyId);
 						resourcesBean.setConfiguration(configuration);
 						resourcesBeanList.add(resourcesBean);
 					}
@@ -752,16 +813,20 @@ public class StudyMetaDataDao {
 				if( null != activeTaskDtoList && activeTaskDtoList.size() > 0){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
 						ActivitiesBean activityBean = new ActivitiesBean();
-						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getTaskName())==true?"":activeTaskDto.getTaskName());
+						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getTaskTitle())==true?"":activeTaskDto.getTaskTitle());
 						activityBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
+						
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
-						List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
-						frequencyDetails.setRuns(runDetailsBean);
+						/*if(StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())){
+							frequencyDetails = getFrequencyRunsDetailsForActiveTasks(activeTaskDto, frequencyDetails, session);
+						}*/
+						frequencyDetails = getFrequencyRunsDetailsForActiveTasks(activeTaskDto, frequencyDetails, session);
+						frequencyDetails.setType(StringUtils.isEmpty(activeTaskDto.getFrequency())==true?"":activeTaskDto.getFrequency());
 						activityBean.setFrequency(frequencyDetails);
+						
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
 						activityBean.setStartTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeStart())==true?"":activeTaskDto.getActiveTaskLifetimeStart());
 						activityBean.setEndTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())==true?"":activeTaskDto.getActiveTaskLifetimeEnd());
-						
 						activitiesBeanList.add(activityBean);
 					}
 				}
@@ -776,9 +841,11 @@ public class StudyMetaDataDao {
 						activityBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
 						
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
-						if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd()) && StringUtils.isNotEmpty(questionaire.getDayOfTheWeek())){
-							frequencyDetails = getFrequencyRunsDetails(questionaire);
-						}
+						/*if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
+							
+						}*/
+						frequencyDetails = getFrequencyRunsDetailsForQuestionaires(questionaire, frequencyDetails, session);
+						frequencyDetails.setType(StringUtils.isEmpty(questionaire.getFrequency())==true?"":questionaire.getFrequency());
 						activityBean.setFrequency(frequencyDetails);
 						
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
@@ -806,70 +873,6 @@ public class StudyMetaDataDao {
 		LOGGER.info("INFO: StudyMetaDataDao - studyActivityList() :: Ends");
 		return activityResponse;
 	}
-	
-	/**
-	 * @author Mohan
-	 * @param questionaire
-	 * @return ActivityFrequencyBean
-	 * @throws DAOException
-	 * 
-	 * This method is used to get the frequency details based on the frequncy type selected i.e One Time, Within a Day, Daily, Weekly, Monthly, Manually Schedule
-	 */
-	public ActivityFrequencyBean getFrequencyRunsDetails(QuestionnairesDto questionaire) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetails() :: Starts");
-		ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
-		List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
-		ActivityFrequencyScheduleBean frequencyScheduleBean = new ActivityFrequencyScheduleBean();
-		try{
-			switch (questionaire.getFrequency()) {
-				case StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME: 
-					String questionaireDay = questionaire.getDayOfTheWeek();
-					String questionaireStartDate = questionaire.getStudyLifetimeStart();
-					String dayOfTheWeek = "";
-					String endDate = "";
-					
-					if(questionaireDay.equalsIgnoreCase(StudyMetaDataUtil.getDayByDate(questionaireStartDate))){
-						dayOfTheWeek = questionaireDay;
-					}
-					
-					if(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
-						while(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
-							questionaireStartDate = StudyMetaDataUtil.addDaysForDate(questionaireStartDate, 1);
-							dayOfTheWeek = StudyMetaDataUtil.getDayByDate(questionaireStartDate);
-						}
-					}
-					
-					endDate = StudyMetaDataUtil.addDaysForDate(questionaireStartDate, 1);
-					/*check the current date is after the active task end date or not 
-					if not add the start and end date else send empty start and end date */
-					if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(endDate))){
-						frequencyScheduleBean.setStartTime(questionaireStartDate);
-						frequencyScheduleBean.setEndTime(endDate);
-					}
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
-					break;
-			}
-			runDetailsBean.add(frequencyScheduleBean);
-			frequencyDetails.setRuns(runDetailsBean);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - getFrequencyRunsDetails() :: ERROR", e);
-			e.printStackTrace();
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetails() :: Ends");
-		return frequencyDetails;
-	}
-	
-	
-	
 	
 	/**
 	 * @author Mohan
@@ -1476,6 +1479,160 @@ public class StudyMetaDataDao {
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - multipleBarChartDetails() :: Ends");
 		return configuration;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param questionaire
+	 * @return ActivityFrequencyBean
+	 * @throws DAOException
+	 * 
+	 * This method is used to get the frequency details for Questionaires based on the frequncy type selected i.e One Time, Within a Day, Daily, Weekly, Monthly, Manually Schedule
+	 */
+	public ActivityFrequencyBean getFrequencyRunsDetailsForQuestionaires(QuestionnairesDto questionaire, ActivityFrequencyBean frequencyDetails, Session session) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Starts");
+		List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+		try{
+			switch (questionaire.getFrequency()) {
+				case StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME: 
+					ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
+					oneTimeBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())==true?"":questionaire.getStudyLifetimeStart());
+					oneTimeBean.setEndTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())==true?"":questionaire.getStudyLifetimeEnd());
+					runDetailsBean.add(oneTimeBean);
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
+					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
+						ActivityFrequencyScheduleBean weeklyBean = new ActivityFrequencyScheduleBean();
+						if(questionaire.getRepeatQuestionnaire() != null && questionaire.getRepeatQuestionnaire() > 0){
+							Integer repeatCount = questionaire.getRepeatQuestionnaire();
+							//create the runs frequency list based on the repeat questionaire count
+							String questionaireStartDate = "";
+							String questionaireDay = questionaire.getDayOfTheWeek();
+							while(repeatCount > 0){
+								weeklyBean = new ActivityFrequencyScheduleBean();
+								if(StringUtils.isEmpty(questionaireDay)){
+									questionaireDay = questionaire.getDayOfTheWeek();
+								}
+								if(StringUtils.isEmpty(questionaireStartDate)){
+									questionaireStartDate = questionaire.getStudyLifetimeStart();
+								}
+								if(StringUtils.isEmpty(questionaireStartDate)){
+									questionaireStartDate = questionaire.getStudyLifetimeStart();
+								}
+								
+								String dayOfTheWeek = "";
+								String endDate = "";
+								
+								if(questionaireDay.equalsIgnoreCase(StudyMetaDataUtil.getDayByDate(questionaireStartDate))){
+									dayOfTheWeek = questionaireDay;
+								}
+								
+								if(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
+									while(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
+										questionaireStartDate = StudyMetaDataUtil.addDaysForDate(questionaireStartDate, 1);
+										dayOfTheWeek = StudyMetaDataUtil.getDayByDate(questionaireStartDate);
+									}
+								}
+								
+								endDate = StudyMetaDataUtil.addWeeks(questionaireStartDate, 1);
+								//check the current date is after the active task end date or not 
+								//if not add the start and end date else send empty start and end date 
+								if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(endDate))){
+									weeklyBean.setStartTime(questionaireStartDate);
+									weeklyBean.setEndTime(endDate);
+								}
+								runDetailsBean.add(weeklyBean);
+								questionaireStartDate = endDate;
+								questionaireDay = dayOfTheWeek;
+								repeatCount--;
+							}
+						}else{
+							weeklyBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())==true?"":questionaire.getStudyLifetimeStart());
+							weeklyBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())==true?"":questionaire.getStudyLifetimeEnd());
+							runDetailsBean.add(weeklyBean);
+						}
+					}
+					
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
+					//get the custom frequency details based on the questionaireId
+					List<QuestionnairesCustomFrequenciesDto> manuallyScheduleFrequencyList = null; 
+					query = session.createQuery("from QuestionnairesCustomFrequenciesDto QCFDTO where QCFDTO.questionnairesId="+questionaire.getId());
+					manuallyScheduleFrequencyList = query.list();
+					if(manuallyScheduleFrequencyList != null && manuallyScheduleFrequencyList.size() > 0){
+						for(QuestionnairesCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList){
+							ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
+							manuallyScheduleBean.setEndTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyEndDate())==true?"":customFrequencyDto.getFrequencyEndDate());
+							manuallyScheduleBean.setStartTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyStartDate())==true?"":customFrequencyDto.getFrequencyStartDate());
+							runDetailsBean.add(manuallyScheduleBean);
+						}
+					}
+					break;
+			}
+			frequencyDetails.setRuns(runDetailsBean);
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: ERROR", e);
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Ends");
+		return frequencyDetails;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param activeTask
+	 * @return ActivityFrequencyBean
+	 * @throws DAOException
+	 * 
+	 * This method is used to get the frequency details for ActiveTasks based on the frequncy type selected i.e One Time, Within a Day, Daily, Weekly, Monthly, Manually Schedule
+	 */
+	public ActivityFrequencyBean getFrequencyRunsDetailsForActiveTasks(ActiveTaskDto activeTask, ActivityFrequencyBean frequencyDetails, Session session) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Starts");
+		List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+		try{
+			switch (activeTask.getFrequency()) {
+				case StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME: 
+					ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
+					oneTimeBean.setStartTime(StringUtils.isEmpty(activeTask.getActiveTaskLifetimeStart())==true?"":activeTask.getActiveTaskLifetimeStart());
+					oneTimeBean.setEndTime(StringUtils.isEmpty(activeTask.getActiveTaskLifetimeEnd())==true?"":activeTask.getActiveTaskLifetimeEnd());
+					runDetailsBean.add(oneTimeBean);
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
+					//get the custom frequency details based on the activeTaskId
+					List<ActiveTaskCustomFrequenciesDto> manuallyScheduleFrequencyList = null; 
+					query = session.createQuery("from ActiveTaskCustomFrequenciesDto ATCFDTO where ATCFDTO.activeTaskId="+activeTask.getId());
+					manuallyScheduleFrequencyList = query.list();
+					if(manuallyScheduleFrequencyList != null && manuallyScheduleFrequencyList.size() > 0){
+						for(ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList){
+							ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
+							manuallyScheduleBean.setEndTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyEndDate())==true?"":customFrequencyDto.getFrequencyEndDate());
+							manuallyScheduleBean.setStartTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyStartDate())==true?"":customFrequencyDto.getFrequencyStartDate());
+							runDetailsBean.add(manuallyScheduleBean);
+						}
+					}
+					break;
+			}
+			frequencyDetails.setRuns(runDetailsBean);
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: ERROR", e);
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Ends");
+		return frequencyDetails;
 	}
 	/*-----------------------------Manipulate chart data methods ends----------------------------------*/
 }

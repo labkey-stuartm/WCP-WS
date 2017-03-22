@@ -170,7 +170,8 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		try{
-			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(consentVersion) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
+			/*if(StringUtils.isNotEmpty(studyId) && (StringUtils.isNotEmpty(consentVersion) || StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion))){*/
+			if(StringUtils.isNotEmpty(studyId)){	
 				consentDocumentResponse = studyMetaDataOrchestration.consentDocument(studyId, consentVersion, activityId, activityVersion);
 				if(!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
