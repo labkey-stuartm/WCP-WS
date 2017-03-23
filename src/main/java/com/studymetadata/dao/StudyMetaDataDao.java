@@ -117,10 +117,6 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
 			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
-			}
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
 		return hasValidAuthorization;
@@ -1104,10 +1100,6 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - termsPolicy() :: ERROR", e);
 			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
-			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Ends");
 		return termsPolicyResponse;
@@ -1127,10 +1119,6 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - notifications() :: ERROR", e);
 			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
-			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Ends");
 		return notificationsResponse;
