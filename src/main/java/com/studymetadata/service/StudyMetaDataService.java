@@ -1,6 +1,7 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
+import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.SuccessResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 
@@ -541,6 +543,93 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
 		return null;
 	}
+	
+	/**
+	 * @author Mohan
+	 * @param params
+	 * @param context
+	 * @param response
+	 * @return Object
+	 * 
+	 * This method is used to check for latest app updates
+	 */
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("appUpdates")
+	public Object appUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
+		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
+		String appVersion = "";
+		String os = ""; //ios/android
+		try{
+			try {
+				JSONObject serviceJson = new JSONObject(params);
+				appVersion = serviceJson.getString("appVersion");
+				os = serviceJson.getString("os");
+				System.out.println(appVersion+" : "+os);
+			} catch (Exception e) {
+				LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}
+			System.out.println("Yet to develop");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
+		return null;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param params
+	 * @param context
+	 * @param response
+	 * @return Object
+	 * 
+	 * This method is used to check for study updates
+	 */
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("studyUpdates")
+	public Object studyUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
+		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
+		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
+		String studyId = "";
+		String studyVersion = ""; //current study version in app
+		try{
+			try {
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+				studyVersion = serviceJson.getString("studyVersion");
+				if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)){
+					studyUpdatesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+					Map<String, Object> updates = new HashMap<String, Object>();
+					updates.put("consent", true);
+					updates.put("activities", true);
+					updates.put("resources", true);
+					updates.put("info", true);
+					studyUpdatesResponse.setUpdates(updates);
+					studyUpdatesResponse.setCurrentVersion("1.0");
+					System.out.println(studyId+" : "+studyVersion);
+				}else{
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				}
+			} catch (Exception e) {
+				LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}
+			System.out.println("Yet to develop");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
+		return studyUpdatesResponse;
+	}
+	
 	
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	
