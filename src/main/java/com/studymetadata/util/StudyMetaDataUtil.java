@@ -858,7 +858,7 @@ public class StudyMetaDataUtil {
 		return actualDay;
 	}
 
-	public static String addDaysForDate(String input, int days){
+	public static String addDaysToDate(String input, int days){
 		String output = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
@@ -873,7 +873,7 @@ public class StudyMetaDataUtil {
 		return output;
 	}
 
-	public static String addWeeks(String input, int weeks){
+	public static String addWeeksToDate(String input, int weeks){
 		String output = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
@@ -888,7 +888,7 @@ public class StudyMetaDataUtil {
 		return output;
 	}
 
-	public static String addMonths(String input, int months){
+	public static String addMonthsToDate(String input, int months){
 		String output = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);

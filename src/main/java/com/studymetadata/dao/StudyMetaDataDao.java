@@ -457,26 +457,8 @@ public class StudyMetaDataDao {
 							if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
 								for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
 									if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
-										switch (consentInfoDto.getDisplayTitle()) {
-												case "overview": consentInfoDto.setDisplayTitle("Overview");
-																 break;
-												case "dataGathering": consentInfoDto.setDisplayTitle("Data Gathering");
-												 				 break;
-												case "privacy": consentInfoDto.setDisplayTitle("Privacy");
-												 				 break;
-												case "dataUse": consentInfoDto.setDisplayTitle("Data Use");
-												 				 break;
-												case "timeCommitment": consentInfoDto.setDisplayTitle("Time Commitment");
-												 				 break;
-												case "studySurvey": consentInfoDto.setDisplayTitle("Study Survey");
-												 				 break;
-												case "studyTasks": consentInfoDto.setDisplayTitle("Study Tasks");
-												 				 break;
-												case "withdrawing": consentInfoDto.setDisplayTitle("Withdrawing");
-												 				 break;
-												case "customService": consentInfoDto.setDisplayTitle("Custom Service");
-												 				 break;
-										}
+										//get the actual display title based on the constant 
+										consentInfoDto.setDisplayTitle(getconsentDocumentDisplayTitle(consentInfoDto.getDisplayTitle()));
 									}
 
 									//get the review content from the individual consents
@@ -566,26 +548,8 @@ public class StudyMetaDataDao {
 						if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
 							for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
 								if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
-									switch (consentInfoDto.getDisplayTitle()) {
-											case "overview": consentInfoDto.setDisplayTitle("Overview");
-															 break;
-											case "dataGathering": consentInfoDto.setDisplayTitle("Data Gathering");
-											 				 break;
-											case "privacy": consentInfoDto.setDisplayTitle("Privacy");
-											 				 break;
-											case "dataUse": consentInfoDto.setDisplayTitle("Data Use");
-											 				 break;
-											case "timeCommitment": consentInfoDto.setDisplayTitle("Time Commitment");
-											 				 break;
-											case "studySurvey": consentInfoDto.setDisplayTitle("Study Survey");
-											 				 break;
-											case "studyTasks": consentInfoDto.setDisplayTitle("Study Tasks");
-											 				 break;
-											case "withdrawing": consentInfoDto.setDisplayTitle("Withdrawing");
-											 				 break;
-											case "customService": consentInfoDto.setDisplayTitle("Custom Service");
-											 				 break;
-									}
+									//get the actual display title based on the constant 
+									consentInfoDto.setDisplayTitle(getconsentDocumentDisplayTitle(consentInfoDto.getDisplayTitle()));
 								}
 
 								content += "<span style=&#34;font-size:20px;&#34;><strong>"
@@ -1124,6 +1088,44 @@ public class StudyMetaDataDao {
 		return notificationsResponse;
 	}
 	
+	/*------------------------------Common methods starts------------------------------*/
+	/**
+	 * @author Mohan
+	 * @param displaytitle
+	 * @return consentTitle
+	 */
+	public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
+		String consentTitle = "";
+		try {
+			switch (displaytitle) {
+					case "overview": consentTitle = "Overview";
+									 break;
+					case "dataGathering": consentTitle = "Data Gathering";
+					 				 break;
+					case "privacy": consentTitle = "Privacy";
+					 				 break;
+					case "dataUse": consentTitle = "Data Use";
+					 				 break;
+					case "timeCommitment": consentTitle = "Time Commitment";
+					 				 break;
+					case "studySurvey": consentTitle = "Study Survey";
+					 				 break;
+					case "studyTasks": consentTitle = "Study Tasks";
+					 				 break;
+					case "withdrawing": consentTitle = "Withdrawing";
+					 				 break;
+					case "customService": consentTitle = "Custom Service";
+					 				 break;
+			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataDao - getconsentDocumentDisplayTitle() :: ERROR", e);
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Ends");
+		return consentTitle;
+	}
+	/*------------------------------Common methods starts------------------------------*/
 	/*-----------------------------Activity data methods starts----------------------------------*/
 	/**
 	 * @author Mohan
@@ -1139,7 +1141,7 @@ public class StudyMetaDataDao {
 	 * This method is used to get the Activivty Steps details based on the sequence order no in quationaire steps
 	 */
 	@SuppressWarnings("unchecked")
-	public TreeMap<Integer, StepsStructureBean> getStepsInfoForQuestionaires(String type, List<InstructionsDto> instructionsDtoList, List<QuestionsDto> questionsDtoList, List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap, Session session) throws Exception{
+	public TreeMap<Integer, StepsStructureBean> getStepsInfoForQuestionaires(String type, List<InstructionsDto> instructionsDtoList, List<QuestionsDto> questionsDtoList, List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap, Session session) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - getStepsInfoForQuestionaires() :: Starts");
 		TreeMap<Integer, StepsStructureBean> stepsSequenceOrderTreeMap = new TreeMap<Integer, StepsStructureBean>();
 		try{
@@ -1491,62 +1493,137 @@ public class StudyMetaDataDao {
 				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
-					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
 					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
-						ActivityFrequencyScheduleBean weeklyBean = new ActivityFrequencyScheduleBean();
-						if(questionaire.getRepeatQuestionnaire() != null && questionaire.getRepeatQuestionnaire() > 0){
-							Integer repeatCount = questionaire.getRepeatQuestionnaire();
-							//create the runs frequency list based on the repeat questionaire count
-							String questionaireStartDate = "";
-							String questionaireDay = questionaire.getDayOfTheWeek();
-							while(repeatCount > 0){
-								weeklyBean = new ActivityFrequencyScheduleBean();
-								if(StringUtils.isEmpty(questionaireDay)){
-									questionaireDay = questionaire.getDayOfTheWeek();
-								}
-								if(StringUtils.isEmpty(questionaireStartDate)){
-									questionaireStartDate = questionaire.getStudyLifetimeStart();
-								}
-								if(StringUtils.isEmpty(questionaireStartDate)){
-									questionaireStartDate = questionaire.getStudyLifetimeStart();
-								}
-								
-								String dayOfTheWeek = "";
-								String endDate = "";
-								
-								if(questionaireDay.equalsIgnoreCase(StudyMetaDataUtil.getDayByDate(questionaireStartDate))){
-									dayOfTheWeek = questionaireDay;
-								}
-								
-								if(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
-									while(!questionaireDay.equalsIgnoreCase(dayOfTheWeek)){
-										questionaireStartDate = StudyMetaDataUtil.addDaysForDate(questionaireStartDate, 1);
-										dayOfTheWeek = StudyMetaDataUtil.getDayByDate(questionaireStartDate);
-									}
-								}
-								
-								endDate = StudyMetaDataUtil.addWeeks(questionaireStartDate, 1);
-								//check the current date is after the active task end date or not 
-								//if not add the start and end date else send empty start and end date 
-								if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(endDate))){
-									weeklyBean.setStartTime(questionaireStartDate);
-									weeklyBean.setEndTime(endDate);
-								}
-								runDetailsBean.add(weeklyBean);
-								questionaireStartDate = endDate;
-								questionaireDay = dayOfTheWeek;
-								repeatCount--;
+						Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
+						String questionaireStartDate = questionaire.getStudyLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+							String questionaireEndDate = "";
+							String dayEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							dayEndDate = StudyMetaDataUtil.addDaysToDate(questionaireStartDate, 1);
+							if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
+								flag = true;
 							}
-						}else{
-							weeklyBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())==true?"":questionaire.getStudyLifetimeStart());
-							weeklyBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())==true?"":questionaire.getStudyLifetimeEnd());
-							runDetailsBean.add(weeklyBean);
+							
+							//get the flag for valid start and end time
+							if(flag){
+								questionaireEndDate = dayEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))){
+									questionaireEndDate = questionaire.getStudyLifetimeEnd();
+									skipLoop = true;
+								}
+								dailyBean.setStartTime(questionaireStartDate);
+								dailyBean.setEndTime(questionaireEndDate);
+								runDetailsBean.add(dailyBean);
+								
+								//skip the loop if the enddate of questionaire is before the month end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							questionaireStartDate = dayEndDate;
+							repeatCount--;
 						}
 					}
-					
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
+					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd()) && StringUtils.isNotEmpty(questionaire.getDayOfTheWeek())){
+						Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
+						//create the runs frequency list based on the repeat questionaire count
+						String questionaireDay = questionaire.getDayOfTheWeek();
+						String questionaireStartDate = questionaire.getStudyLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean weeklyBean = new ActivityFrequencyScheduleBean();
+							String questionaireEndDate = "";
+							String day = "";
+							String weekEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							if(questionaireDay.equalsIgnoreCase(StudyMetaDataUtil.getDayByDate(questionaireStartDate))){
+								day = questionaireDay;
+							}
+							
+							if(!questionaireDay.equalsIgnoreCase(day)){
+								while(!questionaireDay.equalsIgnoreCase(day)){
+									questionaireStartDate = StudyMetaDataUtil.addDaysToDate(questionaireStartDate, 1);
+									day = StudyMetaDataUtil.getDayByDate(questionaireStartDate);
+								}
+							}
+							
+							weekEndDate = StudyMetaDataUtil.addWeeksToDate(questionaireStartDate, 1);
+							//check the current date is after the active task end date or not 
+							//if not add the start and end date else send empty start and end date 
+							if((StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate))) || (StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))){
+								flag = true;
+							}
+							
+							//get the flag for valid start and end time
+							if(flag){
+								//check the calculated end date is after the activity actual end date or not
+								questionaireEndDate = weekEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(weekEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(weekEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))){
+									questionaireEndDate = questionaire.getStudyLifetimeEnd();
+									skipLoop = true;
+								}
+								weeklyBean.setStartTime(questionaireStartDate);
+								weeklyBean.setEndTime(questionaireEndDate);
+								runDetailsBean.add(weeklyBean);
+								
+								//skip the loop if the enddate of questionaire is before the week end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							questionaireStartDate = weekEndDate;
+							questionaireDay = day;
+							repeatCount--;
+						}
+					}
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
+					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
+						Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
+						String questionaireStartDate = questionaire.getStudyLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean monthlyBean = new ActivityFrequencyScheduleBean();
+							String questionaireEndDate = "";
+							String monthEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							monthEndDate = StudyMetaDataUtil.addMonthsToDate(questionaireStartDate, 1);
+							if((StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate))) || (StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))){
+								flag = true;
+							}
+							
+							//get the flag for valid start and end time
+							if(flag){
+								//check the calculated end date is after the activity actual end date or not
+								questionaireEndDate = monthEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(monthEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(monthEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))){
+									questionaireEndDate = questionaire.getStudyLifetimeEnd();
+									skipLoop = true;
+								}
+								monthlyBean.setStartTime(questionaireStartDate);
+								monthlyBean.setEndTime(questionaireEndDate);
+								runDetailsBean.add(monthlyBean);
+								
+								//skip the loop if the enddate of questionaire is before the month end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							questionaireStartDate = monthEndDate;
+							repeatCount--;
+						}
+					}
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
 					//get the custom frequency details based on the questionaireId
@@ -1594,10 +1671,138 @@ public class StudyMetaDataDao {
 				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
+					if(StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())){
+						Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
+						String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+							String activeTaskEndDate = "";
+							String dayEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							dayEndDate = StudyMetaDataUtil.addDaysToDate(activeTaskStartDate, 1);
+							if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
+								flag = true;
+							}
+							
+							//get the flag for valid start and end time
+							if(flag){
+								//check the calculated end date is after the activity actual end date or not
+								activeTaskEndDate = dayEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd())))){
+									activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
+									skipLoop = true;
+								}
+								dailyBean.setStartTime(activeTaskStartDate);
+								dailyBean.setEndTime(activeTaskEndDate);
+								runDetailsBean.add(dailyBean);
+								
+								//skip the loop if the enddate of activeTask is before the month end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							activeTaskStartDate = dayEndDate;
+							repeatCount--;
+						}
+					}
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
+					if(StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd()) && StringUtils.isNotEmpty(activeTask.getDayOfTheWeek())){
+						Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
+						//create the runs frequency list based on the repeat activeTask count
+						String activeTaskDay = activeTask.getDayOfTheWeek();
+						String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean weeklyBean = new ActivityFrequencyScheduleBean();
+							String activeTaskEndDate = "";
+							String day = "";
+							String weekEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							if(activeTaskDay.equalsIgnoreCase(StudyMetaDataUtil.getDayByDate(activeTaskStartDate))){
+								day = activeTaskDay;
+							}
+							
+							if(!activeTaskDay.equalsIgnoreCase(day)){
+								while(!activeTaskDay.equalsIgnoreCase(day)){
+									activeTaskStartDate = StudyMetaDataUtil.addDaysToDate(activeTaskStartDate, 1);
+									day = StudyMetaDataUtil.getDayByDate(activeTaskStartDate);
+								}
+							}
+							
+							weekEndDate = StudyMetaDataUtil.addWeeksToDate(activeTaskStartDate, 1);
+							//check the current date is after the active task end date or not 
+							//if not add the start and end date else send empty start and end date 
+							if((StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate))) || (StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))){
+								flag = true;
+							}
+							
+							//get the flag for valid start and end time
+							if(flag){
+								//check the calculated end date is after the activity actual end date or not
+								activeTaskEndDate = weekEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(weekEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(weekEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd())))){
+									activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
+									skipLoop = true;
+								}
+								weeklyBean.setStartTime(activeTaskStartDate);
+								weeklyBean.setEndTime(activeTaskEndDate);
+								runDetailsBean.add(weeklyBean);
+								
+								//skip the loop if the enddate of activeTask is before the week end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							activeTaskStartDate = weekEndDate;
+							activeTaskDay = day;
+							repeatCount--;
+						}
+					}
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
+					if(StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())){
+						Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
+						String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
+						while(repeatCount > 0){
+							ActivityFrequencyScheduleBean monthlyBean = new ActivityFrequencyScheduleBean();
+							String activeTaskEndDate = "";
+							String monthEndDate = "";
+							boolean flag = false;
+							boolean skipLoop = false;
+							
+							monthEndDate = StudyMetaDataUtil.addMonthsToDate(activeTaskStartDate, 1);
+							if((StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate))) || (StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))){
+								flag = true;
+							}
+							
+							//get the flag for valid start and end time
+							if(flag){
+								//check the calculated end date is after the activity actual end date or not
+								activeTaskEndDate = monthEndDate;
+								if((StudyMetaDataConstants.SDF_DATE.parse(monthEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(monthEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd())))){
+									activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
+									skipLoop = true;
+								}
+								monthlyBean.setStartTime(activeTaskStartDate);
+								monthlyBean.setEndTime(activeTaskEndDate);
+								runDetailsBean.add(monthlyBean);
+								
+								//skip the loop if the enddate of activeTask is before the month end date
+								if(skipLoop){
+									break;
+								}
+							}
+							
+							activeTaskStartDate = monthEndDate;
+							repeatCount--;
+						}
+					}
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
 					//get the custom frequency details based on the activeTaskId
