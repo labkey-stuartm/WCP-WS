@@ -28,6 +28,7 @@ import com.studymetadata.dto.GatewayWelcomeInfoDto;
 import com.studymetadata.dto.InstructionsDto;
 import com.studymetadata.dto.QuestionnairesCustomFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesDto;
+import com.studymetadata.dto.QuestionnairesFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.dto.ReferenceTablesDto;
@@ -769,6 +770,7 @@ public class StudyMetaDataDao {
 			if(actualStudyId != null){
 				//get the Activities (type : Active Task list) by studyId
 				query = session.getNamedQuery("activeTaskByStudyId").setInteger("studyId", actualStudyId);
+				/*query = session.createQuery(" from ActiveTaskDto ATDTO where ATDTO.studyId in ( select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyId="+actualStudyId+" and SSDTO.studyExcActiveTask='Y' )");*/
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && activeTaskDtoList.size() > 0){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
@@ -793,6 +795,7 @@ public class StudyMetaDataDao {
 				
 				//get the Activities (type : Questionaires list) by studyId
 				query = session.getNamedQuery("questionnairesListByStudyId").setInteger("studyId", actualStudyId);
+				/*query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.studyId in ( select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyId="+actualStudyId+" and SSDTO.studyExcQuestionnaries='Y' )");*/
 				questionnairesList = query.list();
 				if( questionnairesList != null && questionnairesList.size() > 0){
 					for(QuestionnairesDto questionaire : questionnairesList){
@@ -1482,6 +1485,7 @@ public class StudyMetaDataDao {
 	public ActivityFrequencyBean getFrequencyRunsDetailsForQuestionaires(QuestionnairesDto questionaire, ActivityFrequencyBean frequencyDetails, Session session) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Starts");
 		List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<ActivityFrequencyScheduleBean>();
+		List<QuestionnairesFrequenciesDto> dailyFrequencyList = null;
 		try{
 			switch (questionaire.getFrequency()) {
 				case StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME: 
@@ -1490,10 +1494,23 @@ public class StudyMetaDataDao {
 					oneTimeBean.setEndTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())==true?"":questionaire.getStudyLifetimeEnd());
 					runDetailsBean.add(oneTimeBean);
 					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
-					break;
+				/*case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
+					break;*/
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
 					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
+						//get the list of frequency time based on the questionaire id 
+						/*query = session.createQuery(" from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId());
+						dailyFrequencyList = query.list();
+						if(dailyFrequencyList != null && dailyFrequencyList.size() > 0){
+							for(QuestionnairesFrequenciesDto questionnaireFrequencyDto : dailyFrequencyList){
+								ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+								dailyBean.setStartTime("");
+								dailyBean.setEndTime("");
+								runDetailsBean.add(dailyBean);
+							}
+						}*/
+						
+						//old approach was replaced
 						Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
 						String questionaireStartDate = questionaire.getStudyLifetimeStart();
 						while(repeatCount > 0){
@@ -1668,8 +1685,8 @@ public class StudyMetaDataDao {
 					oneTimeBean.setEndTime(StringUtils.isEmpty(activeTask.getActiveTaskLifetimeEnd())==true?"":activeTask.getActiveTaskLifetimeEnd());
 					runDetailsBean.add(oneTimeBean);
 					break;
-				case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
-					break;
+				/*case StudyMetaDataConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
+					break;*/
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
 					if(StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())){
 						Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
