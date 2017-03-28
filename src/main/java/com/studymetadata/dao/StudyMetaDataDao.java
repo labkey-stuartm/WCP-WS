@@ -112,7 +112,7 @@ public class StudyMetaDataDao {
 			final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 			final String bundleId = tokenizer.nextToken();
 			final String appToken = tokenizer.nextToken();
-			if((bundleId.equals(authPropMap.get("android.bundleid.pregnent.women")) && appToken.equals(authPropMap.get("android.apptoken.pregnent.women"))) || (bundleId.equals(authPropMap.get("ios.bundleid.pregnent.women")) && appToken.equals(authPropMap.get("ios.apptoken.pregnent.women")))){
+			if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken")))){
 				hasValidAuthorization = true;
 			}
 		}catch(Exception e){
