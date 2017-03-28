@@ -33,6 +33,12 @@ public class ActiveTaskFrequencyDto implements Serializable{
 	
 	@Column(name="frequency_time")
 	private String frequencyTime;
+	
+	@Column(name="is_launch_study")
+	private boolean isLaunchStudy;
+	
+	@Column(name="is_study_life_time")
+	private boolean isStudyLifeTime;
 
 	public Integer getId() {
 		return id;
@@ -64,6 +70,22 @@ public class ActiveTaskFrequencyDto implements Serializable{
 
 	public void setFrequencyTime(String frequencyTime) {
 		this.frequencyTime = frequencyTime;
+	}
+
+	public boolean isLaunchStudy() {
+		return isLaunchStudy;
+	}
+
+	public void setLaunchStudy(boolean isLaunchStudy) {
+		this.isLaunchStudy = isLaunchStudy;
+	}
+
+	public boolean isStudyLifeTime() {
+		return isStudyLifeTime;
+	}
+
+	public void setStudyLifeTime(boolean isStudyLifeTime) {
+		this.isStudyLifeTime = isStudyLifeTime;
 	}
 	
 }

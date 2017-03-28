@@ -902,5 +902,22 @@ public class StudyMetaDataUtil {
 		}
 		return output;
 	}
+	
+	public static String getFormattedDateTimeZone(String input, String inputFormat, String outputFormat){
+		String output = "";
+		try{
+			if(StringUtils.isNotEmpty(input)){
+				SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
+				Date inputDate = inputSDF.parse(input);
+				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat); //yyyy-MM-dd'T'hh:mm:ssZ
+				//outputSDF.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+				//outputSDF.setTimeZone(TimeZone.getDefault()); //TimeZone.getTimeZone("CST")
+				output = outputSDF.format(inputDate);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return output;
+	}
 	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }

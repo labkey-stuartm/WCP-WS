@@ -17,6 +17,7 @@ import org.hibernate.Transaction;
 
 import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
 import com.studymetadata.dto.ActiveTaskDto;
+import com.studymetadata.dto.ActiveTaskFrequencyDto;
 import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
@@ -1499,51 +1500,50 @@ public class StudyMetaDataDao {
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
 					if(StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart()) && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())){
 						//get the list of frequency time based on the questionaire id 
-						/*query = session.createQuery(" from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId());
+						query = session.createQuery(" from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId());
 						dailyFrequencyList = query.list();
 						if(dailyFrequencyList != null && dailyFrequencyList.size() > 0){
-							for(QuestionnairesFrequenciesDto questionnaireFrequencyDto : dailyFrequencyList){
-								ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
-								dailyBean.setStartTime("");
-								dailyBean.setEndTime("");
-								runDetailsBean.add(dailyBean);
-							}
-						}*/
-						
-						//old approach was replaced
-						Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
-						String questionaireStartDate = questionaire.getStudyLifetimeStart();
-						while(repeatCount > 0){
-							ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
-							String questionaireEndDate = "";
-							String dayEndDate = "";
-							boolean flag = false;
-							boolean skipLoop = false;
-							
-							dayEndDate = StudyMetaDataUtil.addDaysToDate(questionaireStartDate, 1);
-							if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
-								flag = true;
-							}
-							
-							//get the flag for valid start and end time
-							if(flag){
-								questionaireEndDate = dayEndDate;
-								if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))){
-									questionaireEndDate = questionaire.getStudyLifetimeEnd();
-									skipLoop = true;
-								}
-								dailyBean.setStartTime(questionaireStartDate);
-								dailyBean.setEndTime(questionaireEndDate);
-								runDetailsBean.add(dailyBean);
+							//old approach was replaced
+							Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
+							String questionaireStartDate = questionaire.getStudyLifetimeStart();
+							while(repeatCount > 0){
+								//ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+								String questionaireEndDate = "";
+								String dayEndDate = "";
+								boolean flag = false;
+								boolean skipLoop = false;
 								
-								//skip the loop if the enddate of questionaire is before the month end date
-								if(skipLoop){
-									break;
+								dayEndDate = StudyMetaDataUtil.addDaysToDate(questionaireStartDate, 1);
+								if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
+									flag = true;
 								}
+								
+								//get the flag for valid start and end time
+								if(flag){
+									questionaireEndDate = dayEndDate;
+									if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))){
+										questionaireEndDate = questionaire.getStudyLifetimeEnd();
+										skipLoop = true;
+									}
+									
+									//get the frequency time for the daily activity
+									for(QuestionnairesFrequenciesDto questionnaireFrequencyDto : dailyFrequencyList){
+										ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+										dailyBean.setStartTime(questionaireStartDate+" "+questionnaireFrequencyDto.getFrequencyTime());
+										dailyBean.setEndTime(questionaireEndDate+" "+questionnaireFrequencyDto.getFrequencyTime());
+										/*dailyBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaireStartDate+" "+questionnaireFrequencyDto.getFrequencyTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+										dailyBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaireEndDate+" "+questionnaireFrequencyDto.getFrequencyTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));*/
+										runDetailsBean.add(dailyBean);
+									}
+									//skip the loop if the enddate of questionaire is before the month end date
+									if(skipLoop){
+										break;
+									}
+								}
+								
+								questionaireStartDate = dayEndDate;
+								repeatCount--;
 							}
-							
-							questionaireStartDate = dayEndDate;
-							repeatCount--;
 						}
 					}
 					break;
@@ -1689,40 +1689,51 @@ public class StudyMetaDataDao {
 					break;*/
 				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
 					if(StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart()) && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())){
-						Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
-						String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
-						while(repeatCount > 0){
-							ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
-							String activeTaskEndDate = "";
-							String dayEndDate = "";
-							boolean flag = false;
-							boolean skipLoop = false;
-							
-							dayEndDate = StudyMetaDataUtil.addDaysToDate(activeTaskStartDate, 1);
-							if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
-								flag = true;
-							}
-							
-							//get the flag for valid start and end time
-							if(flag){
-								//check the calculated end date is after the activity actual end date or not
-								activeTaskEndDate = dayEndDate;
-								if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd())))){
-									activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
-									skipLoop = true;
-								}
-								dailyBean.setStartTime(activeTaskStartDate);
-								dailyBean.setEndTime(activeTaskEndDate);
-								runDetailsBean.add(dailyBean);
+						List<ActiveTaskFrequencyDto> activeTaskDailyFrequencyList = null;
+						query = session.createQuery(" from ActiveTaskFrequencyDto ATFDTO where ATFDTO.activeTaskId="+activeTask.getId());
+						activeTaskDailyFrequencyList = query.list();
+						if(activeTaskDailyFrequencyList != null && activeTaskDailyFrequencyList.size() > 0){
+							Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
+							String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
+							while(repeatCount > 0){
+								String activeTaskEndDate = "";
+								String dayEndDate = "";
+								boolean flag = false;
+								boolean skipLoop = false;
 								
-								//skip the loop if the enddate of activeTask is before the month end date
-								if(skipLoop){
-									break;
+								dayEndDate = StudyMetaDataUtil.addDaysToDate(activeTaskStartDate, 1);
+								if(StudyMetaDataConstants.SDF_DATE.parse(StudyMetaDataUtil.getCurrentDate()).before(StudyMetaDataConstants.SDF_DATE.parse(dayEndDate))){
+									flag = true;
 								}
+								
+								//get the flag for valid start and end time
+								if(flag){
+									//check the calculated end date is after the activity actual end date or not
+									activeTaskEndDate = dayEndDate;
+									if((StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).equals(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd()))) || (StudyMetaDataConstants.SDF_DATE.parse(dayEndDate).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeEnd())))){
+										activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
+										skipLoop = true;
+									}
+									
+									//get the frequency time for the daily activity
+									for(ActiveTaskFrequencyDto activeTaskFrequency : activeTaskDailyFrequencyList){
+										ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+										dailyBean.setStartTime(activeTaskStartDate+" "+activeTaskFrequency.getFrequencyTime());
+										dailyBean.setEndTime(activeTaskEndDate+" "+activeTaskFrequency.getFrequencyTime());
+										/*dailyBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskStartDate+" "+activeTaskFrequency.getFrequencyTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+										dailyBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskEndDate+" "+activeTaskFrequency.getFrequencyTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));*/
+										runDetailsBean.add(dailyBean);
+									}
+									
+									//skip the loop if the enddate of activeTask is before the month end date
+									if(skipLoop){
+										break;
+									}
+								}
+								
+								activeTaskStartDate = dayEndDate;
+								repeatCount--;
 							}
-							
-							activeTaskStartDate = dayEndDate;
-							repeatCount--;
 						}
 					}
 					break;
