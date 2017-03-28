@@ -68,6 +68,7 @@ import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
 import com.studymetadata.bean.SettingsBean;
 import com.studymetadata.bean.SharingBean;
+import com.studymetadata.bean.StatisticsBean;
 import com.studymetadata.bean.StudyBean;
 import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
@@ -482,6 +483,8 @@ public class StudyMetaDataDao {
 				
 					eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 				}
+			}else{
+				eligibilityConsentResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
@@ -567,6 +570,8 @@ public class StudyMetaDataDao {
 					consentDocumentResponse.setConsent(consentDocumentBean);
 				}
 				consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				consentDocumentResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - consentDocument() :: ERROR", e);
@@ -646,6 +651,8 @@ public class StudyMetaDataDao {
 					resourcesResponse.setResources(resourcesBeanList);
 				}
 				resourcesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				resourcesResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - resourcesForStudy() :: ERROR", e);
@@ -736,6 +743,8 @@ public class StudyMetaDataDao {
 				}
 				
 				studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				studyInfoResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyInfo() :: ERROR", e);
@@ -825,6 +834,8 @@ public class StudyMetaDataDao {
 					activityResponse.setActivities(activitiesBeanList);
 				}
 				activityResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				activityResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyActivityList() :: ERROR", e);
@@ -984,6 +995,8 @@ public class StudyMetaDataDao {
 					activityMetaDataResponse.setActivity(activityStructureBean);
 					activityMetaDataResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 				}
+			}else{
+				activityMetaDataResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyActivityMetadata() :: ERROR", e);
@@ -1037,6 +1050,10 @@ public class StudyMetaDataDao {
 				cbean5.setConfiguration(multipleBarChartDetails());
 				charts.add(cbean5);*/
 				dashboard.setCharts(charts);
+				List<StatisticsBean> statisticsList = new ArrayList<StatisticsBean>();
+				StatisticsBean statistics = new StatisticsBean();
+				statisticsList.add(statistics);
+				dashboard.setStatistics(statisticsList);
 				studyDashboardResponse.setDashboard(dashboard);
 				studyDashboardResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}

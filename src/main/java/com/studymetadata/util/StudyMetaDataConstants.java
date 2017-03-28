@@ -12,6 +12,8 @@ public interface StudyMetaDataConstants {
 	public final String ACCOUNT_DEACTIVATE_ERROR_MSG = "Your account has been deactivated.";
 	public final String INVALID_INPUT_ERROR_MSG = "Invalid input.";
 	public final String LOGIN_FAILURE = "Please check your login credentials.";
+	public final String INVALID_STUDY_ID = "StudyId not exists";
+	public final String INVALID_ACTIVITY_ID = "ActivityId not exists";
 	
 	SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");

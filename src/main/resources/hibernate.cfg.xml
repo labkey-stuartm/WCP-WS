@@ -11,9 +11,9 @@
 		<property name="show_sql">true</property>
 		
 		<!-- 50 Server -->
-		<property name="hibernate.connection.url">jdbc:mysql://192.168.0.50/fda_hphc</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.connection.password">root</property>
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://${db.url}</property>
+		<property name="hibernate.connection.username">${db.username}</property>
+		<property name="hibernate.connection.password">${db.password}</property> -->
 
 		<property name="hibernate.c3p0.min_size">5</property>
 		<property name="hibernate.c3p0.max_size">20</property>

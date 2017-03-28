@@ -4,6 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 	<display-name>StudyMetaData</display-name>
+	<listener>
+		<listener-class>com.studymetadata.util.ServletContextHolder</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>StudyMetaDataController REST Service</servlet-name>
 		<servlet-class>com.studymetadata.web.servlet.StudyMetaDataController</servlet-class>

@@ -51,13 +51,12 @@ public class StudyMetaDataService {
 
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	/**
+	 * This Method is used to getGatewayAppResourcesInfo
 	 * @author Mohan
 	 * @param authorization
 	 * @param context
 	 * @param response
 	 * @return GatewayInfoResponse
-	 * 
-	 * This Method is used to getGatewayAppResourcesInfo
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -83,13 +82,12 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This Method is used to getStudyList
 	 * @author Mohan
 	 * @param authorization
 	 * @param context
 	 * @param response
 	 * @return StudyResponse
-	 * 
-	 * This Method is used to getStudyList
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -115,14 +113,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getEligibilityConsentMetadata
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return EligibilityConsentResponse
-	 * 
-	 * This method is used to getEligibilityConsentMetadata
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -135,8 +132,13 @@ public class StudyMetaDataService {
 			if(StringUtils.isNotEmpty(studyId)){
 				eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
 				if(!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					if(eligibilityConsentResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}else{
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -153,6 +155,7 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getConsentDocument Details
 	 * @author Mohan
 	 * @param studyId
 	 * @param consentVersion
@@ -161,8 +164,6 @@ public class StudyMetaDataService {
 	 * @param context
 	 * @param response
 	 * @return ConsentDocumentResponse
-	 * 
-	 * This method is used to getConsentDocument Details
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -176,8 +177,13 @@ public class StudyMetaDataService {
 			if(StringUtils.isNotEmpty(studyId)){	
 				consentDocumentResponse = studyMetaDataOrchestration.consentDocument(studyId, consentVersion, activityId, activityVersion);
 				if(!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					if(consentDocumentResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}else{
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -194,14 +200,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getResourcesForStudy
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return ResourcesResponse
-	 * 
-	 * This method is used to getResourcesForStudy
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -214,8 +219,13 @@ public class StudyMetaDataService {
 			if(StringUtils.isNotEmpty(studyId)){
 				resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
 				if(!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					if(resourcesResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}else{
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -232,14 +242,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getStudyInfo
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return StudyInfoResponse
-	 * 
-	 * This method is used to getStudyInfo
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -252,8 +261,13 @@ public class StudyMetaDataService {
 			if(StringUtils.isNotEmpty(studyId)){
 				studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
 				if(!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					if(studyInfoResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}else{
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -271,14 +285,13 @@ public class StudyMetaDataService {
 	
 	
 	/**
+	 * This method is used to getStudyActivityList
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return ActivityResponse
-	 * 
-	 * This method is used to getStudyActivityList
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -291,8 +304,13 @@ public class StudyMetaDataService {
 			if(StringUtils.isNotEmpty(studyId)){
 				activityResponse = studyMetaDataOrchestration.studyActivityList(studyId);
 				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					if(activityResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}else{
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -310,6 +328,7 @@ public class StudyMetaDataService {
 	
 	
 	/**
+	 * This method is used to getStudyActivityMetadata
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
@@ -318,8 +337,6 @@ public class StudyMetaDataService {
 	 * @param context
 	 * @param response
 	 * @return ActivityMetaDataResponse
-	 * 
-	 * This method is used to getStudyActivityMetadata
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -350,14 +367,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getStudyDashboardInfo
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return StudyDashboardResponse
-	 * 
-	 * This method is used to getStudyDashboardInfo
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -388,14 +404,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to getTermsPolicy
 	 * @author Mohan
 	 * @param authorization
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return TermsPolicyResponse
-	 * 
-	 * This method is used to getTermsPolicy
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -426,14 +441,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 *  This method is used to getNotifications
 	 * @author Mohan
 	 * @param authorization
 	 * @param skip
 	 * @param context
 	 * @param response
 	 * @return NotificationsResponse
-	 * 
-	 * This method is used to getNotifications
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -464,14 +478,13 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to save feedback
 	 * @author Mohan
 	 * @param subject
 	 * @param body
 	 * @param context
 	 * @param response
 	 * @return Object
-	 * 
-	 * This method is used to save feedback
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -503,13 +516,12 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to save the contact us details
 	 * @author Mohan
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return Object
-	 * 
-	 * This method is used to save the contact us details
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -545,13 +557,12 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to check for latest app updates
 	 * @author Mohan
 	 * @param params
 	 * @param context
 	 * @param response
 	 * @return Object
-	 * 
-	 * This method is used to check for latest app updates
 	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -581,13 +592,12 @@ public class StudyMetaDataService {
 	}
 	
 	/**
+	 * This method is used to check for study updates
 	 * @author Mohan
 	 * @param params
 	 * @param context
 	 * @param response
 	 * @return Object
-	 * 
-	 * This method is used to check for study updates
 	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
