@@ -1056,6 +1056,8 @@ public class StudyMetaDataDao {
 				dashboard.setStatistics(statisticsList);
 				studyDashboardResponse.setDashboard(dashboard);
 				studyDashboardResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				studyDashboardResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyDashboardInfo() :: ERROR", e);
