@@ -62,6 +62,12 @@
 		<mapping class="com.studymetadata.dto.InstructionsDto" />
 		<mapping class="com.studymetadata.dto.StudySequenceDto" />
 		<mapping class="com.studymetadata.dto.ActiveTaskCustomFrequenciesDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskFormulaDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskListDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskMasterAttributeDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskSelectOptionsDto" />
+		<mapping class="com.studymetadata.dto.ConsentMasterInfoDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

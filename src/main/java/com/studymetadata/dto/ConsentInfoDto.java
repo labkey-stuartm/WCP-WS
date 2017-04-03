@@ -76,6 +76,12 @@ public class ConsentInfoDto implements Serializable{
 	
 	@Column(name = "display_title")
 	private String displayTitle;
+	
+	@Column(name="status")
+	private Boolean status;
+	
+	@Column(name = "consent_item_title_id")
+	private Integer consentItemTitleId;
 
 	public Integer getId() {
 		return id;
@@ -203,6 +209,22 @@ public class ConsentInfoDto implements Serializable{
 
 	public void setDisplayTitle(String displayTitle) {
 		this.displayTitle = displayTitle;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public Integer getConsentItemTitleId() {
+		return consentItemTitleId;
+	}
+
+	public void setConsentItemTitleId(Integer consentItemTitleId) {
+		this.consentItemTitleId = consentItemTitleId;
 	}
 	
 }

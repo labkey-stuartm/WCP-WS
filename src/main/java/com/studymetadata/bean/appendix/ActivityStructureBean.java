@@ -3,13 +3,39 @@ package com.studymetadata.bean.appendix;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.studymetadata.bean.ActivityMetadataBean;
+import com.studymetadata.bean.ActivityStepsBean;
+
 /**
  * 
  * @author Mohan
  *
  */
 public class ActivityStructureBean {
-	private String type="";
+	private String type = "";
+	private ActivityMetadataBean metadata = new ActivityMetadataBean();
+	private List<ActivityStepsBean> steps = new ArrayList<ActivityStepsBean>();
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public ActivityMetadataBean getMetadata() {
+		return metadata;
+	}
+	public void setMetadata(ActivityMetadataBean metadata) {
+		this.metadata = metadata;
+	}
+	public List<ActivityStepsBean> getSteps() {
+		return steps;
+	}
+	public void setSteps(List<ActivityStepsBean> steps) {
+		this.steps = steps;
+	}
+	
+	/*private String type="";
 	private InfoStructureBean info = new InfoStructureBean();
 	private QuestionnaireConfigurationStructureBean questionnaireConfiguration = new QuestionnaireConfigurationStructureBean();
 	private List<StepsStructureBean> steps = new ArrayList<StepsStructureBean>();
@@ -53,6 +79,6 @@ public class ActivityStructureBean {
 	public void setResourceContext(
 			List<ResourceContextStructureBean> resourceContext) {
 		this.resourceContext = resourceContext;
-	}
+	}*/
 	
 }

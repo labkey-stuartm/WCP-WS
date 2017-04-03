@@ -25,7 +25,7 @@ public interface StudyMetaDataConstants {
 	SimpleDateFormat DISPLAY_DATE = new SimpleDateFormat("EEE, MMM dd, yyyy");
 	SimpleDateFormat DISPLAY_DATE_TIME = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' hh:mm a");
 	SimpleDateFormat DISPLAY_DATE_TIME_MIN = new SimpleDateFormat("dd MMM yyyy  HH:mm:ss");
-	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
 	public static final String PASSWORD_SALT = "BTCSoft";
 	
@@ -68,7 +68,7 @@ public interface StudyMetaDataConstants {
 	public static final String CONSENT_DOC_TYPE_NEW = "New";
 	public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
 	
-	public static final String TYPE_ACTIVE_TASK = "active task";
+	public static final String TYPE_ACTIVE_TASK = "task";
 	public static final String TYPE_QUESTIONNAIRE = "questionnaire";
 	
 	public static final String TYPE_UTF8 = "UTF-8";
@@ -111,4 +111,17 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_WITHDRAW_CONFIG_DELETE_DATA = "delete_data";
 	public static final String STUDY_WITHDRAW_CONFIG_ASK_USER = "ask_user";
 	public static final String STUDY_WITHDRAW_CONFIG_NO_ACTION = "no_action";
+	
+	//task time range options
+    public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
+    public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
+    public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
+    public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
+    public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
+    public static final String RUN_BASED = "Run-based";
+    
+    //active task type
+    public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
+	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
+	public static final String ACTIVITY_AT_TOWER_OF_HANOI = "towerOfHanoi";
 }
