@@ -18,6 +18,7 @@ import org.hibernate.Transaction;
 import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ActiveTaskFrequencyDto;
+import com.studymetadata.dto.ActiveTaskStepsDto;
 import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
@@ -678,7 +679,6 @@ public class StudyMetaDataDao {
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		StudyDto studyDto = null;
 		List<StudyPageDto> StudyPageDtoList = null;
-		BrandingDto brandingDto = null;
 		Integer actualStudyId = null;
 		try{
 			session = sessionFactory.openSession();
@@ -861,18 +861,20 @@ public class StudyMetaDataDao {
 	public ActivityMetaDataResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyActivityMetadata() :: Starts");
 		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
-		String[] activityInfoArray = null;
 		ActivityStructureBean activityStructureBean = new ActivityStructureBean();
 		InfoStructureBean infoBean = new InfoStructureBean();
 		QuestionnaireConfigurationStructureBean questionnaireConfig = new QuestionnaireConfigurationStructureBean();
 		List<String> randomizationSet = new ArrayList<String>();
-		
+		Map<String, Integer> sequenceNoMap = new HashMap<String, Integer>();
+		TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap = new TreeMap<Integer, StepsStructureBean>();
+		List<ResourceContextStructureBean> resourceContextList = new ArrayList<ResourceContextStructureBean>();
+		List<StepsStructureBean> steps = new ArrayList<StepsStructureBean>();
 		ActiveTaskDto activeTaskDto = null;
 		QuestionnairesDto questionnaireDto = null;
-		List<ResourceContextStructureBean> resourceContextList = new ArrayList<ResourceContextStructureBean>();
-		TreeMap<Integer, StepsStructureBean> stepsSequenceTreeMap = new TreeMap<Integer, StepsStructureBean>();
-		List<StepsStructureBean> steps = new ArrayList<StepsStructureBean>();
 		Integer actualStudyId = null;
+		String[] activityInfoArray = null;
+		List<QuestionnairesStepsDto> questionaireStepsList = null;
+		List<ActiveTaskStepsDto> activeTaskStepsList = null;
 		try{
 			session = sessionFactory.openSession();
 			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
@@ -900,6 +902,14 @@ public class StudyMetaDataDao {
 							/*questionnaireConfig.setBranching();
 							questionnaireConfig.setFrequency();
 							questionnaireConfig.setRandomization();*/
+							
+							/*query = session.createQuery("from ActiveTaskStepsDto ATSDTO where ATSDTO.activeTaskId="+activeTaskDto.getId()+" ORDER BY ATSDTO.sequenceNo");
+							activeTaskStepsList = query.list();
+							if(activeTaskStepsList != null && activeTaskStepsList.size() > 0){
+								for(ActiveTaskStepsDto activeTaskStepsDto : activeTaskStepsList){
+									
+								}
+							}*/
 							activityStructureBean.setQuestionnaireConfiguration(questionnaireConfig);
 							
 							activityStructureBean.setRandomizationSets(randomizationSet);
@@ -925,10 +935,7 @@ public class StudyMetaDataDao {
 							questionnaireConfig.setFrequency();
 							questionnaireConfig.setRandomization();*/
 							
-							Map<String, Integer> sequenceNoMap = new HashMap<String, Integer>();
-							
-							List<QuestionnairesStepsDto> questionaireStepsList = null;
-							query = session.createQuery(" from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo ");
+							query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo");
 							questionaireStepsList = query.list();
 							if(questionaireStepsList != null && questionaireStepsList.size() > 0){
 								List<Integer> instructionIdList = new ArrayList<Integer>();
@@ -1082,8 +1089,8 @@ public class StudyMetaDataDao {
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
 			termsPolicyResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			termsPolicyResponse.setPrivacy("http://192.168.0.50:8080/fdaImages/studyHtml/privacyAndPolicy.html");
-			termsPolicyResponse.setTerms("http://192.168.0.50:8080/fdaImages/studyHtml/terms.html");
+			termsPolicyResponse.setPrivacy(propMap.get("fda.smd.pricaypolicy"));
+			termsPolicyResponse.setTerms(propMap.get("fda.smd.terms"));
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - termsPolicy() :: ERROR", e);
 			e.printStackTrace();
