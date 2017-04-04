@@ -15,9 +15,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
 import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ActiveTaskFrequencyDto;
+import com.studymetadata.dto.ActiveTaskListDto;
+import com.studymetadata.dto.ActiveTaskMasterAttributeDto;
 import com.studymetadata.dto.ActiveTaskStepsDto;
 import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
@@ -565,7 +568,8 @@ public class StudyMetaDataDao {
 					if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())==true?"":consent.getConsentDocContent());
 					}else{
-						query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
+						consentDocumentBean.setContent("");
+						/*query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
 						consentInfoDtoList = query.list();
 						String content = "";
 						if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
@@ -582,8 +586,7 @@ public class StudyMetaDataDao {
 													+consentInfoDto.getElaborated()
 													+"</span><br/>";
 							}
-						}
-						consentDocumentBean.setContent(content);
+						}*/
 					}
 					consentDocumentResponse.setConsent(consentDocumentBean);
 				}
@@ -887,7 +890,7 @@ public class StudyMetaDataDao {
 		Integer actualStudyId = null;
 		String[] activityInfoArray = null;
 		List<QuestionnairesStepsDto> questionaireStepsList = null;
-		List<ActiveTaskStepsDto> activeTaskStepsList = null;
+		//List<ActiveTaskStepsDto> activeTaskStepsList = null;
 		try{
 			session = sessionFactory.openSession();
 			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
@@ -900,6 +903,11 @@ public class StudyMetaDataDao {
 						query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityInfoArray[1]);
 						activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 						if( activeTaskDto != null){
+							List<Integer> taskMasterAttrIdList = new ArrayList<Integer>();
+							List<ActiveTaskAttrtibutesValuesDto> activeTaskAttrtibuteValuesList = null;
+							List<ActiveTaskMasterAttributeDto> activeTaskMaterList = null;
+							List<ActiveTaskListDto> activeTaskList = null;
+							
 							activityStructureBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
 							
 							ActivityMetadataBean metadata = new ActivityMetadataBean();
@@ -919,6 +927,49 @@ public class StudyMetaDataDao {
 									
 								}
 							}*/
+							
+							//get the active task attribute values based on the activityId
+							query = session.createQuery(" from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.activeTaskId="+activeTaskDto.getId());
+							activeTaskAttrtibuteValuesList = query.list();
+							if( activeTaskAttrtibuteValuesList != null && activeTaskAttrtibuteValuesList.size() > 0){
+								for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
+									taskMasterAttrIdList.add(attributeDto.getActiveTaskMasterAttrId());
+								}
+								
+								if(taskMasterAttrIdList != null && taskMasterAttrIdList.size() > 0){
+									//get the active task master info based on the active task attribute ids
+									query = session.createQuery(" from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.masterId in ("+StringUtils.join(taskMasterAttrIdList, ",")+")");
+									activeTaskMaterList = query.list();
+								}
+								
+								//get the active task list details
+								query = session.createQuery(" from ActiveTaskListDto ATDTO ");
+								activeTaskList = query.list();
+							}
+							
+							//check the active task details are exists or not
+							if((activeTaskAttrtibuteValuesList != null && activeTaskAttrtibuteValuesList.size() > 0) && (activeTaskMaterList != null && activeTaskMaterList.size() > 0) && (activeTaskList != null && activeTaskList.size() > 0)){
+								//get the steps details based on the activity type
+								for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
+									for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
+										if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
+											for(ActiveTaskListDto taskDto : activeTaskList){
+												if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue()){
+													ActivityStepsBean activeTaskStep = new ActivityStepsBean();
+													activeTaskStep.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
+													activeTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())==true?"":taskDto.getType());
+													activeTaskStep.setKey(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+													activeTaskStep.setText(StringUtils.isEmpty(masterAttributeDto.getDisplayName())==true?"":masterAttributeDto.getDisplayName());
+													activeTaskStep.setOptions(null);
+													activeTaskStep.setFormat(getActiveTaskStepFormatByType(attributeDto, masterAttributeDto, taskDto.getType()));
+													steps.add(activeTaskStep);
+												}
+											}
+										}
+									}
+								}
+								activityStructureBean.setSteps(steps);
+							}
 						}
 					}else{
 						query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id ="+activityInfoArray[1]);
@@ -1288,30 +1339,35 @@ public class StudyMetaDataDao {
 	 * This method is used to get the Active Task Format type based on the type of the Task
 	 * 
 	 * @author Mohan
-	 * @param type
-	 * @return Map<String, Object>
+	 * @param attributeValues
+	 * @param masterAttributeValue
+	 * @param taskType
+	 * @return activeTaskFormat
 	 * @throws DAOException
 	 */
-	public Map<String, Object> getActiveTaskStepFormatByType(String type) throws DAOException{
+	public Map<String, Object> getActiveTaskStepFormatByType(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, String taskType) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - getActiveTaskStepFormatByType() :: Starts");
 		Map<String, Object> activeTaskFormat = new HashMap<String, Object>();
 		try{
-			if(StringUtils.isNotEmpty(type)){
-				switch (type) {
-				case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER: activeTaskFormat.put("duration", ""); //in hours
-																			break;
-				case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY: activeTaskFormat.put("initialSpan", 0);
-																			 activeTaskFormat.put("minimumSpan", 0);
-																			 activeTaskFormat.put("maximumSpan", 0);
-																			 activeTaskFormat.put("playSpeed", 0);
-																			 activeTaskFormat.put("maximumTests", 0);
-																			 activeTaskFormat.put("maximumConsecutiveFailures", 0);
-																			 activeTaskFormat.put("customTargetImage", "");
-																			 activeTaskFormat.put("customTargetPluralName", "");
-																			 activeTaskFormat.put("requireReversal", false);
-																			 break;
-				case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI: activeTaskFormat.put("numberOfDisks", ""); //Integer;
-																		break;
+			if(StringUtils.isNotEmpty(taskType)){
+				switch (taskType) {
+				case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
+					activeTaskFormat.put("duration", ""); //in hours
+					break;
+				case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
+					activeTaskFormat.put("initialSpan", 0);
+					activeTaskFormat.put("minimumSpan", 0);
+					activeTaskFormat.put("maximumSpan", 0);
+					activeTaskFormat.put("playSpeed", 0);
+					activeTaskFormat.put("maximumTests", 0);
+					activeTaskFormat.put("maximumConsecutiveFailures", 0);
+					activeTaskFormat.put("customTargetImage", "");
+					activeTaskFormat.put("customTargetPluralName", "");
+					activeTaskFormat.put("requireReversal", false);
+					break;
+				case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
+					activeTaskFormat.put("numberOfDisks", ""); //Integer;
+					break;
 				}
 			}
 		}catch(Exception e){
@@ -1322,6 +1378,134 @@ public class StudyMetaDataDao {
 		return activeTaskFormat;
 	}
 	
+	/**
+	 * This method is used to get the Question format based on the type of the questionResultType
+	 * 
+	 * @author Mohan
+	 * @param questionDto
+	 * @param questionResultType
+	 * @return questionFormat
+	 * @throws DAOException
+	 */
+	public Map<String, Object> getQuestionaireQuestionFormatByType(QuestionsDto questionDto, String questionResultType) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
+		Map<String, Object> questionFormat = new HashMap<String, Object>();
+		try{
+			if(StringUtils.isNotEmpty(questionResultType)){
+				switch (questionResultType) {
+				case StudyMetaDataConstants.QUESTION_SCALE:
+					questionFormat.put("maxValue", 0);
+					questionFormat.put("minValue", 0);
+					questionFormat.put("default", 0);
+					questionFormat.put("step", 1);
+					questionFormat.put("vertical", false);
+					questionFormat.put("maxDesc", "");
+					questionFormat.put("minDesc", "");
+					questionFormat.put("maxImage", "");
+					questionFormat.put("minImage", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
+					questionFormat.put("maxValue", 0);
+					questionFormat.put("minValue", 0);
+					questionFormat.put("default", 0);
+					questionFormat.put("maxFractionDigits", 1);
+					questionFormat.put("vertical", false);
+					questionFormat.put("maxDesc", "");
+					questionFormat.put("minDesc", "");
+					questionFormat.put("maxImage", "");
+					questionFormat.put("minImage", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
+					HashMap<String, Object> textScaleMap = new HashMap<String, Object>();
+					textScaleMap.put("text", "");
+					textScaleMap.put("value", "");
+					textScaleMap.put("detail", "");
+					textScaleMap.put("exclusive", true);
+					
+					List<HashMap<String, Object>> textChoicesList = new ArrayList<HashMap<String,Object>>();
+					textChoicesList.add(textScaleMap);
+					
+					questionFormat.put("textChoices", textChoicesList);
+					questionFormat.put("default", 0);
+					questionFormat.put("vertical", false);
+					break;
+				case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
+					HashMap<String, Object> valuePickerMap = new HashMap<String, Object>();
+					valuePickerMap.put("text", "");
+					valuePickerMap.put("value", "");
+					valuePickerMap.put("detail", "");
+					valuePickerMap.put("exclusive", true);
+					
+					List<HashMap<String, Object>> valuePickerList = new ArrayList<HashMap<String,Object>>();
+					valuePickerList.add(valuePickerMap);
+					questionFormat.put("textChoices", valuePickerList);
+					break;
+				case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
+					HashMap<String, Object> imageChoiceMap = new HashMap<String, Object>();
+					imageChoiceMap.put("image", "");
+					imageChoiceMap.put("selectedImage", "");
+					imageChoiceMap.put("text", "");
+					imageChoiceMap.put("value", "");
+					
+					List<HashMap<String, Object>> imageChoicesList = new ArrayList<HashMap<String,Object>>();
+					imageChoicesList.add(imageChoiceMap);
+					questionFormat.put("imageChoices", imageChoicesList);
+					break;
+				case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
+					HashMap<String, Object> textChoiceMap = new HashMap<String, Object>();
+					textChoiceMap.put("text", "");
+					textChoiceMap.put("value", "");
+					textChoiceMap.put("detail", "");
+					textChoiceMap.put("exclusive", true);
+					
+					List<HashMap<String, Object>> textChoiceMapList = new ArrayList<HashMap<String,Object>>();
+					textChoiceMapList.add(textChoiceMap);
+					questionFormat.put("textChoices", textChoiceMapList);
+					questionFormat.put("selectionStyle", ""); //Single/Multiple
+					break;
+				case StudyMetaDataConstants.QUESTION_NUMERIC:
+					questionFormat.put("style", "");
+					questionFormat.put("unit", "");
+					questionFormat.put("minValue", 0);
+					questionFormat.put("maxValue", 0);
+					questionFormat.put("placeholder", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_DATE:
+					questionFormat.put("style", ""); //Date/Date-Time
+					questionFormat.put("minDate", ""); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+					questionFormat.put("maxDate", 0); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+					questionFormat.put("default", 0); //Date
+					break;
+				case StudyMetaDataConstants.QUESTION_TEXT: 
+					questionFormat.put("maxLength", 0);
+					questionFormat.put("validationRegex", "");
+					questionFormat.put("invalidMessage", "");
+					questionFormat.put("multipleLines", false);
+					questionFormat.put("placeholder", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_EMAIL:
+					questionFormat.put("placeholder", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:  
+					questionFormat.put("default", 0);
+					questionFormat.put("step", 0); //In minutes 1-30
+					break;
+				case StudyMetaDataConstants.QUESTION_HEIGHT:  
+					questionFormat.put("measurementSystem", 0); //Local/Metric/US
+					questionFormat.put("placeholder", "");
+					break;
+				case StudyMetaDataConstants.QUESTION_LOCATION:
+					questionFormat.put("useCurrentLocation", false);
+					break;
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - getQuestionaireQuestionFormatByType() :: ERROR", e);
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getQuestionaireQuestionFormatByType() :: Ends");
+		return questionFormat;
+	}
 	
 	/*-----------------------------Activity data methods ends----------------------------------*/
 	/*-----------------------------Manipulate chart data methods starts----------------------------------*/

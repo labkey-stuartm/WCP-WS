@@ -124,4 +124,21 @@ public interface StudyMetaDataConstants {
     public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
 	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
 	public static final String ACTIVITY_AT_TOWER_OF_HANOI = "towerOfHanoi";
+	
+	//questionaire question format
+	public static final String QUESTION_SCALE = "scale";
+	public static final String QUESTION_CONTINUOUS_SCALE = "continuousScale";
+	public static final String QUESTION_TEXT_SCALE = "textScale";
+	public static final String QUESTION_VALUE_PICKER = "valuePicker";
+	public static final String QUESTION_IMAGE_CHOICE = "imageChoice";
+	public static final String QUESTION_TEXT_CHOICE = "textChoice";
+	public static final String QUESTION_BOOLEAN = "boolean";
+	public static final String QUESTION_NUMERIC = "numeric";
+	public static final String QUESTION_TIME_OF_DAY = "timeOfDay";
+	public static final String QUESTION_DATE = "date";
+	public static final String QUESTION_TEXT = "text";
+	public static final String QUESTION_EMAIL = "email";
+	public static final String QUESTION_TIME_INTERVAL = "timeInterval";
+	public static final String QUESTION_HEIGHT = "height";
+	public static final String QUESTION_LOCATION = "location";
 }
