@@ -21,8 +21,6 @@ import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ActiveTaskFrequencyDto;
 import com.studymetadata.dto.ActiveTaskListDto;
 import com.studymetadata.dto.ActiveTaskMasterAttributeDto;
-import com.studymetadata.dto.ActiveTaskStepsDto;
-import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
@@ -54,7 +52,6 @@ import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityMetadataBean;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.ActivityStepsBean;
-import com.studymetadata.bean.BrandingBean;
 import com.studymetadata.bean.ChartsBean;
 import com.studymetadata.bean.ComprehensionBean;
 import com.studymetadata.bean.ComprehensionDetailsBean;
@@ -83,11 +80,7 @@ import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.bean.WithdrawalConfigBean;
 import com.studymetadata.bean.appendix.ActivityStructureBean;
-import com.studymetadata.bean.appendix.InfoStructureBean;
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
-import com.studymetadata.bean.appendix.QuestionnaireConfigurationStructureBean;
-import com.studymetadata.bean.appendix.ResourceContextStructureBean;
-import com.studymetadata.bean.appendix.StepsStructureBean;
 
 public class StudyMetaDataDao {
 
@@ -126,7 +119,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
 		return hasValidAuthorization;
@@ -175,7 +167,6 @@ public class StudyMetaDataDao {
 			//get resources details
 			platformType = StudyMetaDataUtil.platformType(authorization);
 			if(StringUtils.isNotEmpty(platformType)){
-				//query = session.createQuery(" from ResourcesDto RDTO where RDTO.status=1 and RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
 				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
 				resourcesList = query.list();
 				if( null != resourcesList && resourcesList.size() > 0){
@@ -200,7 +191,6 @@ public class StudyMetaDataDao {
 			gatewayInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - gatewayAppResourcesInfo() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -302,7 +292,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -477,7 +466,7 @@ public class StudyMetaDataDao {
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 							reviewBean.setSignatureContent(StringUtils.isEmpty(consentDto.getConsentDocContent())==true?"":consentDto.getConsentDocContent());
 						}else{
-							String signatureContent = "";
+							/*String signatureContent = "";
 							if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
 								for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
 									if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
@@ -494,7 +483,7 @@ public class StudyMetaDataDao {
 														+"</span><br/>";
 								}
 							}
-							reviewBean.setSignatureContent(signatureContent);
+							reviewBean.setSignatureContent(signatureContent);*/
 						}
 						reviewBean.setSignatureTitle("");
 						reviewBean.setReasonForConsent("");
@@ -549,11 +538,12 @@ public class StudyMetaDataDao {
 					//get the consent details by activityId and activity version
 				}*/
 				
-				if(StringUtils.isNotEmpty(consentVersion)){
+				/*if(StringUtils.isNotEmpty(consentVersion)){
 					consentQuery += actualStudyId+" and CDTO.version="+consentVersion;
 				}else{
 					consentQuery += actualStudyId;
-				}
+				}*/
+				consentQuery += actualStudyId;
 				query = session.createQuery(consentQuery);
 				consent = (ConsentDto) query.uniqueResult();
 				
@@ -563,13 +553,14 @@ public class StudyMetaDataDao {
 					consentDocumentBean.setType("text/html");
 					if(consent.getVersion() != null){
 						consentDocumentBean.setVersion(consent.getVersion().toString());
+					}else{
+						consentDocumentBean.setVersion("1.0");
 					}
 					
 					if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())==true?"":consent.getConsentDocContent());
 					}else{
-						consentDocumentBean.setContent("");
-						/*query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
+						query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
 						consentInfoDtoList = query.list();
 						String content = "";
 						if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
@@ -586,7 +577,8 @@ public class StudyMetaDataDao {
 													+consentInfoDto.getElaborated()
 													+"</span><br/>";
 							}
-						}*/
+							consentDocumentBean.setContent(content);
+						}
 					}
 					consentDocumentResponse.setConsent(consentDocumentBean);
 				}
@@ -596,7 +588,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - consentDocument() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -677,7 +668,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - resourcesForStudy() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -698,7 +688,7 @@ public class StudyMetaDataDao {
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		StudyDto studyDto = null;
-		List<StudyPageDto> StudyPageDtoList = null;
+		List<StudyPageDto> studyPageDtoList = null;
 		Integer actualStudyId = null;
 		try{
 			session = sessionFactory.openSession();
@@ -713,9 +703,9 @@ public class StudyMetaDataDao {
 					studyInfoResponse.setStudyWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())==true?"":studyDto.getStudyWebsite());
 					List<InfoBean> infoList = new ArrayList<InfoBean>();
 					query = session.getNamedQuery("studyPageDetailsByStudyId").setInteger("studyId", actualStudyId);
-					StudyPageDtoList = query.list();
-					if( null != StudyPageDtoList && StudyPageDtoList.size() > 0){
-						for(StudyPageDto studyPageInfo : StudyPageDtoList){
+					studyPageDtoList = query.list();
+					if( null != studyPageDtoList && studyPageDtoList.size() > 0){
+						for(StudyPageDto studyPageInfo : studyPageDtoList){
 							InfoBean info = new InfoBean();
 							if(infoList.size() == 0){
 								info.setType(StudyMetaDataConstants.TYPE_VIDEO);
@@ -768,7 +758,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyInfo() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -859,7 +848,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyActivityList() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -1056,7 +1044,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyActivityMetadata() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -1117,7 +1104,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyDashboardInfo() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
 			if(null != session){
 				session.close();
@@ -1142,7 +1128,6 @@ public class StudyMetaDataDao {
 			termsPolicyResponse.setTerms(propMap.get("fda.smd.terms"));
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - termsPolicy() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Ends");
 		return termsPolicyResponse;
@@ -1161,7 +1146,6 @@ public class StudyMetaDataDao {
 			
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - notifications() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Ends");
 		return notificationsResponse;
@@ -1200,7 +1184,6 @@ public class StudyMetaDataDao {
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataDao - getconsentDocumentDisplayTitle() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Ends");
 		return consentTitle;
@@ -1329,7 +1312,6 @@ public class StudyMetaDataDao {
 			stepsSequenceOrderTreeMap = stepsSequenceTreeMap;
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - getStepsInfoForQuestionaires() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getStepsInfoForQuestionaires() :: Ends");
 		return stepsSequenceOrderTreeMap;
@@ -1372,7 +1354,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - getActiveTaskStepFormatByType() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getActiveTaskStepFormatByType() :: Ends");
 		return activeTaskFormat;
@@ -1501,7 +1482,6 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - getQuestionaireQuestionFormatByType() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getQuestionaireQuestionFormatByType() :: Ends");
 		return questionFormat;
@@ -1548,7 +1528,6 @@ public class StudyMetaDataDao {
 			configuration.put("settings", settingsList);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - singleLineChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - singleLineChartDetails() :: Ends");
 		return configuration;
@@ -1593,7 +1572,6 @@ public class StudyMetaDataDao {
 			configuration.put("settings", settingsList);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - multipleLineChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - multipleLineChartDetails() :: Ends");
 		return configuration;
@@ -1623,7 +1601,6 @@ public class StudyMetaDataDao {
 			configuration.put("titles", titles); //<unique response>
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - uniquePieChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - uniquePieChartDetails() :: Ends");
 		return configuration;
@@ -1653,7 +1630,6 @@ public class StudyMetaDataDao {
 			configuration.put("titles", titles); //<unique response>
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - rangePieChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - rangePieChartDetails() :: Ends");
 		return configuration;
@@ -1686,7 +1662,6 @@ public class StudyMetaDataDao {
 			configuration.put("settings", settingsList);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - singleBarChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - singleBarChartDetails() :: Ends");
 		return configuration;
@@ -1719,7 +1694,6 @@ public class StudyMetaDataDao {
 			configuration.put("settings", settingsList);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - multipleBarChartDetails() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - multipleBarChartDetails() :: Ends");
 		return configuration;
@@ -1910,7 +1884,6 @@ public class StudyMetaDataDao {
 			frequencyDetails.setRuns(runDetailsBean);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Ends");
 		return frequencyDetails;
@@ -2100,7 +2073,6 @@ public class StudyMetaDataDao {
 			frequencyDetails.setRuns(runDetailsBean);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: ERROR", e);
-			e.printStackTrace();
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Ends");
 		return frequencyDetails;

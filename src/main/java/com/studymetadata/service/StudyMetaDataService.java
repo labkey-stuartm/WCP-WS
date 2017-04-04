@@ -73,7 +73,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - gatewayAppResourcesInfo() :: ERROR ", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -104,7 +103,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -146,7 +144,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - eligibilityConsentMetadata() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -191,7 +188,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -233,7 +229,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -275,7 +270,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -318,7 +312,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityList() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -363,7 +356,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityMetadata() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -405,7 +397,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyDashboardInfo() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -442,7 +433,6 @@ public class StudyMetaDataService {
 			}*/
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - termsPolicy() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -479,7 +469,6 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - notifications() :: ERROR", e);
-			e.printStackTrace();
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
@@ -560,7 +549,7 @@ public class StudyMetaDataService {
 			}
 			System.out.println("Yet to develop");
 		}catch(Exception e){
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
 		return null;
@@ -595,7 +584,7 @@ public class StudyMetaDataService {
 			}
 			System.out.println("Yet to develop");
 		}catch(Exception e){
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
 		return null;
@@ -644,7 +633,7 @@ public class StudyMetaDataService {
 			}
 			System.out.println("Yet to develop");
 		}catch(Exception e){
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
