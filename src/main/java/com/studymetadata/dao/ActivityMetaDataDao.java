@@ -36,7 +36,6 @@ import com.studymetadata.dto.QuestionnairesFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.exception.DAOException;
-import com.studymetadata.integration.StudyMetaDataOrchestration;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -195,6 +194,7 @@ public class ActivityMetaDataDao {
 	 * @return ActivityStructureBean
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ActivityStructureBean activeTaskMetadata(String studyId, String activityId, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Starts");
 		ActivityStructureBean activityStructureBean = new ActivityStructureBean();
@@ -284,6 +284,7 @@ public class ActivityMetaDataDao {
 	 * @return ActivityStructureBean
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ActivityStructureBean questionnaireMetadata(String studyId, String activityId, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
 		ActivityStructureBean activityStructureBean = new ActivityStructureBean();
@@ -449,6 +450,7 @@ public class ActivityMetaDataDao {
 	 * @return List<ActivityFrequencyScheduleBean>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForDaily(ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: Starts");
 		try{
@@ -645,6 +647,7 @@ public class ActivityMetaDataDao {
 	 * @return List<ActivityFrequencyScheduleBean>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForManuallySchedule(ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: Starts");
 		try{
@@ -742,6 +745,7 @@ public class ActivityMetaDataDao {
 	 * @return List<ActivityFrequencyScheduleBean>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForDaily(QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: Starts");
 		List<QuestionnairesFrequenciesDto> dailyFrequencyList = null;
@@ -937,6 +941,7 @@ public class ActivityMetaDataDao {
 	 * @return List<ActivityFrequencyScheduleBean>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForManuallySchedule(QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: Starts");
 		try{
@@ -1091,6 +1096,7 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public SortedMap<Integer, ActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
 		TreeMap<Integer, ActivityStepsBean> stepsSequenceTreeMap = new TreeMap<>();

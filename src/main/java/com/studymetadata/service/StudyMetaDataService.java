@@ -15,7 +15,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;

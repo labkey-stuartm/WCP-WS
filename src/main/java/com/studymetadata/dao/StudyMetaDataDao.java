@@ -5,10 +5,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -16,26 +13,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
-import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
-import com.studymetadata.dto.ActiveTaskDto;
-import com.studymetadata.dto.ActiveTaskFrequencyDto;
-import com.studymetadata.dto.ActiveTaskListDto;
-import com.studymetadata.dto.ActiveTaskMasterAttributeDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
 import com.studymetadata.dto.ConsentMasterInfoDto;
 import com.studymetadata.dto.EligibilityDto;
-import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
-import com.studymetadata.dto.InstructionsDto;
-import com.studymetadata.dto.QuestionnairesCustomFrequenciesDto;
-import com.studymetadata.dto.QuestionnairesDto;
-import com.studymetadata.dto.QuestionnairesFrequenciesDto;
-import com.studymetadata.dto.QuestionnairesStepsDto;
-import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
@@ -46,13 +30,6 @@ import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
-import com.studymetadata.bean.ActivitiesBean;
-import com.studymetadata.bean.ActivityFrequencyBean;
-import com.studymetadata.bean.ActivityFrequencyScheduleBean;
-import com.studymetadata.bean.ActivityMetaDataResponse;
-import com.studymetadata.bean.ActivityMetadataBean;
-import com.studymetadata.bean.ActivityResponse;
-import com.studymetadata.bean.ActivityStepsBean;
 import com.studymetadata.bean.ChartsBean;
 import com.studymetadata.bean.ComprehensionBean;
 import com.studymetadata.bean.ComprehensionDetailsBean;
@@ -80,7 +57,6 @@ import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.bean.WithdrawalConfigBean;
-import com.studymetadata.bean.appendix.ActivityStructureBean;
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class StudyMetaDataDao {
@@ -459,25 +435,6 @@ public class StudyMetaDataDao {
 						ReviewBean reviewBean = new ReviewBean();
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 							reviewBean.setSignatureContent(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent());
-						}else{
-							/*String signatureContent = "";
-							if( consentInfoDtoList != null && consentInfoDtoList.size() > 0){
-								for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
-									if( StringUtils.isNotEmpty(consentInfoDto.getConsentItemType()) && !consentInfoDto.getConsentItemType().equalsIgnoreCase(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM)){
-										//get the actual display title based on the constant
-										consentInfoDto.setDisplayTitle(getconsentDocumentDisplayTitle(consentInfoDto.getDisplayTitle()));
-									}
-
-									//get the review content from the individual consents
-									signatureContent += "<span style=&#34;font-size:20px;&#34;><strong>"
-														+consentInfoDto.getDisplayTitle()
-														+"</strong></span><br/>"
-														+"<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
-														+consentInfoDto.getElaborated()
-														+"</span><br/>";
-								}
-							}
-							reviewBean.setSignatureContent(signatureContent);*/
 						}
 						reviewBean.setSignatureTitle("");
 						reviewBean.setReasonForConsent("");
@@ -511,6 +468,7 @@ public class StudyMetaDataDao {
 	 * @return ConsentDocumentResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
