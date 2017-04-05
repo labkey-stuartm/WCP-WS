@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
+import com.studymetadata.dao.ActivityMetaDataDao;
 import com.studymetadata.dao.StudyMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -26,7 +27,8 @@ public class StudyMetaDataOrchestration {
 	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
 	
 	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
-	
+	ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
+
 	/**
 	 * @author Mohan
 	 * @param authorization
@@ -39,7 +41,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			hasValidAuthorization = studyMetaDataDao.isValidAuthorizationId(authorization);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
@@ -57,7 +58,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			gatewayInfo = studyMetaDataDao.gatewayAppResourcesInfo(authorization);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Ends");
@@ -75,7 +75,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			studyResponse = studyMetaDataDao.studyList(authorization);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyList() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Ends");
@@ -94,7 +93,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Ends");
@@ -117,7 +115,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			consentDocumentResponse = studyMetaDataDao.consentDocument(studyId, consentVersion, activityId, activityVersion);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - consentDocument() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Ends");
@@ -136,7 +133,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			resourcesResponse = studyMetaDataDao.resourcesForStudy(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - resourcesForStudy() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Ends");
@@ -155,7 +151,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			studyInfoResponse = studyMetaDataDao.studyInfo(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyInfo() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Ends");
@@ -172,9 +167,8 @@ public class StudyMetaDataOrchestration {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		try{
-			activityResponse = studyMetaDataDao.studyActivityList(studyId);
+			activityResponse = activityMetaDataDao.studyActivityList(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyActivityList() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityList() :: Ends");
@@ -193,9 +187,8 @@ public class StudyMetaDataOrchestration {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Starts");
 		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
 		try{
-			activityMetaDataResponse = studyMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
+			activityMetaDataResponse = activityMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyActivityMetadata() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Ends");
@@ -214,7 +207,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			studyDashboardResponse = studyMetaDataDao.studyDashboardInfo(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - studyDashboardInfo() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyDashboardInfo() :: Ends");
@@ -233,7 +225,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			termsPolicyResponse = studyMetaDataDao.termsPolicy(studyId);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - termsPolicy() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - termsPolicy() :: Ends");
@@ -252,7 +243,6 @@ public class StudyMetaDataOrchestration {
 		try{
 			notificationsResponse = studyMetaDataDao.notifications(skip);
 		}catch(Exception e){
-			e.printStackTrace();
 			LOGGER.error("StudyMetaDataOrchestration - notifications() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - notifications() :: Ends");

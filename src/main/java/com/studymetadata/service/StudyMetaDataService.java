@@ -170,7 +170,6 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		try{
-			/*if(StringUtils.isNotEmpty(studyId) && (StringUtils.isNotEmpty(consentVersion) || StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion))){*/
 			if(StringUtils.isNotEmpty(studyId)){	
 				consentDocumentResponse = studyMetaDataOrchestration.consentDocument(studyId, consentVersion, activityId, activityVersion);
 				if(!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
@@ -421,16 +420,11 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
-			/*if(StringUtils.isNotEmpty(studyId)){*/
-				termsPolicyResponse = studyMetaDataOrchestration.termsPolicy(studyId);
-				if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-				}
-			/*}else{
-				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
-			}*/
+			termsPolicyResponse = studyMetaDataOrchestration.termsPolicy(studyId);
+			if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - termsPolicy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
@@ -491,20 +485,16 @@ public class StudyMetaDataService {
 	@Path("feedback")
 	public Object feedbackDetails(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - feedbackDetails() :: Starts");
-		String subject = "";
-		String body = "";
 		try{
-			try {
-				JSONObject serviceJson = new JSONObject(params);
-				subject = serviceJson.getString("subject");
-				body = serviceJson.getString("body");
-				System.out.println(subject+" : "+body);
-			} catch (Exception e) {
-				LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
+			JSONObject serviceJson = new JSONObject(params);
+			String subject = serviceJson.getString("subject");
+			String body = serviceJson.getString("body");
+			if(StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body)){
+				LOGGER.info("feedback YET TO DEVELOP");
+			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
-			System.out.println("Yet to develop");
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - feedbackDetails() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
@@ -528,28 +518,25 @@ public class StudyMetaDataService {
 	@Path("contactUs")
 	public Object contactUsDetails(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Starts");
-		String studyId = "";
-		String subject = "";
-		String body = "";
-		String firstName = "";
-		String email = "";
 		try{
-			try {
-				JSONObject serviceJson = new JSONObject(params);
-				studyId = serviceJson.getString("studyId");
-				subject = serviceJson.getString("subject");
-				body = serviceJson.getString("body");
-				firstName = serviceJson.getString("firstName");
-				email = serviceJson.getString("email");
-				System.out.println(studyId+" : "+subject+" : "+body+" : "+firstName+" : "+email);
-			} catch (Exception e) {
-				LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
+			JSONObject serviceJson = new JSONObject(params);
+			String studyId = serviceJson.getString("studyId");
+			String subject = serviceJson.getString("subject");
+			String body = serviceJson.getString("body");
+			String firstName = serviceJson.getString("firstName");
+			String email = serviceJson.getString("email");
+			boolean inputFlag1 = StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body);
+			boolean inputFlag2 = StringUtils.isNotEmpty(firstName) && StringUtils.isNotEmpty(email);
+			if(inputFlag1 && inputFlag2){
+				LOGGER.info("contactUs YET TO DEVELOP");
+			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
-			System.out.println("Yet to develop");
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
 		return null;
@@ -569,22 +556,20 @@ public class StudyMetaDataService {
 	@Path("appUpdates")
 	public Object appUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
-		String appVersion = "";
-		String os = ""; //ios/android
 		try{
-			try {
-				JSONObject serviceJson = new JSONObject(params);
-				appVersion = serviceJson.getString("appVersion");
-				os = serviceJson.getString("os");
-				System.out.println(appVersion+" : "+os);
-			} catch (Exception e) {
-				LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+			JSONObject serviceJson = new JSONObject(params);
+			String appVersion = serviceJson.getString("appVersion");
+			String os = serviceJson.getString("os"); //ios/android
+			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(os)){
+				LOGGER.info("appUpdates YET TO DEVELOP");
+			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
-			System.out.println("Yet to develop");
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
 		return null;
@@ -605,33 +590,23 @@ public class StudyMetaDataService {
 	public Object studyUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
-		String studyId = "";
-		String studyVersion = ""; //current study version in app
 		try{
-			try {
-				JSONObject serviceJson = new JSONObject(params);
-				studyId = serviceJson.getString("studyId");
-				studyVersion = serviceJson.getString("studyVersion");
-				if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)){
-					studyUpdatesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-					Map<String, Object> updates = new HashMap<String, Object>();
-					updates.put("consent", true);
-					updates.put("activities", true);
-					updates.put("resources", true);
-					updates.put("info", true);
-					studyUpdatesResponse.setUpdates(updates);
-					studyUpdatesResponse.setCurrentVersion("1.0");
-					System.out.println(studyId+" : "+studyVersion);
-				}else{
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
-				}
-			} catch (Exception e) {
-				LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+			JSONObject serviceJson = new JSONObject(params);
+			String studyId = serviceJson.getString("studyId");
+			String studyVersion = serviceJson.getString("studyVersion"); //current study version in app
+			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)){
+				studyUpdatesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+				Map<String, Object> updates = new HashMap<>();
+				updates.put("consent", true);
+				updates.put("activities", true);
+				updates.put("resources", true);
+				updates.put("info", true);
+				studyUpdatesResponse.setUpdates(updates);
+				studyUpdatesResponse.setCurrentVersion("1.0");
+			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
-			System.out.println("Yet to develop");
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
 		}
@@ -665,7 +640,7 @@ public class StudyMetaDataService {
 			JSONObject serviceJson = new JSONObject(params);
 			LOGGER.info("json type  " + serviceJson.get("type"));
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataService.signin() :: ERROR ==> 'type' is missing... ");
+			LOGGER.error("StudyMetaDataService.signin() :: ERROR ==> 'type' is missing... ", e);
 		}
 		if(StudyMetaDataUtil.isNotEmpty(type1) && "1".equals(type1)){
 			SuccessResponse sr = new SuccessResponse();
