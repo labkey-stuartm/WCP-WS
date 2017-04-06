@@ -30,6 +30,9 @@ public class FormMappingDto implements Serializable{
 	
 	@Column(name="question_id")
 	private Integer questionId;
+	
+	@Column(name="sequence_no")
+	private Integer sequenceNo;
 
 	public Integer getId() {
 		return id;
@@ -53,6 +56,14 @@ public class FormMappingDto implements Serializable{
 
 	public void setQuestionId(Integer questionId) {
 		this.questionId = questionId;
+	}
+
+	public Integer getSequenceNo() {
+		return sequenceNo;
+	}
+
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 	
 }

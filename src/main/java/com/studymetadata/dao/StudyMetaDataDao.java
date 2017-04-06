@@ -437,7 +437,7 @@ public class StudyMetaDataDao {
 							reviewBean.setSignatureContent(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent());
 						}
 						reviewBean.setSignatureTitle("");
-						reviewBean.setReasonForConsent("");
+						reviewBean.setReasonForConsent(StudyMetaDataConstants.REASON_FOR_CONSENT);
 						consent.setReview(reviewBean);
 					}
 					eligibilityConsentResponse.setConsent(consent);

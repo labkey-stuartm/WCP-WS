@@ -549,7 +549,7 @@ public class StudyMetaDataService {
 	 * @param response
 	 * @return Object
 	 */
-	@GET
+	/*@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("appUpdates")
@@ -572,7 +572,7 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
 		return null;
-	}
+	}*/
 	
 	/**
 	 * This method is used to check for study updates
@@ -582,7 +582,7 @@ public class StudyMetaDataService {
 	 * @param response
 	 * @return Object
 	 */
-	@GET
+	/*@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("studyUpdates")
@@ -611,7 +611,7 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
-	}
+	}*/
 	
 	
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/

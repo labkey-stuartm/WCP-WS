@@ -19,6 +19,14 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>com.studymetadata.service,com.studymetadata.dto,com.studymetadata.corn,org.codehaus.jackson.jaxrs</param-value>
 		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+    		<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+    		<param-value>true</param-value>
+		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -39,10 +47,20 @@
 			<url-pattern>/*</url-pattern>
 			<http-method>GET</http-method>
 			<http-method>POST</http-method>
-			<http-method>PUT</http-method>
-			<http-method>DELETE</http-method>
 		</web-resource-collection>
 	</security-constraint>
+	
+	<!-- Force SSL for entire site -->
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Entire Site</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint> -->
+	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

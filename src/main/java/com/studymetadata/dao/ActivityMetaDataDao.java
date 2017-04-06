@@ -353,11 +353,13 @@ public class ActivityMetaDataDao {
 	
 					//get the forms list
 					if(!formIdList.isEmpty()){
-						List<FormMappingDto> formList;
-						query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId in ("+StringUtils.join(formIdList, ",")+")");
-						formList = query.list();
-						if(formList != null && !formList.isEmpty()){
-							stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, null, null, formList, sequenceNoMap, stepsSequenceTreeMap, session);
+						for(Integer formId : formIdList){
+							List<FormMappingDto> formList;
+							query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId="+formId+" ORDER BY FMDTO.sequenceNo");
+							formList = query.list();
+							if(formList != null && !formList.isEmpty()){
+								stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, null, null, formList, sequenceNoMap, stepsSequenceTreeMap, session);
+							}
 						}
 					}
 	
@@ -980,17 +982,17 @@ public class ActivityMetaDataDao {
 	 */
 	public SortedMap<Integer, ActivityStepsBean> getStepsInfoForQuestionnaires(String type, List<InstructionsDto> instructionsDtoList, List<QuestionsDto> questionsDtoList, List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, TreeMap<Integer, ActivityStepsBean> stepsSequenceTreeMap, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Starts");
-		TreeMap<Integer, ActivityStepsBean> stepsSequenceOrderTreeMap = new TreeMap<>();
+		TreeMap<Integer, ActivityStepsBean> stepsOrderSequenceTreeMap = new TreeMap<>();
 		try{
 			switch (type) {
 				case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION:
-					stepsSequenceOrderTreeMap = (TreeMap<Integer, ActivityStepsBean>) getInstructionDetailsForQuestionnaire(instructionsDtoList, sequenceNoMap);
+					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getInstructionDetailsForQuestionnaire(instructionsDtoList, sequenceNoMap, stepsSequenceTreeMap);
 					break;
 				case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION:
-					stepsSequenceOrderTreeMap = (TreeMap<Integer, ActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap);
+					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap, stepsSequenceTreeMap);
 					break;
 				case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM:
-					stepsSequenceOrderTreeMap = (TreeMap<Integer, ActivityStepsBean>) getFormDetailsForQuestionnaire(formsList, sequenceNoMap, session);
+					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getFormDetailsForQuestionnaire(formsList, sequenceNoMap, session, stepsSequenceTreeMap);
 					break;
 				default:
 					break;
@@ -999,7 +1001,7 @@ public class ActivityMetaDataDao {
 			LOGGER.error("ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Ends");
-		return stepsSequenceOrderTreeMap;
+		return stepsOrderSequenceTreeMap;
 	}
 
 	/**
@@ -1011,9 +1013,8 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
-	public SortedMap<Integer, ActivityStepsBean> getInstructionDetailsForQuestionnaire(List<InstructionsDto> instructionsDtoList, Map<String, Integer> sequenceNoMap) throws DAOException{
+	public SortedMap<Integer, ActivityStepsBean> getInstructionDetailsForQuestionnaire(List<InstructionsDto> instructionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, ActivityStepsBean> stepsSequenceTreeMap) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Starts");
-		TreeMap<Integer, ActivityStepsBean> stepsSequenceTreeMap = new TreeMap<>();
 		try{
 			if( instructionsDtoList != null && !instructionsDtoList.isEmpty()){
 				for(InstructionsDto instructionsDto : instructionsDtoList){
@@ -1051,9 +1052,8 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
-	public SortedMap<Integer, ActivityStepsBean> getQuestionDetailsForQuestionnaire(List<QuestionsDto> questionsDtoList, Map<String, Integer> sequenceNoMap) throws DAOException{
+	public SortedMap<Integer, ActivityStepsBean> getQuestionDetailsForQuestionnaire(List<QuestionsDto> questionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, ActivityStepsBean> stepsSequenceTreeMap) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
-		TreeMap<Integer, ActivityStepsBean> stepsSequenceTreeMap = new TreeMap<>();
 		try{
 			if(questionsDtoList != null && !questionsDtoList.isEmpty()){
 				for(QuestionsDto questionsDto : questionsDtoList){
@@ -1097,17 +1097,24 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public SortedMap<Integer, ActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session) throws DAOException{
+	public SortedMap<Integer, ActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session, SortedMap<Integer, ActivityStepsBean> stepsSequenceTreeMap) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
-		TreeMap<Integer, ActivityStepsBean> stepsSequenceTreeMap = new TreeMap<>();
 		try{
 			if( formsList != null && !formsList.isEmpty()){
+				List<Integer> formQuestionIdsList = new ArrayList<>();
+				TreeMap<Integer, Integer> formQuestionMap = new TreeMap<>();
 				for(FormMappingDto formDto : formsList){
+					formQuestionIdsList.add(formDto.getQuestionId());
+					formQuestionMap.put(formDto.getSequenceNo(), formDto.getQuestionId());
+				}
+				
+				if(!formQuestionIdsList.isEmpty()){
 					ActivityStepsBean formBean = new ActivityStepsBean();
 					List<ActivityStepsBean> formSteps = new ArrayList<>();
+					HashMap<Integer, ActivityStepsBean> formStepsMap = new HashMap<>();
 					formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
 					formBean.setResultType("");
-					formBean.setKey((formDto.getId() == null || formDto.getId() == 0) ?"":formDto.getId().toString());
+					formBean.setKey((formsList.get(0).getFormId() == null || formsList.get(0).getFormId() == 0) ?"":formsList.get(0).getFormId().toString());
 					formBean.setTitle("");
 					formBean.setText("");
 					formBean.setSkippable(false);
@@ -1118,7 +1125,7 @@ public class ActivityMetaDataDao {
 					List<String[]> destinations = new ArrayList<>();
 					formBean.setDestinations(destinations);
 					List<QuestionsDto> formQuestionsList;
-					query = session.createQuery("from QuestionsDto QDTO where QDTO.id="+formDto.getQuestionId());
+					query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(formQuestionIdsList, ',')+")");
 					formQuestionsList = query.list();
 					if(formQuestionsList != null && !formQuestionsList.isEmpty()){
 						for(QuestionsDto formQuestionDto : formQuestionsList){
@@ -1139,13 +1146,18 @@ public class ActivityMetaDataDao {
 
 							Map<String, Object> format = new HashMap<>();
 							formQuestionBean.setFormat(format);
-
-							formSteps.add(formQuestionBean);
+							
+							formStepsMap.put(formQuestionDto.getId(), formQuestionBean);
 						}
+					}
+					
+					//get the questions of form order by sequence number
+					for(Integer key : formQuestionMap.keySet()){
+						formSteps.add(formStepsMap.get(formQuestionMap.get(key)));
 					}
 					formBean.setSteps(formSteps);
 
-					stepsSequenceTreeMap.put(sequenceNoMap.get(String.valueOf(formDto.getFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM), formBean);
+					stepsSequenceTreeMap.put(sequenceNoMap.get(String.valueOf(formsList.get(0).getFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM), formBean);
 				}
 			}
 		}catch(Exception e){
