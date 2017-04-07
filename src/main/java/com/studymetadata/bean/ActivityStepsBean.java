@@ -15,10 +15,10 @@ public class ActivityStepsBean {
 	private String groupName = "";
 	private Boolean repeatable = false;
 	private String repeatableText = "";
-	private List<String[]> destinations = new ArrayList<String[]>();
+	private List<String[]> destinations = new ArrayList<>();
 	private String healthDataKey = "";
-	private Map<String, Object> format = new HashMap<String, Object>(); //QuestionFormat (OR) ActiveTaskFormat
-	private List<ActivityStepsBean> steps = new ArrayList<ActivityStepsBean>(); //Question
+	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
+	private List<ActivityStepsBean> steps = new ArrayList<>(); //Question
 	private String[] options = new String[0];
 	
 	public String getType() {

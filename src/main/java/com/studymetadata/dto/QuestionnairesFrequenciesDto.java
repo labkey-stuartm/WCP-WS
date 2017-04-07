@@ -46,6 +46,9 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	@Column(name="hours_intervals")
 	private Integer hoursIntervals;
 	
+	@Column(name="day_of_the_week")
+	private String dayOfTheWeek;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -108,6 +111,14 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 
 	public void setHoursIntervals(Integer hoursIntervals) {
 		this.hoursIntervals = hoursIntervals;
+	}
+
+	public String getDayOfTheWeek() {
+		return dayOfTheWeek;
+	}
+
+	public void setDayOfTheWeek(String dayOfTheWeek) {
+		this.dayOfTheWeek = dayOfTheWeek;
 	}
 	
 }

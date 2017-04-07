@@ -89,6 +89,9 @@ public class ActiveTaskDto implements Serializable{
 	
 	@Column(name="task_type")
 	private Integer taskType;
+	
+	@Column(name="action")
+	private Boolean action=false;
 
 	public Integer getId() {
 		return id;
@@ -256,6 +259,14 @@ public class ActiveTaskDto implements Serializable{
 
 	public void setTaskType(Integer taskType) {
 		this.taskType = taskType;
+	}
+
+	public Boolean getAction() {
+		return action;
+	}
+
+	public void setAction(Boolean action) {
+		this.action = action;
 	}
 	
 }

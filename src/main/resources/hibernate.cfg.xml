@@ -68,6 +68,7 @@
 		<mapping class="com.studymetadata.dto.ActiveTaskMasterAttributeDto" />
 		<mapping class="com.studymetadata.dto.ActiveTaskSelectOptionsDto" />
 		<mapping class="com.studymetadata.dto.ConsentMasterInfoDto" />
+		<mapping class="com.studymetadata.dto.QuestionResponsetypeMasterInfoDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

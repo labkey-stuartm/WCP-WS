@@ -32,25 +32,25 @@ public class QuestionsDto implements Serializable{
 	private String question;
 	
 	@Column(name="mandatory")
-	private Integer mandatory;
+	private Boolean mandatory=false;
 	
 	@Column(name="skip_and_return")
-	private Integer skip_and_return;
+	private Boolean skipAndReturn=false;
 	
 	@Column(name="phi")
-	private Integer phi;
+	private Boolean phi=false;
 	
 	@Column(name="otc")
-	private Integer otc;
+	private Boolean otc=false;
 	
 	@Column(name="demographics")
-	private Integer demographics;
+	private Boolean demographics=false;
 	
 	@Column(name="randomize")
 	private String randomize;
 	
 	@Column(name="data_for_health")
-	private Integer dataForHealth;
+	private Boolean dataForHealth=false;
 	
 	@Column(name="health_data_type")
 	private String healthDataType;
@@ -59,31 +59,67 @@ public class QuestionsDto implements Serializable{
 	private String timeRange;
 	
 	@Column(name="response_type")
-	private String responseType;
+	private Integer responseType;
 	
 	@Column(name="condition_definition")
 	private String conditionDefinition;
 	
 	@Column(name="define_condition")
-	private String define_Condition;
+	private String defineCondition;
 	
-	@Column(name="form_id")
-	private Integer formId;
-
 	@Column(name="pass_fail")
 	private String passFail;
 	
-	@Column(name="created_by")
-	private Integer createdBy;
-	
-	@Column(name="created_on")
+	@Column(name = "created_on")
 	private String createdOn;
 	
-	@Column(name="modified_by")
+	@Column(name = "modified_on")
+	private String modifiedOn;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
 	
-	@Column(name="modified_on")
-	private String modifiedOn;
+	@Column(name="form_id")
+	private Integer formId;
+	
+	@Column(name="add_line_chart")
+	private String addLineChart;
+	
+	@Column(name="allow_rollback_chart")
+	private String allowRollbackChart;
+	
+	@Column(name="chart_title")
+	private String chartTitle;
+	
+	@Column(name="description")
+	private String description;
+	
+	@Column(name="line_chart_timerange")
+	private String lineChartTimerange;
+	
+	@Column(name="skippable")
+	private String skippable;
+	
+	@Column(name="stat_display_name")
+	private String statDisplayName;
+	
+	@Column(name="stat_diaplay_units")
+	private String statDiaplayUnits;
+	
+	@Column(name="stat_formula")
+	private String statFormula;
+	
+	@Column(name="stat_short_name")
+	private String statShortName;
+	
+	@Column(name="stat_type")
+	private String statType;
+	
+	@Column(name="use_stastic_data")
+	private String useStasticData;
 
 	public Integer getId() {
 		return id;
@@ -109,43 +145,43 @@ public class QuestionsDto implements Serializable{
 		this.question = question;
 	}
 
-	public Integer getMandatory() {
+	public Boolean getMandatory() {
 		return mandatory;
 	}
 
-	public void setMandatory(Integer mandatory) {
+	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
 	}
 
-	public Integer getSkip_and_return() {
-		return skip_and_return;
+	public Boolean getSkipAndReturn() {
+		return skipAndReturn;
 	}
 
-	public void setSkip_and_return(Integer skip_and_return) {
-		this.skip_and_return = skip_and_return;
+	public void setSkipAndReturn(Boolean skipAndReturn) {
+		this.skipAndReturn = skipAndReturn;
 	}
 
-	public Integer getPhi() {
+	public Boolean getPhi() {
 		return phi;
 	}
 
-	public void setPhi(Integer phi) {
+	public void setPhi(Boolean phi) {
 		this.phi = phi;
 	}
 
-	public Integer getOtc() {
+	public Boolean getOtc() {
 		return otc;
 	}
 
-	public void setOtc(Integer otc) {
+	public void setOtc(Boolean otc) {
 		this.otc = otc;
 	}
 
-	public Integer getDemographics() {
+	public Boolean getDemographics() {
 		return demographics;
 	}
 
-	public void setDemographics(Integer demographics) {
+	public void setDemographics(Boolean demographics) {
 		this.demographics = demographics;
 	}
 
@@ -157,11 +193,11 @@ public class QuestionsDto implements Serializable{
 		this.randomize = randomize;
 	}
 
-	public Integer getDataForHealth() {
+	public Boolean getDataForHealth() {
 		return dataForHealth;
 	}
 
-	public void setDataForHealth(Integer dataForHealth) {
+	public void setDataForHealth(Boolean dataForHealth) {
 		this.dataForHealth = dataForHealth;
 	}
 
@@ -181,11 +217,11 @@ public class QuestionsDto implements Serializable{
 		this.timeRange = timeRange;
 	}
 
-	public String getResponseType() {
+	public Integer getResponseType() {
 		return responseType;
 	}
 
-	public void setResponseType(String responseType) {
+	public void setResponseType(Integer responseType) {
 		this.responseType = responseType;
 	}
 
@@ -197,20 +233,12 @@ public class QuestionsDto implements Serializable{
 		this.conditionDefinition = conditionDefinition;
 	}
 
-	public String getDefine_Condition() {
-		return define_Condition;
+	public String getDefineCondition() {
+		return defineCondition;
 	}
 
-	public void setDefine_Condition(String define_Condition) {
-		this.define_Condition = define_Condition;
-	}
-
-	public Integer getFormId() {
-		return formId;
-	}
-
-	public void setFormId(Integer formId) {
-		this.formId = formId;
+	public void setDefineCondition(String defineCondition) {
+		this.defineCondition = defineCondition;
 	}
 
 	public String getPassFail() {
@@ -221,20 +249,28 @@ public class QuestionsDto implements Serializable{
 		this.passFail = passFail;
 	}
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public String getCreatedOn() {
 		return createdOn;
 	}
 
 	public void setCreatedOn(String createdOn) {
 		this.createdOn = createdOn;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Integer getModifiedBy() {
@@ -245,12 +281,108 @@ public class QuestionsDto implements Serializable{
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getModifiedOn() {
-		return modifiedOn;
+	public Integer getFormId() {
+		return formId;
 	}
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
+	public void setFormId(Integer formId) {
+		this.formId = formId;
+	}
+
+	public String getAddLineChart() {
+		return addLineChart;
+	}
+
+	public void setAddLineChart(String addLineChart) {
+		this.addLineChart = addLineChart;
+	}
+
+	public String getAllowRollbackChart() {
+		return allowRollbackChart;
+	}
+
+	public void setAllowRollbackChart(String allowRollbackChart) {
+		this.allowRollbackChart = allowRollbackChart;
+	}
+
+	public String getChartTitle() {
+		return chartTitle;
+	}
+
+	public void setChartTitle(String chartTitle) {
+		this.chartTitle = chartTitle;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLineChartTimerange() {
+		return lineChartTimerange;
+	}
+
+	public void setLineChartTimerange(String lineChartTimerange) {
+		this.lineChartTimerange = lineChartTimerange;
+	}
+
+	public String getSkippable() {
+		return skippable;
+	}
+
+	public void setSkippable(String skippable) {
+		this.skippable = skippable;
+	}
+
+	public String getStatDisplayName() {
+		return statDisplayName;
+	}
+
+	public void setStatDisplayName(String statDisplayName) {
+		this.statDisplayName = statDisplayName;
+	}
+
+	public String getStatDiaplayUnits() {
+		return statDiaplayUnits;
+	}
+
+	public void setStatDiaplayUnits(String statDiaplayUnits) {
+		this.statDiaplayUnits = statDiaplayUnits;
+	}
+
+	public String getStatFormula() {
+		return statFormula;
+	}
+
+	public void setStatFormula(String statFormula) {
+		this.statFormula = statFormula;
+	}
+
+	public String getStatShortName() {
+		return statShortName;
+	}
+
+	public void setStatShortName(String statShortName) {
+		this.statShortName = statShortName;
+	}
+
+	public String getStatType() {
+		return statType;
+	}
+
+	public void setStatType(String statType) {
+		this.statType = statType;
+	}
+
+	public String getUseStasticData() {
+		return useStasticData;
+	}
+
+	public void setUseStasticData(String useStasticData) {
+		this.useStasticData = useStasticData;
 	}
 	
 }

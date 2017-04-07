@@ -63,7 +63,13 @@ public class QuestionnairesDto implements Serializable{
 	
 	@Column(name="repeat_questionnaire")
 	private Integer repeatQuestionnaire;
-
+	
+	@Column(name="short_title")
+	private String shortTitle;
+	
+	@Column(name="branching")
+	private Boolean branching=false;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -158,6 +164,22 @@ public class QuestionnairesDto implements Serializable{
 
 	public void setRepeatQuestionnaire(Integer repeatQuestionnaire) {
 		this.repeatQuestionnaire = repeatQuestionnaire;
+	}
+
+	public String getShortTitle() {
+		return shortTitle;
+	}
+
+	public void setShortTitle(String shortTitle) {
+		this.shortTitle = shortTitle;
+	}
+
+	public Boolean getBranching() {
+		return branching;
+	}
+
+	public void setBranching(Boolean branching) {
+		this.branching = branching;
 	}
 	
 }

@@ -43,6 +43,18 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="id")
 	private Integer id;
 
+	@Column(name="repeatable")
+	private String repeatable;
+	
+	@Column(name="repeatable_text")
+	private String repeatableText;
+	
+	@Column(name="skiappable")
+	private String skiappable;
+	
+	@Column(name="step_short_title")
+	private String stepShortTitle;
+	
 	public Integer getStepId() {
 		return stepId;
 	}
@@ -97,6 +109,38 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getRepeatable() {
+		return repeatable;
+	}
+
+	public void setRepeatable(String repeatable) {
+		this.repeatable = repeatable;
+	}
+
+	public String getRepeatableText() {
+		return repeatableText;
+	}
+
+	public void setRepeatableText(String repeatableText) {
+		this.repeatableText = repeatableText;
+	}
+
+	public String getSkiappable() {
+		return skiappable;
+	}
+
+	public void setSkiappable(String skiappable) {
+		this.skiappable = skiappable;
+	}
+
+	public String getStepShortTitle() {
+		return stepShortTitle;
+	}
+
+	public void setStepShortTitle(String stepShortTitle) {
+		this.stepShortTitle = stepShortTitle;
 	}
 
 }
