@@ -130,7 +130,7 @@ public class ActivityMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - studyActivityList() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -174,7 +174,7 @@ public class ActivityMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - studyActivityMetadata() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -271,7 +271,7 @@ public class ActivityMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - activeTaskMetadata() :: ERROR", e);
 		}
-		LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Starts");
+		LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Ends");
 		return activityStructureBean;
 	}
 	
@@ -384,7 +384,7 @@ public class ActivityMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - questionnaireMetadata() :: ERROR", e);
 		}
-		LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
+		LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Ends");
 		return activityStructureBean;
 	}
 	

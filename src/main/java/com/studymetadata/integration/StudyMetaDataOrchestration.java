@@ -27,7 +27,6 @@ public class StudyMetaDataOrchestration {
 	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
 	
 	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
-	ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
 
 	/**
 	 * @author Mohan
@@ -157,95 +156,4 @@ public class StudyMetaDataOrchestration {
 		return studyInfoResponse;
 	}
 	
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @return ActivityResponse
-	 * @throws OrchestrationException
-	 */
-	public ActivityResponse studyActivityList(String studyId) throws OrchestrationException{
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityList() :: Starts");
-		ActivityResponse activityResponse = new ActivityResponse();
-		try{
-			activityResponse = activityMetaDataDao.studyActivityList(studyId);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataOrchestration - studyActivityList() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityList() :: Ends");
-		return activityResponse;
-	}
-	
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @param activityId
-	 * @param activityVersion
-	 * @return ActivityResponse
-	 * @throws OrchestrationException
-	 */
-	public ActivityMetaDataResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Starts");
-		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
-		try{
-			activityMetaDataResponse = activityMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataOrchestration - studyActivityMetadata() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyActivityMetadata() :: Ends");
-		return activityMetaDataResponse;
-	}
-	
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @return StudyDashboardResponse
-	 * @throws OrchestrationException
-	 */
-	public StudyDashboardResponse studyDashboardInfo(String studyId) throws OrchestrationException{
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyDashboardInfo() :: Starts");
-		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
-		try{
-			studyDashboardResponse = studyMetaDataDao.studyDashboardInfo(studyId);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataOrchestration - studyDashboardInfo() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataOrchestration - studyDashboardInfo() :: Ends");
-		return studyDashboardResponse;
-	}
-	
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @return TermsPolicyResponse
-	 * @throws OrchestrationException
-	 */
-	public TermsPolicyResponse termsPolicy(String studyId) throws OrchestrationException{
-		LOGGER.info("INFO: StudyMetaDataOrchestration - termsPolicy() :: Starts");
-		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
-		try{
-			termsPolicyResponse = studyMetaDataDao.termsPolicy(studyId);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataOrchestration - termsPolicy() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataOrchestration - termsPolicy() :: Ends");
-		return termsPolicyResponse;
-	}
-	
-	/**
-	 * @author Mohan
-	 * @param skip
-	 * @return NotificationsResponse
-	 * @throws OrchestrationException
-	 */
-	public NotificationsResponse notifications(String skip) throws OrchestrationException{
-		LOGGER.info("INFO: StudyMetaDataOrchestration - notifications() :: Starts");
-		NotificationsResponse notificationsResponse = new NotificationsResponse();
-		try{
-			notificationsResponse = studyMetaDataDao.notifications(skip);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataOrchestration - notifications() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataOrchestration - notifications() :: Ends");
-		return notificationsResponse;
-	}
 }

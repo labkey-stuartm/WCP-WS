@@ -169,7 +169,7 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - gatewayAppResourcesInfo() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -263,7 +263,7 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -450,7 +450,7 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -518,7 +518,7 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - consentDocument() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -598,7 +598,7 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - resourcesForStudy() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -687,93 +687,12 @@ public class StudyMetaDataDao {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyInfo() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Ends");
 		return studyInfoResponse;
-	}
-
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @return StudyDashboardResponse
-	 * @throws DAOException
-	 */
-	public StudyDashboardResponse studyDashboardInfo(String studyId) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - studyDashboardInfo() :: Starts");
-		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
-		Integer actualStudyId = null;
-		try{
-			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();
-			if(actualStudyId != null){
-				DashboardBean dashboard = new DashboardBean();
-				List<ChartsBean> charts = new ArrayList<ChartsBean>();
-				ChartsBean cbean = new ChartsBean();
-				cbean.setConfiguration(singleLineChartDetails());
-				charts.add(cbean);
-				dashboard.setCharts(charts);
-				List<StatisticsBean> statisticsList = new ArrayList<StatisticsBean>();
-				StatisticsBean statistics = new StatisticsBean();
-				statisticsList.add(statistics);
-				dashboard.setStatistics(statisticsList);
-				studyDashboardResponse.setDashboard(dashboard);
-				studyDashboardResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			}else{
-				studyDashboardResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
-			}
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - studyDashboardInfo() :: ERROR", e);
-		}finally{
-			if(null != session){
-				session.close();
-			}
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - studyDashboardInfo() :: Ends");
-		return studyDashboardResponse;
-	}
-
-	/**
-	 * @author Mohan
-	 * @param studyId
-	 * @return TermsPolicyResponse
-	 * @throws DAOException
-	 */
-	public TermsPolicyResponse termsPolicy(String studyId) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Starts");
-		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
-		try{
-			termsPolicyResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			termsPolicyResponse.setPrivacy(propMap.get("fda.smd.pricaypolicy"));
-			termsPolicyResponse.setTerms(propMap.get("fda.smd.terms"));
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - termsPolicy() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Ends");
-		return termsPolicyResponse;
-	}
-
-	/**
-	 * @author Mohan
-	 * @param skip
-	 * @return NotificationsResponse
-	 * @throws DAOException
-	 */
-	public NotificationsResponse notifications(String skip) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Starts");
-		NotificationsResponse notificationsResponse = new NotificationsResponse();
-		try{
-			if(StringUtils.isNotEmpty(skip)){
-				notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			}
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - notifications() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Ends");
-		return notificationsResponse;
 	}
 
 	/*------------------------------Common methods starts------------------------------*/
@@ -815,215 +734,4 @@ public class StudyMetaDataDao {
 		return consentTitle;
 	}
 	
-	/*-----------------------------Manipulate chart data methods starts----------------------------------*/
-	/**
-	 * @author Mohan
-	 * @return Map<String, Object>
-	 * @throws Exception
-	 * 
-	 * This method is used to fetch the chart configuration details for single line chart
-	 */
-	public Map<String, Object> singleLineChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - singleLineChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "single");
-			configuration.put("gridlines", false);
-			configuration.put("animated", false);
-			configuration.put("scaling", 0); //x-axis divisions
-
-			Map<String, Object> axisColor = new HashMap<>();
-			axisColor.put("x-axis", "#fff"); //hexcolor
-			axisColor.put("y-axis", "#000"); //hexcolor
-			configuration.put("axisColor", axisColor);
-
-			configuration.put("max", 0.0d);
-			configuration.put("min", 0.0d);
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles);
-			configuration.put("defaultText", "");
-
-			//single setting only
-			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
-			settings.put("numberOfPoints", 1);
-			List<Double> pointValues = new ArrayList<>();
-			settings.put("pointValues", pointValues);
-			settings.put("lineColor", "#d3d3d3");
-			settingsList.add(settings);
-			configuration.put("settings", settingsList);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - singleLineChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - singleLineChartDetails() :: Ends");
-		return configuration;
-	}
-
-	/**
-	 * @author Mohan
-	 * @return Map<String, Object>
-	 * @throws Exception
-	 * 
-	 * This method is used to fetch the chart configuration details for multiple line chart
-	 */
-	public Map<String, Object> multipleLineChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - multipleLineChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "multiple");
-			configuration.put("gridlines", false);
-			configuration.put("animated", false);
-			configuration.put("scaling", 0); //x-axis divisions
-
-			Map<String, Object> axisColor = new HashMap<>();
-			axisColor.put("x-axis", "#fff"); //hexcolor
-			axisColor.put("y-axis", "#000"); //hexcolor
-			configuration.put("axisColor", axisColor);
-
-			configuration.put("max", 0.0d);
-			configuration.put("min", 0.0d);
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles);
-			configuration.put("defaultText", "");
-
-			// more than one setting
-			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
-			settings.put("numberOfPoints", 1);
-			List<Double> pointValues = new ArrayList<>();
-			settings.put("pointValues", pointValues);
-			settings.put("lineColor", "#d3d3d3");
-			settingsList.add(settings);
-			configuration.put("settings", settingsList);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - multipleLineChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - multipleLineChartDetails() :: Ends");
-		return configuration;
-	}
-
-	/**
-	 * @author Mohan
-	 * @return Object
-	 * @throws DAOException
-	 * 
-	 * This method is used to fetch the chart configuration details for unique pie chart
-	 */
-	public Map<String, Object> uniquePieChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - uniquePieChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "unique-responses");
-			configuration.put("numberOfSegments", 0); // =0, calculated at run time <number of unique responses>
-
-			List<Double> values = new ArrayList<>();
-			configuration.put("values", values); //calculated <count of each unique response / total number of responses>
-
-			List<String> colors = new ArrayList<>();
-			configuration.put("colors", colors); //<default colors>
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles); //<unique response>
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - uniquePieChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - uniquePieChartDetails() :: Ends");
-		return configuration;
-	}
-
-	/**
-	 * @author Mohan
-	 * @return Object
-	 * @throws DAOException
-	 * 
-	 * This method is used to fetch the chart configuration details for range pie chart
-	 */
-	public Map<String, Object> rangePieChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - rangePieChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "range-responses");
-			configuration.put("numberOfSegments", 5); //Number of ranges
-
-			List<Double> values = new ArrayList<>();
-			configuration.put("values", values); //calculated <count of responses in each range / total number of responses>
-
-			List<String> colors = new ArrayList<>();
-			configuration.put("colors", colors);
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles); //<unique response>
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - rangePieChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - rangePieChartDetails() :: Ends");
-		return configuration;
-	}
-
-	/**
-	 * @author Mohan
-	 * @return Object
-	 * @throws DAOException
-	 * 
-	 * This method is used to fetch the chart configuration details for single bar chart
-	 */
-	public Map<String, Object> singleBarChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - singleBarChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "single");
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles);
-
-			//single setting only
-			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
-			settings.put("numberOfPoints", 1);
-			List<Double> pointValues = new ArrayList<>();
-			settings.put("pointValues", pointValues);
-			settings.put("barColor", "#d3d3d3");
-			settingsList.add(settings);
-			configuration.put("settings", settingsList);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - singleBarChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - singleBarChartDetails() :: Ends");
-		return configuration;
-	}
-
-	/**
-	 * @author Mohan
-	 * @return Object
-	 * @throws DAOException
-	 * 
-	 * This method is used to fetch the chart configuration details for multiple bar chart
-	 */
-	public Map<String, Object> multipleBarChartDetails() throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - multipleBarChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
-		try{
-			configuration.put("subType", "multiple");
-
-			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles);
-
-			//more than one setting
-			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
-			settings.put("numberOfPoints", 1);
-			List<Double> pointValues = new ArrayList<>();
-			settings.put("pointValues", pointValues);
-			settings.put("barColor", "#d3d3d3");
-			settingsList.add(settings);
-			configuration.put("settings", settingsList);
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - multipleBarChartDetails() :: ERROR", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - multipleBarChartDetails() :: Ends");
-		return configuration;
-	}
-	/*-----------------------------Manipulate chart data methods ends----------------------------------*/
 }
