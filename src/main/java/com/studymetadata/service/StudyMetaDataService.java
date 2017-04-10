@@ -1,8 +1,6 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;

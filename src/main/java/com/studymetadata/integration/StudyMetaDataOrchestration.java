@@ -4,21 +4,15 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.studymetadata.dao.ActivityMetaDataDao;
 import com.studymetadata.dao.StudyMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
-import com.studymetadata.bean.ActivityMetaDataResponse;
-import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.ConsentDocumentResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
-import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.ResourcesResponse;
-import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
-import com.studymetadata.bean.TermsPolicyResponse;
 
 public class StudyMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);

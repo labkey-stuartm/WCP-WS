@@ -27,7 +27,7 @@ public class RestAuthenticationFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-			String pingPath = "/ping";
+			String pingPath = "/studyData/ping";
 			if(StringUtils.isNotEmpty(authCredentials)){
 				AuthenticationService authenticationService = new AuthenticationService();
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials);
