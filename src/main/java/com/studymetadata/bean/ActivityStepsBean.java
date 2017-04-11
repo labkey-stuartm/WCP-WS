@@ -2,6 +2,7 @@ package com.studymetadata.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class ActivityStepsBean {
 	private String groupName = "";
 	private Boolean repeatable = false;
 	private String repeatableText = "";
-	private List<String[]> destinations = new ArrayList<>();
+	private List<DestinationBean> destinations = new ArrayList<>();
 	private String healthDataKey = "";
 	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
 	private List<ActivityStepsBean> steps = new ArrayList<>(); //Question
@@ -75,10 +76,10 @@ public class ActivityStepsBean {
 	public void setRepeatableText(String repeatableText) {
 		this.repeatableText = repeatableText;
 	}
-	public List<String[]> getDestinations() {
+	public List<DestinationBean> getDestinations() {
 		return destinations;
 	}
-	public void setDestinations(List<String[]> destinations) {
+	public void setDestinations(List<DestinationBean> destinations) {
 		this.destinations = destinations;
 	}
 	public String getHealthDataKey() {

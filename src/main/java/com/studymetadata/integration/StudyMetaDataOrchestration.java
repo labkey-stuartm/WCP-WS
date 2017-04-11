@@ -1,11 +1,11 @@
 package com.studymetadata.integration;
 
 import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 
 import com.studymetadata.dao.StudyMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
+import com.studymetadata.util.Mail;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.ConsentDocumentResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
@@ -148,6 +148,25 @@ public class StudyMetaDataOrchestration {
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Ends");
 		return studyInfoResponse;
+	}
+	
+	/**
+	 * This method is used to test the sample mail
+	 * 
+	 * @author Mohan
+	 * @return boolean
+	 * @throws OrchestrationException
+	 */
+	public boolean sampleMail() throws OrchestrationException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - sampleMail() :: Starts");
+		boolean flag = false;
+		try{
+			flag = Mail.sendemail("mohant@boston-technology.com","Test Mail", "Hello!");
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - sampleMail() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - sampleMail() :: Ends");
+		return flag;
 	}
 	
 }

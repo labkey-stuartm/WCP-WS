@@ -34,27 +34,30 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="step_type")
 	private String stepType;
 	
+	@Column(name="step_short_title")
+	private String stepShortTitle;
+	
+	@Column(name="skiappable")
+	private String skiappable;
+	
+	@Column(name="destination_step")
+	private Integer destinationStep;
+	
 	@Column(name="randomization")
 	private String randomization;
 
 	@Column(name="sequence_no")
 	private Integer sequenceNo;
 	
-	@Column(name="id")
-	private Integer id;
-
 	@Column(name="repeatable")
-	private String repeatable;
+	private String repeatable="No";
 	
 	@Column(name="repeatable_text")
 	private String repeatableText;
 	
-	@Column(name="skiappable")
-	private String skiappable;
-	
-	@Column(name="step_short_title")
-	private String stepShortTitle;
-	
+	@Column(name="status")
+	private Boolean status;
+
 	public Integer getStepId() {
 		return stepId;
 	}
@@ -87,6 +90,30 @@ public class QuestionnairesStepsDto implements Serializable{
 		this.stepType = stepType;
 	}
 
+	public String getStepShortTitle() {
+		return stepShortTitle;
+	}
+
+	public void setStepShortTitle(String stepShortTitle) {
+		this.stepShortTitle = stepShortTitle;
+	}
+
+	public String getSkiappable() {
+		return skiappable;
+	}
+
+	public void setSkiappable(String skiappable) {
+		this.skiappable = skiappable;
+	}
+
+	public Integer getDestinationStep() {
+		return destinationStep;
+	}
+
+	public void setDestinationStep(Integer destinationStep) {
+		this.destinationStep = destinationStep;
+	}
+
 	public String getRandomization() {
 		return randomization;
 	}
@@ -101,14 +128,6 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setSequenceNo(Integer sequenceNo) {
 		this.sequenceNo = sequenceNo;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getRepeatable() {
@@ -127,20 +146,12 @@ public class QuestionnairesStepsDto implements Serializable{
 		this.repeatableText = repeatableText;
 	}
 
-	public String getSkiappable() {
-		return skiappable;
+	public Boolean getStatus() {
+		return status;
 	}
 
-	public void setSkiappable(String skiappable) {
-		this.skiappable = skiappable;
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
-
-	public String getStepShortTitle() {
-		return stepShortTitle;
-	}
-
-	public void setStepShortTitle(String stepShortTitle) {
-		this.stepShortTitle = stepShortTitle;
-	}
-
+	
 }

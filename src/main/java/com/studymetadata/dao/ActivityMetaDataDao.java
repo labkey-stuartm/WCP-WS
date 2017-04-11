@@ -2,6 +2,7 @@ package com.studymetadata.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -21,6 +22,7 @@ import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityMetadataBean;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.ActivityStepsBean;
+import com.studymetadata.bean.DestinationBean;
 import com.studymetadata.bean.appendix.ActivityStructureBean;
 import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
 import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
@@ -91,8 +93,9 @@ public class ActivityMetaDataDao {
 						activityBean.setFrequency(frequencyDetails);
 
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
-						activityBean.setStartTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeStart())?"":activeTaskDto.getActiveTaskLifetimeStart());
-						activityBean.setEndTime(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd());
+						activityBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						
 						activitiesBeanList.add(activityBean);
 					}
 				}
@@ -112,9 +115,9 @@ public class ActivityMetaDataDao {
 						activityBean.setFrequency(frequencyDetails);
 
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
-						activityBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())?"":questionaire.getStudyLifetimeStart());
-						activityBean.setEndTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd());
-
+						activityBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getStudyLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getStudyLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						
 						activitiesBeanList.add(activityBean);
 					}
 				}
@@ -214,12 +217,13 @@ public class ActivityMetaDataDao {
 
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
 				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
-				metadata.setEndDate(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd());
+				
+				metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setLastModified(""); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getTaskName())?"":activeTaskDto.getTaskName());
-				metadata.setStartDate(StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeStart())?"":activeTaskDto.getActiveTaskLifetimeStart());
+				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
-				metadata.setVersion(""); //column not there in the database
+				metadata.setVersion("1.0"); //column not there in the database
 				activityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
@@ -304,12 +308,13 @@ public class ActivityMetaDataDao {
 	
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
 				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
-				metadata.setEndDate(StringUtils.isEmpty(questionnaireDto.getStudyLifetimeEnd())?"":questionnaireDto.getStudyLifetimeEnd());
-				metadata.setLastModified(StringUtils.isEmpty(questionnaireDto.getModifiedDate())?"":questionnaireDto.getModifiedDate());
+				
+				metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getStudyLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+				metadata.setLastModified(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setName(StringUtils.isEmpty(questionnaireDto.getTitle())?"":questionnaireDto.getTitle());
-				metadata.setStartDate(StringUtils.isEmpty(questionnaireDto.getStudyLifetimeStart())?"":questionnaireDto.getStudyLifetimeStart());
+				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getStudyLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
-				metadata.setVersion(""); //column not there in the database
+				metadata.setVersion("1.0"); //column not there in the database
 				activityStructureBean.setMetadata(metadata);
 	
 				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo");
@@ -408,10 +413,10 @@ public class ActivityMetaDataDao {
 					runDetailsBean = getActiveTaskFrequencyDetailsForDaily(activeTask, runDetailsBean, session);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
-					runDetailsBean = getActiveTaskFrequencyDetailsForWeekly(activeTask, runDetailsBean);
+					//runDetailsBean = getActiveTaskFrequencyDetailsForWeekly(activeTask, runDetailsBean);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
-					runDetailsBean = getActiveTaskFrequencyDetailsForMonthly(activeTask, runDetailsBean);
+					//runDetailsBean = getActiveTaskFrequencyDetailsForMonthly(activeTask, runDetailsBean);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
 					runDetailsBean = getActiveTaskFrequencyDetailsForManuallySchedule(activeTask, runDetailsBean, session);
@@ -441,8 +446,8 @@ public class ActivityMetaDataDao {
 		try{
 			if(activeTask != null){
 				ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
-				oneTimeBean.setStartTime(StringUtils.isEmpty(activeTask.getActiveTaskLifetimeStart())?"":activeTask.getActiveTaskLifetimeStart());
-				oneTimeBean.setEndTime(StringUtils.isEmpty(activeTask.getActiveTaskLifetimeEnd())?"":activeTask.getActiveTaskLifetimeEnd());
+				oneTimeBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTask.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+				oneTimeBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTask.getActiveTaskLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				runDetailsBean.add(oneTimeBean);
 			}
 		}catch(Exception e){
@@ -471,7 +476,16 @@ public class ActivityMetaDataDao {
 				query = session.createQuery(" from ActiveTaskFrequencyDto ATFDTO where ATFDTO.activeTaskId="+activeTask.getId());
 				activeTaskDailyFrequencyList = query.list();
 				if(activeTaskDailyFrequencyList != null && !activeTaskDailyFrequencyList.isEmpty()){
-					Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
+					for(ActiveTaskFrequencyDto activeTaskFrequency : activeTaskDailyFrequencyList){
+						ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+						String activeTaskStartDate = activeTaskFrequency.getFrequencyDate()+" "+activeTaskFrequency.getFrequencyTime();
+						String activeTaskEndDate = StudyMetaDataUtil.addDaysToDate(activeTaskFrequency.getFrequencyDate(), 1)+" "+activeTaskFrequency.getFrequencyTime();
+						dailyBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskStartDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						dailyBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskEndDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						runDetailsBean.add(dailyBean);
+					}
+					
+					/*Integer repeatCount = (activeTask.getRepeatActiveTask() == null||activeTask.getRepeatActiveTask() == 0)?1:activeTask.getRepeatActiveTask();
 					String activeTaskStartDate = activeTask.getActiveTaskLifetimeStart();
 					while(repeatCount > 0){
 						String activeTaskEndDate;
@@ -509,7 +523,7 @@ public class ActivityMetaDataDao {
 
 						activeTaskStartDate = dayEndDate;
 						repeatCount--;
-					}
+					}*/
 				}
 			}
 		}catch(Exception e){
@@ -670,8 +684,10 @@ public class ActivityMetaDataDao {
 			if(manuallyScheduleFrequencyList != null && !manuallyScheduleFrequencyList.isEmpty()){
 				for(ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList){
 					ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
-					manuallyScheduleBean.setEndTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyEndDate())?"":customFrequencyDto.getFrequencyEndDate());
-					manuallyScheduleBean.setStartTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyStartDate())?"":customFrequencyDto.getFrequencyStartDate());
+					String startDate = customFrequencyDto.getFrequencyStartDate()+" "+customFrequencyDto.getFrequencyTime()+":00";
+					String endDate = customFrequencyDto.getFrequencyEndDate()+" "+customFrequencyDto.getFrequencyTime()+":00";
+					manuallyScheduleBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(startDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+					manuallyScheduleBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(endDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
 					runDetailsBean.add(manuallyScheduleBean);
 				}
 			}
@@ -703,10 +719,10 @@ public class ActivityMetaDataDao {
 					runDetailsBean = getQuestionnaireFrequencyDetailsForDaily(questionaire, runDetailsBean, session);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY:
-					runDetailsBean = getQuestionnaireFrequencyDetailsForWeekly(questionaire, runDetailsBean);
+					//runDetailsBean = getQuestionnaireFrequencyDetailsForWeekly(questionaire, runDetailsBean);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY:
-					runDetailsBean = getQuestionnaireFrequencyDetailsForMonthly(questionaire, runDetailsBean);
+					//runDetailsBean = getQuestionnaireFrequencyDetailsForMonthly(questionaire, runDetailsBean);
 					break;
 				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
 					runDetailsBean = getQuestionnaireFrequencyDetailsForManuallySchedule(questionaire, runDetailsBean, session);
@@ -736,8 +752,8 @@ public class ActivityMetaDataDao {
 		try{
 			if(questionaire != null){
 				ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
-				oneTimeBean.setStartTime(StringUtils.isEmpty(questionaire.getStudyLifetimeStart())?"":questionaire.getStudyLifetimeStart());
-				oneTimeBean.setEndTime(StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd());
+				oneTimeBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getStudyLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+				oneTimeBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getStudyLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				runDetailsBean.add(oneTimeBean);
 			}
 		}catch(Exception e){
@@ -767,8 +783,17 @@ public class ActivityMetaDataDao {
 				query = session.createQuery(" from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId());
 				dailyFrequencyList = query.list();
 				if(dailyFrequencyList != null && !dailyFrequencyList.isEmpty()){
+					for(QuestionnairesFrequenciesDto questionnaireFrequencyDto : dailyFrequencyList){
+						ActivityFrequencyScheduleBean dailyBean = new ActivityFrequencyScheduleBean();
+						String activeTaskStartDate = questionnaireFrequencyDto.getFrequencyDate()+" "+questionnaireFrequencyDto.getFrequencyTime();
+						String activeTaskEndDate = StudyMetaDataUtil.addDaysToDate(questionnaireFrequencyDto.getFrequencyDate(), 1)+" "+questionnaireFrequencyDto.getFrequencyTime();
+						dailyBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskStartDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						dailyBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskEndDate, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ"));
+						runDetailsBean.add(dailyBean);
+					}
+					
 					//old approach was replaced
-					Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
+					/*Integer repeatCount = (questionaire.getRepeatQuestionnaire() == null||questionaire.getRepeatQuestionnaire() == 0)?1:questionaire.getRepeatQuestionnaire();
 					String questionaireStartDate = questionaire.getStudyLifetimeStart();
 					while(repeatCount > 0){
 						String questionaireEndDate;
@@ -804,7 +829,7 @@ public class ActivityMetaDataDao {
 
 						questionaireStartDate = dayEndDate;
 						repeatCount--;
-					}
+					}*/
 				}
 			}
 		}catch(Exception e){
@@ -964,8 +989,8 @@ public class ActivityMetaDataDao {
 			if(manuallyScheduleFrequencyList != null && !manuallyScheduleFrequencyList.isEmpty()){
 				for(QuestionnairesCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList){
 					ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
-					manuallyScheduleBean.setEndTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyEndDate())?"":customFrequencyDto.getFrequencyEndDate());
-					manuallyScheduleBean.setStartTime(StringUtils.isEmpty(customFrequencyDto.getFrequencyStartDate())?"":customFrequencyDto.getFrequencyStartDate());
+					manuallyScheduleBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(customFrequencyDto.getFrequencyEndDate(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
+					manuallyScheduleBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(customFrequencyDto.getFrequencyStartDate(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 					runDetailsBean.add(manuallyScheduleBean);
 				}
 			}
@@ -1033,7 +1058,8 @@ public class ActivityMetaDataDao {
 
 					instructionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION.toLowerCase());
 					instructionBean.setResultType("");
-					instructionBean.setKey(instructionStepDetails.getStepShortTitle() == null?"":instructionStepDetails.getStepShortTitle());
+					/*instructionBean.setKey(instructionStepDetails.getStepShortTitle() == null?"":instructionStepDetails.getStepShortTitle());*/
+					instructionBean.setKey(instructionStepDetails.getInstructionFormId().toString());
 					instructionBean.setTitle(StringUtils.isEmpty(instructionsDto.getInstructionTitle())?"":instructionsDto.getInstructionTitle());
 					instructionBean.setText(StringUtils.isEmpty(instructionsDto.getInstructionText())?"":instructionsDto.getInstructionText());
 					instructionBean.setSkippable((instructionStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(instructionStepDetails.getSkiappable()))?false:true);
@@ -1041,7 +1067,11 @@ public class ActivityMetaDataDao {
 					instructionBean.setRepeatable((instructionStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(instructionStepDetails.getRepeatable()))?false:true);
 					instructionBean.setRepeatableText(instructionStepDetails.getRepeatableText() == null?"":instructionStepDetails.getRepeatableText());
 
-					List<String[]> destinations = new ArrayList<>();
+					List<DestinationBean> destinations = new ArrayList<>();
+					DestinationBean dest = new DestinationBean();
+					dest.setCondition("");
+					dest.setDestination(instructionStepDetails.getDestinationStep().toString());
+					destinations.add(dest);
 					instructionBean.setDestinations(destinations);
 
 					stepsSequenceTreeMap.put(sequenceNoMap.get((instructionsDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION).toString()), instructionBean);
@@ -1084,14 +1114,27 @@ public class ActivityMetaDataDao {
 						questionBean.setResultType(""); //NA
 					}
 					questionBean.setText("");
-					questionBean.setKey(questionStepDetails.getStepShortTitle() == null?"":questionStepDetails.getStepShortTitle());
+					/*questionBean.setKey(questionStepDetails.getStepShortTitle() == null?"":questionStepDetails.getStepShortTitle());*/
+					questionBean.setKey(questionStepDetails.getInstructionFormId().toString());
 					questionBean.setTitle(questionsDto.getShortTitle() == null?"":questionsDto.getShortTitle());
 					questionBean.setSkippable((questionStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getSkiappable()))?false:true); //NA
 					questionBean.setGroupName(""); //NA
 					questionBean.setRepeatable((questionStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getRepeatable()))?false:true); //NA
 					questionBean.setRepeatableText(questionStepDetails.getRepeatableText() == null?"":questionStepDetails.getRepeatableText()); //NA
 
-					List<String[]> destinations = new ArrayList<>();
+					
+					List<DestinationBean> destinations = new ArrayList<>();
+					
+					DestinationBean dest = new DestinationBean();
+					dest.setCondition("Yes");
+					dest.setDestination(questionStepDetails.getDestinationStep().toString());
+					destinations.add(dest);
+					
+					DestinationBean dest1 = new DestinationBean();
+					dest1.setCondition("No");
+					dest1.setDestination(questionStepDetails.getDestinationStep().toString());
+					destinations.add(dest1);
+					
 					questionBean.setDestinations(destinations);
 
 					questionBean.setHealthDataKey("");
@@ -1136,7 +1179,8 @@ public class ActivityMetaDataDao {
 					
 					formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
 					formBean.setResultType("grouped");
-					formBean.setKey(formStepDetails.getStepShortTitle() == null?"":formStepDetails.getStepShortTitle());
+					/*formBean.setKey(formStepDetails.getStepShortTitle() == null?"":formStepDetails.getStepShortTitle());*/
+					formBean.setKey(formStepDetails.getInstructionFormId().toString());
 					formBean.setTitle("");
 					formBean.setText("");
 					formBean.setSkippable((formStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getSkiappable()))?false:true);
@@ -1144,7 +1188,12 @@ public class ActivityMetaDataDao {
 					formBean.setRepeatable((formStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getRepeatable()))?false:true);
 					formBean.setRepeatableText(formStepDetails.getRepeatableText() == null?"":formStepDetails.getRepeatableText());
 
-					List<String[]> destinations = new ArrayList<>();
+					
+					List<DestinationBean> destinations = new ArrayList<>();
+					DestinationBean dest = new DestinationBean();
+					dest.setCondition("");
+					dest.setDestination(formStepDetails.getDestinationStep().toString());
+					destinations.add(dest);
 					formBean.setDestinations(destinations);
 					List<QuestionsDto> formQuestionsList;
 					query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(formQuestionIdsList, ',')+")");
@@ -1164,15 +1213,14 @@ public class ActivityMetaDataDao {
 							}else{
 								formQuestionBean.setResultType(""); //NA
 							}
-							formQuestionBean.setKey("");
+							formQuestionBean.setKey(formQuestionDto.getId().toString());
 							formQuestionBean.setTitle(StringUtils.isEmpty(formQuestionDto.getShortTitle())?"":formQuestionDto.getShortTitle());
 							formQuestionBean.setSkippable(false); //NA
 							formQuestionBean.setGroupName(""); //NA
 							formQuestionBean.setRepeatable(false); //NA
 							formQuestionBean.setRepeatableText(""); //NA
 
-							List<String[]> formQuestiondestinations = new ArrayList<>();
-							formQuestionBean.setDestinations(formQuestiondestinations);
+							//formQuestionBean.setDestinations();
 
 							formQuestionBean.setHealthDataKey("");
 
@@ -1324,8 +1372,8 @@ public class ActivityMetaDataDao {
 				case StudyMetaDataConstants.QUESTION_DATE:
 					questionFormat.put("style", ""); //Date/Date-Time
 					questionFormat.put("minDate", ""); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-					questionFormat.put("maxDate", 0); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-					questionFormat.put("default", 0); //Date
+					questionFormat.put("maxDate", ""); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+					questionFormat.put("default", ""); //Date
 					break;
 				case StudyMetaDataConstants.QUESTION_TEXT: 
 					questionFormat = formatQuestionTextDetails(questionDto);

@@ -27,7 +27,8 @@ public class RestAuthenticationFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-			String pingPath = "/studyData/ping";
+			String pingPath = "/ping";
+			String emailPath = "/mail";
 			if(StringUtils.isNotEmpty(authCredentials)){
 				AuthenticationService authenticationService = new AuthenticationService();
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials);
@@ -44,7 +45,7 @@ public class RestAuthenticationFilter implements Filter {
 				}
 			}else{
 				//to ping the Web Services
-				if(pingPath.equalsIgnoreCase(httpServletRequest.getPathInfo())){
+				if(pingPath.equalsIgnoreCase(httpServletRequest.getPathInfo()) || emailPath.equalsIgnoreCase(httpServletRequest.getPathInfo())){
 					filter.doFilter(request, response);
 				}else{
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;

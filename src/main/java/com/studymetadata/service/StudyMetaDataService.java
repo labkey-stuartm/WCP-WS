@@ -1,6 +1,7 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -13,11 +14,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import com.studymetadata.exception.ErrorCodes;
+import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.integration.StudyMetaDataOrchestration;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -36,7 +39,7 @@ import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.SuccessResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 
-@Path("/studyData/")
+@Path("/")
 public class StudyMetaDataService {
 	
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataService.class);
@@ -286,6 +289,28 @@ public class StudyMetaDataService {
 		return response;
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Path("mail")
+	public String sampleMail(){
+		LOGGER.info("INFO: StudyMetaDataService - sampleMail() :: Starts ");
+		boolean flag;
+		String response = "";
+		try {
+			flag = studyMetaDataOrchestration.sampleMail();
+			if(flag){
+				response = "Mail Sent Successfully";
+			}else{
+				response = "Sending mail failed";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - sampleMail() :: Ends ");
+		return response;
+	}
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@Consumes(MediaType.APPLICATION_JSON)

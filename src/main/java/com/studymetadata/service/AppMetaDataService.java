@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import com.studymetadata.bean.AppResponse;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
@@ -101,9 +102,9 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataService.class);
 		}
 		LOGGER.info("INFO: AppMetaDataService - notifications() :: Ends");
 		return notificationsResponse;
-	}
+	}*/
 	
-	*//**
+	/**
 	 * This method is used to save feedback
 	 * @author Mohan
 	 * @param subject
@@ -111,19 +112,20 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataService.class);
 	 * @param context
 	 * @param response
 	 * @return Object
-	 *//*
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("feedback")
 	public Object feedbackDetails(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: AppMetaDataService - feedbackDetails() :: Starts");
+		AppResponse appResponse = new AppResponse();
 		try{
 			JSONObject serviceJson = new JSONObject(params);
 			String subject = serviceJson.getString("subject");
 			String body = serviceJson.getString("body");
 			if(StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body)){
-				LOGGER.info("feedback YET TO DEVELOP");
+				appResponse = appMetaDataOrchestration.feedback(subject, body);
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -134,34 +136,34 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataService.class);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: AppMetaDataService - feedbackDetails() :: Ends");
-		return null;
+		return appResponse;
 	}
 	
-	*//**
+	/**
 	 * This method is used to save the contact us details
 	 * @author Mohan
 	 * @param studyId
 	 * @param context
 	 * @param response
 	 * @return Object
-	 *//*
+	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("contactUs")
 	public Object contactUsDetails(String params, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: AppMetaDataService - contactUsDetails() :: Starts");
+		AppResponse appResponse = new AppResponse();
 		try{
 			JSONObject serviceJson = new JSONObject(params);
-			String studyId = serviceJson.getString("studyId");
 			String subject = serviceJson.getString("subject");
 			String body = serviceJson.getString("body");
 			String firstName = serviceJson.getString("firstName");
 			String email = serviceJson.getString("email");
-			boolean inputFlag1 = StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body);
+			boolean inputFlag1 = StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body);
 			boolean inputFlag2 = StringUtils.isNotEmpty(firstName) && StringUtils.isNotEmpty(email);
 			if(inputFlag1 && inputFlag2){
-				LOGGER.info("contactUs YET TO DEVELOP");
+				appResponse = appMetaDataOrchestration.contactUsDetails(subject, body, firstName, email);
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -172,10 +174,10 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataService.class);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: AppMetaDataService - contactUsDetails() :: Ends");
-		return null;
+		return appResponse;
 	}
 	
-	*//**
+	/**
 	 * This method is used to check for latest app updates
 	 * @author Mohan
 	 * @param params

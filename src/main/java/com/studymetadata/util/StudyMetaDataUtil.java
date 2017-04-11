@@ -934,7 +934,7 @@ public class StudyMetaDataUtil {
 				Date inputDate = inputSDF.parse(input);
 				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat); //yyyy-MM-dd'T'hh:mm:ssZ
 				//outputSDF.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-				//outputSDF.setTimeZone(TimeZone.getDefault()); //TimeZone.getTimeZone("CST")
+				outputSDF.setTimeZone(TimeZone.getDefault()); //TimeZone.getTimeZone("CST")
 				output = outputSDF.format(inputDate);
 			}
 		}catch(Exception e){

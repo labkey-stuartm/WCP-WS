@@ -1,6 +1,8 @@
 package com.studymetadata.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -11,6 +13,7 @@ import org.hibernate.Transaction;
 
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
@@ -69,5 +72,40 @@ public class AppMetaDataDao {
 		}
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Ends");
 		return notificationsResponse;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @return superAdminsList
+	 * @throws DAOException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<UserDto> superAdminsList() throws DAOException{
+		LOGGER.info("INFO: AppMetaDataDao - superAdminsList() :: Starts");
+		List<UserDto> superAdminsList = new ArrayList<>();
+		List<Object[]> adminList = null;
+		try{
+			session = sessionFactory.openSession();
+			query = session.createSQLQuery("select u.email, u.first_name, u.last_name, u.user_id from users u where u.role_id=1 and u.status=true");
+			adminList = query.list();
+			if(adminList != null && !adminList.isEmpty()){
+				for(Object[] obj : adminList){
+					UserDto admin = new UserDto();
+					admin.setUserEmail((String) obj[0]);
+					admin.setFirstName((String) obj[1]);
+					admin.setLastName((String) obj[2]);
+					admin.setUserId((Integer) obj[3]);
+					superAdminsList.add(admin);
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataDao - superAdminsList() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: AppMetaDataDao - superAdminsList() :: Ends");
+		return superAdminsList;
 	}
 }
