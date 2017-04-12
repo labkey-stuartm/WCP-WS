@@ -111,12 +111,12 @@ public class StudyDto implements Serializable{
 	@Column(name="study_tagline")
 	private String studyTagline;
 	
-	@Column(name="study_version")
-	private String studyVersion;
-	
 	@Column(name = "allow_rejoin_text")
 	private String allowRejoinText;
 	
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -333,20 +333,20 @@ public class StudyDto implements Serializable{
 		this.studyTagline = studyTagline;
 	}
 
-	public String getStudyVersion() {
-		return studyVersion;
-	}
-
-	public void setStudyVersion(String studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-
 	public String getAllowRejoinText() {
 		return allowRejoinText;
 	}
 
 	public void setAllowRejoinText(String allowRejoinText) {
 		this.allowRejoinText = allowRejoinText;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

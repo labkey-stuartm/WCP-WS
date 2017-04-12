@@ -32,7 +32,12 @@ public class Mail  {
 				}
 			});
 			
+			/*Properties props = new Properties();
+			props.put("mail.smtp.host", "localhost");
+			Session session = Session.getInstance(props, null);*/
+			
 			Message message = new MimeMessage(session);
+			//message.setFrom(new InternetAddress("apps@boston-technology.com"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(subject);
 			message.setContent(messageBody, "text/html");

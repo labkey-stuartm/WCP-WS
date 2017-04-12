@@ -25,27 +25,42 @@ public class NotificationDto implements Serializable{
 	@Column(name="notification_id")
 	private Integer notificationId;
 	
-	@Column(name="study_id")
+	@Column(name = "study_id")
 	private Integer studyId;
 	
-	@Column(name="notification_text")
+	@Column(name = "notification_text")
 	private String notificationText;
 	
-	@Column(name="schedule_date")
+	@Column(name = "schedule_date")
 	private String scheduleDate;
 	
-	@Column(name="schedule_time")
+	@Column(name = "schedule_time")
 	private String scheduleTime;
 	
-	@Column(name="notification_sent")
-	private Integer notificationSent;
+	@Column(name = "notification_action", length = 1)
+	private boolean notificationAction;
 	
-	@Column(name="notification_type")
+	@Column(name="notification_sent", length = 1)
+	private boolean notificationSent = false;
+
+	@Column(name = "notification_type")
 	private String notificationType;
 	
-	@Column(name="notification_sent_date_time")
+	@Column(name = "notification_sent_date_time")
 	private String notificationSentDateTime;
 	
+	@Column(name="notification_schedule_type")
+	private String notificationScheduleType;
+	
+	@Column(name="notification_done", length = 1)
+	private boolean notificationDone = false;
+	
+	@Column(name="notification_status", length = 1)
+	private boolean notificationStatus = false;
+	
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+
 	public Integer getNotificationId() {
 		return notificationId;
 	}
@@ -86,11 +101,19 @@ public class NotificationDto implements Serializable{
 		this.scheduleTime = scheduleTime;
 	}
 
-	public Integer getNotificationSent() {
+	public boolean isNotificationAction() {
+		return notificationAction;
+	}
+
+	public void setNotificationAction(boolean notificationAction) {
+		this.notificationAction = notificationAction;
+	}
+
+	public boolean isNotificationSent() {
 		return notificationSent;
 	}
 
-	public void setNotificationSent(Integer notificationSent) {
+	public void setNotificationSent(boolean notificationSent) {
 		this.notificationSent = notificationSent;
 	}
 
@@ -108,6 +131,38 @@ public class NotificationDto implements Serializable{
 
 	public void setNotificationSentDateTime(String notificationSentDateTime) {
 		this.notificationSentDateTime = notificationSentDateTime;
+	}
+
+	public String getNotificationScheduleType() {
+		return notificationScheduleType;
+	}
+
+	public void setNotificationScheduleType(String notificationScheduleType) {
+		this.notificationScheduleType = notificationScheduleType;
+	}
+
+	public boolean isNotificationDone() {
+		return notificationDone;
+	}
+
+	public void setNotificationDone(boolean notificationDone) {
+		this.notificationDone = notificationDone;
+	}
+
+	public boolean isNotificationStatus() {
+		return notificationStatus;
+	}
+
+	public void setNotificationStatus(boolean notificationStatus) {
+		this.notificationStatus = notificationStatus;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

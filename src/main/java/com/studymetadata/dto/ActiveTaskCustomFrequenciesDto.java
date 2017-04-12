@@ -37,6 +37,9 @@ public class ActiveTaskCustomFrequenciesDto implements Serializable{
 	@Column(name="active_task_id")
 	private Integer activeTaskId;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -75,6 +78,14 @@ public class ActiveTaskCustomFrequenciesDto implements Serializable{
 
 	public void setActiveTaskId(Integer activeTaskId) {
 		this.activeTaskId = activeTaskId;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

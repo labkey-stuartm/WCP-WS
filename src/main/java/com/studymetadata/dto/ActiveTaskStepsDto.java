@@ -23,7 +23,7 @@ public class ActiveTaskStepsDto implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="step_id")
-	private Integer step_id;
+	private Integer stepId;
 	
 	@Column(name="active_task_id")
 	private Integer activeTaskId;
@@ -37,13 +37,8 @@ public class ActiveTaskStepsDto implements Serializable{
 	@Column(name="sequence_no")
 	private Integer sequenceNo;
 
-	public Integer getStep_id() {
-		return step_id;
-	}
-
-	public void setStep_id(Integer step_id) {
-		this.step_id = step_id;
-	}
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
 
 	public Integer getActiveTaskId() {
 		return activeTaskId;
@@ -75,6 +70,22 @@ public class ActiveTaskStepsDto implements Serializable{
 
 	public void setSequenceNo(Integer sequenceNo) {
 		this.sequenceNo = sequenceNo;
+	}
+
+	public Integer getStepId() {
+		return stepId;
+	}
+
+	public void setStepId(Integer stepId) {
+		this.stepId = stepId;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

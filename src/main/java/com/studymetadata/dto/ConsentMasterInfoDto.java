@@ -29,6 +29,9 @@ public class ConsentMasterInfoDto implements Serializable{
 	@Column(name="code")
 	private String code;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -59,6 +62,14 @@ public class ConsentMasterInfoDto implements Serializable{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

@@ -56,6 +56,9 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	@Column(name = "modified_on")
 	private Integer modifiedOn;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -126,6 +129,14 @@ public class ComprehensionTestQuestionDto implements Serializable{
 
 	public void setModifiedOn(Integer modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 	

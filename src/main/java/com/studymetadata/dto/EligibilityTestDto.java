@@ -46,6 +46,17 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name="eligibility_test")
 	private Integer eligibilityTest;
 	
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

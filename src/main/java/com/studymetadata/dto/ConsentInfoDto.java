@@ -83,6 +83,9 @@ public class ConsentInfoDto implements Serializable{
 	@Column(name = "consent_item_title_id")
 	private Integer consentItemTitleId;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -225,6 +228,14 @@ public class ConsentInfoDto implements Serializable{
 
 	public void setConsentItemTitleId(Integer consentItemTitleId) {
 		this.consentItemTitleId = consentItemTitleId;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

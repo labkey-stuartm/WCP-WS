@@ -43,6 +43,9 @@ public class EligibilityDto implements Serializable{
 	@Column(name = "failure_outcome_text")
 	private String failureOutcomeText;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -82,5 +85,14 @@ public class EligibilityDto implements Serializable{
 	public void setFailureOutcomeText(String failureOutcomeText) {
 		this.failureOutcomeText = failureOutcomeText;
 	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	
 }

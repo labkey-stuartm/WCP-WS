@@ -82,6 +82,17 @@ public class StudySequenceDto implements Serializable{
 	@Column(name="study_id")
 	private Integer studyId;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	public Integer getStudySequenceId() {
 		return studySequenceId;
 	}

@@ -93,6 +93,9 @@ public class ActiveTaskDto implements Serializable{
 	@Column(name="action")
 	private Boolean action=false;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -267,6 +270,14 @@ public class ActiveTaskDto implements Serializable{
 
 	public void setAction(Boolean action) {
 		this.action = action;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

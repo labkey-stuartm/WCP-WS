@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -223,7 +224,7 @@ public class ActivityMetaDataDao {
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getTaskName())?"":activeTaskDto.getTaskName());
 				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
-				metadata.setVersion("1.0"); //column not there in the database
+				metadata.setVersion(activeTaskDto.getStudyVersion() == null?"1":activeTaskDto.getStudyVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
@@ -314,7 +315,7 @@ public class ActivityMetaDataDao {
 				metadata.setName(StringUtils.isEmpty(questionnaireDto.getTitle())?"":questionnaireDto.getTitle());
 				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getStudyLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
-				metadata.setVersion("1.0"); //column not there in the database
+				metadata.setVersion(questionnaireDto.getStudyVersion() == null?"1":questionnaireDto.getStudyVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 	
 				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo");
@@ -1114,7 +1115,6 @@ public class ActivityMetaDataDao {
 						questionBean.setResultType(""); //NA
 					}
 					questionBean.setText("");
-					/*questionBean.setKey(questionStepDetails.getStepShortTitle() == null?"":questionStepDetails.getStepShortTitle());*/
 					questionBean.setKey(questionStepDetails.getInstructionFormId().toString());
 					questionBean.setTitle(questionsDto.getShortTitle() == null?"":questionsDto.getShortTitle());
 					questionBean.setSkippable((questionStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getSkiappable()))?false:true); //NA
@@ -1179,7 +1179,6 @@ public class ActivityMetaDataDao {
 					
 					formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
 					formBean.setResultType("grouped");
-					/*formBean.setKey(formStepDetails.getStepShortTitle() == null?"":formStepDetails.getStepShortTitle());*/
 					formBean.setKey(formStepDetails.getInstructionFormId().toString());
 					formBean.setTitle("");
 					formBean.setText("");
@@ -1220,8 +1219,6 @@ public class ActivityMetaDataDao {
 							formQuestionBean.setRepeatable(false); //NA
 							formQuestionBean.setRepeatableText(""); //NA
 
-							//formQuestionBean.setDestinations();
-
 							formQuestionBean.setHealthDataKey("");
 
 							formStepsMap.put(formQuestionDto.getId(), formQuestionBean);
@@ -1261,7 +1258,12 @@ public class ActivityMetaDataDao {
 			if(StringUtils.isNotEmpty(taskType)){
 				switch (taskType) {
 				case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
-					activeTaskFormat.put("duration", ""); //in hours
+					if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
+						StringTokenizer tokenizer = new StringTokenizer(attributeValues.getAttributeVal(), ":");
+						activeTaskFormat.put("duration", tokenizer.nextToken()+"."+tokenizer.nextToken()); //in hours
+					}else{
+						activeTaskFormat.put("duration", "0.0"); //in hours
+					}
 					break;
 				case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
 					activeTaskFormat = spatialSpanMemoryDetails(attributeValues, masterAttributeValue);
@@ -1386,7 +1388,7 @@ public class ActivityMetaDataDao {
 					questionFormat.put("step", 0); //In minutes 1-30
 					break;
 				case StudyMetaDataConstants.QUESTION_HEIGHT:  
-					questionFormat.put("measurementSystem", 0); //Local/Metric/US
+					questionFormat.put("measurementSystem", ""); //Local/Metric/US
 					questionFormat.put("placeholder", "");
 					break;
 				case StudyMetaDataConstants.QUESTION_LOCATION:

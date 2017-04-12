@@ -88,6 +88,17 @@ public class ResourcesDto implements Serializable{
 	@Column(name="status")
 	private Integer status;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

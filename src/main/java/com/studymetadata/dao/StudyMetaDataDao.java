@@ -203,7 +203,7 @@ public class StudyMetaDataDao {
 					List<StudyBean> studyBeanList = new ArrayList<>();
 					for(StudyDto studyDto : studiesList){
 						StudyBean studyBean = new StudyBean();
-						studyBean.setStudyVersion(StringUtils.isEmpty(studyDto.getStudyVersion())?"":studyDto.getStudyVersion());
+						studyBean.setStudyVersion(studyDto.getStudyVersion() == null?"1":studyDto.getStudyVersion().toString());
 						studyBean.setTagline(StringUtils.isEmpty(studyDto.getStudyTagline())?"":studyDto.getStudyTagline());
 
 						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
@@ -339,9 +339,7 @@ public class StudyMetaDataDao {
 					query = session.getNamedQuery("consentDtoByStudyId").setInteger("studyId", actualStudyId);
 					consentDto = (ConsentDto) query.uniqueResult();
 					if( null != consentDto){
-						if(consentDto.getVersion() != null){
-							consent.setVersion(consentDto.getVersion().toString());
-						}
+						consent.setVersion(consentDto.getStudyVersion() == null?"1":consentDto.getStudyVersion().toString());
 
 						//Sharing
 						SharingBean sharingBean = new SharingBean();
@@ -490,11 +488,7 @@ public class StudyMetaDataDao {
 				if( consent != null){
 					ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
 					consentDocumentBean.setType("text/html");
-					if(consent.getVersion() != null){
-						consentDocumentBean.setVersion(consent.getVersion().toString());
-					}else{
-						consentDocumentBean.setVersion("1.0");
-					}
+					consent.setStudyVersion(consent.getStudyVersion() == null?1:consent.getStudyVersion());
 
 					if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent());

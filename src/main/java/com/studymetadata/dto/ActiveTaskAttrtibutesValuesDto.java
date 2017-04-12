@@ -66,6 +66,9 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 	@Column(name = "time_range_stat")
 	private String timeRangeStat;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getAttributeValueId() {
 		return attributeValueId;
 	}
@@ -184,6 +187,14 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 
 	public void setTimeRangeStat(String timeRangeStat) {
 		this.timeRangeStat = timeRangeStat;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }
