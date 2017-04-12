@@ -71,6 +71,9 @@
 		<mapping class="com.studymetadata.dto.QuestionResponsetypeMasterInfoDto" />
 		<mapping class="com.studymetadata.dto.UserDto" />
 		<mapping class="com.studymetadata.dto.UserPermissions" />
+		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto" />
+		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto" />
+		
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

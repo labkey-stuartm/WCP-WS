@@ -142,4 +142,7 @@ public interface StudyMetaDataConstants {
 	public static final String QUESTION_TIME_INTERVAL = "timeInterval";
 	public static final String QUESTION_HEIGHT = "height";
 	public static final String QUESTION_LOCATION = "location";
+	
+	public static final String STEP_CONDITION_DEFAULT = "default";
+	public static final String STEP_DESTINATION_COMPLETION = "completion";
 }

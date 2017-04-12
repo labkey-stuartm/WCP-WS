@@ -49,6 +49,9 @@ public class InstructionsDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
+	@Column(name = "active")
+	private Boolean active;
+	
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -119,6 +122,14 @@ public class InstructionsDto implements Serializable{
 
 	public void setModifiedOn(String modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

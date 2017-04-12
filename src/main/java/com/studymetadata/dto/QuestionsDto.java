@@ -124,6 +124,9 @@ public class QuestionsDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
+	@Column(name = "active")
+	private Boolean active;
+	
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -394,6 +397,14 @@ public class QuestionsDto implements Serializable{
 
 	public void setUseStasticData(String useStasticData) {
 		this.useStasticData = useStasticData;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

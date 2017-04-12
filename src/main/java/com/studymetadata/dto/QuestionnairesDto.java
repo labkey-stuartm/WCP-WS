@@ -73,6 +73,9 @@ public class QuestionnairesDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
+	@Column(name = "active")
+	private Boolean active;
+	
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -191,6 +194,14 @@ public class QuestionnairesDto implements Serializable{
 
 	public void setBranching(Boolean branching) {
 		this.branching = branching;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

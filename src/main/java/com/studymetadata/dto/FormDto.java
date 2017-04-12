@@ -24,39 +24,13 @@ public class FormDto implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="form_id")
 	private Integer formId;
-	
-	@Column(name="question_type")
-	private String questionType;
-	
-	@Column(name="form_order")
-	private Integer formOrder;
-	
-	@Column(name="type")
-	private String type;
-	
-	@Column(name="created_by")
-	private Integer createdBy;
-	
-	@Column(name="created_on")
-	private String createdOn;
-	
-	@Column(name="modified_by")
-	private Integer modifiedBy;
-	
-	@Column(name="modified_on")
-	private String modifiedOn;
 
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+	@Column(name = "active")
+	private Boolean active;
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-	
 	public Integer getFormId() {
 		return formId;
 	}
@@ -65,60 +39,20 @@ public class FormDto implements Serializable{
 		this.formId = formId;
 	}
 
-	public String getQuestionType() {
-		return questionType;
+	public Integer getStudyVersion() {
+		return studyVersion;
 	}
 
-	public void setQuestionType(String questionType) {
-		this.questionType = questionType;
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 
-	public Integer getFormOrder() {
-		return formOrder;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setFormOrder(Integer formOrder) {
-		this.formOrder = formOrder;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

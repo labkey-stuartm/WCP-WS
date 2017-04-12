@@ -61,6 +61,9 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
+	@Column(name = "active")
+	private Boolean active;
+	
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -163,6 +166,14 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

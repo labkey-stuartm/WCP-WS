@@ -33,6 +33,8 @@ import com.studymetadata.dto.ActiveTaskListDto;
 import com.studymetadata.dto.ActiveTaskMasterAttributeDto;
 import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.InstructionsDto;
+import com.studymetadata.dto.QuestionReponseTypeDto;
+import com.studymetadata.dto.QuestionResponseSubTypeDto;
 import com.studymetadata.dto.QuestionResponsetypeMasterInfoDto;
 import com.studymetadata.dto.QuestionnairesCustomFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesDto;
@@ -102,7 +104,7 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				query = session.getNamedQuery("questionnairesListByStudyId").setInteger("studyId", actualStudyId);
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.studyId="+actualStudyId+" and QDTO.active=true");
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
 					for(QuestionnairesDto questionaire : questionnairesList){
@@ -302,7 +304,7 @@ public class ActivityMetaDataDao {
 		List<ActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id ="+activityId);
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
 				activityStructureBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
@@ -318,7 +320,7 @@ public class ActivityMetaDataDao {
 				metadata.setVersion(questionnaireDto.getStudyVersion() == null?"1":questionnaireDto.getStudyVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 	
-				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" ORDER BY QSDTO.sequenceNo");
+				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.active=true ORDER BY QSDTO.sequenceNo");
 				questionaireStepsList = query.list();
 				if(questionaireStepsList != null && !questionaireStepsList.isEmpty()){
 					List<Integer> instructionIdList = new ArrayList<>();
@@ -350,7 +352,7 @@ public class ActivityMetaDataDao {
 					//get the instructionsList
 					if(!instructionIdList.isEmpty()){
 						List<InstructionsDto> instructionsDtoList;
-						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+")");
+						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.active=true");
 						instructionsDtoList = query.list();
 						if(instructionsDtoList != null && !instructionsDtoList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, instructionsDtoList, null, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, null);
@@ -360,7 +362,7 @@ public class ActivityMetaDataDao {
 					//get the questionaire List
 					if(!questionIdList.isEmpty()){
 						List<QuestionsDto> questionsList;
-						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+")");
+						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.active=true");
 						questionsList = query.list();
 						if( questionsList != null && !questionsList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, null, questionsList, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
@@ -371,7 +373,7 @@ public class ActivityMetaDataDao {
 					if(!formIdList.isEmpty()){
 						for(Integer formId : formIdList){
 							List<FormMappingDto> formList;
-							query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId="+formId+" ORDER BY FMDTO.sequenceNo ");
+							query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId="+formId+" and FDTO.active=true) ORDER BY FMDTO.sequenceNo ");
 							formList = query.list();
 							if(formList != null && !formList.isEmpty()){
 								stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, null, null, formList, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
@@ -1025,7 +1027,7 @@ public class ActivityMetaDataDao {
 					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getInstructionDetailsForQuestionnaire(instructionsDtoList, sequenceNoMap, stepsSequenceTreeMap, questionnaireStepDetailsMap);
 					break;
 				case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION:
-					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap, stepsSequenceTreeMap, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
+					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
 					break;
 				case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM:
 					stepsOrderSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getFormDetailsForQuestionnaire(formsList, sequenceNoMap, session, stepsSequenceTreeMap, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
@@ -1059,7 +1061,6 @@ public class ActivityMetaDataDao {
 
 					instructionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION.toLowerCase());
 					instructionBean.setResultType("");
-					/*instructionBean.setKey(instructionStepDetails.getStepShortTitle() == null?"":instructionStepDetails.getStepShortTitle());*/
 					instructionBean.setKey(instructionStepDetails.getInstructionFormId().toString());
 					instructionBean.setTitle(StringUtils.isEmpty(instructionsDto.getInstructionTitle())?"":instructionsDto.getInstructionTitle());
 					instructionBean.setText(StringUtils.isEmpty(instructionsDto.getInstructionText())?"":instructionsDto.getInstructionText());
@@ -1071,7 +1072,7 @@ public class ActivityMetaDataDao {
 					List<DestinationBean> destinations = new ArrayList<>();
 					DestinationBean dest = new DestinationBean();
 					dest.setCondition("");
-					dest.setDestination(instructionStepDetails.getDestinationStep().toString());
+					dest.setDestination((instructionStepDetails.getDestinationStep()==null || instructionStepDetails.getDestinationStep().intValue()==0)?"":instructionStepDetails.getDestinationStep().toString());
 					destinations.add(dest);
 					instructionBean.setDestinations(destinations);
 
@@ -1094,8 +1095,9 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
-	public SortedMap<Integer, ActivityStepsBean> getQuestionDetailsForQuestionnaire(List<QuestionsDto> questionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, ActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList) throws DAOException{
+	public SortedMap<Integer, ActivityStepsBean> getQuestionDetailsForQuestionnaire(List<QuestionsDto> questionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, ActivityStepsBean> stepsSequenceTreeMap, Session session, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
+		List<QuestionResponseSubTypeDto> destinationConditionList = null;
 		try{
 			if(questionsDtoList != null && !questionsDtoList.isEmpty()){
 				for(QuestionsDto questionsDto : questionsDtoList){
@@ -1107,7 +1109,7 @@ public class ActivityMetaDataDao {
 						for(QuestionResponsetypeMasterInfoDto masterInfo : questionResponseTypeMasterInfoList){
 							if(masterInfo.getId().intValue() == questionsDto.getResponseType().intValue()){
 								questionBean.setResultType(masterInfo.getResponseTypeCode());
-								questionBean.setFormat(getQuestionaireQuestionFormatByType(questionsDto, masterInfo.getResponseTypeCode()));
+								questionBean.setFormat(getQuestionaireQuestionFormatByType(questionsDto, masterInfo.getResponseTypeCode(), session));
 								break;
 							}
 						}
@@ -1121,22 +1123,25 @@ public class ActivityMetaDataDao {
 					questionBean.setGroupName(""); //NA
 					questionBean.setRepeatable((questionStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getRepeatable()))?false:true); //NA
 					questionBean.setRepeatableText(questionStepDetails.getRepeatableText() == null?"":questionStepDetails.getRepeatableText()); //NA
-
 					
-					List<DestinationBean> destinations = new ArrayList<>();
-					
-					DestinationBean dest = new DestinationBean();
-					dest.setCondition("Yes");
-					dest.setDestination(questionStepDetails.getDestinationStep().toString());
-					destinations.add(dest);
-					
-					DestinationBean dest1 = new DestinationBean();
-					dest1.setCondition("No");
-					dest1.setDestination(questionStepDetails.getDestinationStep().toString());
-					destinations.add(dest1);
-					
-					questionBean.setDestinations(destinations);
-
+					//destination logic based on the branching
+					List<DestinationBean> destinationsList = new ArrayList<>();
+					query = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionsDto.getId());
+					destinationConditionList = query.list();
+					if(destinationConditionList != null && !destinationConditionList.isEmpty()){
+						for(QuestionResponseSubTypeDto destinationDto : destinationConditionList){
+							DestinationBean destination = new DestinationBean();
+							destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
+							destination.setDestination((destinationDto.getDestinationStepId() == null || destinationDto.getDestinationStepId().intValue() == 0)?"":destinationDto.getDestinationStepId().toString());
+							destinationsList.add(destination);
+						}
+					}else{
+						DestinationBean destinationBean = new DestinationBean();
+						destinationBean.setCondition("");
+						destinationBean.setDestination((questionStepDetails.getDestinationStep()==null || questionStepDetails.getDestinationStep().intValue()==0)?"":questionStepDetails.getDestinationStep().toString());
+						destinationsList.add(destinationBean);
+					}
+					questionBean.setDestinations(destinationsList);
 					questionBean.setHealthDataKey("");
 
 					stepsSequenceTreeMap.put(sequenceNoMap.get((questionsDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION).toString()), questionBean);
@@ -1191,7 +1196,7 @@ public class ActivityMetaDataDao {
 					List<DestinationBean> destinations = new ArrayList<>();
 					DestinationBean dest = new DestinationBean();
 					dest.setCondition("");
-					dest.setDestination(formStepDetails.getDestinationStep().toString());
+					dest.setDestination((formStepDetails.getDestinationStep()==null ||formStepDetails.getDestinationStep().intValue()==0)?"":formStepDetails.getDestinationStep().toString());
 					destinations.add(dest);
 					formBean.setDestinations(destinations);
 					List<QuestionsDto> formQuestionsList;
@@ -1205,7 +1210,7 @@ public class ActivityMetaDataDao {
 								for(QuestionResponsetypeMasterInfoDto masterInfo : questionResponseTypeMasterInfoList){
 									if(masterInfo.getId().intValue() == formQuestionDto.getResponseType().intValue()){
 										formQuestionBean.setResultType(masterInfo.getResponseTypeCode());
-										formQuestionBean.setFormat(getQuestionaireQuestionFormatByType(formQuestionDto, masterInfo.getResponseTypeCode()));
+										formQuestionBean.setFormat(getQuestionaireQuestionFormatByType(formQuestionDto, masterInfo.getResponseTypeCode(), session));
 										break;
 									}
 								}
@@ -1344,58 +1349,58 @@ public class ActivityMetaDataDao {
 	 * @return questionFormat
 	 * @throws DAOException
 	 */
-	public Map<String, Object> getQuestionaireQuestionFormatByType(QuestionsDto questionDto, String questionResultType) throws DAOException{
+	public Map<String, Object> getQuestionaireQuestionFormatByType(QuestionsDto questionDto, String questionResultType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
+		QuestionReponseTypeDto reponseType = null;
 		try{
 			if(StringUtils.isNotEmpty(questionResultType)){
+				query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionDto.getId());
+				reponseType = (QuestionReponseTypeDto) query.uniqueResult();
 				switch (questionResultType) {
-				case StudyMetaDataConstants.QUESTION_SCALE:
-					questionFormat = formatQuestionScaleDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
-					questionFormat = formatQuestionContinuousScaleDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
-					questionFormat = formatQuestionTextScaleDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
-					questionFormat = formatQuestionValuePickerDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
-					questionFormat = formatQuestionImageChoiceDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
-					questionFormat = formatQuestionTextChoiceDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_NUMERIC:
-					questionFormat = formatQuestionNumericDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_DATE:
-					questionFormat.put("style", ""); //Date/Date-Time
-					questionFormat.put("minDate", ""); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-					questionFormat.put("maxDate", ""); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-					questionFormat.put("default", ""); //Date
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT: 
-					questionFormat = formatQuestionTextDetails(questionDto);
-					break;
-				case StudyMetaDataConstants.QUESTION_EMAIL:
-					questionFormat.put("placeholder", "");
-					break;
-				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:  
-					questionFormat.put("default", 0);
-					questionFormat.put("step", 0); //In minutes 1-30
-					break;
-				case StudyMetaDataConstants.QUESTION_HEIGHT:  
-					questionFormat.put("measurementSystem", ""); //Local/Metric/US
-					questionFormat.put("placeholder", "");
-					break;
-				case StudyMetaDataConstants.QUESTION_LOCATION:
-					questionFormat.put("useCurrentLocation", false);
-					break;
-				default:
-					break;
+					case StudyMetaDataConstants.QUESTION_SCALE:
+						questionFormat = formatQuestionScaleDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
+						questionFormat = formatQuestionContinuousScaleDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
+						questionFormat = formatQuestionTextScaleDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
+						questionFormat = formatQuestionValuePickerDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
+						questionFormat = formatQuestionImageChoiceDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
+						questionFormat = formatQuestionTextChoiceDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_NUMERIC:
+						questionFormat = formatQuestionNumericDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_DATE:
+						questionFormat = formatQuestionDateDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT: 
+						questionFormat = formatQuestionTextDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_EMAIL:
+						questionFormat.put("placeholder", "");
+						break;
+					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:  
+						questionFormat.put("default", 0);
+						questionFormat.put("step", 0); //In minutes 1-30
+						break;
+					case StudyMetaDataConstants.QUESTION_HEIGHT:  
+						questionFormat.put("measurementSystem", ""); //Local/Metric/US
+						questionFormat.put("placeholder", "");
+						break;
+					case StudyMetaDataConstants.QUESTION_LOCATION:
+						questionFormat.put("useCurrentLocation", false);
+						break;
+					default:
+						break;
 				}
 			}
 		}catch(Exception e){
@@ -1411,19 +1416,19 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionScaleDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
 		try{
-			questionFormat.put("maxValue", 0);
-			questionFormat.put("minValue", 0);
-			questionFormat.put("default", 0);
-			questionFormat.put("step", 1);
-			questionFormat.put("vertical", false);
-			questionFormat.put("maxDesc", "");
-			questionFormat.put("minDesc", "");
-			questionFormat.put("maxImage", "");
-			questionFormat.put("minImage", "");
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
+			questionFormat.put("step", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
+			questionFormat.put("vertical", (reponseType==null || !reponseType.getVertical())?false:true);
+			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
+			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
+			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
 		}
@@ -1437,19 +1442,19 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionContinuousScaleDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionContinuousScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
 		try{
-			questionFormat.put("maxValue", 0);
-			questionFormat.put("minValue", 0);
-			questionFormat.put("default", 0);
-			questionFormat.put("maxFractionDigits", 1);
-			questionFormat.put("vertical", false);
-			questionFormat.put("maxDesc", "");
-			questionFormat.put("minDesc", "");
-			questionFormat.put("maxImage", "");
-			questionFormat.put("minImage", "");
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
+			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?0:reponseType.getMaxFractionDigits());
+			questionFormat.put("vertical", (reponseType==null || !reponseType.getVertical())?false:true);
+			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
+			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?0:reponseType.getMinDescription());
+			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?0:reponseType.getMaxImage());
+			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?0:reponseType.getMinImage());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
 		}
@@ -1463,22 +1468,27 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionTextScaleDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionTextScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
+		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
+		List<HashMap<String, Object>> textChoicesList = new ArrayList<>();
 		try{
-			HashMap<String, Object> textScaleMap = new HashMap<>();
-			textScaleMap.put("text", "");
-			textScaleMap.put("value", "");
-			textScaleMap.put("detail", "");
-			textScaleMap.put("exclusive", true);
-
-			List<HashMap<String, Object>> textChoicesList = new ArrayList<>();
-			textChoicesList.add(textScaleMap);
-
+			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
+			responseSubTypeList = query.list();
+			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
+				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
+					HashMap<String, Object> textScaleMap = new HashMap<>();
+					textScaleMap.put("text", subType.getText()==null?"":subType.getText());
+					textScaleMap.put("value", subType.getValue()==null?"":subType.getValue());
+					textScaleMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
+					textScaleMap.put("exclusive", !subType.getExclusive()?false:true);
+					textChoicesList.add(textScaleMap);
+				}
+			}
 			questionFormat.put("textChoices", textChoicesList);
-			questionFormat.put("default", 0);
-			questionFormat.put("vertical", false);
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
+			questionFormat.put("vertical", (reponseType==null || !reponseType.getVertical())?false:true);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
 		}
@@ -1492,18 +1502,24 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionValuePickerDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionValuePickerDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
+		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
+		List<HashMap<String, Object>> valuePickerList = new ArrayList<>();
 		try{
-			HashMap<String, Object> valuePickerMap = new HashMap<>();
-			valuePickerMap.put("text", "");
-			valuePickerMap.put("value", "");
-			valuePickerMap.put("detail", "");
-			valuePickerMap.put("exclusive", true);
-
-			List<HashMap<String, Object>> valuePickerList = new ArrayList<>();
-			valuePickerList.add(valuePickerMap);
+			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
+			responseSubTypeList = query.list();
+			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
+				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
+					HashMap<String, Object> valuePickerMap = new HashMap<>();
+					valuePickerMap.put("text", subType.getText()==null?"":subType.getText());
+					valuePickerMap.put("value", subType.getValue()==null?"":subType.getValue());
+					valuePickerMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
+					valuePickerMap.put("exclusive", !subType.getExclusive()?false:true);
+					valuePickerList.add(valuePickerMap);
+				}
+			}
 			questionFormat.put("textChoices", valuePickerList);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionValuePickerDetails() :: ERROR", e);
@@ -1518,18 +1534,24 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionImageChoiceDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionImageChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
+		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
+		List<HashMap<String, Object>> imageChoicesList = new ArrayList<>();
 		try{
-			HashMap<String, Object> imageChoiceMap = new HashMap<>();
-			imageChoiceMap.put("image", "");
-			imageChoiceMap.put("selectedImage", "");
-			imageChoiceMap.put("text", "");
-			imageChoiceMap.put("value", "");
-
-			List<HashMap<String, Object>> imageChoicesList = new ArrayList<>();
-			imageChoicesList.add(imageChoiceMap);
+			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
+			responseSubTypeList = query.list();
+			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
+				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
+					HashMap<String, Object> imageChoiceMap = new HashMap<>();
+					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage());
+					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":subType.getSelectedImage());
+					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
+					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
+					imageChoicesList.add(imageChoiceMap);
+				}
+			}
 			questionFormat.put("imageChoices", imageChoicesList);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: ERROR", e);
@@ -1544,20 +1566,26 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionTextChoiceDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionTextChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
+		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
+		List<HashMap<String, Object>> textChoiceMapList = new ArrayList<>();
 		try{
-			HashMap<String, Object> textChoiceMap = new HashMap<String, Object>();
-			textChoiceMap.put("text", "");
-			textChoiceMap.put("value", "");
-			textChoiceMap.put("detail", "");
-			textChoiceMap.put("exclusive", true);
-
-			List<HashMap<String, Object>> textChoiceMapList = new ArrayList<HashMap<String,Object>>();
-			textChoiceMapList.add(textChoiceMap);
+			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
+			responseSubTypeList = query.list();
+			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
+				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
+					HashMap<String, Object> textChoiceMap = new HashMap<String, Object>();
+					textChoiceMap.put("text", subType.getText()==null?"":subType.getText());
+					textChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
+					textChoiceMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
+					textChoiceMap.put("exclusive", !subType.getExclusive()?false:true);
+					textChoiceMapList.add(textChoiceMap);
+				}
+			}
 			questionFormat.put("textChoices", textChoiceMapList);
-			questionFormat.put("selectionStyle", ""); //Single/Multiple
+			questionFormat.put("selectionStyle", (reponseType==null || reponseType.getSelectionStyle()==null)?"":reponseType.getSelectionStyle()); //Single/Multiple
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: ERROR", e);
 		}
@@ -1571,15 +1599,15 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionNumericDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionNumericDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
 		try{
-			questionFormat.put("style", "");
-			questionFormat.put("unit", "");
-			questionFormat.put("minValue", 0);
-			questionFormat.put("maxValue", 0);
-			questionFormat.put("placeholder", "");
+			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?"":reponseType.getStyle());
+			questionFormat.put("unit", (reponseType==null || reponseType.getUnit()==null)?"":reponseType.getUnit());
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
+			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?0:reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
 		}
@@ -1593,15 +1621,36 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> formatQuestionTextDetails(QuestionsDto questionDto) throws DAOException{
+	public Map<String, Object> formatQuestionDateDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
+		Map<String, Object> questionFormat = new HashMap<>();
+		try{
+			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?0:reponseType.getStyle()); //Date/Date-Time
+			questionFormat.put("minDate", (reponseType==null || reponseType.getMinDate()==null)?0:reponseType.getMinDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+			questionFormat.put("maxDate", (reponseType==null || reponseType.getMaxDate()==null)?0:reponseType.getMaxDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue()); //Date
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Ends");
+		return questionFormat;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param questionDto
+	 * @return Map<String, Object>
+	 * @throws DAOException
+	 */
+	public Map<String, Object> formatQuestionTextDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
 		try{
-			questionFormat.put("maxLength", 0);
-			questionFormat.put("validationRegex", "");
-			questionFormat.put("invalidMessage", "");
-			questionFormat.put("multipleLines", false);
-			questionFormat.put("placeholder", "");
+			questionFormat.put("maxLength", (reponseType==null || reponseType.getMaxLength()==null)?0:reponseType.getMaxLength());
+			questionFormat.put("validationRegex", (reponseType==null || reponseType.getValidationRegex()==null)?"":reponseType.getValidationRegex());
+			questionFormat.put("invalidMessage", (reponseType==null || reponseType.getInvalidMessage()==null)?"":reponseType.getInvalidMessage());
+			questionFormat.put("multipleLines", (reponseType==null || !reponseType.getMultipleLines())?false:true);
+			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?0:reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
 		}
