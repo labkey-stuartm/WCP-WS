@@ -25,20 +25,27 @@ public class Mail  {
 		boolean sentMail = false;
 		try {
 			Properties props = new Properties();
-			/*props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", "465");*/
-			props.put("mail.smtp.auth", "false");
-			props.put("mail.smtp.host", propMap.get("smtp.hostname"));
-			props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
-			/*props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");*/
-			Session session = Session.getInstance(props/*,
-					new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("apps@boston-technology.com", "password789");
-				}
-			}*/);
+			Session session;
+			if(propMap.get("fda.smd.mail") != null && propMap.get("fda.smd.mail").equalsIgnoreCase("true")){
+				//labkey mail config
+				props.put("mail.smtp.auth", "false");
+				props.put("mail.smtp.host", propMap.get("smtp.hostname"));
+				props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
+				session = Session.getInstance(props);
+			}else{
+				//local mail config
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				session = Session.getInstance(props,
+						new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("apps@boston-technology.com", "password789");
+					}
+				});
+			}
 			
 			Message message = new MimeMessage(session);
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));

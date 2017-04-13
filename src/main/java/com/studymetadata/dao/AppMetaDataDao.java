@@ -40,13 +40,13 @@ public class AppMetaDataDao {
 	 * @return TermsPolicyResponse
 	 * @throws DAOException
 	 */
-	public TermsPolicyResponse termsPolicy(String studyId) throws DAOException{
+	public TermsPolicyResponse termsPolicy() throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
 			termsPolicyResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			termsPolicyResponse.setPrivacy(propMap.get("fda.smd.pricaypolicy"));
-			termsPolicyResponse.setTerms(propMap.get("fda.smd.terms"));
+			termsPolicyResponse.setPrivacy(propMap.get("fda.smd.pricaypolicy")==null?"":propMap.get("fda.smd.pricaypolicy"));
+			termsPolicyResponse.setTerms(propMap.get("fda.smd.terms")==null?"":propMap.get("fda.smd.terms"));
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - termsPolicy() :: ERROR", e);
 		}

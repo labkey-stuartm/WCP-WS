@@ -222,7 +222,7 @@ public class ActivityMetaDataDao {
 				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
 				
 				metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
-				metadata.setLastModified(""); //column not there in the database
+				metadata.setLastModified(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ")); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getTaskName())?"":activeTaskDto.getTaskName());
 				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
@@ -1452,9 +1452,9 @@ public class ActivityMetaDataDao {
 			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?0:reponseType.getMaxFractionDigits());
 			questionFormat.put("vertical", (reponseType==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
-			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?0:reponseType.getMinDescription());
-			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?0:reponseType.getMaxImage());
-			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?0:reponseType.getMinImage());
+			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
+			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
 		}
@@ -1576,7 +1576,7 @@ public class ActivityMetaDataDao {
 			responseSubTypeList = query.list();
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
-					HashMap<String, Object> textChoiceMap = new HashMap<String, Object>();
+					HashMap<String, Object> textChoiceMap = new HashMap<>();
 					textChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					textChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
 					textChoiceMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
@@ -1625,10 +1625,10 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
 		Map<String, Object> questionFormat = new HashMap<>();
 		try{
-			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?0:reponseType.getStyle()); //Date/Date-Time
-			questionFormat.put("minDate", (reponseType==null || reponseType.getMinDate()==null)?0:reponseType.getMinDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-			questionFormat.put("maxDate", (reponseType==null || reponseType.getMaxDate()==null)?0:reponseType.getMaxDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue()); //Date
+			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?"":reponseType.getStyle()); //Date/Date-Time
+			questionFormat.put("minDate", (reponseType==null || reponseType.getMinDate()==null)?"":reponseType.getMinDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+			questionFormat.put("maxDate", (reponseType==null || reponseType.getMaxDate()==null)?"":reponseType.getMaxDate()); //yyyy-MM-dd'T'HH:mm:ss.SSSZ
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?"":reponseType.getDefaultValue()); //Date
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
 		}
@@ -1650,7 +1650,7 @@ public class ActivityMetaDataDao {
 			questionFormat.put("validationRegex", (reponseType==null || reponseType.getValidationRegex()==null)?"":reponseType.getValidationRegex());
 			questionFormat.put("invalidMessage", (reponseType==null || reponseType.getInvalidMessage()==null)?"":reponseType.getInvalidMessage());
 			questionFormat.put("multipleLines", (reponseType==null || !reponseType.getMultipleLines())?false:true);
-			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?0:reponseType.getPlaceholder());
+			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
 		}

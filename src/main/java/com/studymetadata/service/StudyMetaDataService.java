@@ -422,11 +422,11 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("termsPolicy")
-	public Object termsPolicy(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object termsPolicy(@Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
-			termsPolicyResponse = appMetaDataOrchestration.termsPolicy(studyId);
+			termsPolicyResponse = appMetaDataOrchestration.termsPolicy();
 			if(!termsPolicyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();

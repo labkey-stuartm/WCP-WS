@@ -30,11 +30,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return TermsPolicyResponse
 	 * @throws OrchestrationException
 	 */
-	public TermsPolicyResponse termsPolicy(String studyId) throws OrchestrationException{
+	public TermsPolicyResponse termsPolicy() throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - termsPolicy() :: Starts");
 		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
 		try{
-			termsPolicyResponse = appMetaDataDao.termsPolicy(studyId);
+			termsPolicyResponse = appMetaDataDao.termsPolicy();
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - termsPolicy() :: ERROR", e);
 		}
