@@ -33,32 +33,16 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	
 	@Column(name="frequency_time")
 	private String frequencyTime;
-
+	
 	@Column(name="is_launch_study")
-	private Integer isLaunchStudy;
+	private Boolean isLaunchStudy = false;
 	
 	@Column(name="is_study_life_time")
-	private Integer isStudyLifeTime;
-	
-	@Column(name="repeat_questionnaire")
-	private Integer repeatQuestionnaire;
-	
-	@Column(name="hours_intervals")
-	private Integer hoursIntervals;
-	
-	@Column(name="day_of_the_week")
-	private String dayOfTheWeek;
+	private Boolean isStudyLifeTime=false;
 	
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
-
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
 	
 	public Integer getId() {
 		return id;
@@ -92,44 +76,28 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 		this.frequencyTime = frequencyTime;
 	}
 
-	public Integer getIsLaunchStudy() {
+	public Boolean getIsLaunchStudy() {
 		return isLaunchStudy;
 	}
 
-	public void setIsLaunchStudy(Integer isLaunchStudy) {
+	public void setIsLaunchStudy(Boolean isLaunchStudy) {
 		this.isLaunchStudy = isLaunchStudy;
 	}
 
-	public Integer getIsStudyLifeTime() {
+	public Boolean getIsStudyLifeTime() {
 		return isStudyLifeTime;
 	}
 
-	public void setIsStudyLifeTime(Integer isStudyLifeTime) {
+	public void setIsStudyLifeTime(Boolean isStudyLifeTime) {
 		this.isStudyLifeTime = isStudyLifeTime;
 	}
 
-	public Integer getRepeatQuestionnaire() {
-		return repeatQuestionnaire;
+	public Integer getStudyVersion() {
+		return studyVersion;
 	}
 
-	public void setRepeatQuestionnaire(Integer repeatQuestionnaire) {
-		this.repeatQuestionnaire = repeatQuestionnaire;
-	}
-
-	public Integer getHoursIntervals() {
-		return hoursIntervals;
-	}
-
-	public void setHoursIntervals(Integer hoursIntervals) {
-		this.hoursIntervals = hoursIntervals;
-	}
-
-	public String getDayOfTheWeek() {
-		return dayOfTheWeek;
-	}
-
-	public void setDayOfTheWeek(String dayOfTheWeek) {
-		this.dayOfTheWeek = dayOfTheWeek;
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

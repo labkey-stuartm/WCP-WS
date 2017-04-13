@@ -223,7 +223,7 @@ public class ActivityMetaDataDao {
 				
 				metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeEnd(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setLastModified(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'hh:mm:ssZ")); //column not there in the database
-				metadata.setName(StringUtils.isEmpty(activeTaskDto.getTaskName())?"":activeTaskDto.getTaskName());
+				metadata.setName(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 				metadata.setStartDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getActiveTaskLifetimeStart(), "yyyy-MM-dd", "yyyy-MM-dd'T'hh:mm:ssZ"));
 				metadata.setStudyId(studyId);
 				metadata.setVersion(activeTaskDto.getStudyVersion() == null?"1":activeTaskDto.getStudyVersion().toString());
@@ -1118,7 +1118,7 @@ public class ActivityMetaDataDao {
 					}
 					questionBean.setText("");
 					questionBean.setKey(questionStepDetails.getInstructionFormId().toString());
-					questionBean.setTitle(questionsDto.getShortTitle() == null?"":questionsDto.getShortTitle());
+					questionBean.setTitle(questionsDto.getQuestion() == null?"":questionsDto.getQuestion());
 					questionBean.setSkippable((questionStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getSkiappable()))?false:true); //NA
 					questionBean.setGroupName(""); //NA
 					questionBean.setRepeatable((questionStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getRepeatable()))?false:true); //NA
@@ -1218,7 +1218,7 @@ public class ActivityMetaDataDao {
 								formQuestionBean.setResultType(""); //NA
 							}
 							formQuestionBean.setKey(formQuestionDto.getId().toString());
-							formQuestionBean.setTitle(StringUtils.isEmpty(formQuestionDto.getShortTitle())?"":formQuestionDto.getShortTitle());
+							formQuestionBean.setTitle(StringUtils.isEmpty(formQuestionDto.getQuestion())?"":formQuestionDto.getQuestion());
 							formQuestionBean.setSkippable(false); //NA
 							formQuestionBean.setGroupName(""); //NA
 							formQuestionBean.setRepeatable(false); //NA

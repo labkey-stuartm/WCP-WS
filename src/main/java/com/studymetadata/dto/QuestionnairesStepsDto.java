@@ -21,7 +21,7 @@ public class QuestionnairesStepsDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="step_id")
 	private Integer stepId;
 	
@@ -34,6 +34,9 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="step_type")
 	private String stepType;
 	
+	@Column(name="sequence_no")
+	private Integer sequenceNo;
+	
 	@Column(name="step_short_title")
 	private String stepShortTitle;
 	
@@ -43,12 +46,6 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="destination_step")
 	private Integer destinationStep;
 	
-	@Column(name="randomization")
-	private String randomization;
-
-	@Column(name="sequence_no")
-	private Integer sequenceNo;
-	
 	@Column(name="repeatable")
 	private String repeatable="No";
 	
@@ -57,21 +54,25 @@ public class QuestionnairesStepsDto implements Serializable{
 	
 	@Column(name="status")
 	private Boolean status;
-
+	
+	@Column(name = "created_on")
+	private String createdOn;
+	
+	@Column(name = "modified_on")
+	private String modifiedOn;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "modified_by")
+	private Integer modifiedBy;
+	
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	@Column(name = "active")
+	@Column(name="active")
 	private Boolean active;
-	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-	
 	public Integer getStepId() {
 		return stepId;
 	}
@@ -104,6 +105,14 @@ public class QuestionnairesStepsDto implements Serializable{
 		this.stepType = stepType;
 	}
 
+	public Integer getSequenceNo() {
+		return sequenceNo;
+	}
+
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
+	}
+
 	public String getStepShortTitle() {
 		return stepShortTitle;
 	}
@@ -128,22 +137,6 @@ public class QuestionnairesStepsDto implements Serializable{
 		this.destinationStep = destinationStep;
 	}
 
-	public String getRandomization() {
-		return randomization;
-	}
-
-	public void setRandomization(String randomization) {
-		this.randomization = randomization;
-	}
-
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
-
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
-
 	public String getRepeatable() {
 		return repeatable;
 	}
@@ -166,6 +159,46 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 
 	public Boolean getActive() {

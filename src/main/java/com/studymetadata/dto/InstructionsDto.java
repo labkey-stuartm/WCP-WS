@@ -21,45 +21,34 @@ public class InstructionsDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private Integer id;
 	
-	@Column(name="instruction_title")
+	@Column(name="instruction_title",length=250)
 	private String instructionTitle;
 	
-	@Column(name="instruction_text")
+	@Column(name="instruction_text",length=2500)
 	private String instructionText;
 	
-	@Column(name="button_text")
-	private String buttonText;
-	
-	@Column(name="created_by")
-	private Integer createdBy;
-	
-	@Column(name="created_on")
+	@Column(name = "created_on")
 	private String createdOn;
 	
-	@Column(name="modified_by")
+	@Column(name = "modified_on")
+	private String modifiedOn;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
 	
-	@Column(name="modified_on")
-	private String modifiedOn;
-
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	@Column(name = "active")
+	@Column(name="active")
 	private Boolean active;
-	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-	
 	public Integer getId() {
 		return id;
 	}
@@ -84,12 +73,20 @@ public class InstructionsDto implements Serializable{
 		this.instructionText = instructionText;
 	}
 
-	public String getButtonText() {
-		return buttonText;
+	public String getCreatedOn() {
+		return createdOn;
 	}
 
-	public void setButtonText(String buttonText) {
-		this.buttonText = buttonText;
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 
 	public Integer getCreatedBy() {
@@ -100,14 +97,6 @@ public class InstructionsDto implements Serializable{
 		this.createdBy = createdBy;
 	}
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
-
 	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
@@ -116,12 +105,12 @@ public class InstructionsDto implements Serializable{
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getModifiedOn() {
-		return modifiedOn;
+	public Integer getStudyVersion() {
+		return studyVersion;
 	}
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 
 	public Boolean getActive() {
