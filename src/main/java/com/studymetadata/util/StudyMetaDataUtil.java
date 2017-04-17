@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -53,33 +55,29 @@ public class StudyMetaDataUtil {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static HashMap getAppProperties(){
 		HashMap hm = new HashMap<String, String>();
-		logger.info("INFO: StudyMetaDataUtil - getAppProperties() :: Starts");
+		logger.warn("fdahpStudyDesignerUtil - getAppProperties() :: Properties Initialization");
+		Enumeration<String> keys = null;
+		Enumeration<Object> objectKeys = null;
 		try {
-			//get the details from message resource properties file
 			ResourceBundle rb = ResourceBundle.getBundle("messageResource");
-			Enumeration<String> keys = rb.getKeys();
-			while (keys.hasMoreElements()) {
-				String key = keys.nextElement();
-				String value = rb.getString(key);
-				hm.put(key, value);
-			}
-			
-			//get the details from properties file
-			ServletContext context = ServletContextHolder.getServletContext();
-			File file = new File(context.getInitParameter("property_file_location_prop"));
-			URL[] urls = {file.toURI().toURL()};
-			ClassLoader loader = new URLClassLoader(urls);
-			rb = ResourceBundle.getBundle(context.getInitParameter("property_file_name"), Locale.getDefault(), loader);
 			keys = rb.getKeys();
 			while (keys.hasMoreElements()) {
 				String key = keys.nextElement();
 				String value = rb.getString(key);
 				hm.put(key, value);
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		logger.info("INFO: StudyMetaDataUtil - getAppProperties() :: Ends");
+			ServletContext context = ServletContextHolder.getServletContext();
+			Properties prop = new Properties();
+			prop.load(new FileInputStream(context.getInitParameter("property_file_location_path")));
+			objectKeys = prop.keys();
+			while (objectKeys.hasMoreElements()) {
+				String key = (String) objectKeys.nextElement();
+				String value = prop.getProperty(key);
+				hm.put(key, value);
+			}
+		} catch (Exception e) {
+			logger.error("fdahpStudyDesignerUtil - getAppProperties() - ERROR " , e);
+		} 
 		return hm;
 	}
 
@@ -925,14 +923,14 @@ public class StudyMetaDataUtil {
 		}
 		return output;
 	}
-	
+
 	public static String getFormattedDateTimeZone(String input, String inputFormat, String outputFormat){
 		String output = "";
 		try{
 			if(StringUtils.isNotEmpty(input)){
 				SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
 				Date inputDate = inputSDF.parse(input);
-				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat); //yyyy-MM-dd'T'hh:mm:ssZ
+				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat); //yyyy-MM-dd'T'hh:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.SSSZ
 				//outputSDF.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 				//outputSDF.setTimeZone(TimeZone.getDefault()); //TimeZone.getTimeZone("CST")
 				output = outputSDF.format(inputDate);

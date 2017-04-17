@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 
@@ -73,6 +74,9 @@ public class QuestionnairesStepsDto implements Serializable{
 	@Column(name="active")
 	private Boolean active;
 
+	@Transient
+	private String destinationStepType;
+	
 	public Integer getStepId() {
 		return stepId;
 	}
@@ -207,6 +211,14 @@ public class QuestionnairesStepsDto implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getDestinationStepType() {
+		return destinationStepType;
+	}
+
+	public void setDestinationStepType(String destinationStepType) {
+		this.destinationStepType = destinationStepType;
 	}
 	
 }

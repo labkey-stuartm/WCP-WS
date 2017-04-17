@@ -26,6 +26,7 @@ public interface StudyMetaDataConstants {
 	SimpleDateFormat DISPLAY_DATE_TIME = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' hh:mm a");
 	SimpleDateFormat DISPLAY_DATE_TIME_MIN = new SimpleDateFormat("dd MMM yyyy  HH:mm:ss");
 	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+	SimpleDateFormat SDF_DATE_TIME_TIMEZONE_MILLISECONDS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
 	public static final String PASSWORD_SALT = "BTCSoft";
 	
@@ -145,4 +146,8 @@ public interface StudyMetaDataConstants {
 	
 	public static final String STEP_CONDITION_DEFAULT = "default";
 	public static final String STEP_DESTINATION_COMPLETION = "completion";
+	
+	//question response type constants
+	public static final String 	QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
+	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATETIME = "Date-Time";
 }
