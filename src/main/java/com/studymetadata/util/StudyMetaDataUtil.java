@@ -940,5 +940,21 @@ public class StudyMetaDataUtil {
 		}
 		return output;
 	}
+	
+	public static String addSeconds(String dtStr, int seconds) {
+		String newdateStr = "";
+		try {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date dt = date.parse(dtStr);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.SECOND, seconds);
+			Date newDate = cal.getTime();
+			newdateStr = date.format(newDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return newdateStr;
+	}
 	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }
