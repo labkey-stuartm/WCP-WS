@@ -127,7 +127,7 @@ public class StudyMetaDataDao {
 					for(GatewayWelcomeInfoDto gatewayWelcomeInfo : gatewayWelcomeInfoList){
 						InfoBean infoBean = new InfoBean();
 						infoBean.setTitle(StringUtils.isEmpty(gatewayWelcomeInfo.getAppTitle())?"":gatewayWelcomeInfo.getAppTitle());
-						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())?"":propMap.get("fda.smd.study.thumbnailPath")+gatewayWelcomeInfo.getImagePath());
+						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())?"":propMap.get("fda.smd.study.thumbnailPath")+gatewayWelcomeInfo.getImagePath()+StudyMetaDataUtil.getMilliSecondsForImagePath());
 						infoBean.setText(StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())?"":gatewayWelcomeInfo.getDescription());
 						if(infoBeanList.isEmpty()){
 							infoBean.setType(StudyMetaDataConstants.TYPE_VIDEO);
@@ -209,7 +209,7 @@ public class StudyMetaDataDao {
 						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
 						studyBean.setStatus(StudyMetaDataConstants.STUDY_STATUS_ACTIVE.toLowerCase());
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())?"":studyDto.getName());
-						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage());
+						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage()+StudyMetaDataUtil.getMilliSecondsForImagePath());
 						//set the custom studyid of studies table
 						studyBean.setStudyId(StringUtils.isEmpty(studyDto.getCustomStudyId())?"":studyDto.getCustomStudyId());
 
@@ -637,7 +637,7 @@ public class StudyMetaDataDao {
 								info.setVideoLink("");
 							}
 							info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())?"":studyPageInfo.getTitle());
-							info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())?"":propMap.get("fda.smd.study.pagePath")+studyPageInfo.getImagePath());
+							info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())?"":propMap.get("fda.smd.study.pagePath")+studyPageInfo.getImagePath()+StudyMetaDataUtil.getMilliSecondsForImagePath());
 							info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())?"":studyPageInfo.getDescription());
 							infoList.add(info);
 						}
@@ -652,7 +652,7 @@ public class StudyMetaDataDao {
 							info.setVideoLink("");
 						}
 						info.setTitle(StringUtils.isEmpty(studyDto.getName())?"":studyDto.getName());
-						info.setImage(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage());
+						info.setImage(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage()+StudyMetaDataUtil.getMilliSecondsForImagePath());
 						info.setText(StringUtils.isEmpty(studyDto.getFullName())?"":studyDto.getFullName());
 						infoList.add(info);
 					}

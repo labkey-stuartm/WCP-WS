@@ -26,7 +26,7 @@ public class Mail  {
 		try {
 			Properties props = new Properties();
 			Session session;
-			if(propMap.get("fda.smd.mail") != null && propMap.get("fda.smd.mail").equalsIgnoreCase("true")){
+			if(propMap.get("fda.env") != null && propMap.get("fda.env").equalsIgnoreCase("true")){
 				//labkey mail config
 				props.put("mail.smtp.auth", "false");
 				props.put("mail.smtp.host", propMap.get("smtp.hostname"));

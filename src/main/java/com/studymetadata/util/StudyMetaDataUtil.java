@@ -956,5 +956,14 @@ public class StudyMetaDataUtil {
 		}
 		return newdateStr;
 	}
+	
+	public static String getMilliSecondsForImagePath() {
+		logger.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Starts ");
+		String milliSeconds;
+		Calendar cal = Calendar.getInstance();
+		milliSeconds = "?v="+cal.getTimeInMillis();
+		logger.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
+		return milliSeconds;
+	}
 	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }

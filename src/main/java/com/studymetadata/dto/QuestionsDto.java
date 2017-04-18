@@ -84,6 +84,9 @@ public class QuestionsDto implements Serializable{
 	
 	@Column(name="active")
 	private Boolean active;
+	
+	@Column(name = "short_title")
+	private String shortTitle;
 
 	public Integer getId() {
 		return id;
@@ -251,6 +254,14 @@ public class QuestionsDto implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getShortTitle() {
+		return shortTitle;
+	}
+
+	public void setShortTitle(String shortTitle) {
+		this.shortTitle = shortTitle;
 	}
 	
 }

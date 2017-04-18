@@ -19,9 +19,6 @@ import org.hibernate.annotations.NamedQuery;
  */
 @Entity
 @Table(name="active_task")
-@NamedQueries({
-	@NamedQuery(name="activeTaskByStudyId", query="from ActiveTaskDto ATDTO where ATDTO.studyId =:studyId"),
-})
 public class ActiveTaskDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
