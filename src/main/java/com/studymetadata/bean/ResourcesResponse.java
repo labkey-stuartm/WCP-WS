@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ResourcesResponse {
 	private String message = "FAILURE";
-	private List<ResourcesBean> resources = new ArrayList<ResourcesBean>();
+	private List<ResourcesBean> resources = new ArrayList<>();
 	
 	public String getMessage() {
 		return message;

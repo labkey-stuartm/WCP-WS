@@ -10,7 +10,7 @@ public class ResourcesBean {
 	private String audience = "";
 	private String studyId = "";
 	private String key = "";
-	private ConfigurationBean configuration = new ConfigurationBean();
+	private ResourceConfigurationBean configuration = new ResourceConfigurationBean();
 	
 	public String getTitle() {
 		return title;
@@ -42,10 +42,10 @@ public class ResourcesBean {
 	public void setStudyId(String studyId) {
 		this.studyId = studyId;
 	}
-	public ConfigurationBean getConfiguration() {
+	public ResourceConfigurationBean getConfiguration() {
 		return configuration;
 	}
-	public void setConfiguration(ConfigurationBean configuration) {
+	public void setConfiguration(ResourceConfigurationBean configuration) {
 		this.configuration = configuration;
 	}
 	public String getResourcesId() {

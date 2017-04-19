@@ -34,14 +34,11 @@ public class ResourcesDto implements Serializable{
 	@Column(name="study_id")
 	private Integer studyId;
 	
-	@Column(name="custom_study_id")
-	private String customStudyId;
-	
 	@Column(name="title")
 	private String title;
 	
-	@Column(name="text_or_pdf")
-	private Integer textOrPdf;
+	@Column(name = "text_or_pdf", length = 1)
+	private boolean textOrPdf;
 	
 	@Column(name="rich_text")
 	private String richText;
@@ -49,8 +46,11 @@ public class ResourcesDto implements Serializable{
 	@Column(name="pdf_url")
 	private String pdfUrl;
 	
-	@Column(name="resource_visibility")
-	private Integer resourceVisibility;
+	@Column(name="pdf_name")
+	private String pdfName;
+	
+	@Column(name = "resource_visibility", length = 1)
+	private boolean resourceVisibility;
 	
 	@Column(name="time_period_from_days")
 	private Integer timePeriodFromDays;
@@ -67,38 +67,33 @@ public class ResourcesDto implements Serializable{
 	@Column(name="resource_text")
 	private String resourceText;
 	
-	@Column(name="action")
-	private Integer action;
+	@Column(name = "action", length = 1)
+	private boolean action;
 	
-	@Column(name="study_protocol")
-	private Integer studyProtocol;
+	@Column(name = "study_protocol", length = 1)
+	private boolean studyProtocol;
 	
-	@Column(name="created_by")
+	@Column(name = "status", length = 1)
+	private boolean status;
+	
+	@Column(name = "created_by")
 	private Integer createdBy;
 	
-	@Column(name="created_on")
+	@Column(name = "created_on")
 	private String createdOn;
 	
-	@Column(name="modified_by")
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
 	
-	@Column(name="modified_on")
+	@Column(name = "modified_on")
 	private String modifiedOn;
 	
-	@Column(name="status")
-	private Integer status;
-
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+	@Column(name="anchor_date")
+	private String anchorDate;
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-	
 	public Integer getId() {
 		return id;
 	}
@@ -123,11 +118,11 @@ public class ResourcesDto implements Serializable{
 		this.title = title;
 	}
 
-	public Integer getTextOrPdf() {
+	public boolean isTextOrPdf() {
 		return textOrPdf;
 	}
 
-	public void setTextOrPdf(Integer textOrPdf) {
+	public void setTextOrPdf(boolean textOrPdf) {
 		this.textOrPdf = textOrPdf;
 	}
 
@@ -147,59 +142,19 @@ public class ResourcesDto implements Serializable{
 		this.pdfUrl = pdfUrl;
 	}
 
-	public Integer getCreatedBy() {
-		return createdBy;
+	public String getPdfName() {
+		return pdfName;
 	}
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
+	public void setPdfName(String pdfName) {
+		this.pdfName = pdfName;
 	}
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
-
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
-
-	public Integer getResourceVisibility() {
+	public boolean isResourceVisibility() {
 		return resourceVisibility;
 	}
 
-	public void setResourceVisibility(Integer resourceVisibility) {
+	public void setResourceVisibility(boolean resourceVisibility) {
 		this.resourceVisibility = resourceVisibility;
 	}
 
@@ -243,20 +198,76 @@ public class ResourcesDto implements Serializable{
 		this.resourceText = resourceText;
 	}
 
-	public Integer getAction() {
+	public boolean isAction() {
 		return action;
 	}
 
-	public void setAction(Integer action) {
+	public void setAction(boolean action) {
 		this.action = action;
 	}
 
-	public Integer getStudyProtocol() {
+	public boolean isStudyProtocol() {
 		return studyProtocol;
 	}
 
-	public void setStudyProtocol(Integer studyProtocol) {
+	public void setStudyProtocol(boolean studyProtocol) {
 		this.studyProtocol = studyProtocol;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+
+	public String getAnchorDate() {
+		return anchorDate;
+	}
+
+	public void setAnchorDate(String anchorDate) {
+		this.anchorDate = anchorDate;
 	}
 	
 }

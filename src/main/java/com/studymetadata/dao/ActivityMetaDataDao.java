@@ -1018,7 +1018,7 @@ public class ActivityMetaDataDao {
 					instructionBean.setKey(StringUtils.isEmpty(instructionStepDetails.getStepShortTitle())?"":instructionStepDetails.getStepShortTitle());
 					instructionBean.setTitle(StringUtils.isEmpty(instructionsDto.getInstructionTitle())?"":instructionsDto.getInstructionTitle());
 					instructionBean.setText(StringUtils.isEmpty(instructionsDto.getInstructionText())?"":instructionsDto.getInstructionText());
-					instructionBean.setSkippable(false);
+					instructionBean.setSkippable((StringUtils.isEmpty(instructionStepDetails.getSkiappable()) || instructionStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					instructionBean.setGroupName("");
 					instructionBean.setRepeatable(false);
 					instructionBean.setRepeatableText(instructionStepDetails.getRepeatableText() == null?"":instructionStepDetails.getRepeatableText());
@@ -1073,7 +1073,7 @@ public class ActivityMetaDataDao {
 					questionBean.setText(StringUtils.isEmpty(questionsDto.getDescription())?"":questionsDto.getDescription());
 					questionBean.setKey(StringUtils.isEmpty(questionStepDetails.getStepShortTitle())?"":questionStepDetails.getStepShortTitle());
 					questionBean.setTitle(StringUtils.isEmpty(questionsDto.getQuestion())?"":questionsDto.getQuestion());
-					questionBean.setSkippable((questionStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(questionStepDetails.getSkiappable()))?false:true); //NA
+					questionBean.setSkippable((StringUtils.isEmpty(questionStepDetails.getSkiappable()) || questionStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true); //NA
 					questionBean.setGroupName(""); //NA
 					questionBean.setRepeatable(false); //NA
 					questionBean.setRepeatableText(questionStepDetails.getRepeatableText() == null?"":questionStepDetails.getRepeatableText()); //NA
@@ -1141,7 +1141,7 @@ public class ActivityMetaDataDao {
 					formBean.setKey(StringUtils.isEmpty(formStepDetails.getStepShortTitle())?"":formStepDetails.getStepShortTitle());
 					formBean.setTitle("");
 					formBean.setText("");
-					formBean.setSkippable((formStepDetails.getSkiappable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getSkiappable()))?false:true);
+					formBean.setSkippable((StringUtils.isEmpty(formStepDetails.getSkiappable()) || formStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					formBean.setGroupName("");
 					formBean.setRepeatable((formStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getRepeatable()))?false:true);
 					formBean.setRepeatableText(formStepDetails.getRepeatableText() == null?"":formStepDetails.getRepeatableText());
@@ -1173,7 +1173,7 @@ public class ActivityMetaDataDao {
 							}
 							formQuestionBean.setKey(StringUtils.isEmpty(formQuestionDto.getShortTitle())?"":formQuestionDto.getShortTitle());
 							formQuestionBean.setTitle(StringUtils.isEmpty(formQuestionDto.getQuestion())?"":formQuestionDto.getQuestion());
-							formQuestionBean.setSkippable(false); //NA
+							formQuestionBean.setSkippable((StringUtils.isEmpty(formQuestionDto.getSkippable()) || formQuestionDto.getSkippable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true); //NA
 							formQuestionBean.setGroupName(""); //NA
 							formQuestionBean.setRepeatable(false); //NA
 							formQuestionBean.setRepeatableText(""); //NA

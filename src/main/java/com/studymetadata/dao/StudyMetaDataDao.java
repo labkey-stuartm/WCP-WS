@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -42,9 +43,11 @@ import com.studymetadata.bean.CorrectAnswersBean;
 import com.studymetadata.bean.DashboardBean;
 import com.studymetadata.bean.EligibilityBean;
 import com.studymetadata.bean.EligibilityConsentResponse;
+import com.studymetadata.bean.GatewayInfoResourceBean;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
 import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.ResourceConfigurationBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
@@ -147,11 +150,11 @@ public class StudyMetaDataDao {
 				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"') ");
 				resourcesList = query.list();
 				if( null != resourcesList && !resourcesList.isEmpty()){
-					List<ResourcesBean> resourceBeanList = new ArrayList<>();
+					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
 					for(ResourcesDto resource : resourcesList){
-						ResourcesBean resourceBean = new ResourcesBean();
+						GatewayInfoResourceBean resourceBean = new GatewayInfoResourceBean();
 						resourceBean.setTitle(StringUtils.isEmpty(resource.getTitle())?"":resource.getTitle());
-						if(null != resource.getTextOrPdf() && resource.getTextOrPdf() == 0){
+						if(!resource.isTextOrPdf()){
 							resourceBean.setType(StudyMetaDataConstants.TYPE_HTML);
 							resourceBean.setContent(StringUtils.isEmpty(resource.getRichText())?"":resource.getRichText());
 						}else{
@@ -159,7 +162,6 @@ public class StudyMetaDataDao {
 							resourceBean.setContent(StringUtils.isEmpty(resource.getPdfUrl())?"":propMap.get("fda.smd.resource.pdfPath")+resource.getPdfUrl());
 						}
 						resourceBean.setResourcesId(resource.getId() == null?"":String.valueOf(resource.getId()));
-						resourceBean.setKey(resource.getId() == null?"":String.valueOf(resource.getId()));
 						resourceBeanList.add(resourceBean);
 					}
 					gatewayInfoResponse.setResources(resourceBeanList);
@@ -557,7 +559,7 @@ public class StudyMetaDataDao {
 
 						resourcesBean.setKey(String.valueOf(resourcesDto.getId()));
 						resourcesBean.setTitle(StringUtils.isEmpty(resourcesDto.getTitle())?"":resourcesDto.getTitle());
-						if(null != resourcesDto.getTextOrPdf() && resourcesDto.getTextOrPdf() == 0){
+						if(!resourcesDto.isTextOrPdf()){
 							resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
 							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getRichText())?"":resourcesDto.getRichText());
 						}else{
@@ -567,7 +569,7 @@ public class StudyMetaDataDao {
 						resourcesBean.setResourcesId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
 
 						//configuration details for the study
-						ConfigurationBean configuration = new ConfigurationBean();
+						ResourceConfigurationBean configuration = new ResourceConfigurationBean();
 						if(resourcesDto.getTimePeriodFromDays() != null){
 							configuration.setStart(resourcesDto.getTimePeriodFromDays());
 						}else{
