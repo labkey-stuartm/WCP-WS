@@ -26,13 +26,7 @@ public class Mail  {
 		try {
 			Properties props = new Properties();
 			Session session;
-			if(propMap.get("fda.env") != null && propMap.get("fda.env").equalsIgnoreCase("true")){
-				//labkey mail config
-				props.put("mail.smtp.auth", "false");
-				props.put("mail.smtp.host", propMap.get("smtp.hostname"));
-				props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
-				session = Session.getInstance(props);
-			}else{
+			if(propMap.get("fda.env") != null && propMap.get("fda.env").equalsIgnoreCase("local")){
 				//local mail config
 				props.put("mail.smtp.auth", "true");
 				props.put("mail.smtp.host", "smtp.gmail.com");
@@ -45,6 +39,12 @@ public class Mail  {
 						return new PasswordAuthentication("apps@boston-technology.com", "password789");
 					}
 				});
+			}else{
+				//labkey mail config
+				props.put("mail.smtp.auth", "false");
+				props.put("mail.smtp.host", propMap.get("smtp.hostname"));
+				props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
+				session = Session.getInstance(props);
 			}
 			
 			Message message = new MimeMessage(session);

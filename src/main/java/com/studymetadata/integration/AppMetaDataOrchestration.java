@@ -72,8 +72,18 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		AppResponse response = new AppResponse();
 		Boolean flag = false;
 		try{
-			flag = Mail.sendemail(propMap.get("fda.smd.feedback"), subject, body);
-			
+			String feedbackSubject = "App Feedback Mail: "+subject;
+			String feedbackBody = "<div>"
+								 +"<div><span>Hi</span></div><br>"
+								 +"<div><span>A user of the FDA Health Studies mobile app has provided feedback via the app. Here&#39;s the content of the feedback:</span></div><br>"
+								 +"<div><span><i>"+body+"</i></span></div><br>"
+								 +"<div>"
+								 +"<span>Thanks,</span><br><span>The FDA Health Studies Gateway Team</span><br>"
+								 +"<span>---------------------------------------------------------</span><br>"
+								 +"<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
+								 +"</div>"
+								 +"</div>";
+			flag = Mail.sendemail(propMap.get("fda.smd.feedback"), feedbackSubject, feedbackBody);
 			if(flag){
 				response.setMessage(StudyMetaDataConstants.SUCCESS);
 			}
@@ -99,7 +109,26 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		AppResponse response = new AppResponse();
 		Boolean flag = false;
 		try{
-			flag = Mail.sendemail(propMap.get("fda.smd.contactus"), subject, body);
+			String contactUsSubject = "App Helpdesk Mail: "+subject;
+			String contactUsContent = "<div>"
+									 +"<div><span>Hi</span></div><br>"
+									 +"<div style='padding-bottom:10px;'><span>A user of the FDA Health Studies mobile app has reached out to the HelpDesk. Below are the contact form details:</span></div>"
+									 +"<div>"
+									 +"<div>___________________________________________</div>"
+									 +"<div style='padding-top:20px;'>First Name: "+firstName+"</div>"
+									 +"<div style='padding-top:10px;'>Email: <a href='mailto:"+email+"'>"+email+"</a></div>"
+									 +"<div style='padding-top:10px;'>Subject: "+subject+"</div>"
+									 +"<div style='padding-top:10px;padding-bottom:10px'>Message: "+body+"</div>"
+									 +"</div>"
+									 +"<div>___________________________________________</div><br>"
+									 +"<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
+									 +"<div>"
+									 +"<span>Thanks,</span><br><span>The FDA Health Studies Gateway Team</span><br>"
+									 +"<span>---------------------------------------------------------</span><br>"
+									 +"<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
+									 +"</div>"
+									 +"</div>";
+			flag = Mail.sendemail(propMap.get("fda.smd.contactus"), contactUsSubject, contactUsContent);
 			
 			if(flag){
 				response.setMessage(StudyMetaDataConstants.SUCCESS);
