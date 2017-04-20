@@ -197,8 +197,9 @@ public class StudyMetaDataDao {
 				session = sessionFactory.openSession();
 
 				//fetch all Gateway studies based on the platform supported (iOS/android)
-				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' "
-						+" and SDTO.id IN (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.basicInfo='Y' and SSDTO.overView='Y' and SSDTO.settingAdmins='Y' ) ";
+				/*studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' "
+						+" and SDTO.id IN (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.basicInfo='Y' and SSDTO.overView='Y' and SSDTO.settingAdmins='Y' ) ";*/
+				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and SDTO.status != '"+StudyMetaDataConstants.STUDY_STATUS_PRE_LAUNCH+"'";
 				query = session.createQuery(studyListQuery);
 				studiesList = query.list();
 				if(null != studiesList && !studiesList.isEmpty()){
@@ -207,9 +208,21 @@ public class StudyMetaDataDao {
 						StudyBean studyBean = new StudyBean();
 						studyBean.setStudyVersion(studyDto.getStudyVersion() == null?"1":studyDto.getStudyVersion().toString());
 						studyBean.setTagline(StringUtils.isEmpty(studyDto.getStudyTagline())?"":studyDto.getStudyTagline());
-
+						
 						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
-						studyBean.setStatus(StudyMetaDataConstants.STUDY_STATUS_ACTIVE.toLowerCase());
+						switch (studyDto.getStatus()) {
+							case StudyMetaDataConstants.STUDY_STATUS_LAUNCHED: studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_PAUSED: studyBean.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: studyBean.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: studyBean.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
+								break;
+							default:
+								break;
+						}
+						
 						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())?"":studyDto.getName());
 						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage()+StudyMetaDataUtil.getMilliSecondsForImagePath());
 						//set the custom studyid of studies table
@@ -237,12 +250,12 @@ public class StudyMetaDataDao {
 							settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_BOTH);
 						}else{
 							switch (studyDto.getPlatform()) {
-							case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_IOS);
-							break;
-							case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID);
-							break;
-							default:
-								break;
+								case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_IOS);
+									break;
+								case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID);
+									break;
+								default:
+									break;
 							}
 						}
 						if(StringUtils.isNotEmpty(studyDto.getAllowRejoin()) && studyDto.getAllowRejoin().equalsIgnoreCase(StudyMetaDataConstants.YES)){

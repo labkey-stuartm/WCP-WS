@@ -37,15 +37,21 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_PLATFORM_TYPE_ANDROID = "A";
 	
 	//Study Status
-    public static final String STUDY_STATUS_PRE_LAUNCH = "Pre-launch";
-    public static final String STUDY_STATUS_ACTIVE = "Active";
-    public static final String STUDY_STATUS_PAUSED = "Paused";
-    public static final String STUDY_STATUS_DEACTIVATED = "Deactivated";
-    public static final String STUDY_STATUS_COMPLETED = "Completed";
-    
-     //Study Category type
-    public static final String STUDY_REF_CATEGORIES = "Categories";
-    public static final String STUDY_REF_SPONSERS = "Research Sponsors";
+	public static final String STUDY_STATUS_PRE_LAUNCH = "Pre-launch";
+	public static final String STUDY_STATUS_ACTIVE = "Pre-launch(Published)";
+	public static final String STUDY_STATUS_LAUNCHED = "Launched";
+	public static final String STUDY_STATUS_PAUSED = "Paused";
+	public static final String STUDY_STATUS_DEACTIVATED = "Deactivated";
+
+	//Mobile app status
+	public static final String STUDY_ACTIVE = "Active";
+	public static final String STUDY_PAUSED = "Paused";
+	public static final String STUDY_UPCOMING = "Upcoming";
+	public static final String STUDY_CLOSED = "Closed";
+	
+	 //Study Category type
+	public static final String STUDY_REF_CATEGORIES = "Categories";
+	public static final String STUDY_REF_SPONSERS = "Research Sponsors";
 	
 	public static final String YES = "Yes";
 	public static final String NO = "No";
@@ -77,14 +83,14 @@ public interface StudyMetaDataConstants {
 	public static final String SDF_DAY = "EEEE";
 	
 	//Consent related constants
-    public static final String CONSENT_TYPE_RESEARCHKIT = "ResearchKit/ResearchStack";
-    public static final String CONSENT_TYPE_CUSTOM = "Custom";
+	public static final String CONSENT_TYPE_RESEARCHKIT = "ResearchKit/ResearchStack";
+	public static final String CONSENT_TYPE_CUSTOM = "Custom";
 	
 	//questionaire frequency schedule
-    public static final String QUESTIONAIRE_STEP_TYPE_INSTRUCTION = "Instruction";
-    public static final String QUESTIONAIRE_STEP_TYPE_QUESTION = "Question";
-    public static final String QUESTIONAIRE_STEP_TYPE_FORM = "Form";
-    
+	public static final String QUESTIONAIRE_STEP_TYPE_INSTRUCTION = "Instruction";
+	public static final String QUESTIONAIRE_STEP_TYPE_QUESTION = "Question";
+	public static final String QUESTIONAIRE_STEP_TYPE_FORM = "Form";
+	
 	public static final String FREQUENCY_TYPE_ONE_TIME = "One time";
 	public static final String FREQUENCY_TYPE_WITHIN_A_DAY = "Within a day";
 	public static final String FREQUENCY_TYPE_DAILY = "Daily";
@@ -115,15 +121,15 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_WITHDRAW_CONFIG_NO_ACTION = "no_action";
 	
 	//task time range options
-    public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
-    public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
-    public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
-    public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
-    public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
-    public static final String RUN_BASED = "Run-based";
-    
-    //active task type
-    public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
+	public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
+	public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
+	public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
+	public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
+	public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
+	public static final String RUN_BASED = "Run-based";
+	
+	//active task type
+	public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
 	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
 	public static final String ACTIVITY_AT_TOWER_OF_HANOI = "towerOfHanoi";
 	
