@@ -1177,7 +1177,7 @@ public class ActivityMetaDataDao {
 							formQuestionBean.setGroupName(""); //NA
 							formQuestionBean.setRepeatable(false); //NA
 							formQuestionBean.setRepeatableText(""); //NA
-
+							formQuestionBean.setText(StringUtils.isEmpty(formQuestionDto.getDescription())?"":formQuestionDto.getDescription());
 							formQuestionBean.setHealthDataKey("");
 
 							formStepsMap.put(formQuestionDto.getId(), formQuestionBean);
