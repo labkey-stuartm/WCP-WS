@@ -7,7 +7,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.studymetadata.bean.AppResponse;
+import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dao.AppMetaDataDao;
 import com.studymetadata.dto.UserDto;
@@ -139,4 +141,43 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		LOGGER.info("INFO: AppMetaDataOrchestration - contactUsDetails() :: Ends");
 		return response;
 	}
+	
+	/**
+	 * @author Mohan
+	 * @param appVersion
+	 * @param os
+	 * @return AppUpdatesResponse
+	 * @throws OrchestrationException
+	 */
+	public AppUpdatesResponse appUpdates(String appVersion, String os) throws OrchestrationException{
+		LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
+		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
+		try{
+			appUpdates = appMetaDataDao.appUpdates(appVersion, os);
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataOrchestration - appUpdates() :: ERROR", e);
+		}
+		LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Ends");
+		return appUpdates;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param studyId
+	 * @param studyVersion
+	 * @return StudyUpdatesResponse
+	 * @throws OrchestrationException
+	 */
+	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws OrchestrationException{
+		LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Starts");
+		StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
+		try{
+			studyUpdates = appMetaDataDao.studyUpdates(studyId, studyVersion);
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataOrchestration - studyUpdates() :: ERROR", e);
+		}
+		LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Ends");
+		return studyUpdates;
+	}
+	
 }

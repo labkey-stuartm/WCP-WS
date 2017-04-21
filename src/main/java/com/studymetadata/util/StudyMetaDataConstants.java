@@ -38,10 +38,12 @@ public interface StudyMetaDataConstants {
 	
 	//Study Status
 	public static final String STUDY_STATUS_PRE_LAUNCH = "Pre-launch";
-	public static final String STUDY_STATUS_ACTIVE = "Pre-launch(Published)";
-	public static final String STUDY_STATUS_LAUNCHED = "Launched";
+	public static final String STUDY_STATUS_PRE_PUBLISH = "Pre-launch(Published)";
+	public static final String STUDY_STATUS_ACTIVE = "Active";
+	public static final String STUDY_STATUS_PUBLISH = "Published";
 	public static final String STUDY_STATUS_PAUSED = "Paused";
 	public static final String STUDY_STATUS_DEACTIVATED = "Deactivated";
+	
 
 	//Mobile app status
 	public static final String STUDY_ACTIVE = "Active";
@@ -69,7 +71,7 @@ public interface StudyMetaDataConstants {
 	public static final String TYPE_PDF = "pdf";
 	
 	public static final String TYPE_TOKEN = "token";
-	public static final String TYPE_BOTH = "both";
+	public static final String TYPE_BOTH = "combined";
 	public static final String TYPE_TEST = "test";
 	
 	public static final String CONSENT_DOC_TYPE_NEW = "New";
@@ -114,6 +116,7 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_PLATFORM_IOS = "ios";
 	public static final String STUDY_PLATFORM_ANDROID = "android";
 	public static final String STUDY_PLATFORM_BOTH = "both";
+	public static final String STUDY_PLATFORM_ALL = "all";
 	
 	//study withdraw config
 	public static final String STUDY_WITHDRAW_CONFIG_DELETE_DATA = "delete_data";

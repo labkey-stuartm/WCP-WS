@@ -2,10 +2,13 @@ package com.studymetadata.bean;
 
 public class ActivitiesBean {
 	private String activityId = "";
+	private String activityVersion = "";
 	private String title = "";
 	private String type = ""; //active task/questionnaire
 	private String startTime = "";
 	private String endTime = "";
+	private Boolean branching = false;
+	private String lastModified = "";
 	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 	
 	public String getActivityId() {
@@ -43,6 +46,24 @@ public class ActivitiesBean {
 	}
 	public void setFrequency(ActivityFrequencyBean frequency) {
 		this.frequency = frequency;
+	}
+	public String getActivityVersion() {
+		return activityVersion;
+	}
+	public void setActivityVersion(String activityVersion) {
+		this.activityVersion = activityVersion;
+	}
+	public Boolean getBranching() {
+		return branching;
+	}
+	public void setBranching(Boolean branching) {
+		this.branching = branching;
+	}
+	public String getLastModified() {
+		return lastModified;
+	}
+	public void setLastModified(String lastModified) {
+		this.lastModified = lastModified;
 	}
 	
 }

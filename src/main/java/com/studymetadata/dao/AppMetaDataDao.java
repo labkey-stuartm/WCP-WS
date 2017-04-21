@@ -3,6 +3,7 @@ package com.studymetadata.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -11,7 +12,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.DAOException;
@@ -76,36 +79,48 @@ public class AppMetaDataDao {
 	
 	/**
 	 * @author Mohan
-	 * @return superAdminsList
+	 * @param appVersion
+	 * @param os
+	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unchecked")
-	public List<UserDto> superAdminsList() throws DAOException{
-		LOGGER.info("INFO: AppMetaDataDao - superAdminsList() :: Starts");
-		List<UserDto> superAdminsList = new ArrayList<>();
-		List<Object[]> adminList = null;
+	public AppUpdatesResponse appUpdates(String appVersion, String os) throws DAOException{
+		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
+		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		try{
-			session = sessionFactory.openSession();
-			query = session.createSQLQuery("select u.email, u.first_name, u.last_name, u.user_id from users u where u.role_id=1 and u.status=true");
-			adminList = query.list();
-			if(adminList != null && !adminList.isEmpty()){
-				for(Object[] obj : adminList){
-					UserDto admin = new UserDto();
-					admin.setUserEmail((String) obj[0]);
-					admin.setFirstName((String) obj[1]);
-					admin.setLastName((String) obj[2]);
-					admin.setUserId((Integer) obj[3]);
-					superAdminsList.add(admin);
-				}
-			}
+			appUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
+			appUpdates.setForceUpdate(false);
+			appUpdates.setCurrentVersion("1.0");
 		}catch(Exception e){
-			LOGGER.error("AppMetaDataDao - superAdminsList() :: ERROR", e);
-		}finally{
-			if(session != null){
-				session.close();
-			}
+			LOGGER.error("AppMetaDataDao - appUpdates() :: ERROR", e);
 		}
-		LOGGER.info("INFO: AppMetaDataDao - superAdminsList() :: Ends");
-		return superAdminsList;
+		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Ends");
+		return appUpdates;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param studyId
+	 * @param studyVersion
+	 * @return StudyUpdatesResponse
+	 * @throws DAOException
+	 */
+	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws DAOException{
+		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Starts");
+		StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
+		try{
+			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
+			Map<String, Object> updates = new HashMap<>();
+			updates.put("consent", true);
+			updates.put("activities", true);
+			updates.put("resources", true);
+			updates.put("info", true);
+			studyUpdates.setUpdates(updates);
+			studyUpdates.setCurrentVersion("1.0");
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataDao - studyUpdates() :: ERROR", e);
+		}
+		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Ends");
+		return studyUpdates;
 	}
 }

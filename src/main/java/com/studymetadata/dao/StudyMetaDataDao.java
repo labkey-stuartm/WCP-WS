@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
@@ -21,13 +22,14 @@ import com.studymetadata.dto.ConsentMasterInfoDto;
 import com.studymetadata.dto.EligibilityDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
+import com.studymetadata.dto.QuestionnairesDto;
 import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyPageDto;
 import com.studymetadata.dto.StudySequenceDto;
 import com.studymetadata.exception.DAOException;
-import com.studymetadata.exception.OrchestrationException;
+import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -84,7 +86,7 @@ public class StudyMetaDataDao {
 	 * @return hasValidAuthorization
 	 * @throws DAOException
 	 */
-	public boolean isValidAuthorizationId(String authorization) throws OrchestrationException{
+	public boolean isValidAuthorizationId(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
 		boolean hasValidAuthorization = false;
 		String bundleIdAndAppToken = null;
@@ -211,11 +213,11 @@ public class StudyMetaDataDao {
 						
 						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
 						switch (studyDto.getStatus()) {
-							case StudyMetaDataConstants.STUDY_STATUS_LAUNCHED: studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
+							case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
 								break;
 							case StudyMetaDataConstants.STUDY_STATUS_PAUSED: studyBean.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
 								break;
-							case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: studyBean.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
+							case StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH: studyBean.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
 								break;
 							case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: studyBean.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
 								break;
@@ -247,7 +249,7 @@ public class StudyMetaDataDao {
 						//study settings details
 						SettingsBean settings = new SettingsBean();
 						if(studyDto.getPlatform().contains(",")){
-							settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_BOTH);
+							settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ALL);
 						}else{
 							switch (studyDto.getPlatform()) {
 								case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_IOS);
@@ -447,9 +449,8 @@ public class StudyMetaDataDao {
 					if( consentDto != null){
 						ReviewBean reviewBean = new ReviewBean();
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
-							reviewBean.setSignatureContent(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent());
+							reviewBean.setReviewHTML(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent());
 						}
-						reviewBean.setSignatureTitle("");
 						reviewBean.setReasonForConsent(StudyMetaDataConstants.REASON_FOR_CONSENT);
 						consent.setReview(reviewBean);
 					}
@@ -703,7 +704,70 @@ public class StudyMetaDataDao {
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Ends");
 		return studyInfoResponse;
 	}
-
+	
+	/**
+	 * @author Mohan
+	 * @param studyId
+	 * @return boolean
+	 * @throws DAOException
+	 */
+	public boolean isValidStudy(String studyId) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+		boolean isValidStudy = false;
+		Integer actualStudyId = null;
+		try{
+			session = sessionFactory.openSession();
+			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();
+			isValidStudy = (actualStudyId == null)?false:true;
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
+		}finally{
+			if(session != null ){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
+		return isValidStudy;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param activityId
+	 * @return boolean
+	 * @throws DAOException
+	 */
+	public boolean isValidActivity(String activityId) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+		boolean isValidActivity = false;
+		String[] activityInfoArray = null;
+		ActiveTaskDto activeTaskDto = null;
+		QuestionnairesDto questionnaireDto = null;
+		try{
+			if(activityId.contains("-")){
+				session = sessionFactory.openSession();
+				activityInfoArray = activityId.split("-");
+				if(activityInfoArray[0].equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
+					query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityInfoArray[1]);
+					activeTaskDto = (ActiveTaskDto) query.uniqueResult();
+					isValidActivity = (activeTaskDto == null)?false:true;
+				}else{
+					query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityInfoArray[1]+" and QDTO.active=true");
+					questionnaireDto = (QuestionnairesDto) query.uniqueResult();
+					isValidActivity = (questionnaireDto == null)?false:true;
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
+		}finally{
+			if(session != null ){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
+		return isValidActivity;
+	}
+	
 	/*------------------------------Common methods starts------------------------------*/
 	/**
 	 * @author Mohan

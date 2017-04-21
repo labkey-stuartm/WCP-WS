@@ -1,6 +1,7 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.ActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.AppResponse;
+import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.ConsentDocumentResponse;
 import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.FailureResponse;
@@ -133,17 +135,19 @@ public class StudyMetaDataService {
 	public Object eligibilityConsentMetadata(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
 				if(!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(eligibilityConsentResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -176,17 +180,19 @@ public class StudyMetaDataService {
 	public Object consentDocument(@HeaderParam("studyId") String studyId, @HeaderParam("consentVersion") String consentVersion, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){	
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				consentDocumentResponse = studyMetaDataOrchestration.consentDocument(studyId, consentVersion, activityId, activityVersion);
 				if(!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(consentDocumentResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -217,17 +223,19 @@ public class StudyMetaDataService {
 	public Object resourcesForStudy(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
 				if(!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(resourcesResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -258,17 +266,19 @@ public class StudyMetaDataService {
 	public Object studyInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
 				if(!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(studyInfoResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -299,17 +309,19 @@ public class StudyMetaDataService {
 	public Object studyActivityList(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				activityResponse = activityMetaDataOrchestration.studyActivityList(studyId);
 				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(activityResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -343,17 +355,25 @@ public class StudyMetaDataService {
 	public Object studyActivityMetadata(@HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
 		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
+				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_ACTIVITY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
+				}
+				
 				activityMetaDataResponse = activityMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
 				if(!activityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(activityMetaDataResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -384,17 +404,19 @@ public class StudyMetaDataService {
 	public Object studyDashboardInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
+		Boolean isValidFlag = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId)){
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
 				studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId);
 				if(!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					if(studyDashboardResponse.getMessage().equalsIgnoreCase(StudyMetaDataConstants.FAILURE)){
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-					}else{
-						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-						return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
-					}
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -556,19 +578,21 @@ public class StudyMetaDataService {
 	 * @param context
 	 * @param response
 	 * @return Object
-	 *//*
+	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("appUpdates")
-	public Object appUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("os") String os, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
+		AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
 		try{
-			JSONObject serviceJson = new JSONObject(params);
-			String appVersion = serviceJson.getString("appVersion");
-			String os = serviceJson.getString("os"); //ios/android
 			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(os)){
-				LOGGER.info("appUpdates YET TO DEVELOP");
+				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, os);
+				if(!appUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -579,37 +603,38 @@ public class StudyMetaDataService {
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
-		return null;
+		return appUpdatesResponse;
 	}
 	
-	*//**
+	/**
 	 * This method is used to check for study updates
 	 * @author Mohan
 	 * @param params
 	 * @param context
 	 * @param response
 	 * @return Object
-	 *//*
+	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("studyUpdates")
-	public Object studyUpdates(String params, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyUpdates(@HeaderParam("studyId") String studyId, @HeaderParam("studyVersion") String studyVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
+		Boolean isValidFlag = false;
 		try{
-			JSONObject serviceJson = new JSONObject(params);
-			String studyId = serviceJson.getString("studyId");
-			String studyVersion = serviceJson.getString("studyVersion"); //current study version in app
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)){
-				studyUpdatesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-				Map<String, Object> updates = new HashMap<>();
-				updates.put("consent", true);
-				updates.put("activities", true);
-				updates.put("resources", true);
-				updates.put("info", true);
-				studyUpdatesResponse.setUpdates(updates);
-				studyUpdatesResponse.setCurrentVersion("1.0");
+				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
+				if(!isValidFlag){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+				}
+				
+				studyUpdatesResponse = appMetaDataOrchestration.studyUpdates(studyId, studyVersion);
+				if(!studyUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -619,7 +644,7 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
-	}*/
+	}
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	
 	@GET

@@ -41,25 +41,28 @@
 		<load-on-startup>1</load-on-startup> </servlet> -->
 	<!-- Added for Quartz scheduler : Ends -->
 
-	<security-constraint>
+	<!-- <security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Permitted Actions</web-resource-name>
 			<url-pattern>/*</url-pattern>
 			<http-method>GET</http-method>
 			<http-method>POST</http-method>
 		</web-resource-collection>
-	</security-constraint>
+	</security-constraint> -->
 	
 	<!-- Force SSL for entire site -->
-	<!-- <security-constraint>
+	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Entire Site</web-resource-name>
 			<url-pattern>/*</url-pattern>
 		</web-resource-collection>
 		<user-data-constraint>
-			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+			<!-- available only through HTTPS  -->
+			<!-- <transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
+			<!-- available through both HTTP and HTTPS  -->
+			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
-	</security-constraint> -->
+	</security-constraint>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

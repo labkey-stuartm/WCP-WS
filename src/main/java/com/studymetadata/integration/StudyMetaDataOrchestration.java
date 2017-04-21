@@ -169,4 +169,44 @@ public class StudyMetaDataOrchestration {
 		return flag;
 	}
 	
+	/**
+	 * This method is used to validate the studyId exists or not
+	 * 
+	 * @author Mohan
+	 * @param studyId
+	 * @return boolean
+	 * @throws OrchestrationException
+	 */
+	public boolean isValidStudy(String studyId) throws OrchestrationException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+		boolean flag = false;
+		try{
+			flag = studyMetaDataDao.isValidStudy(studyId);
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
+		return flag;
+	}
+	
+	/**
+	 * This method is used to validate the activity exists or not
+	 * 
+	 * @author Mohan
+	 * @param activityId
+	 * @return boolean
+	 * @throws OrchestrationException
+	 */
+	public boolean isValidActivity(String activityId) throws OrchestrationException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+		boolean flag = false;
+		try{
+			flag = studyMetaDataDao.isValidActivity(activityId);
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
+		return flag;
+	}
+	
 }

@@ -7,8 +7,7 @@ package com.studymetadata.bean;
  */
 public class ReviewBean {
 	private String reasonForConsent = "";
-	private String signatureTitle = "";
-	private String signatureContent = "";
+	private String reviewHTML = "";
 	
 	public String getReasonForConsent() {
 		return reasonForConsent;
@@ -16,18 +15,11 @@ public class ReviewBean {
 	public void setReasonForConsent(String reasonForConsent) {
 		this.reasonForConsent = reasonForConsent;
 	}
-	public String getSignatureTitle() {
-		return signatureTitle;
+	public String getReviewHTML() {
+		return reviewHTML;
 	}
-	public void setSignatureTitle(String signatureTitle) {
-		this.signatureTitle = signatureTitle;
+	public void setReviewHTML(String reviewHTML) {
+		this.reviewHTML = reviewHTML;
 	}
-	public String getSignatureContent() {
-		return signatureContent;
-	}
-	public void setSignatureContent(String signatureContent) {
-		this.signatureContent = signatureContent;
-	}
-	
 	
 }

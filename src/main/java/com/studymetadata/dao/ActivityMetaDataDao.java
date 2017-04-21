@@ -82,8 +82,8 @@ public class ActivityMetaDataDao {
 			actualStudyId = (Integer) query.uniqueResult();
 			if(actualStudyId != null){
 				//get the Activities (type : Active Task list) by studyId
-				//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
-				query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId="+actualStudyId);
+				query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
+				//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId="+actualStudyId);
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
@@ -91,6 +91,10 @@ public class ActivityMetaDataDao {
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 						activityBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
 
+						activityBean.setActivityVersion((activeTaskDto.getStudyVersion() == null || activeTaskDto.getStudyVersion().intValue() == 0)?"1":activeTaskDto.getStudyVersion().toString());
+						activityBean.setBranching(false);
+						activityBean.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+						
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						frequencyDetails = getFrequencyRunsDetailsForActiveTasks(activeTaskDto, frequencyDetails, session);
 						frequencyDetails.setType(StringUtils.isEmpty(activeTaskDto.getFrequency())?"":activeTaskDto.getFrequency());
@@ -104,13 +108,13 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.studyId="+actualStudyId+" and QDTO.active=true");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
+				//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.studyId="+actualStudyId+" and QDTO.active=true");
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
 					for(QuestionnairesDto questionaire : questionnairesList){
 						ActivitiesBean activityBean = new ActivitiesBean();
-						activityBean.setTitle(StringUtils.isEmpty(questionaire.getTitle())?"":questionaire.getTitle());
+						activityBean.setTitle(StringUtils.isEmpty(questionaire.getShortTitle())?"":questionaire.getShortTitle());
 						activityBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
 
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
@@ -119,7 +123,9 @@ public class ActivityMetaDataDao {
 						activityBean.setFrequency(frequencyDetails);
 
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
-
+						activityBean.setActivityVersion((questionaire.getStudyVersion() == null || questionaire.getStudyVersion().intValue() == 0)?"1":questionaire.getStudyVersion().toString());
+						activityBean.setBranching((questionaire.getBranching() == null || !questionaire.getBranching())?false:true);
+						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
 						activitiesBeanList.add(activityBean);
 					}
