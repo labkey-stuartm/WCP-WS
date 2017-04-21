@@ -46,9 +46,6 @@ public class NotificationDto implements Serializable{
 	@Column(name = "notification_type")
 	private String notificationType;
 	
-	@Column(name = "notification_sent_date_time")
-	private String notificationSentDateTime;
-	
 	@Column(name="notification_schedule_type")
 	private String notificationScheduleType;
 	
@@ -60,6 +57,18 @@ public class NotificationDto implements Serializable{
 	
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "created_on")
+	private String createdOn;
+	
+	@Column(name = "modified_by")
+	private Integer modifiedBy;
+	
+	@Column(name = "modified_on")
+	private String modifiedOn;
 
 	public Integer getNotificationId() {
 		return notificationId;
@@ -125,14 +134,6 @@ public class NotificationDto implements Serializable{
 		this.notificationType = notificationType;
 	}
 
-	public String getNotificationSentDateTime() {
-		return notificationSentDateTime;
-	}
-
-	public void setNotificationSentDateTime(String notificationSentDateTime) {
-		this.notificationSentDateTime = notificationSentDateTime;
-	}
-
 	public String getNotificationScheduleType() {
 		return notificationScheduleType;
 	}
@@ -163,6 +164,38 @@ public class NotificationDto implements Serializable{
 
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 	
 }

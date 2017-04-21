@@ -159,4 +159,21 @@ public interface StudyMetaDataConstants {
 	//question response type constants
 	public static final String 	QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
 	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATETIME = "Date-Time";
+	
+	//notification
+	public static final String NOTIFICATION_TYPE_GT = "GT";
+	public static final String NOTIFICATION_TYPE_ST = "ST";
+	
+	public static final String NOTIFICATION_GATEWAY = "Gateway";
+	public static final String NOTIFICATION_STANDALONE = "Study";
+	
+	public static final String NOTIFICATION_SUBTYPE_GENERAL = "Announcement";
+	public static final String NOTIFICATION_SUBTYPE_ACTIVITY = "Activity";
+	public static final String NOTIFICATION_SUBTYPE_STUDY = "Study";
+	public static final String NOTIFICATION_SUBTYPE_RESOURCE = "Resource";
+	
+	public static final String NOTIFICATION_AUDIENCE_ALL = "All";
+	public static final String NOTIFICATION_AUDIENCE_PARTICIPANTS = "Participants";
+	public static final String NOTIFICATION_AUDIENCE_LIMITED = "Limited";
+	
 }

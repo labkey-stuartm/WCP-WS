@@ -470,7 +470,7 @@ public class StudyMetaDataService {
 	 * @param context
 	 * @param response
 	 * @return NotificationsResponse
-	 *//*
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -496,7 +496,7 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Ends");
 		return notificationsResponse;
-	}*/
+	}
 	
 	/**
 	 * This method is used to save feedback

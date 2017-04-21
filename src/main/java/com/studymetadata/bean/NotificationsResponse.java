@@ -3,9 +3,11 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.studymetadata.util.StudyMetaDataConstants;
+
 public class NotificationsResponse {
-	private String message = "FAILURE";
-	private List<NotificationsBean> notifications = new ArrayList<NotificationsBean>();
+	private String message = StudyMetaDataConstants.FAILURE;
+	private List<NotificationsBean> notifications = new ArrayList<>();
 	
 	public String getMessage() {
 		return message;

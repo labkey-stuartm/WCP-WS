@@ -13,9 +13,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.studymetadata.bean.AppUpdatesResponse;
+import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.dto.NotificationDto;
 import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
@@ -66,12 +68,31 @@ public class AppMetaDataDao {
 	public NotificationsResponse notifications(String skip) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
+		List<NotificationDto> notificationList = null;
 		try{
-			if(StringUtils.isNotEmpty(skip)){
+			/*session = sessionFactory.openSession();
+			query = session.createQuery(" from NotificationDto NDTO where NDTO.scheduleDate >="+StudyMetaDataUtil.getCurrentDate()+" LIMIT "+skip);
+			notificationList = query.list();
+			if(notificationList != null && !notificationList.isEmpty()){
+				List<NotificationsBean> notifyList = new ArrayList<>();
+				for(NotificationDto notificationDto : notificationList){
+					NotificationsBean botifyBean = new NotificationsBean();
+					botifyBean.setNotificationId(notificationDto.getNotificationId().toString());
+					if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
+						botifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+					}else{
+						botifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+					}
+					notifyList.add(botifyBean);
+				}
 				notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			}
+			}*/
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - notifications() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Ends");
 		return notificationsResponse;
