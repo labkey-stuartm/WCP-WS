@@ -1,5 +1,7 @@
 package com.studymetadata.dao;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +12,8 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -234,7 +238,8 @@ public class ActivityMetaDataDao {
 
 				metadata.setStartDate(activityBean.getStartTime());
 				metadata.setEndDate(activityBean.getEndTime());
-				metadata.setLastModified(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //column not there in the database
+				
+				metadata.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 				metadata.setStudyId(studyId);
 				metadata.setVersion(activeTaskDto.getStudyVersion() == null?"1":activeTaskDto.getStudyVersion().toString());
@@ -328,7 +333,7 @@ public class ActivityMetaDataDao {
 
 				metadata.setStartDate(activityBean.getStartTime());
 				metadata.setEndDate(activityBean.getEndTime());
-				metadata.setLastModified(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+				metadata.setLastModified(StringUtils.isEmpty(questionnaireDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 				metadata.setName(StringUtils.isEmpty(questionnaireDto.getTitle())?"":questionnaireDto.getTitle());
 				metadata.setStudyId(studyId);
 				metadata.setVersion(questionnaireDto.getStudyVersion() == null?"1":questionnaireDto.getStudyVersion().toString());
@@ -1826,5 +1831,27 @@ public class ActivityMetaDataDao {
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Ends");
 		return destinationBean;
+	}
+	
+	/**
+	 * This method is used to get the base64 string for image
+	 * 
+	 * @author Mohan
+	 * @param imagePath
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String getBase64Image(String imagePath) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
+		String base64Image = "";
+		try{
+			File file = new File(imagePath);
+			byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+			base64Image = new String(encoded, StandardCharsets.UTF_8);
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Ends");
+		return base64Image;
 	}
 }
