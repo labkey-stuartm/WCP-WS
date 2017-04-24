@@ -9,9 +9,8 @@ public class ChartsBean {
 	private String title = "";
 	private String displayName = "";
 	private String type = "";
-	private boolean scrollable=false;
-	private List<ConfigurationBean> dataSource = new ArrayList<ConfigurationBean>();
-	private Map<String, Object> configuration = new HashMap<String, Object>();
+	private Map<String, Object> configuration = new HashMap<>();
+	private List<ConfigurationBean> dataSource = new ArrayList<>();
 	
 	public String getTitle() {
 		return title;
@@ -31,23 +30,17 @@ public class ChartsBean {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public boolean isScrollable() {
-		return scrollable;
+	public Map<String, Object> getConfiguration() {
+		return configuration;
 	}
-	public void setScrollable(boolean scrollable) {
-		this.scrollable = scrollable;
+	public void setConfiguration(Map<String, Object> configuration) {
+		this.configuration = configuration;
 	}
 	public List<ConfigurationBean> getDataSource() {
 		return dataSource;
 	}
 	public void setDataSource(List<ConfigurationBean> dataSource) {
 		this.dataSource = dataSource;
-	}
-	public Map<String, Object> getConfiguration() {
-		return configuration;
-	}
-	public void setConfiguration(Map<String, Object> configuration) {
-		this.configuration = configuration;
 	}
 	
 }

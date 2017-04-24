@@ -2,6 +2,7 @@ package com.studymetadata.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +52,12 @@ public class DashboardMetaDataDao {
 			actualStudyId = (Integer) query.uniqueResult();
 			if(actualStudyId != null){
 				DashboardBean dashboard = new DashboardBean();
-				List<ChartsBean> charts = new ArrayList<ChartsBean>();
+				List<ChartsBean> charts = new ArrayList<>();
 				ChartsBean cbean = new ChartsBean();
 				cbean.setConfiguration(singleLineChartDetails());
 				charts.add(cbean);
 				dashboard.setCharts(charts);
-				List<StatisticsBean> statisticsList = new ArrayList<StatisticsBean>();
+				List<StatisticsBean> statisticsList = new ArrayList<>();
 				StatisticsBean statistics = new StatisticsBean();
 				statisticsList.add(statistics);
 				dashboard.setStatistics(statisticsList);
@@ -79,22 +80,23 @@ public class DashboardMetaDataDao {
 	
 	/*-----------------------------Manipulate chart data methods starts----------------------------------*/
 	/**
+	 * This method is used to fetch the chart configuration details for single line chart
+	 * 
 	 * @author Mohan
 	 * @return Map<String, Object>
 	 * @throws Exception
 	 * 
-	 * This method is used to fetch the chart configuration details for single line chart
 	 */
 	public Map<String, Object> singleLineChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - singleLineChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "single");
 			configuration.put("gridlines", false);
 			configuration.put("animated", false);
 			configuration.put("scaling", 0); //x-axis divisions
 
-			Map<String, Object> axisColor = new HashMap<>();
+			Map<String, Object> axisColor = new LinkedHashMap<>();
 			axisColor.put("x-axis", "#fff"); //hexcolor
 			axisColor.put("y-axis", "#000"); //hexcolor
 			configuration.put("axisColor", axisColor);
@@ -108,7 +110,7 @@ public class DashboardMetaDataDao {
 
 			//single setting only
 			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
+			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
 			List<Double> pointValues = new ArrayList<>();
 			settings.put("pointValues", pointValues);
@@ -123,22 +125,23 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
+	 * This method is used to fetch the chart configuration details for multiple line chart
+	 * 
 	 * @author Mohan
 	 * @return Map<String, Object>
 	 * @throws Exception
 	 * 
-	 * This method is used to fetch the chart configuration details for multiple line chart
 	 */
 	public Map<String, Object> multipleLineChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleLineChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "multiple");
 			configuration.put("gridlines", false);
 			configuration.put("animated", false);
 			configuration.put("scaling", 0); //x-axis divisions
 
-			Map<String, Object> axisColor = new HashMap<>();
+			Map<String, Object> axisColor = new LinkedHashMap<>();
 			axisColor.put("x-axis", "#fff"); //hexcolor
 			axisColor.put("y-axis", "#000"); //hexcolor
 			configuration.put("axisColor", axisColor);
@@ -152,7 +155,7 @@ public class DashboardMetaDataDao {
 
 			// more than one setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
+			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
 			List<Double> pointValues = new ArrayList<>();
 			settings.put("pointValues", pointValues);
@@ -167,15 +170,16 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
+	 * This method is used to fetch the chart configuration details for unique pie chart
+	 * 
 	 * @author Mohan
 	 * @return Object
 	 * @throws DAOException
 	 * 
-	 * This method is used to fetch the chart configuration details for unique pie chart
 	 */
 	public Map<String, Object> uniquePieChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - uniquePieChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "unique-responses");
 			configuration.put("numberOfSegments", 0); // =0, calculated at run time <number of unique responses>
@@ -196,15 +200,16 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
+	 * This method is used to fetch the chart configuration details for range pie chart
+	 * 
 	 * @author Mohan
 	 * @return Object
 	 * @throws DAOException
 	 * 
-	 * This method is used to fetch the chart configuration details for range pie chart
 	 */
 	public Map<String, Object> rangePieChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - rangePieChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "range-responses");
 			configuration.put("numberOfSegments", 5); //Number of ranges
@@ -225,15 +230,16 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
+	 * This method is used to fetch the chart configuration details for single bar chart
+	 * 
 	 * @author Mohan
 	 * @return Object
 	 * @throws DAOException
 	 * 
-	 * This method is used to fetch the chart configuration details for single bar chart
 	 */
 	public Map<String, Object> singleBarChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - singleBarChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "single");
 
@@ -242,7 +248,7 @@ public class DashboardMetaDataDao {
 
 			//single setting only
 			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
+			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
 			List<Double> pointValues = new ArrayList<>();
 			settings.put("pointValues", pointValues);
@@ -257,15 +263,16 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
+	 * This method is used to fetch the chart configuration details for multiple bar chart
+	 * 
 	 * @author Mohan
 	 * @return Object
 	 * @throws DAOException
 	 * 
-	 * This method is used to fetch the chart configuration details for multiple bar chart
 	 */
 	public Map<String, Object> multipleBarChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Starts");
-		Map<String, Object> configuration = new HashMap<>();
+		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "multiple");
 
@@ -274,7 +281,7 @@ public class DashboardMetaDataDao {
 
 			//more than one setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
-			Map<String, Object> settings = new HashMap<>();
+			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
 			List<Double> pointValues = new ArrayList<>();
 			settings.put("pointValues", pointValues);

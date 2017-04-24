@@ -48,6 +48,9 @@ public class InstructionsDto implements Serializable{
 	
 	@Column(name="active")
 	private Boolean active;
+	
+	@Column(name="status")
+	private Boolean status;
 
 	public Integer getId() {
 		return id;
@@ -119,6 +122,14 @@ public class InstructionsDto implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 	
 }

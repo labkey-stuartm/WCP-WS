@@ -3,6 +3,7 @@ package com.studymetadata.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -82,7 +83,7 @@ public class ActivityMetaDataDao {
 			actualStudyId = (Integer) query.uniqueResult();
 			if(actualStudyId != null){
 				//get the Activities (type : Active Task list) by studyId
-				query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
+				query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.action=1 and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
 				//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId="+actualStudyId);
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
@@ -108,7 +109,7 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
 				//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.studyId="+actualStudyId+" and QDTO.active=true");
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
@@ -214,7 +215,8 @@ public class ActivityMetaDataDao {
 		ActiveTaskDto activeTaskDto = null;
 		List<ActivityStepsBean> steps = new ArrayList<>();
 		try{
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId);
+			//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId);
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId+" and ATDTO.action=1 ");
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
@@ -313,7 +315,7 @@ public class ActivityMetaDataDao {
 		List<ActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true");
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true and QDTO.status=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
 				activityStructureBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
@@ -332,7 +334,7 @@ public class ActivityMetaDataDao {
 				metadata.setVersion(questionnaireDto.getStudyVersion() == null?"1":questionnaireDto.getStudyVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 
-				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.active=true ORDER BY QSDTO.sequenceNo");
+				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.active=true and QSDTO.status=true ORDER BY QSDTO.sequenceNo");
 				questionaireStepsList = query.list();
 				if(questionaireStepsList != null && !questionaireStepsList.isEmpty()){
 					List<Integer> instructionIdList = new ArrayList<>();
@@ -375,7 +377,7 @@ public class ActivityMetaDataDao {
 					//get the instructionsList
 					if(!instructionIdList.isEmpty()){
 						List<InstructionsDto> instructionsDtoList;
-						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.active=true");
+						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.active=true and IDTO.status=true");
 						instructionsDtoList = query.list();
 						if(instructionsDtoList != null && !instructionsDtoList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, instructionsDtoList, null, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, null, questionaireStepsList, questionnaireDto);
@@ -385,7 +387,7 @@ public class ActivityMetaDataDao {
 					//get the questionaire List
 					if(!questionIdList.isEmpty()){
 						List<QuestionsDto> questionsList;
-						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.active=true");
+						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.active=true and QDTO.status=true");
 						questionsList = query.list();
 						if( questionsList != null && !questionsList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, ActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, null, questionsList, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);
@@ -1255,7 +1257,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> spatialSpanMemoryDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Starts");
-		Map<String, Object> activeTaskFormat = new HashMap<>();
+		Map<String, Object> activeTaskFormat = new LinkedHashMap<>();
 		try{
 			activeTaskFormat.put("initialSpan", 0);
 			activeTaskFormat.put("minimumSpan", 0);
@@ -1311,7 +1313,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> getQuestionaireQuestionFormatByType(QuestionsDto questionDto, String questionResultType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		QuestionReponseTypeDto reponseType = null;
 		try{
 			if(StringUtils.isNotEmpty(questionResultType)){
@@ -1378,7 +1380,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
@@ -1404,7 +1406,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionContinuousScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
@@ -1430,15 +1432,15 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionTextScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
-		List<HashMap<String, Object>> textChoicesList = new ArrayList<>();
+		List<LinkedHashMap<String, Object>> textChoicesList = new ArrayList<>();
 		try{
 			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
 			responseSubTypeList = query.list();
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
-					HashMap<String, Object> textScaleMap = new HashMap<>();
+					LinkedHashMap<String, Object> textScaleMap = new LinkedHashMap<>();
 					textScaleMap.put("text", subType.getText()==null?"":subType.getText());
 					textScaleMap.put("value", subType.getValue()==null?"":subType.getValue());
 					textScaleMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
@@ -1464,15 +1466,15 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionValuePickerDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
-		List<HashMap<String, Object>> valuePickerList = new ArrayList<>();
+		List<LinkedHashMap<String, Object>> valuePickerList = new ArrayList<>();
 		try{
 			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
 			responseSubTypeList = query.list();
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
-					HashMap<String, Object> valuePickerMap = new HashMap<>();
+					LinkedHashMap<String, Object> valuePickerMap = new LinkedHashMap<>();
 					valuePickerMap.put("text", subType.getText()==null?"":subType.getText());
 					valuePickerMap.put("value", subType.getValue()==null?"":subType.getValue());
 					valuePickerMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
@@ -1496,15 +1498,15 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionImageChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
-		List<HashMap<String, Object>> imageChoicesList = new ArrayList<>();
+		List<LinkedHashMap<String, Object>> imageChoicesList = new ArrayList<>();
 		try{
 			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
 			responseSubTypeList = query.list();
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
-					HashMap<String, Object> imageChoiceMap = new HashMap<>();
+					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
 					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage());
 					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":subType.getSelectedImage());
 					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
@@ -1528,15 +1530,15 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionTextChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		List<QuestionResponseSubTypeDto> responseSubTypeList = null;
-		List<HashMap<String, Object>> textChoiceMapList = new ArrayList<>();
+		List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
 		try{
 			query = session.createQuery(" from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionDto.getId());
 			responseSubTypeList = query.list();
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
-					HashMap<String, Object> textChoiceMap = new HashMap<>();
+					LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
 					textChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					textChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
 					textChoiceMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
@@ -1561,7 +1563,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionNumericDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
 			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?"":reponseType.getStyle());
 			questionFormat.put("unit", (reponseType==null || reponseType.getUnit()==null)?"":reponseType.getUnit());
@@ -1583,7 +1585,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionDateDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		String dateFormat = "";
 		try{
 			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?"":reponseType.getStyle());
@@ -1610,7 +1612,7 @@ public class ActivityMetaDataDao {
 	 */
 	public Map<String, Object> formatQuestionTextDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
-		Map<String, Object> questionFormat = new HashMap<>();
+		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
 			questionFormat.put("maxLength", (reponseType==null || reponseType.getMaxLength()==null)?0:reponseType.getMaxLength());
 			questionFormat.put("validationRegex", (reponseType==null || reponseType.getValidationRegex()==null)?"":reponseType.getValidationRegex());

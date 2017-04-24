@@ -2,6 +2,7 @@ package com.studymetadata.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +132,7 @@ public class AppMetaDataDao {
 		StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
 		try{
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
-			Map<String, Object> updates = new HashMap<>();
+			Map<String, Object> updates = new LinkedHashMap<>();
 			updates.put("consent", true);
 			updates.put("activities", true);
 			updates.put("resources", true);
