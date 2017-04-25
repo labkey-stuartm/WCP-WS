@@ -1,8 +1,6 @@
 package com.studymetadata.bean;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChartsBean {
@@ -10,7 +8,7 @@ public class ChartsBean {
 	private String displayName = "";
 	private String type = "";
 	private Map<String, Object> configuration = new HashMap<>();
-	private List<ConfigurationBean> dataSource = new ArrayList<>();
+	private ConfigurationBean dataSource = new ConfigurationBean();
 	
 	public String getTitle() {
 		return title;
@@ -36,10 +34,10 @@ public class ChartsBean {
 	public void setConfiguration(Map<String, Object> configuration) {
 		this.configuration = configuration;
 	}
-	public List<ConfigurationBean> getDataSource() {
+	public ConfigurationBean getDataSource() {
 		return dataSource;
 	}
-	public void setDataSource(List<ConfigurationBean> dataSource) {
+	public void setDataSource(ConfigurationBean dataSource) {
 		this.dataSource = dataSource;
 	}
 	

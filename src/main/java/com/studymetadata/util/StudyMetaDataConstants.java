@@ -78,8 +78,10 @@ public interface StudyMetaDataConstants {
 	public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
 	public static final String REASON_FOR_CONSENT = "By Agreeing this you confirm that you read the consent and that you wish to take part in this research study";
 	
-	public static final String TYPE_ACTIVE_TASK = "task";
-	public static final String TYPE_QUESTIONNAIRE = "questionnaire";
+	public static final String ACTIVITY_ACTIVE_TASK = "task";
+	public static final String ACTIVITY_QUESTIONNAIRE = "questionnaire";
+	public static final String DASHBOARD_ACTIVE_TASK = "active task";
+	public static final String DASHBOARD_QUESTIONNAIRE = "questionnaire";
 	
 	public static final String TYPE_UTF8 = "UTF-8";
 	public static final String SDF_DAY = "EEEE";
@@ -123,14 +125,6 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_WITHDRAW_CONFIG_ASK_USER = "ask_user";
 	public static final String STUDY_WITHDRAW_CONFIG_NO_ACTION = "no_action";
 	
-	//task time range options
-	public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
-	public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
-	public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
-	public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
-	public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
-	public static final String RUN_BASED = "Run-based";
-	
 	//active task type
 	public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
 	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
@@ -159,6 +153,28 @@ public interface StudyMetaDataConstants {
 	//question response type constants
 	public static final String 	QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
 	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATETIME = "Date-Time";
+	
+	//Charts and Statistics
+	//task time range options
+	public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
+	public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
+	public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
+	public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
+	public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
+	public static final String RUN_BASED = "Run-based";
+	
+	public static final String CHART_DAY_OF_WEEK = "days_of_week";
+	public static final String CHART_DAYS_OF_MONTH = "days_of_month";
+	public static final String CHART_WEEK_OF_MONTH = "weeks_of_month";
+	public static final String CHART_MONTHS_OF_YEAR = "months_of_year";
+	public static final String CHART_RUNS = "runs";
+	
+	public static final String CHART_TYPE_PIE = "pie-chart";
+	public static final String CHART_TYPE_BAR = "bar-chart";
+	public static final String CHART_TYPE_LINE = "line-chart";
+	
+	public static final String DASHBOARD_STATISTICS = "statistics";
+	public static final String DASHBOARD_CHARTS = "charts";
 	
 	//notification
 	public static final String NOTIFICATION_TYPE_GT = "GT";

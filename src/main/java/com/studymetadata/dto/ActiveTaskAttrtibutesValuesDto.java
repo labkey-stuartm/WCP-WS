@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
@@ -68,6 +69,18 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
+	
+	@Transient
+	private String activityId;
+	
+	@Transient
+	private String activityVersion;
+	
+	@Transient
+	private String activityType;
+	
+	@Transient
+	private String activityStepKey;
 	
 	public Integer getAttributeValueId() {
 		return attributeValueId;
@@ -195,6 +208,38 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
+	}
+
+	public String getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
+	}
+
+	public String getActivityVersion() {
+		return activityVersion;
+	}
+
+	public void setActivityVersion(String activityVersion) {
+		this.activityVersion = activityVersion;
+	}
+
+	public String getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+
+	public String getActivityStepKey() {
+		return activityStepKey;
+	}
+
+	public void setActivityStepKey(String activityStepKey) {
+		this.activityStepKey = activityStepKey;
 	}
 	
 }

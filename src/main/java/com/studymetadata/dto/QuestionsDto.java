@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 
@@ -91,6 +92,18 @@ public class QuestionsDto implements Serializable{
 	@Column(name="status")
 	private Boolean status;
 
+	@Transient
+	private String activityId;
+	
+	@Transient
+	private String activityVersion;
+	
+	@Transient
+	private String activityType;
+	
+	@Transient
+	private String activityStepKey;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -273,6 +286,38 @@ public class QuestionsDto implements Serializable{
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
+	}
+
+	public String getActivityVersion() {
+		return activityVersion;
+	}
+
+	public void setActivityVersion(String activityVersion) {
+		this.activityVersion = activityVersion;
+	}
+
+	public String getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+
+	public String getActivityStepKey() {
+		return activityStepKey;
+	}
+
+	public void setActivityStepKey(String activityStepKey) {
+		this.activityStepKey = activityStepKey;
 	}
 	
 }

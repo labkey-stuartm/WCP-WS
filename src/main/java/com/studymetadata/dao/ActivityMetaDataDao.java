@@ -94,7 +94,7 @@ public class ActivityMetaDataDao {
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
-						activityBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
+						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
 						activityBean.setActivityVersion((activeTaskDto.getStudyVersion() == null || activeTaskDto.getStudyVersion().intValue() == 0)?"1":activeTaskDto.getStudyVersion().toString());
 						activityBean.setBranching(false);
@@ -120,7 +120,7 @@ public class ActivityMetaDataDao {
 					for(QuestionnairesDto questionaire : questionnairesList){
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(questionaire.getShortTitle())?"":questionaire.getShortTitle());
-						activityBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
+						activityBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
 
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						frequencyDetails = getFrequencyRunsDetailsForQuestionaires(questionaire, frequencyDetails, session);
@@ -228,7 +228,7 @@ public class ActivityMetaDataDao {
 				List<ActiveTaskMasterAttributeDto> activeTaskMaterList = null;
 				List<ActiveTaskListDto> activeTaskList = null;
 
-				activityStructureBean.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
+				activityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
 				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
@@ -271,14 +271,15 @@ public class ActivityMetaDataDao {
 				if(attributeListFlag && masterAttributeListFlag && taskListFlag){
 					//get the steps details based on the activity type
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
+						
 						for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
 							if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
 								for(ActiveTaskListDto taskDto : activeTaskList){
 									if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue()){
 										ActivityStepsBean activeTaskStep = new ActivityStepsBean();
-										activeTaskStep.setType(StudyMetaDataConstants.TYPE_ACTIVE_TASK);
+										activeTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 										activeTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
-										activeTaskStep.setKey(activeTaskDto.getShortTitle());
+										activeTaskStep.setKey(attributeDto.getAttributeValueId().toString());
 										activeTaskStep.setText(StringUtils.isEmpty(masterAttributeDto.getDisplayName())?"":masterAttributeDto.getDisplayName());
 										//activeTaskStep.setOptions(activeTaskOptions()); //activeTask options list
 										activeTaskStep.setFormat(getActiveTaskStepFormatByType(attributeDto, masterAttributeDto, taskDto.getType()));
@@ -287,6 +288,7 @@ public class ActivityMetaDataDao {
 								}
 							}
 						}
+						
 					}
 					activityStructureBean.setSteps(steps);
 				}
@@ -323,7 +325,7 @@ public class ActivityMetaDataDao {
 			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true and QDTO.status=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
-				activityStructureBean.setType(StudyMetaDataConstants.TYPE_QUESTIONNAIRE);
+				activityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
 
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
 				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());

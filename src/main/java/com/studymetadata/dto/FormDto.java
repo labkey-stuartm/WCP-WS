@@ -30,7 +30,7 @@ public class FormDto implements Serializable{
 	
 	@Column(name = "active")
 	private Boolean active;
-
+	
 	public Integer getFormId() {
 		return formId;
 	}
