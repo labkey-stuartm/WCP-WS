@@ -73,7 +73,7 @@
 		<mapping class="com.studymetadata.dto.UserPermissions" />
 		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto" />
 		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto" />
-		
+		<mapping class="com.studymetadata.dto.StatisticImageListDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

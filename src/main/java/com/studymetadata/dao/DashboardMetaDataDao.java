@@ -22,11 +22,13 @@ import com.studymetadata.bean.StatisticsBean;
 import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
 import com.studymetadata.dto.ActiveTaskDto;
+import com.studymetadata.dto.ActiveTaskFormulaDto;
 import com.studymetadata.dto.FormDto;
 import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.QuestionnairesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
+import com.studymetadata.dto.StatisticImageListDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
@@ -71,6 +73,8 @@ public class DashboardMetaDataDao {
 		List<QuestionnairesStepsDto> questionnaireStepsList = null;
 		List<Integer> questionIdsList = new ArrayList<>();
 		List<Integer> formIdsList = new ArrayList<>();
+		List<ActiveTaskFormulaDto> formulaDtoList = null;
+		List<StatisticImageListDto> statisticImageList = null;
 		try{
 			session = sessionFactory.openSession();
 			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
@@ -123,6 +127,14 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
+				if((activeTaskIdsList != null && !activeTaskIdsList.isEmpty()) && (questionIdsList != null && !questionIdsList.isEmpty())){
+					query = session.createQuery(" from ActiveTaskFormulaDto ATCDTO");
+					formulaDtoList = query.list();
+					
+					query = session.createQuery(" from StatisticImageListDto STDTO");
+					statisticImageList = query.list();
+				}
+				
 				//get statistics and chart details for Active Task
 				if(activeTaskIdsList != null && !activeTaskIdsList.isEmpty()){
 					query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true and ATAVDTO.activeTaskId in ("+StringUtils.join(activeTaskIdsList, ',')+")");
@@ -141,7 +153,7 @@ public class DashboardMetaDataDao {
 								}
 								
 								if(activeTaskAttrDto.isUseForStatistic()){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, statisticsList);
+									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, statisticsList,  formulaDtoList, statisticImageList);
 								}
 							}
 						}
@@ -167,7 +179,7 @@ public class DashboardMetaDataDao {
 								}
 								
 								if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList);
+									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList, formulaDtoList, statisticImageList);
 								}
 							}
 						}
@@ -210,7 +222,7 @@ public class DashboardMetaDataDao {
 													}
 													
 													if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList);
+														statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList, formulaDtoList, statisticImageList);
 													}
 												}
 											}
@@ -315,7 +327,7 @@ public class DashboardMetaDataDao {
 	 * @return List<ChartsBean>
 	 * @throws DAOException
 	 */
-	public List<StatisticsBean> getStatisticsDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<StatisticsBean> statisticsList) throws DAOException{
+	public List<StatisticsBean> getStatisticsDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<StatisticsBean> statisticsList, List<ActiveTaskFormulaDto> formulaDtoList, List<StatisticImageListDto> statisticImageList) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Starts");
 		StatisticsBean statistics = new StatisticsBean();
 		ConfigurationBean dataSource = new ConfigurationBean();
@@ -324,9 +336,9 @@ public class DashboardMetaDataDao {
 			if(activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
 				statistics.setTitle(StringUtils.isEmpty(activeTask.getIdentifierNameStat())?"":activeTask.getIdentifierNameStat());
 				statistics.setDisplayName(StringUtils.isEmpty(activeTask.getDisplayNameStat())?"":activeTask.getDisplayNameStat());
-				statistics.setStatType(StringUtils.isEmpty(activeTask.getUploadTypeStat())?"":activeTask.getUploadTypeStat());
+				statistics.setStatType(StringUtils.isEmpty(activeTask.getUploadTypeStat())?"":getStatisticsType(Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
 				statistics.setUnit(StringUtils.isEmpty(activeTask.getDisplayUnitStat())?"":activeTask.getDisplayUnitStat());
-				statistics.setCalculation(StringUtils.isEmpty(activeTask.getFormulaAppliedStat())?"":activeTask.getFormulaAppliedStat());
+				statistics.setCalculation(StringUtils.isEmpty(activeTask.getFormulaAppliedStat())?"":getFormulaType(Integer.parseInt(activeTask.getFormulaAppliedStat()), formulaDtoList));
 				
 				activity.setActivityId(activeTask.getActivityId());
 				activity.setVersion(activeTask.getActivityVersion());
@@ -337,9 +349,9 @@ public class DashboardMetaDataDao {
 			}else{
 				statistics.setTitle("");
 				statistics.setDisplayName(StringUtils.isEmpty(question.getStatDisplayName())?"":question.getStatDisplayName());
-				statistics.setStatType(question.getStatType()==null?"":question.getStatType().toString());
+				statistics.setStatType(question.getStatType()==null?"":getStatisticsType(question.getStatType(), statisticImageList));
 				statistics.setUnit(StringUtils.isEmpty(question.getStatDisplayUnits())?"":question.getStatDisplayUnits());
-				statistics.setCalculation(question.getStatFormula()==null?"":question.getStatFormula().toString());
+				statistics.setCalculation(question.getStatFormula()==null?"":getFormulaType(question.getStatFormula(), formulaDtoList));
 				
 				dataSource.setType(question.getActivityType());
 				dataSource.setKey(question.getActivityStepKey());
@@ -387,6 +399,64 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: DashboardMetaDataDao - getTimeRangeType() :: Ends");
 		return type;
 	}
+	
+	/**
+	 * This method is used to get the statistics value by statId
+	 * 
+	 * @author Mohan
+	 * @param statisticTypeId
+	 * @param statisticImageList
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String getStatisticsType(Integer statisticTypeId,List<StatisticImageListDto> statisticImageList) throws DAOException{
+		LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsType() :: Starts");
+		String statisticType = "";
+		try{
+			if(statisticImageList != null && !statisticImageList.isEmpty()){
+				for(StatisticImageListDto statistic : statisticImageList){
+					if(statisticTypeId.intValue() == statistic.getStatisticImageId().intValue()){
+						statisticType = statistic.getValue();
+						break;
+					}
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("DashboardMetaDataDao - getStatisticsType() :: ERROR", e);
+		}
+		LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsType() :: Ends");
+		return statisticType;
+	}
+	
+	/**
+	 * This method is used to get the fomula value by formulaId
+	 * 
+	 * @author Mohan
+	 * @param formulaTypeId
+	 * @param formulaDtoList
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String getFormulaType(Integer formulaTypeId,List<ActiveTaskFormulaDto> formulaDtoList) throws DAOException{
+		LOGGER.info("INFO: DashboardMetaDataDao - getFormulaType() :: Starts");
+		String formulaType = "";
+		try{
+			if(formulaDtoList != null && !formulaDtoList.isEmpty()){
+				for(ActiveTaskFormulaDto formulaDto : formulaDtoList){
+					if(formulaTypeId.intValue() == formulaDto.getActivetaskFormulaId().intValue()){
+						formulaType = formulaDto.getValue();
+						break;
+					}
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("DashboardMetaDataDao - getFormulaType() :: ERROR", e);
+		}
+		LOGGER.info("INFO: DashboardMetaDataDao - getFormulaType() :: Ends");
+		return formulaType;
+	}
+	
+	
 	/*-----------------------------Manipulate chart data methods starts----------------------------------*/
 	/**
 	 * This method is used to fetch the chart configuration details for single line chart
