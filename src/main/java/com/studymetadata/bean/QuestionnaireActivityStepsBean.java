@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ActivityStepsBean {
+public class QuestionnaireActivityStepsBean {
 	private String type = ""; //instruction (OR) question (OR) form (OR) task
 	private String resultType = "";
 	private String key = "";
@@ -19,7 +19,7 @@ public class ActivityStepsBean {
 	private List<DestinationBean> destinations = new ArrayList<>();
 	private String healthDataKey = "";
 	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
-	private List<ActivityStepsBean> steps = new ArrayList<>(); //Question
+	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>(); //Question
 	private String[] options = new String[0];
 	
 	public String getType() {
@@ -94,10 +94,10 @@ public class ActivityStepsBean {
 	public void setFormat(Map<String, Object> format) {
 		this.format = format;
 	}
-	public List<ActivityStepsBean> getSteps() {
+	public List<QuestionnaireActivityStepsBean> getSteps() {
 		return steps;
 	}
-	public void setSteps(List<ActivityStepsBean> steps) {
+	public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
 		this.steps = steps;
 	}
 	public String[] getOptions() {

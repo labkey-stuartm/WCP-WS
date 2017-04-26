@@ -1,11 +1,10 @@
 package com.studymetadata.bean;
 
-import com.studymetadata.bean.appendix.ActivityStructureBean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
-public class ActivityMetaDataResponse {
+public class ActiveTaskActivityMetaDataResponse {
 	private String message = StudyMetaDataConstants.FAILURE;
-	private ActivityStructureBean activity = new ActivityStructureBean();
+	private ActiveTaskActivityStructureBean activity = new ActiveTaskActivityStructureBean();
 	
 	public String getMessage() {
 		return message;
@@ -13,10 +12,10 @@ public class ActivityMetaDataResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public ActivityStructureBean getActivity() {
+	public ActiveTaskActivityStructureBean getActivity() {
 		return activity;
 	}
-	public void setActivity(ActivityStructureBean activity) {
+	public void setActivity(ActiveTaskActivityStructureBean activity) {
 		this.activity = activity;
 	}
 	

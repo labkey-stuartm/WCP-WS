@@ -1,7 +1,6 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
@@ -11,24 +10,23 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import com.studymetadata.exception.ErrorCodes;
-import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.integration.ActivityMetaDataOrchestration;
 import com.studymetadata.integration.AppMetaDataOrchestration;
 import com.studymetadata.integration.DashboardMetaDataOrchestration;
 import com.studymetadata.integration.StudyMetaDataOrchestration;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
-import com.studymetadata.bean.ActivityMetaDataResponse;
+import com.studymetadata.bean.ActiveTaskActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.AppResponse;
 import com.studymetadata.bean.AppUpdatesResponse;
@@ -37,6 +35,7 @@ import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.FailureResponse;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.QuestionnaireActivityMetaDataResponse;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
@@ -137,6 +136,10 @@ public class StudyMetaDataService {
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+			}*/
 			if(StringUtils.isNotEmpty(studyId)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -182,6 +185,14 @@ public class StudyMetaDataService {
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+				consentVersion = serviceJson.getString("consentVersion");
+				activityId = serviceJson.getString("activityId");
+				activityVersion = serviceJson.getString("activityVersion");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId)){	
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -225,6 +236,11 @@ public class StudyMetaDataService {
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -268,6 +284,11 @@ public class StudyMetaDataService {
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -311,6 +332,11 @@ public class StudyMetaDataService {
 		ActivityResponse activityResponse = new ActivityResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -352,11 +378,19 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activity")
-	public Object studyActivityMetadata(@HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityMetadata(@QueryParam("studyId") String studyId, @QueryParam("activityId") String activityId, @QueryParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
-		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
+		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
+		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+				activityId = serviceJson.getString("activityId");
+				activityVersion = serviceJson.getString("activityVersion");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -370,10 +404,23 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
 				}
 				
-				activityMetaDataResponse = activityMetaDataOrchestration.studyActivityMetadata(studyId, activityId, activityVersion);
-				if(!activityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+				if(activityId.contains("-")){
+					String[] activityInfoArray = activityId.split("-");
+					if(activityInfoArray[0].equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
+						activeTaskActivityMetaDataResponse = activityMetaDataOrchestration.studyActiveTaskActivityMetadata(studyId, activityInfoArray[1], activityVersion);
+						if(!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+							StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+							return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+						}
+						return activeTaskActivityMetaDataResponse;
+					}else{
+						questionnaireActivityMetaDataResponse = activityMetaDataOrchestration.studyQuestionnaireActivityMetadata(studyId, activityInfoArray[1], activityVersion);
+						if(!questionnaireActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+							StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+							return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+						}
+						return questionnaireActivityMetaDataResponse;
+					}
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -385,7 +432,7 @@ public class StudyMetaDataService {
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Ends");
-		return activityMetaDataResponse;
+		return null;
 	}
 	
 	/**
@@ -406,6 +453,11 @@ public class StudyMetaDataService {
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
@@ -479,6 +531,11 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				skip = serviceJson.getString("skip");
+			}*/
+			
 			if(StringUtils.isNotEmpty(skip)){
 				notificationsResponse = appMetaDataOrchestration.notifications(skip);
 				if(!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
@@ -587,6 +644,12 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				appVersion = serviceJson.getString("appVersion");
+				os = serviceJson.getString("os");
+			}*/
+			
 			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(os)){
 				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, os);
 				if(!appUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
@@ -623,6 +686,12 @@ public class StudyMetaDataService {
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
 		Boolean isValidFlag = false;
 		try{
+			/*if(StringUtils.isNotEmpty(params)){
+				JSONObject serviceJson = new JSONObject(params);
+				studyId = serviceJson.getString("studyId");
+				studyVersion = serviceJson.getString("studyVersion");
+			}*/
+			
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){

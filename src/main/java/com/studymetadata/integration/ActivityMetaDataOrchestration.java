@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.studymetadata.bean.ActivityMetaDataResponse;
+import com.studymetadata.bean.ActiveTaskActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
+import com.studymetadata.bean.QuestionnaireActivityMetaDataResponse;
 import com.studymetadata.dao.ActivityMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -42,18 +43,39 @@ public class ActivityMetaDataOrchestration {
 	 * @param studyId
 	 * @param activityId
 	 * @param activityVersion
-	 * @return ActivityResponse
+	 * @return ActiveTaskActivityMetaDataResponse
 	 * @throws OrchestrationException
 	 */
-	public ActivityMetaDataResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
-		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityMetadata() :: Starts");
-		ActivityMetaDataResponse activityMetaDataResponse = new ActivityMetaDataResponse();
+	public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
+		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: Starts");
+		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
 		try{
-			activityMetaDataResponse = activityMetaDataDao.studyActivityMetadata(studyId, activityId, activityVersion);
+			activeTaskActivityMetaDataResponse = activityMetaDataDao.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
 		}catch(Exception e){
-			LOGGER.error("ActivityMetaDataOrchestration - studyActivityMetadata() :: ERROR", e);
+			LOGGER.error("ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: ERROR", e);
 		}
-		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityMetadata() :: Ends");
-		return activityMetaDataResponse;
+		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: Ends");
+		return activeTaskActivityMetaDataResponse;
 	}
+	
+	/**
+	 * @author Mohan
+	 * @param studyId
+	 * @param activityId
+	 * @param activityVersion
+	 * @return QuestionnaireActivityMetaDataResponse
+	 * @throws OrchestrationException
+	 */
+	public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
+		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Starts");
+		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
+		try{
+			questionnaireActivityMetaDataResponse = activityMetaDataDao.studyQuestionnaireActivityMetadata(studyId, activityId, activityVersion);
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Ends");
+		return questionnaireActivityMetaDataResponse;
+	}
+	
 }

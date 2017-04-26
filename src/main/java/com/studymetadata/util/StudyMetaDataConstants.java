@@ -150,6 +150,9 @@ public interface StudyMetaDataConstants {
 	public static final String STEP_CONDITION_DEFAULT = "default";
 	public static final String STEP_DESTINATION_COMPLETION = "completion";
 	
+	public static final String QUESTION_NUMERIC_STYLE_INTEGER = "Integer";
+	public static final String QUESTION_NUMERIC_STYLE_DECIMAL = "Decimal";
+	
 	//question response type constants
 	public static final String 	QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
 	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATETIME = "Date-Time";

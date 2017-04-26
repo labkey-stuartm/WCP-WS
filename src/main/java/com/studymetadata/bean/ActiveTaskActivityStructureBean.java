@@ -1,20 +1,12 @@
-package com.studymetadata.bean.appendix;
+package com.studymetadata.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.studymetadata.bean.ActivityMetadataBean;
-import com.studymetadata.bean.ActivityStepsBean;
-
-/**
- * 
- * @author Mohan
- *
- */
-public class ActivityStructureBean {
+public class ActiveTaskActivityStructureBean {
 	private String type = "";
 	private ActivityMetadataBean metadata = new ActivityMetadataBean();
-	private List<ActivityStepsBean> steps = new ArrayList<>();
+	private List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 	
 	public String getType() {
 		return type;
@@ -28,10 +20,11 @@ public class ActivityStructureBean {
 	public void setMetadata(ActivityMetadataBean metadata) {
 		this.metadata = metadata;
 	}
-	public List<ActivityStepsBean> getSteps() {
+	public List<ActiveTaskActivityStepsBean> getSteps() {
 		return steps;
 	}
-	public void setSteps(List<ActivityStepsBean> steps) {
+	public void setSteps(List<ActiveTaskActivityStepsBean> steps) {
 		this.steps = steps;
 	}
+	
 }
