@@ -302,16 +302,15 @@ public class ActivityMetaDataDao {
 				if(attributeListFlag && masterAttributeListFlag && taskListFlag){
 					//get the steps details based on the activity type
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
-						
 						for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
 							if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
 								for(ActiveTaskListDto taskDto : activeTaskList){
-									if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue()){
+									if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue() && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
 										ActiveTaskActivityStepsBean activeTaskActiveTaskStep = new ActiveTaskActivityStepsBean();
 										activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 										activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
 										activeTaskActiveTaskStep.setKey(attributeDto.getAttributeValueId().toString());
-										activeTaskActiveTaskStep.setText(StringUtils.isEmpty(masterAttributeDto.getDisplayName())?"":masterAttributeDto.getDisplayName());
+										activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
 										//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
 										activeTaskActiveTaskStep.setFormat(getActiveTaskStepFormatByType(attributeDto, masterAttributeDto, taskDto.getType()));
 										steps.add(activeTaskActiveTaskStep);

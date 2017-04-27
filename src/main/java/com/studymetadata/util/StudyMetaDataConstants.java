@@ -130,6 +130,9 @@ public interface StudyMetaDataConstants {
 	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
 	public static final String ACTIVITY_AT_TOWER_OF_HANOI = "towerOfHanoi";
 	
+	public static final String ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE = "configure_type";
+	public static final String ACTIVE_TASK_ATTRIBUTE_TYPE_RESULT = "result_type";
+	
 	//questionaire question format
 	public static final String QUESTION_SCALE = "scale";
 	public static final String QUESTION_CONTINUOUS_SCALE = "continuousScale";
