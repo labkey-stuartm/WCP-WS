@@ -96,7 +96,10 @@ public class ResourcesDto implements Serializable{
 	
 	@Column(name = "resource_type", length = 1)
 	private boolean resourceType=false;
-
+	
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -279,6 +282,14 @@ public class ResourcesDto implements Serializable{
 
 	public void setResourceType(boolean resourceType) {
 		this.resourceType = resourceType;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
 	}
 	
 }

@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.annotations.Type;
 
 /**
  * 
@@ -23,6 +24,7 @@ import org.hibernate.annotations.NamedQuery;
 	//@NamedQuery(name="gatewayStudiesListByPlatform", query="from StudyDto SDTO where SDTO.type =:type and SDTO.platform like CONCAT('%',:platform,'%')"),
 	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO where SDTO.id =:id"),
 	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
+	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
 })
 public class StudyDto implements Serializable{
 	
@@ -75,6 +77,9 @@ public class StudyDto implements Serializable{
 	@Column(name = "allow_rejoin")
 	private String allowRejoin;
 	
+	@Column(name = "allow_rejoin_text")
+	private String allowRejoinText;
+	
 	@Column(name = "irb_review")
 	private String irbReview;
 	
@@ -97,7 +102,7 @@ public class StudyDto implements Serializable{
 	private String status;
 	
 	@Column(name = "sequence_number")
-	private String sequenceNumber;
+	private Integer sequenceNumber;
 	
 	@Column(name = "thumbnail_image")
 	private String thumbnailImage;
@@ -111,11 +116,27 @@ public class StudyDto implements Serializable{
 	@Column(name="study_tagline")
 	private String studyTagline;
 	
-	@Column(name = "allow_rejoin_text")
-	private String allowRejoinText;
+	@Column(name="version")
+	private Float version=0f;
 	
-	@Column(name = "study_version")
-	private Integer studyVersion=1;
+	@Column(name="study_lunched_date")
+	private String studylunchDate;
+	
+	@Column(name = "study_pre_active_flag")
+	@Type(type="yes_no")
+	private boolean studyPreActiveFlag = false;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
+	
+	@Column(name = "has_study_draft")
+	private Integer hasStudyDraft = 0;
+	
+	@Column(name = "has_activity_draft")
+	private Integer hasActivityDraft = 0;
+	
+	@Column(name = "has_consent_draft")
+	private Integer hasConsentDraft = 0;
 
 	public Integer getId() {
 		return id;
@@ -237,6 +258,14 @@ public class StudyDto implements Serializable{
 		this.allowRejoin = allowRejoin;
 	}
 
+	public String getAllowRejoinText() {
+		return allowRejoinText;
+	}
+
+	public void setAllowRejoinText(String allowRejoinText) {
+		this.allowRejoinText = allowRejoinText;
+	}
+
 	public String getIrbReview() {
 		return irbReview;
 	}
@@ -293,11 +322,11 @@ public class StudyDto implements Serializable{
 		this.status = status;
 	}
 
-	public String getSequenceNumber() {
+	public Integer getSequenceNumber() {
 		return sequenceNumber;
 	}
 
-	public void setSequenceNumber(String sequenceNumber) {
+	public void setSequenceNumber(Integer sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 
@@ -333,20 +362,60 @@ public class StudyDto implements Serializable{
 		this.studyTagline = studyTagline;
 	}
 
-	public String getAllowRejoinText() {
-		return allowRejoinText;
+	public Float getVersion() {
+		return version;
 	}
 
-	public void setAllowRejoinText(String allowRejoinText) {
-		this.allowRejoinText = allowRejoinText;
+	public void setVersion(Float version) {
+		this.version = version;
 	}
 
-	public Integer getStudyVersion() {
-		return studyVersion;
+	public String getStudylunchDate() {
+		return studylunchDate;
 	}
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
+	public void setStudylunchDate(String studylunchDate) {
+		this.studylunchDate = studylunchDate;
+	}
+
+	public boolean isStudyPreActiveFlag() {
+		return studyPreActiveFlag;
+	}
+
+	public void setStudyPreActiveFlag(boolean studyPreActiveFlag) {
+		this.studyPreActiveFlag = studyPreActiveFlag;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
+	}
+
+	public Integer getHasStudyDraft() {
+		return hasStudyDraft;
+	}
+
+	public void setHasStudyDraft(Integer hasStudyDraft) {
+		this.hasStudyDraft = hasStudyDraft;
+	}
+
+	public Integer getHasActivityDraft() {
+		return hasActivityDraft;
+	}
+
+	public void setHasActivityDraft(Integer hasActivityDraft) {
+		this.hasActivityDraft = hasActivityDraft;
+	}
+
+	public Integer getHasConsentDraft() {
+		return hasConsentDraft;
+	}
+
+	public void setHasConsentDraft(Integer hasConsentDraft) {
+		this.hasConsentDraft = hasConsentDraft;
 	}
 	
 }

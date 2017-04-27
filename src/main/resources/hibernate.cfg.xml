@@ -74,6 +74,7 @@
 		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto" />
 		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto" />
 		<mapping class="com.studymetadata.dto.StatisticImageListDto" />
+		<mapping class="com.studymetadata.dto.StudyVersionDto" />
 		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

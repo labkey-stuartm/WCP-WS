@@ -91,6 +91,9 @@ public class QuestionsDto implements Serializable{
 	
 	@Column(name="status")
 	private Boolean status;
+	
+	@Column(name="use_anchor_date")
+	private Boolean useAnchorDate=false;
 
 	@Transient
 	private String activityId;
@@ -318,6 +321,14 @@ public class QuestionsDto implements Serializable{
 
 	public void setActivityStepKey(String activityStepKey) {
 		this.activityStepKey = activityStepKey;
+	}
+
+	public Boolean getUseAnchorDate() {
+		return useAnchorDate;
+	}
+
+	public void setUseAnchorDate(Boolean useAnchorDate) {
+		this.useAnchorDate = useAnchorDate;
 	}
 	
 }

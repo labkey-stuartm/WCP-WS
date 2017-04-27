@@ -101,7 +101,7 @@ public class DashboardMetaDataDao {
 					for(Object[] obj :questionnaireList){
 						QuestionnairesDto questionnaireDto = new QuestionnairesDto();
 						questionnaireDto.setId(obj[1]==null?1:(Integer) obj[0]);
-						questionnaireDto.setStudyVersion(obj[1]==null?1:(Integer) obj[1]);
+						questionnaireDto.setVersion(obj[1]==null?1f:(Integer) obj[1]);
 						questionnaireDto.setShortTitle(obj[2]==null?"":(String) obj[2]);
 						questionnaireMap.put(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId(), questionnaireDto);
 						questionnaireIdsList.add(questionnaireDto.getId());
@@ -172,7 +172,7 @@ public class DashboardMetaDataDao {
 							if(questionnaireDto != null){
 								questionDto.setActivityType(StudyMetaDataConstants.DASHBOARD_QUESTIONNAIRE);
 								questionDto.setActivityStepKey(StringUtils.isEmpty(questionnaireSteps.getStepShortTitle())?"":questionnaireSteps.getStepShortTitle());
-								questionDto.setActivityVersion(questionnaireDto.getStudyVersion()==null?"1":questionnaireDto.getStudyVersion().toString());
+								questionDto.setActivityVersion(questionnaireDto.getVersion()==null?"1":questionnaireDto.getVersion().toString());
 								questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 								if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
 									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList);
@@ -215,7 +215,7 @@ public class DashboardMetaDataDao {
 												if(questionnaireDto != null){
 													questionDto.setActivityType(StudyMetaDataConstants.DASHBOARD_QUESTIONNAIRE);
 													questionDto.setActivityStepKey(StringUtils.isEmpty(questionDto.getShortTitle())?"":questionDto.getShortTitle());
-													questionDto.setActivityVersion(questionnaireDto.getStudyVersion()==null?"1":questionnaireDto.getStudyVersion().toString());
+													questionDto.setActivityVersion(questionnaireDto.getVersion()==null?"1":questionnaireDto.getVersion().toString());
 													questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 													if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
 														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList);

@@ -70,6 +70,9 @@ public class NotificationDto implements Serializable{
 	@Column(name = "modified_on")
 	private String modifiedOn;
 
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	
 	public Integer getNotificationId() {
 		return notificationId;
 	}
@@ -196,6 +199,14 @@ public class NotificationDto implements Serializable{
 
 	public void setModifiedOn(String modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
 	}
 	
 }

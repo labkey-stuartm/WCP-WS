@@ -79,12 +79,22 @@ public class ConsentInfoDto implements Serializable{
 	
 	@Column(name="status")
 	private Boolean status;
+
+	@Column(name="active")
+	private Boolean active=true;
 	
 	@Column(name = "consent_item_title_id")
 	private Integer consentItemTitleId;
-
-	@Column(name = "study_version")
-	private Integer studyVersion=1;
+	
+	@Column(name = "version")
+	private Float version = 0f;
+	
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
+	
 	
 	public Integer getId() {
 		return id;
@@ -230,12 +240,36 @@ public class ConsentInfoDto implements Serializable{
 		this.consentItemTitleId = consentItemTitleId;
 	}
 
-	public Integer getStudyVersion() {
-		return studyVersion;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
 	}
 	
 }
