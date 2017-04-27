@@ -93,6 +93,9 @@ public class ResourcesDto implements Serializable{
 	
 	@Column(name="anchor_date")
 	private String anchorDate;
+	
+	@Column(name = "resource_type", length = 1)
+	private boolean resourceType=false;
 
 	public Integer getId() {
 		return id;
@@ -268,6 +271,14 @@ public class ResourcesDto implements Serializable{
 
 	public void setAnchorDate(String anchorDate) {
 		this.anchorDate = anchorDate;
+	}
+
+	public boolean isResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(boolean resourceType) {
+		this.resourceType = resourceType;
 	}
 	
 }

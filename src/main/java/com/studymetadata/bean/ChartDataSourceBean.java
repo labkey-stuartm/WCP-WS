@@ -1,6 +1,6 @@
 package com.studymetadata.bean;
 
-public class ConfigurationBean {
+public class ChartDataSourceBean {
 	private String type = "";
 	private String key = "";
 	private DashboardActivityBean activity = new DashboardActivityBean();

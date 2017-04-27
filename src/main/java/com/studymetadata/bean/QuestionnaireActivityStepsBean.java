@@ -20,6 +20,7 @@ public class QuestionnaireActivityStepsBean {
 	private String healthDataKey = "";
 	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
 	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>(); //Question
+	
 	private String[] options = new String[0];
 	
 	public String getType() {
@@ -106,5 +107,6 @@ public class QuestionnaireActivityStepsBean {
 	public void setOptions(String[] options) {
 		this.options = options;
 	}
+	
 	
 }

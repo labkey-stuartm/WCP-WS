@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -14,11 +13,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.studymetadata.bean.ChartDataSourceBean;
 import com.studymetadata.bean.ChartsBean;
-import com.studymetadata.bean.ConfigurationBean;
 import com.studymetadata.bean.DashboardActivityBean;
 import com.studymetadata.bean.DashboardBean;
 import com.studymetadata.bean.StatisticsBean;
+import com.studymetadata.bean.StatisticsDataSourceBean;
 import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
 import com.studymetadata.dto.ActiveTaskDto;
@@ -266,7 +266,7 @@ public class DashboardMetaDataDao {
 	public List<ChartsBean> getChartDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<ChartsBean> chartsList) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Starts");
 		ChartsBean chart = new ChartsBean();
-		ConfigurationBean dataSource = new ConfigurationBean();
+		ChartDataSourceBean dataSource = new ChartDataSourceBean();
 		DashboardActivityBean activity = new DashboardActivityBean();
 		try{
 			if(activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
@@ -330,7 +330,7 @@ public class DashboardMetaDataDao {
 	public List<StatisticsBean> getStatisticsDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<StatisticsBean> statisticsList, List<ActiveTaskFormulaDto> formulaDtoList, List<StatisticImageListDto> statisticImageList) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Starts");
 		StatisticsBean statistics = new StatisticsBean();
-		ConfigurationBean dataSource = new ConfigurationBean();
+		StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
 		DashboardActivityBean activity = new DashboardActivityBean();
 		try{
 			if(activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){

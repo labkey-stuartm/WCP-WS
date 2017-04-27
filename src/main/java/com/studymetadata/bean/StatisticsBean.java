@@ -6,7 +6,7 @@ public class StatisticsBean {
 	private String statType = "";
 	private String unit = "";
 	private String calculation = "";
-	private ConfigurationBean dataSource = new ConfigurationBean();
+	private StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
 	
 	public String getTitle() {
 		return title;
@@ -38,10 +38,10 @@ public class StatisticsBean {
 	public void setCalculation(String calculation) {
 		this.calculation = calculation;
 	}
-	public ConfigurationBean getDataSource() {
+	public StatisticsDataSourceBean getDataSource() {
 		return dataSource;
 	}
-	public void setDataSource(ConfigurationBean dataSource) {
+	public void setDataSource(StatisticsDataSourceBean dataSource) {
 		this.dataSource = dataSource;
 	}
 	

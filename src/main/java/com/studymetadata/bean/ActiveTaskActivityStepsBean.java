@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ActiveTaskActivityStepsBean {
@@ -10,6 +12,15 @@ public class ActiveTaskActivityStepsBean {
 	private String text = "";
 	private String[] options = new String[0];
 	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
+	
+	private String title = "";
+	private Boolean skippable = false;
+	private String groupName = "";
+	private Boolean repeatable = false;
+	private String repeatableText = "";
+	private List<DestinationBean> destinations = new ArrayList<>();
+	private String healthDataKey = "";
+	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>(); //Question
 	
 	public String getType() {
 		return type;
@@ -46,6 +57,54 @@ public class ActiveTaskActivityStepsBean {
 	}
 	public void setFormat(Map<String, Object> format) {
 		this.format = format;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public Boolean getSkippable() {
+		return skippable;
+	}
+	public void setSkippable(Boolean skippable) {
+		this.skippable = skippable;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public Boolean getRepeatable() {
+		return repeatable;
+	}
+	public void setRepeatable(Boolean repeatable) {
+		this.repeatable = repeatable;
+	}
+	public String getRepeatableText() {
+		return repeatableText;
+	}
+	public void setRepeatableText(String repeatableText) {
+		this.repeatableText = repeatableText;
+	}
+	public List<DestinationBean> getDestinations() {
+		return destinations;
+	}
+	public void setDestinations(List<DestinationBean> destinations) {
+		this.destinations = destinations;
+	}
+	public String getHealthDataKey() {
+		return healthDataKey;
+	}
+	public void setHealthDataKey(String healthDataKey) {
+		this.healthDataKey = healthDataKey;
+	}
+	public List<QuestionnaireActivityStepsBean> getSteps() {
+		return steps;
+	}
+	public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
+		this.steps = steps;
 	}
 	
 }
