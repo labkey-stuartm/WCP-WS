@@ -1486,7 +1486,7 @@ public class ActivityMetaDataDao {
 					textScaleMap.put("text", subType.getText()==null?"":subType.getText());
 					textScaleMap.put("value", subType.getValue()==null?"":subType.getValue());
 					textScaleMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
-					textScaleMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive())?true:false);
+					textScaleMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 					textChoicesList.add(textScaleMap);
 				}
 			}
@@ -1520,7 +1520,7 @@ public class ActivityMetaDataDao {
 					valuePickerMap.put("text", subType.getText()==null?"":subType.getText());
 					valuePickerMap.put("value", subType.getValue()==null?"":subType.getValue());
 					valuePickerMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
-					valuePickerMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive())?true:false);
+					valuePickerMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 					valuePickerList.add(valuePickerMap);
 				}
 			}
@@ -1584,7 +1584,7 @@ public class ActivityMetaDataDao {
 					textChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					textChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
 					textChoiceMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
-					textChoiceMap.put("exclusive", (subType.getExclusive() == null || !subType.getExclusive())?false:true);
+					textChoiceMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					textChoiceMapList.add(textChoiceMap);
 				}
 			}

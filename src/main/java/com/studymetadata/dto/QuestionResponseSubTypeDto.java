@@ -34,7 +34,7 @@ public class QuestionResponseSubTypeDto implements Serializable{
 	private String detail;
 	
 	@Column(name="exclusive")
-	private Boolean exclusive;
+	private String exclusive;
 	
 	@Column(name="image")
 	private String image;
@@ -47,6 +47,9 @@ public class QuestionResponseSubTypeDto implements Serializable{
 	
 	@Column(name="destination_step_id")
 	private Integer destinationStepId;
+	
+	@Column(name="active")
+	private Boolean active;
 
 	public Integer getResponseSubTypeValueId() {
 		return responseSubTypeValueId;
@@ -88,11 +91,11 @@ public class QuestionResponseSubTypeDto implements Serializable{
 		this.detail = detail;
 	}
 
-	public Boolean getExclusive() {
+	public String getExclusive() {
 		return exclusive;
 	}
 
-	public void setExclusive(Boolean exclusive) {
+	public void setExclusive(String exclusive) {
 		this.exclusive = exclusive;
 	}
 
@@ -126,6 +129,14 @@ public class QuestionResponseSubTypeDto implements Serializable{
 
 	public void setDestinationStepId(Integer destinationStepId) {
 		this.destinationStepId = destinationStepId;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }
