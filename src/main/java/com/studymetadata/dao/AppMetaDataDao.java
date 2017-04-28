@@ -1,12 +1,7 @@
 package com.studymetadata.dao;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -14,14 +9,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.studymetadata.bean.AppUpdatesResponse;
-import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesBean;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.NotificationDto;
 import com.studymetadata.dto.StudyVersionDto;
-import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
