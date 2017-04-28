@@ -1,13 +1,10 @@
 package com.studymetadata.bean;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.studymetadata.util.StudyMetaDataConstants;
 
 public class StudyUpdatesResponse {
 	private String message = StudyMetaDataConstants.FAILURE;
-	private Map<String, Object> updates = new HashMap<>();
+	private StudyUpdatesBean updates = new StudyUpdatesBean();
 	private String currentVersion = ""; //current study version
 	
 	public String getMessage() {
@@ -16,10 +13,10 @@ public class StudyUpdatesResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public Map<String, Object> getUpdates() {
+	public StudyUpdatesBean getUpdates() {
 		return updates;
 	}
-	public void setUpdates(Map<String, Object> updates) {
+	public void setUpdates(StudyUpdatesBean updates) {
 		this.updates = updates;
 	}
 	public String getCurrentVersion() {

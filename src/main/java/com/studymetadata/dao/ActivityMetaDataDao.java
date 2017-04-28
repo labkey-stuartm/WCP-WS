@@ -309,7 +309,7 @@ public class ActivityMetaDataDao {
 										ActiveTaskActivityStepsBean activeTaskActiveTaskStep = new ActiveTaskActivityStepsBean();
 										activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 										activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
-										activeTaskActiveTaskStep.setKey(attributeDto.getAttributeValueId().toString());
+										activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
 										activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
 										//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
 										activeTaskActiveTaskStep.setFormat(getActiveTaskStepFormatByType(attributeDto, masterAttributeDto, taskDto.getType()));
@@ -1426,8 +1426,8 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:reponseType.getMaxValue());
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:reponseType.getMinValue());
-			questionFormat.put("default", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
-			questionFormat.put("step", (reponseType==null || reponseType.getDefaultValue()==null)?1:reponseType.getDefaultValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
+			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepCount(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
@@ -1450,10 +1450,10 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?1:reponseType.getMaxValue());
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-1:reponseType.getMinValue());
 			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
-			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?0:reponseType.getMaxFractionDigits());
+			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?4:getContinuousScaleMaxFractionDigits((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
@@ -1891,4 +1891,72 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Ends");
 		return base64Image;
 	}
+	
+	/**
+	 * This method is used to get the actual stepcount based on the maxValue and minValue
+	 * 
+	 * @author Mohan
+	 * @param step
+	 * @param maxValue
+	 * @param minValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getScaleStepCount(Integer step, Integer maxValue, Integer minValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Starts");
+		Integer scaleStepCount = 1;
+		Integer maxStepCount = 13;
+		List<Integer> stepCountList = new ArrayList<>();
+		try{
+			Integer diff = maxValue - minValue;
+			while(maxStepCount > 0){
+				if((diff%maxStepCount) == 0){
+					stepCountList.add(maxStepCount);
+				}
+				maxStepCount--;
+			}
+			if(stepCountList.contains(step)){
+				scaleStepCount = step;
+				return scaleStepCount;
+			}
+			scaleStepCount = stepCountList.get(0);
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getScaleStepCount() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Ends");
+		return scaleStepCount;
+	}
+	
+	/**
+	 * This method is used to get the maximum fraction digits based on the maxValue and minValue
+	 * 
+	 * @author Mohan
+	 * @param maxValue
+	 * @param minValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getContinuousScaleMaxFractionDigits(Integer maxValue, Integer minValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
+		Integer maxFracDigits = 4;
+		try{
+			Integer diff = maxValue - minValue;
+			if(diff > 2000 || diff == 20000){
+				maxFracDigits = 0;
+			}else if (diff > 200 || diff == 2000){
+				maxFracDigits = 1;
+			}else if (diff > 20 || diff == 200){
+				maxFracDigits = 2;
+			}else if (diff > 2 || diff == 20){
+				maxFracDigits = 3;
+			}else{
+				maxFracDigits = 4;
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
+		return maxFracDigits;
+	}
+	
 }

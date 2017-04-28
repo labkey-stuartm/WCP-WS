@@ -16,9 +16,11 @@ import org.hibernate.Transaction;
 import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.StudyUpdatesBean;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.NotificationDto;
+import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
@@ -130,17 +132,33 @@ public class AppMetaDataDao {
 	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
+		StudyUpdatesBean updates = new StudyUpdatesBean();
+		List<StudyVersionDto> studyVersionList = null;
+		StudyVersionDto currentVersion = null;
+		StudyVersionDto latestVersion = null;
 		try{
+			session = sessionFactory.openSession();
+			query = session.getNamedQuery("getStudyVersionsByCustomStudyId").setString("customStudyId", studyId);
+			studyVersionList = query.list();
+			if(studyVersionList != null && !studyVersionList.isEmpty()){
+				currentVersion = studyVersionList.get(0);
+				latestVersion = studyVersionList.get(studyVersionList.size()-1);
+				updates.setConsent(currentVersion.getConsentVersion()==latestVersion.getConsentVersion()?false:true);
+				updates.setActivities(currentVersion.getActivityVersion()==latestVersion.getActivityVersion()?false:true);
+				updates.setResources(false);
+				updates.setInfo(currentVersion.getStudyVersion()==latestVersion.getStudyVersion()?false:true);
+				studyUpdates.setUpdates(updates);
+				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
+			}else{
+				studyUpdates.setCurrentVersion(studyVersion);
+			}
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
-			Map<String, Object> updates = new LinkedHashMap<>();
-			updates.put("consent", true);
-			updates.put("activities", true);
-			updates.put("resources", true);
-			updates.put("info", true);
-			studyUpdates.setUpdates(updates);
-			studyUpdates.setCurrentVersion("1.0");
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - studyUpdates() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Ends");
 		return studyUpdates;
