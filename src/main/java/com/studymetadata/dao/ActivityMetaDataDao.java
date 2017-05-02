@@ -102,7 +102,7 @@ public class ActivityMetaDataDao {
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
-						activityBean.setActivityVersion((activeTaskDto.getStudyVersion() == null || activeTaskDto.getStudyVersion().intValue() == 0)?"1":activeTaskDto.getStudyVersion().toString());
+						activityBean.setActivityVersion((activeTaskDto.getStudyVersion() == null || activeTaskDto.getStudyVersion().intValue() == 0)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
 						activityBean.setBranching(false);
 						activityBean.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						
@@ -134,7 +134,7 @@ public class ActivityMetaDataDao {
 						activityBean.setFrequency(frequencyDetails);
 
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
-						activityBean.setActivityVersion((questionaire.getVersion() == null || questionaire.getVersion() == 0)?"1":questionaire.getVersion().toString());
+						activityBean.setActivityVersion((questionaire.getVersion() == null || questionaire.getVersion() == 0)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionaire.getVersion().toString());
 						activityBean.setBranching((questionaire.getBranching() == null || !questionaire.getBranching())?false:true);
 						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
@@ -273,7 +273,7 @@ public class ActivityMetaDataDao {
 				metadata.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 				metadata.setStudyId(studyId);
-				metadata.setVersion(activeTaskDto.getStudyVersion() == null?"1":activeTaskDto.getStudyVersion().toString());
+				metadata.setVersion(activeTaskDto.getStudyVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
 				activeTaskActivityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
@@ -369,7 +369,7 @@ public class ActivityMetaDataDao {
 				metadata.setLastModified(StringUtils.isEmpty(questionnaireDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 				metadata.setName(StringUtils.isEmpty(questionnaireDto.getShortTitle())?"":questionnaireDto.getShortTitle());
 				metadata.setStudyId(studyId);
-				metadata.setVersion(questionnaireDto.getVersion() == null?"1":questionnaireDto.getVersion().toString());
+				metadata.setVersion(questionnaireDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 
 				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.active=true and QSDTO.status=true ORDER BY QSDTO.sequenceNo");
@@ -1550,7 +1550,7 @@ public class ActivityMetaDataDao {
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
 					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage());
-					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":subType.getSelectedImage());
+					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image")+subType.getSelectedImage()));
 					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
 					imageChoicesList.add(imageChoiceMap);
@@ -1883,8 +1883,10 @@ public class ActivityMetaDataDao {
 		String base64Image = "";
 		try{
 			File file = new File(imagePath);
-			byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
-			base64Image = new String(encoded, StandardCharsets.UTF_8);
+			if(file.exists()){
+				byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+				base64Image = new String(encoded, StandardCharsets.UTF_8);
+			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
 		}

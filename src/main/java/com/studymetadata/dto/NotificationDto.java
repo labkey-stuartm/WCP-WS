@@ -46,6 +46,9 @@ public class NotificationDto implements Serializable{
 	@Column(name = "notification_type")
 	private String notificationType;
 	
+	@Column(name = "notification_subType")
+	private String notificationSubType;
+	
 	@Column(name="notification_schedule_type")
 	private String notificationScheduleType;
 	
@@ -72,6 +75,15 @@ public class NotificationDto implements Serializable{
 
 	@Column(name = "custom_study_id")
 	private String customStudyId;
+	
+	@Column(name="resource_id")
+	private Integer resourceId;
+	 
+	@Column(name = "is_anchor_date", length = 1)
+	private boolean anchorDate = false;
+	 
+	@Column(name = "x_days")
+	private Integer xDays;
 	
 	public Integer getNotificationId() {
 		return notificationId;
@@ -207,6 +219,38 @@ public class NotificationDto implements Serializable{
 
 	public void setCustomStudyId(String customStudyId) {
 		this.customStudyId = customStudyId;
+	}
+
+	public Integer getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(Integer resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public boolean isAnchorDate() {
+		return anchorDate;
+	}
+
+	public void setAnchorDate(boolean anchorDate) {
+		this.anchorDate = anchorDate;
+	}
+
+	public Integer getxDays() {
+		return xDays;
+	}
+
+	public void setxDays(Integer xDays) {
+		this.xDays = xDays;
+	}
+
+	public String getNotificationSubType() {
+		return notificationSubType;
+	}
+
+	public void setNotificationSubType(String notificationSubType) {
+		this.notificationSubType = notificationSubType;
 	}
 	
 }

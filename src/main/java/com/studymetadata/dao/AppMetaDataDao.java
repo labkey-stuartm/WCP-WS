@@ -1,7 +1,11 @@
 package com.studymetadata.dao;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -9,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.studymetadata.bean.AppUpdatesResponse;
+import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesBean;
 import com.studymetadata.bean.StudyUpdatesResponse;
@@ -66,23 +71,43 @@ public class AppMetaDataDao {
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		List<NotificationDto> notificationList = null;
 		try{
-			/*session = sessionFactory.openSession();
-			query = session.createQuery(" from NotificationDto NDTO where NDTO.scheduleDate >="+StudyMetaDataUtil.getCurrentDate()+" LIMIT "+skip);
+			session = sessionFactory.openSession();
+			query = session.createQuery("from NotificationDto NDTO where NDTO.notificationAction=true and NDTO.notificationStatus=true and TIMESTAMP(NDTO.scheduleDate, NDTO.scheduleTime) <= TIMESTAMP('"+StudyMetaDataUtil.getCurrentDateTime()+"')");
+			query.setFirstResult(Integer.parseInt(skip));
 			notificationList = query.list();
 			if(notificationList != null && !notificationList.isEmpty()){
+				Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>(); 
 				List<NotificationsBean> notifyList = new ArrayList<>();
+				List<Integer> notificationIdsList = new ArrayList<>();
 				for(NotificationDto notificationDto : notificationList){
-					NotificationsBean botifyBean = new NotificationsBean();
-					botifyBean.setNotificationId(notificationDto.getNotificationId().toString());
+					NotificationsBean notifyBean = new NotificationsBean();
+					notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
 					if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
-						botifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+						notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 					}else{
-						botifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+						notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
 					}
-					notifyList.add(botifyBean);
+					notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+					notifyBean.setTitle(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+					notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());
+					notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
+					
+					notificationIdsList.add(notificationDto.getNotificationId());
+					notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
 				}
+				
+				//reorder the list i.e. latest should come first 
+				Collections.sort(notificationIdsList, Collections.reverseOrder());
+				
+				//get the notification bean based on the id
+				for(Integer notificationId : notificationIdsList){
+					notifyList.add(notificationTreeMap.get(notificationId));
+				}
+				notificationsResponse.setNotifications(notifyList);
 				notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
-			}*/
+			}
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - notifications() :: ERROR", e);
 		}finally{
@@ -107,7 +132,7 @@ public class AppMetaDataDao {
 		try{
 			appUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 			appUpdates.setForceUpdate(false);
-			appUpdates.setCurrentVersion("1.0");
+			appUpdates.setCurrentVersion(StudyMetaDataConstants.STUDY_DEFAULT_VERSION);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - appUpdates() :: ERROR", e);
 		}
