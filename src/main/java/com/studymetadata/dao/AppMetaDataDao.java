@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -18,9 +19,11 @@ import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesBean;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.dto.AppVersionDto;
 import com.studymetadata.dto.NotificationDto;
 import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
+import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -129,12 +132,26 @@ public class AppMetaDataDao {
 	public AppUpdatesResponse appUpdates(String appVersion, String os) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
+		AppVersionDto appVersionDto = null;
 		try{
+			session = sessionFactory.openSession();
+			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' ORDER BY AVDTO.appVersion DESC");
+			query.setMaxResults(1);
+			appVersionDto = (AppVersionDto) query.uniqueResult();
+			if(appVersionDto != null){
+				appUpdates.setCurrentVersion(String.valueOf(appVersionDto.getAppVersion()));
+				appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
+			}else{
+				appUpdates.setForceUpdate(false);
+				appUpdates.setCurrentVersion(appVersion);
+			}
 			appUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
-			appUpdates.setForceUpdate(false);
-			appUpdates.setCurrentVersion(StudyMetaDataConstants.STUDY_DEFAULT_VERSION);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - appUpdates() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Ends");
 		return appUpdates;
@@ -180,5 +197,80 @@ public class AppMetaDataDao {
 		}
 		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Ends");
 		return studyUpdates;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param forceUpdate
+	 * @param osType
+	 * @param appVersion
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion) throws DAOException{
+		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
+		String updateAppVersionResponse = "OOPS! Something went wrong.";
+		List<AppVersionDto> appVersionDtoList = null;
+		Boolean updateFlag = false;
+		AppVersionDto appVersionDto = new AppVersionDto();
+		try{
+			session = sessionFactory.openSession();
+			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' ORDER BY AVDTO.appVersion DESC");
+			appVersionDtoList = query.list();
+			if(appVersionDtoList != null && !appVersionDtoList.isEmpty()){
+				if(Float.parseFloat(appVersion) == appVersionDtoList.get(0).getAppVersion().floatValue()){
+					if(Integer.parseInt(forceUpdate) == appVersionDtoList.get(0).getForceUpdate().intValue()){
+						updateAppVersionResponse = ""+appVersion+" is already available for os "+osType+"";
+					}else{
+						updateFlag = true;
+						appVersionDto = appVersionDtoList.get(0);
+					}
+				}else{
+					for(AppVersionDto avDto : appVersionDtoList){
+						if(Float.parseFloat(appVersion) > avDto.getAppVersion().floatValue()){
+							updateFlag = true;
+							break;
+						}
+						
+						if(Float.parseFloat(appVersion) == avDto.getAppVersion().floatValue()){
+							if(Integer.parseInt(forceUpdate) == avDto.getForceUpdate().intValue()){
+								updateAppVersionResponse = ""+appVersion+" is already available for os "+osType+"";
+								break;
+							}else{
+								updateFlag = true;
+								appVersionDto = avDto;
+							}
+						}
+					}
+				}
+			}else{
+				updateFlag = true;
+			}
+			
+			//update flag
+			if(updateFlag){
+				transaction = session.beginTransaction();
+				appVersionDto.setAppVersion(Float.parseFloat(appVersion));
+				appVersionDto.setForceUpdate(Integer.parseInt(forceUpdate));
+				appVersionDto.setOsType(osType);
+				appVersionDto.setCreatedOn(StudyMetaDataUtil.getCurrentDateTime());
+				session.saveOrUpdate(appVersionDto);
+				
+				transaction.commit();
+				updateAppVersionResponse = "App Version was successfully updated to v"+appVersion+" for "+osType+" os.";
+			}
+			
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataDao - updateAppVersionDetails() :: ERROR", e);
+			if(transaction.isActive()){
+				transaction.rollback();
+			}
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Ends");
+		return updateAppVersionResponse;
 	}
 }

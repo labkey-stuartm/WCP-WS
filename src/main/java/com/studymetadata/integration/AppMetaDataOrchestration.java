@@ -180,4 +180,24 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		return studyUpdates;
 	}
 	
+	/**
+	 * @author Mohan
+	 * @param forceUpdate
+	 * @param osType
+	 * @param appVersion
+	 * @return String
+	 * @throws OrchestrationException
+	 */
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion) throws OrchestrationException{
+		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
+		String updateAppVersionResponse = "OOPS! Something went wrong.";
+		try{
+			updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion);
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataOrchestration - updateAppVersionDetails() :: ERROR", e);
+		}
+		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Ends");
+		return updateAppVersionResponse;
+	}
+	
 }

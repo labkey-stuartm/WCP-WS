@@ -1,5 +1,6 @@
 package com.studymetadata.service;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -660,6 +661,59 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
 	}
+	
+	/**
+	 * This method is used to update the App Version
+	 * 
+	 * @author Mohan
+	 * @param params
+	 * @param context
+	 * @param response
+	 * @return Object
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("updateAppVersion")
+	public Object updateAppVersionDetails(String params, @Context ServletContext context, @Context HttpServletResponse response){
+		LOGGER.info("INFO: StudyMetaDataService - updateAppVersionDetails() :: Starts");
+		String updateAppVersionResponse = "OOPS! Something went wrong.";
+		try{
+			JSONObject serviceJson = new JSONObject(params);
+			String forceUpdate = serviceJson.getString("forceUpdate").toString();
+			String osType = serviceJson.getString("osType").toString();
+			String appVersion = serviceJson.getString("appVersion").toString();
+			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion)){
+				if(Integer.parseInt(forceUpdate) > 1){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				}
+				
+				if(!osType.equals(StudyMetaDataConstants.STUDY_PLATFORM_IOS) && !osType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				}
+				
+				if(Float.parseFloat(appVersion) < 1){
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+				}
+				
+				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion);
+			}else{
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataService - updateAppVersionDetails() :: ERROR", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - updateAppVersionDetails() :: Ends");
+		return updateAppVersionResponse;
+	}
+	
+	
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	
 	@GET
