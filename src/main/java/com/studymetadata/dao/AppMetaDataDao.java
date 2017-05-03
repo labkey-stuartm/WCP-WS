@@ -75,7 +75,7 @@ public class AppMetaDataDao {
 		List<NotificationDto> notificationList = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from NotificationDto NDTO where NDTO.notificationAction=true and NDTO.notificationStatus=true and TIMESTAMP(NDTO.scheduleDate, NDTO.scheduleTime) <= TIMESTAMP('"+StudyMetaDataUtil.getCurrentDateTime()+"')");
+			query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSent=true and NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"')");
 			query.setFirstResult(Integer.parseInt(skip));
 			notificationList = query.list();
 			if(notificationList != null && !notificationList.isEmpty()){
@@ -87,13 +87,12 @@ public class AppMetaDataDao {
 					notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
 					if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
 						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
-						notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 					}else{
 						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
-						notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
 					}
+					notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 					notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
-					notifyBean.setTitle(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+					notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
 					notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());
 					notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
 					
@@ -180,7 +179,7 @@ public class AppMetaDataDao {
 				latestVersion = studyVersionList.get(studyVersionList.size()-1);
 				updates.setConsent(currentVersion.getConsentVersion()==latestVersion.getConsentVersion()?false:true);
 				updates.setActivities(currentVersion.getActivityVersion()==latestVersion.getActivityVersion()?false:true);
-				updates.setResources(false);
+				updates.setResources(currentVersion.getStudyVersion()==latestVersion.getStudyVersion()?false:true);
 				updates.setInfo(currentVersion.getStudyVersion()==latestVersion.getStudyVersion()?false:true);
 				studyUpdates.setUpdates(updates);
 				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
