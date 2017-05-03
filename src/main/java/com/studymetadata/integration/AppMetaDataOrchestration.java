@@ -188,11 +188,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return String
 	 * @throws OrchestrationException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion) throws OrchestrationException{
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String studyId) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try{
-			updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion);
+			updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion, studyId);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - updateAppVersionDetails() :: ERROR", e);
 		}

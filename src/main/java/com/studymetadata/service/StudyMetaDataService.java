@@ -683,6 +683,7 @@ public class StudyMetaDataService {
 			String forceUpdate = serviceJson.getString("forceUpdate").toString();
 			String osType = serviceJson.getString("osType").toString();
 			String appVersion = serviceJson.getString("appVersion").toString();
+			String studyId = serviceJson.getString("studyId").toString();
 			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion)){
 				if(Integer.parseInt(forceUpdate) > 1){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -699,7 +700,8 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 				}
 				
-				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion);
+				studyId = StringUtils.isEmpty(studyId)?"0":studyId;
+				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion, studyId);
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();

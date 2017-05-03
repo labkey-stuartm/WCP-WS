@@ -206,7 +206,7 @@ public class AppMetaDataDao {
 	 * @return String
 	 * @throws DAOException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion) throws DAOException{
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String studyId) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		List<AppVersionDto> appVersionDtoList = null;
@@ -214,12 +214,12 @@ public class AppMetaDataDao {
 		AppVersionDto appVersionDto = new AppVersionDto();
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' ORDER BY AVDTO.appVersion DESC");
+			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' and AVDTO.customStudyId='"+studyId+"' ORDER BY AVDTO.appVersion DESC");
 			appVersionDtoList = query.list();
 			if(appVersionDtoList != null && !appVersionDtoList.isEmpty()){
 				if(Float.parseFloat(appVersion) == appVersionDtoList.get(0).getAppVersion().floatValue()){
 					if(Integer.parseInt(forceUpdate) == appVersionDtoList.get(0).getForceUpdate().intValue()){
-						updateAppVersionResponse = ""+appVersion+" is already available for os "+osType+"";
+						updateAppVersionResponse = "v"+appVersion+" is already available for os "+osType+"";
 					}else{
 						updateFlag = true;
 						appVersionDto = appVersionDtoList.get(0);
@@ -233,7 +233,7 @@ public class AppMetaDataDao {
 						
 						if(Float.parseFloat(appVersion) == avDto.getAppVersion().floatValue()){
 							if(Integer.parseInt(forceUpdate) == avDto.getForceUpdate().intValue()){
-								updateAppVersionResponse = ""+appVersion+" is already available for os "+osType+"";
+								updateAppVersionResponse = "v"+appVersion+" is already available for os "+osType+"";
 								break;
 							}else{
 								updateFlag = true;
@@ -253,6 +253,8 @@ public class AppMetaDataDao {
 				appVersionDto.setForceUpdate(Integer.parseInt(forceUpdate));
 				appVersionDto.setOsType(osType);
 				appVersionDto.setCreatedOn(StudyMetaDataUtil.getCurrentDateTime());
+				appVersionDto.setCustomStudyId(studyId);
+				
 				session.saveOrUpdate(appVersionDto);
 				
 				transaction.commit();
