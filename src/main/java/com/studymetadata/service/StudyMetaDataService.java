@@ -599,12 +599,13 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("appUpdates")
-	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("os") String os, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("os") String os, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
 		try{
 			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(os)){
-				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, os);
+				studyId = StringUtils.isEmpty(studyId)?"0":studyId;
+				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, os, studyId);
 				if(!appUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();

@@ -149,11 +149,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return AppUpdatesResponse
 	 * @throws OrchestrationException
 	 */
-	public AppUpdatesResponse appUpdates(String appVersion, String os) throws OrchestrationException{
+	public AppUpdatesResponse appUpdates(String appVersion, String os, String studyId) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		try{
-			appUpdates = appMetaDataDao.appUpdates(appVersion, os);
+			appUpdates = appMetaDataDao.appUpdates(appVersion, os, studyId);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - appUpdates() :: ERROR", e);
 		}

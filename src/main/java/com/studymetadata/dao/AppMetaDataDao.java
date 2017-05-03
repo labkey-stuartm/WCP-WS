@@ -128,13 +128,13 @@ public class AppMetaDataDao {
 	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
-	public AppUpdatesResponse appUpdates(String appVersion, String os) throws DAOException{
+	public AppUpdatesResponse appUpdates(String appVersion, String os, String studyId) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' ORDER BY AVDTO.appVersion DESC");
+			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.customStudyId='"+studyId+"' ORDER BY AVDTO.appVersion DESC");
 			query.setMaxResults(1);
 			appVersionDto = (AppVersionDto) query.uniqueResult();
 			if(appVersionDto != null){
