@@ -491,12 +491,12 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("notifications")
-	public Object notifications(@HeaderParam("skip") String skip, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object notifications(@HeaderParam("skip") String skip, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try{
 			if(StringUtils.isNotEmpty(skip)){
-				notificationsResponse = appMetaDataOrchestration.notifications(skip);
+				notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization);
 				if(!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
@@ -599,13 +599,12 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("appUpdates")
-	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("os") String os, @HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
 		try{
-			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(os)){
-				studyId = StringUtils.isEmpty(studyId)?"0":studyId;
-				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, os, studyId);
+			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(authorization)){
+				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, authorization);
 				if(!appUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
@@ -684,8 +683,9 @@ public class StudyMetaDataService {
 			String forceUpdate = serviceJson.getString("forceUpdate").toString();
 			String osType = serviceJson.getString("osType").toString();
 			String appVersion = serviceJson.getString("appVersion").toString();
-			String studyId = serviceJson.getString("studyId").toString();
-			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion)){
+			String bundleId = serviceJson.getString("bundleId").toString();
+			String customStudyId = serviceJson.getString("studyId").toString();
+			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(bundleId)){
 				if(Integer.parseInt(forceUpdate) > 1){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -701,8 +701,7 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 				}
 				
-				studyId = StringUtils.isEmpty(studyId)?"0":studyId;
-				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion, studyId);
+				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion, bundleId, customStudyId);
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();

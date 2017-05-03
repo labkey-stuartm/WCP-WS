@@ -816,7 +816,7 @@ public class StudyMetaDataUtil {
 
 	/*---------------------------------------------FDA util methods------------------------------------------*/
 	/*-----------------------------------------FDA WCP WS related methods starts-----------------------------------------*/
-	public static String platformType(String authCredentials) {
+	public static String platformType(String authCredentials, String type) {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Starts");
 		String bundleIdAndAppToken = null;
 		String platform = "";
@@ -831,9 +831,23 @@ public class StudyMetaDataUtil {
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
 						if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("labkey.bundleid")) && appToken.equals(authPropMap.get("labkey.apptoken")))){
-							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
+							switch (type) {
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("android.bundleid");
+									break;
+							}
 						}else if(bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken"))){
-							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+							switch (type) {
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("ios.bundleid");
+									break;
+							}
 						}
 					}
 				}

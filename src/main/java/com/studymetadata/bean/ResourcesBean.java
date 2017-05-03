@@ -4,13 +4,10 @@ public class ResourcesBean {
 	/*/gatewayInfo*/
 	private String title = "";
 	private String type = ""; //html/pdf
-	private String content = ""; //text/pdf link
 	private String resourcesId = "";
-	
+	private String content = ""; //text/pdf link
 	private String audience = "";
-	private String studyId = "";
-	private String key = "";
-	private ResourceConfigurationBean configuration = new ResourceConfigurationBean();
+	private ResourceConfigurationBean availability = new ResourceConfigurationBean();
 	
 	public String getTitle() {
 		return title;
@@ -24,6 +21,12 @@ public class ResourcesBean {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getResourcesId() {
+		return resourcesId;
+	}
+	public void setResourcesId(String resourcesId) {
+		this.resourcesId = resourcesId;
+	}
 	public String getContent() {
 		return content;
 	}
@@ -36,29 +39,11 @@ public class ResourcesBean {
 	public void setAudience(String audience) {
 		this.audience = audience;
 	}
-	public String getStudyId() {
-		return studyId;
+	public ResourceConfigurationBean getAvailability() {
+		return availability;
 	}
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
-	}
-	public ResourceConfigurationBean getConfiguration() {
-		return configuration;
-	}
-	public void setConfiguration(ResourceConfigurationBean configuration) {
-		this.configuration = configuration;
-	}
-	public String getResourcesId() {
-		return resourcesId;
-	}
-	public void setResourcesId(String resourcesId) {
-		this.resourcesId = resourcesId;
-	}
-	public String getKey() {
-		return key;
-	}
-	public void setKey(String key) {
-		this.key = key;
+	public void setAvailability(ResourceConfigurationBean availability) {
+		this.availability = availability;
 	}
 	
 }

@@ -199,4 +199,8 @@ public interface StudyMetaDataConstants {
 	public static final String NOTIFICATION_AUDIENCE_LIMITED = "Limited";
 	
 	public static final String STUDY_DEFAULT_VERSION = "1.0";
+	
+	public static final String STUDY_AUTH_TYPE_PLATFORM = "platform";
+	public static final String STUDY_AUTH_TYPE_OS = "os";
+	public static final String STUDY_AUTH_TYPE_BUNDLE_ID = "bundleId";
 }

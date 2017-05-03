@@ -442,7 +442,7 @@ public class DashboardMetaDataDao {
 			if(formulaDtoList != null && !formulaDtoList.isEmpty()){
 				for(ActiveTaskFormulaDto formulaDto : formulaDtoList){
 					if(formulaTypeId.intValue() == formulaDto.getActivetaskFormulaId().intValue()){
-						formulaType = formulaDto.getValue();
+						formulaType = formulaDto.getFormula();
 						break;
 					}
 				}

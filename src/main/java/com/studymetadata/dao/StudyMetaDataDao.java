@@ -141,7 +141,7 @@ public class StudyMetaDataDao {
 			}
 
 			//get resources details
-			platformType = StudyMetaDataUtil.platformType(authorization);
+			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if(StringUtils.isNotEmpty(platformType)){
 				/*version related query*/
 				//query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) ");
@@ -190,7 +190,7 @@ public class StudyMetaDataDao {
 		String platformType = "";
 		String studyListQuery = "";
 		try{
-			platformType = StudyMetaDataUtil.platformType(authorization);
+			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if(StringUtils.isNotEmpty(platformType)){
 				session = sessionFactory.openSession();
 
@@ -573,7 +573,6 @@ public class StudyMetaDataDao {
 							}
 						}
 
-						resourcesBean.setKey(String.valueOf(resourcesDto.getId()));
 						resourcesBean.setTitle(StringUtils.isEmpty(resourcesDto.getTitle())?"":resourcesDto.getTitle());
 						if(!resourcesDto.isTextOrPdf()){
 							resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
@@ -585,20 +584,12 @@ public class StudyMetaDataDao {
 						resourcesBean.setResourcesId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
 
 						//configuration details for the study
-						ResourceConfigurationBean configuration = new ResourceConfigurationBean();
-						if(resourcesDto.getTimePeriodFromDays() != null){
-							configuration.setStart(resourcesDto.getTimePeriodFromDays());
-						}else{
-							configuration.setStart(0);
-						}
-
-						if(resourcesDto.getTimePeriodToDays() != null){
-							configuration.setEnd(resourcesDto.getTimePeriodToDays());
-						}else{
-							configuration.setEnd(0);
-						}
-						resourcesBean.setStudyId(studyId);
-						resourcesBean.setConfiguration(configuration);
+						ResourceConfigurationBean availability = new ResourceConfigurationBean();
+						availability.setAvailableDate(StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
+						availability.setExpiryDate(StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
+						availability.setStartDays(resourcesDto.getTimePeriodFromDays()==null?0:resourcesDto.getTimePeriodFromDays());
+						availability.setEndDays(resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
+						resourcesBean.setAvailability(availability);
 						resourcesBeanList.add(resourcesBean);
 					}
 					resourcesResponse.setResources(resourcesBeanList);

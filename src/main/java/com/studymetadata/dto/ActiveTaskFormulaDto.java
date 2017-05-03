@@ -22,6 +22,9 @@ public class ActiveTaskFormulaDto implements Serializable{
 	
 	@Column(name="value")
 	private String value;
+	
+	@Column(name="formula")
+	private String formula;
 
 	public Integer getActivetaskFormulaId() {
 		return activetaskFormulaId;
@@ -37,6 +40,14 @@ public class ActiveTaskFormulaDto implements Serializable{
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 	
 }

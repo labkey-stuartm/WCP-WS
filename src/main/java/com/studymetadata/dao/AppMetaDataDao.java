@@ -69,47 +69,65 @@ public class AppMetaDataDao {
 	 * @return NotificationsResponse
 	 * @throws DAOException
 	 */
-	public NotificationsResponse notifications(String skip) throws DAOException{
+	public NotificationsResponse notifications(String skip, String authorization) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		List<NotificationDto> notificationList = null;
+		String bundleIdType = "";
+		List<NotificationsBean> notifyList = new ArrayList<>();
+		AppVersionDto appVersion = null;
+		String notificationStudyTypeQuery = "";
 		try{
-			session = sessionFactory.openSession();
-			query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSent=true and NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"')");
-			query.setFirstResult(Integer.parseInt(skip));
-			notificationList = query.list();
-			if(notificationList != null && !notificationList.isEmpty()){
-				Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>(); 
-				List<NotificationsBean> notifyList = new ArrayList<>();
-				List<Integer> notificationIdsList = new ArrayList<>();
-				for(NotificationDto notificationDto : notificationList){
-					NotificationsBean notifyBean = new NotificationsBean();
-					notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
-					if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
-						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+			
+			bundleIdType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID);
+			if(StringUtils.isNotEmpty(bundleIdType)){
+				session = sessionFactory.openSession();
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.bundleId='"+bundleIdType+"' ORDER BY AVDTO.avId DESC");
+				query.setMaxResults(1);
+				appVersion = (AppVersionDto) query.uniqueResult();
+				if(appVersion != null){
+					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
+						notificationStudyTypeQuery = " and NDTO.customStudyId='"+appVersion.getCustomStudyId()+"' and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
 					}else{
-						notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+						notificationStudyTypeQuery = " and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_GT+"'";
 					}
-					notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
-					notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
-					notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
-					notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());
-					notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
-					
-					notificationIdsList.add(notificationDto.getNotificationId());
-					notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
+					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSent=true and NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery);
+					query.setFirstResult(Integer.parseInt(skip));
+					query.setMaxResults(20);
+					notificationList = query.list();
+					if(notificationList != null && !notificationList.isEmpty()){
+						Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>(); 
+						List<Integer> notificationIdsList = new ArrayList<>();
+						for(NotificationDto notificationDto : notificationList){
+							NotificationsBean notifyBean = new NotificationsBean();
+							notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
+							if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
+								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+							}else{
+								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+							}
+							notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
+							notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+							notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
+							notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());
+							notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
+							
+							notificationIdsList.add(notificationDto.getNotificationId());
+							notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
+						}
+						
+						//reorder the list i.e. latest should come first 
+						Collections.sort(notificationIdsList, Collections.reverseOrder());
+						
+						//get the notification bean based on the id
+						for(Integer notificationId : notificationIdsList){
+							notifyList.add(notificationTreeMap.get(notificationId));
+						}
+					}
 				}
-				
-				//reorder the list i.e. latest should come first 
-				Collections.sort(notificationIdsList, Collections.reverseOrder());
-				
-				//get the notification bean based on the id
-				for(Integer notificationId : notificationIdsList){
-					notifyList.add(notificationTreeMap.get(notificationId));
-				}
-				notificationsResponse.setNotifications(notifyList);
-				notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}
+			notificationsResponse.setNotifications(notifyList);
+			notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - notifications() :: ERROR", e);
 		}finally{
@@ -128,15 +146,20 @@ public class AppMetaDataDao {
 	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
-	public AppUpdatesResponse appUpdates(String appVersion, String os, String studyId) throws DAOException{
+	public AppUpdatesResponse appUpdates(String appVersion, String app) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
+		String os = "";
 		try{
-			session = sessionFactory.openSession();
-			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.customStudyId='"+studyId+"' ORDER BY AVDTO.appVersion DESC");
-			query.setMaxResults(1);
-			appVersionDto = (AppVersionDto) query.uniqueResult();
+			os = StudyMetaDataUtil.platformType(app, StudyMetaDataConstants.STUDY_AUTH_TYPE_OS);
+			if(StringUtils.isNotEmpty(os)){
+				session = sessionFactory.openSession();
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+app+"' ORDER BY AVDTO.appVersion DESC");
+				query.setMaxResults(1);
+				appVersionDto = (AppVersionDto) query.uniqueResult();
+			}
+			
 			if(appVersionDto != null){
 				appUpdates.setCurrentVersion(String.valueOf(appVersionDto.getAppVersion()));
 				appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
@@ -206,7 +229,7 @@ public class AppMetaDataDao {
 	 * @return String
 	 * @throws DAOException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String studyId) throws DAOException{
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		List<AppVersionDto> appVersionDtoList = null;
@@ -214,7 +237,7 @@ public class AppMetaDataDao {
 		AppVersionDto appVersionDto = new AppVersionDto();
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' and AVDTO.customStudyId='"+studyId+"' ORDER BY AVDTO.appVersion DESC");
+			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
 			appVersionDtoList = query.list();
 			if(appVersionDtoList != null && !appVersionDtoList.isEmpty()){
 				if(Float.parseFloat(appVersion) == appVersionDtoList.get(0).getAppVersion().floatValue()){
@@ -253,7 +276,8 @@ public class AppMetaDataDao {
 				appVersionDto.setForceUpdate(Integer.parseInt(forceUpdate));
 				appVersionDto.setOsType(osType);
 				appVersionDto.setCreatedOn(StudyMetaDataUtil.getCurrentDateTime());
-				appVersionDto.setCustomStudyId(studyId);
+				appVersionDto.setBundleId(bundleId);
+				appVersionDto.setCustomStudyId(customStudyId);
 				
 				session.saveOrUpdate(appVersionDto);
 				

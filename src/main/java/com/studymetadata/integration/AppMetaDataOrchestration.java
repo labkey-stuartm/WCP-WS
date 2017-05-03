@@ -50,11 +50,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return NotificationsResponse
 	 * @throws OrchestrationException
 	 */
-	public NotificationsResponse notifications(String skip) throws OrchestrationException{
+	public NotificationsResponse notifications(String skip, String authorization) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try{
-			notificationsResponse = appMetaDataDao.notifications(skip);
+			notificationsResponse = appMetaDataDao.notifications(skip, authorization);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - notifications() :: ERROR", e);
 		}
@@ -149,11 +149,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return AppUpdatesResponse
 	 * @throws OrchestrationException
 	 */
-	public AppUpdatesResponse appUpdates(String appVersion, String os, String studyId) throws OrchestrationException{
+	public AppUpdatesResponse appUpdates(String appVersion, String app) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		try{
-			appUpdates = appMetaDataDao.appUpdates(appVersion, os, studyId);
+			appUpdates = appMetaDataDao.appUpdates(appVersion, app);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - appUpdates() :: ERROR", e);
 		}
@@ -188,11 +188,11 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @return String
 	 * @throws OrchestrationException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String studyId) throws OrchestrationException{
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try{
-			updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion, studyId);
+			updateAppVersionResponse = appMetaDataDao.updateAppVersionDetails(forceUpdate, osType, appVersion, bundleId, customStudyId);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataOrchestration - updateAppVersionDetails() :: ERROR", e);
 		}
