@@ -501,6 +501,8 @@ public class StudyMetaDataDao {
 		//String consentQuery = "from ConsentDto CDTO where CDTO.studyId=";
 		List<ConsentInfoDto> consentInfoDtoList = null;
 		StudyDto studyDto = null;
+		StudyVersionDto studyVersionDto = null;
+		String studyVersionQuery = "from StudyVersionDto SVDTO where SVDTO.customStudyId='"+studyId+"' ";
 		try{
 			session = sessionFactory.openSession();
 			//get studyId from studies table
@@ -513,32 +515,42 @@ public class StudyMetaDataDao {
 			if(studyDto != null){
 				//consentQuery += actualStudyId;
 				//query = session.createQuery(consentQuery);
-				query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", Float.parseFloat(consentVersion));
-				consent = (ConsentDto) query.uniqueResult();
-
-				//check the consentBo is empty or not
-				if( consent != null){
-					ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
-					consentDocumentBean.setType("text/html");
-					consentDocumentBean.setVersion((consent.getVersion() == null || consent.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
-
-					if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
-						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent());
-					}else{
-						//query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
-						query = session.getNamedQuery("consentInfoDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", Float.parseFloat(consentVersion));
-						consentInfoDtoList = query.list();
-						if( consentInfoDtoList != null && !consentInfoDtoList.isEmpty()){
-							StringBuilder contentBuilder = new StringBuilder();
-							for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
-								contentBuilder.append("<span style=&#34;font-size:20px;&#34;><strong>"+consentInfoDto.getDisplayTitle()+"</strong></span><br/><span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"+consentInfoDto.getElaborated()+"</span><br/>");
-							}
-							consentDocumentBean.setContent(contentBuilder.toString());
-						}
-					}
-					consentDocumentResponse.setConsent(consentDocumentBean);
+				if(StringUtils.isNotEmpty(consentVersion)){
+					studyVersionQuery += " and ROUND(SVDTO.consentVersion, 1)="+consentVersion+" ORDER BY SVDTO.versionId DESC";
+				}else{
+					studyVersionQuery += " and ROUND(SVDTO.activityVersion, 1)="+activityVersion+" ORDER BY SVDTO.versionId DESC";
 				}
-				consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+				query = session.createQuery(studyVersionQuery);
+				query.setMaxResults(1);
+				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				if(studyVersionDto != null){
+					query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
+					consent = (ConsentDto) query.uniqueResult();
+
+					//check the consentBo is empty or not
+					if( consent != null){
+						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
+						consentDocumentBean.setType("text/html");
+						consentDocumentBean.setVersion((consent.getVersion() == null || consent.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
+
+						if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
+							consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent());
+						}else{
+							//query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
+							query = session.getNamedQuery("consentInfoDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
+							consentInfoDtoList = query.list();
+							if( consentInfoDtoList != null && !consentInfoDtoList.isEmpty()){
+								StringBuilder contentBuilder = new StringBuilder();
+								for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
+									contentBuilder.append("<span style=&#34;font-size:20px;&#34;><strong>"+consentInfoDto.getDisplayTitle()+"</strong></span><br/><span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"+consentInfoDto.getElaborated()+"</span><br/>");
+								}
+								consentDocumentBean.setContent(contentBuilder.toString());
+							}
+						}
+						consentDocumentResponse.setConsent(consentDocumentBean);
+					}
+					consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+				}
 			}else{
 				consentDocumentResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
