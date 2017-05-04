@@ -203,4 +203,8 @@ public interface StudyMetaDataConstants {
 	public static final String STUDY_AUTH_TYPE_PLATFORM = "platform";
 	public static final String STUDY_AUTH_TYPE_OS = "os";
 	public static final String STUDY_AUTH_TYPE_BUNDLE_ID = "bundleId";
+	
+	public static final String ANCHORDATE_TYPE_QUESTION = "date-question";
+	public static final String ANCHORDATE_TYPE_ENROLLMENT = "enrollment-date";
+	
 }

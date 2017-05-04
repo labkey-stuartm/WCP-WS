@@ -32,6 +32,7 @@ import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
+import com.studymetadata.bean.AnchorDateBean;
 import com.studymetadata.bean.ComprehensionBean;
 import com.studymetadata.bean.ComprehensionDetailsBean;
 import com.studymetadata.bean.ConsentBean;
@@ -44,6 +45,7 @@ import com.studymetadata.bean.EligibilityConsentResponse;
 import com.studymetadata.bean.GatewayInfoResourceBean;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
+import com.studymetadata.bean.QuestionInfoBean;
 import com.studymetadata.bean.ResourceConfigurationBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
@@ -650,6 +652,11 @@ public class StudyMetaDataDao {
 		List<StudyPageDto> studyPageDtoList = null;
 		//Integer actualStudyId = null;
 		StudyDto studyDto = null;
+		Object[] obj = null;
+		StudyVersionDto studyVersionDto = null;
+		String questionQuery = "";
+		String formQuery = "";
+		Boolean isAnchorDateExists = false;
 		try{
 			session = sessionFactory.openSession();
 			/*version related query*/
@@ -659,6 +666,10 @@ public class StudyMetaDataDao {
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
 			if(studyDto != null){
+				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
+				query.setMaxResults(1);
+				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				
 				//get study welcome info and page details by studyId
 				studyInfoResponse.setStudyWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())?"":studyDto.getStudyWebsite());
 				List<InfoBean> infoList = new ArrayList<>();
@@ -710,8 +721,41 @@ public class StudyMetaDataDao {
 				}
 				withdrawConfig.setMessage(StringUtils.isEmpty(studyDto.getAllowRejoinText())?"":studyDto.getAllowRejoinText());
 				studyInfoResponse.setWithdrawalConfig(withdrawConfig);
-			
-
+				
+				//check the anchor date details
+				/*questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
+									+"where qt.response_type=10 and qt.use_anchor_date=true and qt.id=qs.instruction_form_id and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
+									+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
+				query = session.createSQLQuery(questionQuery);
+				obj = (Object[]) query.uniqueResult();
+				if(obj != null){
+					isAnchorDateExists = true;
+				}else{
+					formQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt,form f, form_mapping fm "
+							+" where qt.response_type=10 and qt.use_anchor_date=true and qt.id=fm.question_id and fm.form_id=f.form_id and f.active=true and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
+							+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
+					query = session.createSQLQuery(formQuery);
+					obj = (Object[]) query.uniqueResult();
+					if(obj != null){
+						isAnchorDateExists = true;
+					}
+				}*/
+				
+				if(isAnchorDateExists){
+					AnchorDateBean anchorDate = new AnchorDateBean();
+					anchorDate.setType(StudyMetaDataConstants.ANCHORDATE_TYPE_QUESTION);
+					
+					QuestionInfoBean questionInfoBean = new QuestionInfoBean();
+					questionInfoBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+obj[0].toString());
+					questionInfoBean.setActivityVersion(obj[1]==null?"":obj[1].toString());
+					if(obj[2]!=null && obj[2].toString().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)){
+						questionInfoBean.setKey(obj[4]==null?"":obj[4].toString());
+					}else{
+						questionInfoBean.setKey(obj[3]==null?"":obj[3].toString());
+					}
+					anchorDate.setQuestionInfo(questionInfoBean);
+					studyInfoResponse.setAnchorDate(anchorDate);
+				}
 				studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}else{
 				studyInfoResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);

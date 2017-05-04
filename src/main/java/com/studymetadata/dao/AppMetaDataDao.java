@@ -103,10 +103,11 @@ public class AppMetaDataDao {
 							notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
 							if(notificationDto.getNotificationType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)){
 								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+								notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 							}else{
 								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+								notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
 							}
-							notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 							notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
 							notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
 							notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());

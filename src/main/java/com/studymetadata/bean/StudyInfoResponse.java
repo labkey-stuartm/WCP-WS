@@ -6,7 +6,7 @@ import java.util.List;
 public class StudyInfoResponse {
 	private String message = "FAILURE";
 	private String studyWebsite = "";
-	private List<InfoBean> info = new ArrayList<InfoBean>();
+	private List<InfoBean> info = new ArrayList<>();
 	private AnchorDateBean anchorDate = new AnchorDateBean();
 	private WithdrawalConfigBean withdrawalConfig = new WithdrawalConfigBean();
 	
