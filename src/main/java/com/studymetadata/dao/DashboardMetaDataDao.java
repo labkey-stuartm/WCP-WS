@@ -349,7 +349,7 @@ public class DashboardMetaDataDao {
 				dataSource.setType(activeTask.getActivityType());
 				statistics.setDataSource(dataSource);
 			}else{
-				statistics.setTitle("");
+				statistics.setTitle(StringUtils.isEmpty(question.getStatShortName())?"":question.getStatShortName());
 				statistics.setDisplayName(StringUtils.isEmpty(question.getStatDisplayName())?"":question.getStatDisplayName());
 				statistics.setStatType(question.getStatType()==null?"":getStatisticsType(question.getStatType(), statisticImageList));
 				statistics.setUnit(StringUtils.isEmpty(question.getStatDisplayUnits())?"":question.getStatDisplayUnits());
