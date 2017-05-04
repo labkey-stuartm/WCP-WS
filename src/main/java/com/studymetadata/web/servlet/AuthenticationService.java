@@ -35,12 +35,9 @@ public class AuthenticationService {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
 							authenticationStatus = true;
 						}
-						/*if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken"))) || (bundleId.equals(authPropMap.get("labkey.bundleid")) && appToken.equals(authPropMap.get("labkey.apptoken")))){
-							authenticationStatus = true;
-						}*/
 					}
 				}
 			}

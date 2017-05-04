@@ -831,22 +831,22 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+						/*if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){*/
+						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
 							String appBundleId = "";
 							String appTokenId = "";
 							for(Map.Entry<String, String> map : authPropMap.entrySet()){
-								if(map.getValue().equals(appToken)){
-									appTokenId = map.getKey();
+								if(map.getKey().equals(appToken)){
+									appTokenId = map.getValue();
 								}
 								
-								if(map.getValue().equals(bundleId)){
-									appBundleId = map.getKey();
+								if(map.getKey().equals(bundleId)){
+									appBundleId = map.getValue();
 								}
 							}
 							
 							if(StringUtils.isNotEmpty(appBundleId) && StringUtils.isNotEmpty(appTokenId)){
 								final StringTokenizer authTokenizer = new StringTokenizer(appTokenId, ".");
-								final String id = authTokenizer.nextToken();
 								final String platformType = authTokenizer.nextToken();
 								final String key = authTokenizer.nextToken();
 								if(platformType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
@@ -855,7 +855,7 @@ public class StudyMetaDataUtil {
 											break;
 										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
 											break;
-										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get(appBundleId);
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = bundleId;
 											break;
 									}
 								}else{
@@ -864,7 +864,7 @@ public class StudyMetaDataUtil {
 											break;
 										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
 											break;
-										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get(appBundleId);
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = bundleId;
 											break;
 									}
 								}
@@ -1016,9 +1016,14 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+						/*if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+							appBundleId = bundleId;
+						}*/
+						
+						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
 							appBundleId = bundleId;
 						}
+						
 					}
 				}
 			}

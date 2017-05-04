@@ -74,22 +74,22 @@ public class AppMetaDataDao {
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		List<NotificationDto> notificationList = null;
 		String bundleIdType = "";
+		String platform = "";
 		List<NotificationsBean> notifyList = new ArrayList<>();
 		AppVersionDto appVersion = null;
 		String notificationStudyTypeQuery = "";
 		try{
 			
 			bundleIdType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID);
-			if(StringUtils.isNotEmpty(bundleIdType)){
+			platform = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_OS);
+			if(StringUtils.isNotEmpty(bundleIdType) && StringUtils.isNotEmpty(platform)){
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.bundleId='"+bundleIdType+"' ORDER BY AVDTO.avId DESC");
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.bundleId='"+bundleIdType+"' and AVDTO.osType='"+platform+"' ORDER BY AVDTO.avId DESC");
 				query.setMaxResults(1);
 				appVersion = (AppVersionDto) query.uniqueResult();
 				if(appVersion != null){
 					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
 						notificationStudyTypeQuery = " and NDTO.customStudyId='"+appVersion.getCustomStudyId()+"' and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
-					}else{
-						//notificationStudyTypeQuery = " and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_GT+"'";
 					}
 					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSent=true and NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery);
 					query.setFirstResult(Integer.parseInt(skip));
