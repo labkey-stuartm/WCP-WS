@@ -89,7 +89,7 @@ public class AppMetaDataDao {
 					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
 						notificationStudyTypeQuery = " and NDTO.customStudyId='"+appVersion.getCustomStudyId()+"' and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
 					}else{
-						notificationStudyTypeQuery = " and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_GT+"'";
+						//notificationStudyTypeQuery = " and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_GT+"'";
 					}
 					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSent=true and NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery);
 					query.setFirstResult(Integer.parseInt(skip));
@@ -146,16 +146,18 @@ public class AppMetaDataDao {
 	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
-	public AppUpdatesResponse appUpdates(String appVersion, String app) throws DAOException{
+	public AppUpdatesResponse appUpdates(String appVersion, String authCredentials) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
 		String os = "";
+		String bundleId = "";
 		try{
-			os = StudyMetaDataUtil.platformType(app, StudyMetaDataConstants.STUDY_AUTH_TYPE_OS);
+			os = StudyMetaDataUtil.platformType(authCredentials, StudyMetaDataConstants.STUDY_AUTH_TYPE_OS);
+			bundleId = StudyMetaDataUtil.getBundleIdFromAuthorization(authCredentials);
 			if(StringUtils.isNotEmpty(os)){
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+app+"' ORDER BY AVDTO.appVersion DESC");
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
 				query.setMaxResults(1);
 				appVersionDto = (AppVersionDto) query.uniqueResult();
 			}

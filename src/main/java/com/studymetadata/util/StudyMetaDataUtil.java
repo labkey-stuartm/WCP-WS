@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -830,24 +831,45 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("labkey.bundleid")) && appToken.equals(authPropMap.get("labkey.apptoken")))){
-							switch (type) {
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
-									break;
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
-									break;
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("android.bundleid");
-									break;
+						if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+							String appBundleId = "";
+							String appTokenId = "";
+							for(Map.Entry<String, String> map : authPropMap.entrySet()){
+								if(map.getValue().equals(appToken)){
+									appTokenId = map.getKey();
+								}
+								
+								if(map.getValue().equals(bundleId)){
+									appBundleId = map.getKey();
+								}
 							}
-						}else if(bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken"))){
-							switch (type) {
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
-									break;
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
-									break;
-								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("ios.bundleid");
-									break;
+							
+							if(StringUtils.isNotEmpty(appBundleId) && StringUtils.isNotEmpty(appTokenId)){
+								final StringTokenizer authTokenizer = new StringTokenizer(appTokenId, ".");
+								final String id = authTokenizer.nextToken();
+								final String platformType = authTokenizer.nextToken();
+								final String key = authTokenizer.nextToken();
+								if(platformType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
+									switch (type) {
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("android.bundleid");
+											break;
+									}
+								}else{
+									switch (type) {
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("ios.bundleid");
+											break;
+									}
+								}
 							}
+							
 						}
 					}
 				}
@@ -978,6 +1000,33 @@ public class StudyMetaDataUtil {
 		milliSeconds = "?v="+cal.getTimeInMillis();
 		logger.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
 		return milliSeconds;
+	}
+	
+	public static String getBundleIdFromAuthorization(String authCredentials) {
+		logger.info("INFO: AuthenticationService - getBundleIdFromAuthorization() - Starts");
+		String bundleIdAndAppToken = null;
+		String appBundleId = "";
+		try{
+			if(StringUtils.isNotEmpty(authCredentials)){
+				if(authCredentials.contains("Basic")){
+					final String encodedUserPassword = authCredentials.replaceFirst("Basic"+ " ", "");
+					byte[] decodedBytes = Base64.decode(encodedUserPassword);
+					bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
+					if(bundleIdAndAppToken.contains(":")){
+						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
+						final String bundleId = tokenizer.nextToken();
+						final String appToken = tokenizer.nextToken();
+						if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
+							appBundleId = bundleId;
+						}
+					}
+				}
+			}
+		}catch(Exception e){
+			logger.error("AuthenticationService - getBundleIdFromAuthorization() :: ERROR", e);
+		}
+		logger.info("INFO: AuthenticationService - getBundleIdFromAuthorization() - Ends");
+		return appBundleId;
 	}
 	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }

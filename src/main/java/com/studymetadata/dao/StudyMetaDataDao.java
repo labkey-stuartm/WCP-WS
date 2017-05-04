@@ -90,9 +90,12 @@ public class StudyMetaDataDao {
 			final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 			final String bundleId = tokenizer.nextToken();
 			final String appToken = tokenizer.nextToken();
-			if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken"))) || (bundleId.equals(authPropMap.get("labkey.bundleid")) && appToken.equals(authPropMap.get("labkey.apptoken")))){
+			if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
 				hasValidAuthorization = true;
 			}
+			/*if((bundleId.equals(authPropMap.get("android.bundleid")) && appToken.equals(authPropMap.get("android.apptoken"))) || (bundleId.equals(authPropMap.get("ios.bundleid")) && appToken.equals(authPropMap.get("ios.apptoken"))) || (bundleId.equals(authPropMap.get("labkey.bundleid")) && appToken.equals(authPropMap.get("labkey.apptoken")))){
+				hasValidAuthorization = true;
+			}*/
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
 		}

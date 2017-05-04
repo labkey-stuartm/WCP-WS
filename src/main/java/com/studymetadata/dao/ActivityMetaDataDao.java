@@ -1394,7 +1394,7 @@ public class ActivityMetaDataDao {
 					break;
 				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
 					questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:reponseType.getDefaultValue());
-					questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:reponseType.getStep()); //In minutes 1-30
+					questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
 					break;
 				case StudyMetaDataConstants.QUESTION_HEIGHT:
 					questionFormat.put("measurementSystem", (reponseType == null || reponseType.getMeasurementSystem() == null)?"":reponseType.getMeasurementSystem()); //Local/Metric/US
@@ -1959,6 +1959,35 @@ public class ActivityMetaDataDao {
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
 		return maxFracDigits;
+	}
+	
+	/**
+	 * This method is used to get the actual step count for the time interval response type
+	 * 
+	 * @author Mohan
+	 * @param stepValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getTimeIntervalStep(Integer stepValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
+		Integer step = 1;
+		String stepIds = "1,2,3,4,5,6,10,12,15,30";
+		try{
+			 String[] stepArray = stepIds.split(",");
+			 for(int i=0; i<stepArray.length; i++){
+				 if(stepValue > Integer.parseInt(stepArray[i]) ){
+					 step = Integer.parseInt(stepArray[i]);
+				 }else{
+					 step = Integer.parseInt(stepArray[i]);
+					 break;
+				 }
+			 }
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
+		return step;
 	}
 	
 }
