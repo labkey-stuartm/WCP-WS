@@ -22,6 +22,7 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
 	/*@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),*/
 	@NamedQuery(name="consentInfoDtoByStudyId", query=" from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
+	@NamedQuery(name="consentInfoDetailsByCustomStudyIdAndVersion", query=" from ConsentInfoDto CIDTO where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version ORDER BY CIDTO.sequenceNo"),
 })
 public class ConsentInfoDto implements Serializable{
 	

@@ -19,6 +19,9 @@ import org.hibernate.annotations.NamedQuery;
  */
 @Entity
 @Table(name="active_task")
+@NamedQueries({
+	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndVersion", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ROUND(ATDTO.version, 1)=:version")
+})
 public class ActiveTaskDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -82,6 +85,12 @@ public class ActiveTaskDto implements Serializable{
 	
 	@Column(name = "version")
 	private Float version=0f;
+	
+	@Column(name="custom_study_id")
+	private String customStudyId;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
 
 	public Integer getId() {
 		return id;
@@ -241,6 +250,22 @@ public class ActiveTaskDto implements Serializable{
 
 	public void setVersion(Float version) {
 		this.version = version;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
 	}
 	
 }

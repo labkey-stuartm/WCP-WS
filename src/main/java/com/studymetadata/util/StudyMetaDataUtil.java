@@ -855,7 +855,7 @@ public class StudyMetaDataUtil {
 											break;
 										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
 											break;
-										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("android.bundleid");
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get(appBundleId);
 											break;
 									}
 								}else{
@@ -864,7 +864,7 @@ public class StudyMetaDataUtil {
 											break;
 										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
 											break;
-										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get("ios.bundleid");
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = authPropMap.get(appBundleId);
 											break;
 									}
 								}

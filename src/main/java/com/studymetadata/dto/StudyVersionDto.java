@@ -15,8 +15,9 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name="study_version")
 @NamedQueries({ 
-	@NamedQuery(name = "getStudyVersionDetailsByCustomStudyId", query = "from StudyVersionDto SVDTO where SVDTO.customStudyId =:customStudyId ORDER BY SVDTO.versionId DESC LIMIT 1"),
+	@NamedQuery(name = "getStudyVersionDetailsByCustomStudyId", query = "from StudyVersionDto SVDTO where SVDTO.customStudyId =:customStudyId ORDER BY SVDTO.versionId DESC"),
 	@NamedQuery(name = "getStudyVersionsByCustomStudyId", query = "from StudyVersionDto SVDTO where SVDTO.customStudyId =:customStudyId"),
+	@NamedQuery(name = "getLiveVersionDetailsByCustomStudyIdAndVersion", query = "from StudyVersionDto SVDTO where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)=:studyVersion ORDER BY SVDTO.versionId DESC"),
 })
 public class StudyVersionDto implements Serializable{
 	private static final long serialVersionUID = 1L;

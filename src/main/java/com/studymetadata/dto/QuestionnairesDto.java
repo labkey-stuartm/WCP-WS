@@ -21,6 +21,7 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name="questionnaires")
 @NamedQueries({
 	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO where QDTO.studyId =:studyId"),
+	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndVersion", query = "from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.customStudyId=:customStudyId and ROUND(QDTO.version, 1)=:version")
 })
 public class QuestionnairesDto implements Serializable{
 	

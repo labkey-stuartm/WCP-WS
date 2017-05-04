@@ -21,6 +21,7 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name="consent")
 @NamedQueries({
 	@NamedQuery(name="consentDtoByStudyId", query=" from ConsentDto CDTO where CDTO.studyId =:studyId "),
+	@NamedQuery(name="consentDetailsByCustomStudyIdAndVersion", query=" from ConsentDto CDTO where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"),
 })
 public class ConsentDto implements Serializable{
 	

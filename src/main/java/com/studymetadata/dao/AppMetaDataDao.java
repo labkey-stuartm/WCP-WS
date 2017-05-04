@@ -202,10 +202,10 @@ public class AppMetaDataDao {
 			if(studyVersionList != null && !studyVersionList.isEmpty()){
 				currentVersion = studyVersionList.get(0);
 				latestVersion = studyVersionList.get(studyVersionList.size()-1);
-				updates.setConsent(currentVersion.getConsentVersion()==latestVersion.getConsentVersion()?false:true);
-				updates.setActivities(currentVersion.getActivityVersion()==latestVersion.getActivityVersion()?false:true);
-				updates.setResources(currentVersion.getStudyVersion()==latestVersion.getStudyVersion()?false:true);
-				updates.setInfo(currentVersion.getStudyVersion()==latestVersion.getStudyVersion()?false:true);
+				updates.setConsent(latestVersion.getConsentVersion().floatValue() > currentVersion.getConsentVersion().floatValue()?true:false);
+				updates.setActivities(latestVersion.getActivityVersion().floatValue() > currentVersion.getActivityVersion().floatValue()?true:false);
+				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
+				updates.setInfo(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 				studyUpdates.setUpdates(updates);
 				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
 			}else{

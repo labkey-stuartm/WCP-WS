@@ -48,6 +48,8 @@ import com.studymetadata.dto.QuestionnairesDto;
 import com.studymetadata.dto.QuestionnairesFrequenciesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
+import com.studymetadata.dto.StudyDto;
+import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.HibernateUtil;
@@ -82,19 +84,28 @@ public class ActivityMetaDataDao {
 		List<ActiveTaskDto> activeTaskDtoList = null;
 		List<QuestionnairesDto> questionnairesList = null;
 		List<ActivitiesBean> activitiesBeanList = new ArrayList<>();
-		Integer actualStudyId = null;
+		//Integer actualStudyId = null;
+		StudyDto studyDto = null;
+		StudyVersionDto studyVersionDto = null;
 		try{
 			session = sessionFactory.openSession();
 
 			/*version related query*/
 			//query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			//query =  session.getNamedQuery("getStudyVersionDetailsByCustomStudyId").setString("customStudyId", studyId);
-			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();
-			if(actualStudyId != null){
+			/*query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();*/
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
+				query.setMaxResults(1);
+				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				
 				//get the Activities (type : Active Task list) by studyId
-				query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.action=1 and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
+				/*query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.action=1 and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");*/
 				//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.studyId="+actualStudyId);
+				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
@@ -102,7 +113,7 @@ public class ActivityMetaDataDao {
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
-						activityBean.setActivityVersion((activeTaskDto.getStudyVersion() == null || activeTaskDto.getStudyVersion().intValue() == 0)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
+						activityBean.setActivityVersion((activeTaskDto.getVersion() == null || activeTaskDto.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 						activityBean.setBranching(false);
 						activityBean.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						
@@ -119,8 +130,9 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
+				//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
 				//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.studyId="+actualStudyId+" and QDTO.active=true");
+				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
 					for(QuestionnairesDto questionaire : questionnairesList){
@@ -134,7 +146,7 @@ public class ActivityMetaDataDao {
 						activityBean.setFrequency(frequencyDetails);
 
 						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
-						activityBean.setActivityVersion((questionaire.getVersion() == null || questionaire.getVersion() == 0)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionaire.getVersion().toString());
+						activityBean.setActivityVersion((questionaire.getVersion() == null || questionaire.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionaire.getVersion().toString());
 						activityBean.setBranching((questionaire.getBranching() == null || !questionaire.getBranching())?false:true);
 						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
@@ -173,13 +185,16 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Starts");
 		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
 		ActiveTaskActivityStructureBean activeTaskactivityStructureBean = new ActiveTaskActivityStructureBean();
-		Integer actualStudyId = null;
+		//Integer actualStudyId = null;
+		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();
-			if(actualStudyId != null){
-				activeTaskactivityStructureBean = activeTaskMetadata(studyId, activityId, session);
+			/*query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();*/
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				activeTaskactivityStructureBean = activeTaskMetadata(studyId, activityId, session, activityVersion);
 				activeTaskActivityMetaDataResponse.setActivity(activeTaskactivityStructureBean);
 				activeTaskActivityMetaDataResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}else{
@@ -208,13 +223,16 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
 		QuestionnaireActivityMetaDataResponse activityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		QuestionnaireActivityStructureBean activityStructureBean = new QuestionnaireActivityStructureBean();
-		Integer actualStudyId = null;
+		//Integer actualStudyId = null;
+		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();
-			if(actualStudyId != null){
-				activityStructureBean = questionnaireMetadata(studyId, activityId, session);
+			/*query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();*/
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				activityStructureBean = questionnaireMetadata(studyId, activityId, session, activityVersion);
 				activityMetaDataResponse.setActivity(activityStructureBean);
 				activityMetaDataResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}else{
@@ -244,14 +262,14 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public ActiveTaskActivityStructureBean activeTaskMetadata(String studyId, String activityId, Session session) throws DAOException{
+	public ActiveTaskActivityStructureBean activeTaskMetadata(String studyId, String activityId, Session session, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Starts");
 		ActiveTaskActivityStructureBean activeTaskActivityStructureBean = new ActiveTaskActivityStructureBean();
 		ActiveTaskDto activeTaskDto = null;
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 		try{
 			//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId);
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId+" and ATDTO.action=1 ");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId+" and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
@@ -341,7 +359,7 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public QuestionnaireActivityStructureBean questionnaireMetadata(String studyId, String activityId, Session session) throws DAOException{
+	public QuestionnaireActivityStructureBean questionnaireMetadata(String studyId, String activityId, Session session, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
 		QuestionnaireActivityStructureBean activityStructureBean = new QuestionnaireActivityStructureBean();
 		Map<String, Integer> sequenceNoMap = new HashMap<>();
@@ -352,7 +370,7 @@ public class ActivityMetaDataDao {
 		List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true and QDTO.status=true");
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
 			//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
@@ -1687,7 +1705,7 @@ public class ActivityMetaDataDao {
 		String time = "00:00:00";
 		try{
 			startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+time;
-			endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+time;
+			endDateTime = StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd()+" "+time;
 			if(StringUtils.isNotEmpty(activeTaskDto.getFrequency())){
 				if((activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
 					ActiveTaskFrequencyDto activeTaskFrequency;
@@ -1760,7 +1778,7 @@ public class ActivityMetaDataDao {
 		String time = "00:00:00";
 		try{
 			startDateTime = questionaire.getStudyLifetimeStart()+" "+time;
-			endDateTime = questionaire.getStudyLifetimeEnd()+" "+time;
+			endDateTime = StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd()+" "+time;
 			if(StringUtils.isNotEmpty(questionaire.getFrequency())){
 				if((questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
 					QuestionnairesFrequenciesDto questionnairesFrequency;

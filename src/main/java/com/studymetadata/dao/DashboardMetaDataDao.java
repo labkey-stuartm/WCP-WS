@@ -29,6 +29,8 @@ import com.studymetadata.dto.QuestionnairesDto;
 import com.studymetadata.dto.QuestionnairesStepsDto;
 import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.dto.StatisticImageListDto;
+import com.studymetadata.dto.StudyDto;
+import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
@@ -66,49 +68,51 @@ public class DashboardMetaDataDao {
 		Map<String, Object> questionnaireMap = new LinkedHashMap<>();
 		List<Integer> activeTaskIdsList = new ArrayList<>();
 		List<Integer> questionnaireIdsList = new ArrayList<>();
-		Integer actualStudyId = null;
-		List<Object[]> activeTaskList = null;
-		List<Object[]> questionnaireList = null;
+		//Integer actualStudyId = null;
+		List<ActiveTaskDto> activeTaskList = null;
+		List<QuestionnairesDto> questionnaireList = null;
 		List<ActiveTaskAttrtibutesValuesDto> activeTaskValuesList = null;
 		List<QuestionnairesStepsDto> questionnaireStepsList = null;
 		List<Integer> questionIdsList = new ArrayList<>();
 		List<Integer> formIdsList = new ArrayList<>();
 		List<ActiveTaskFormulaDto> formulaDtoList = null;
 		List<StatisticImageListDto> statisticImageList = null;
+		StudyDto studyDto = null;
+		StudyVersionDto studyVersionDto= null;
 		try{
 			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();
-			if(actualStudyId != null){
+			/*query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			actualStudyId = (Integer) query.uniqueResult();*/
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
+				query.setMaxResults(1);
+				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				
 				//Active Task details
-				query = session.createQuery("select ATDTO.id, ATDTO.version, ATDTO.shortTitle  from ActiveTaskDto ATDTO where ATDTO.action=1 and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
+				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.createQuery("select ATDTO.id, ATDTO.version, ATDTO.shortTitle  from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
 				activeTaskList = query.list();
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
-					for(Object[] obj : activeTaskList){
-						ActiveTaskDto activeTaskDto = new ActiveTaskDto();
-						activeTaskDto.setId(obj[0]==null?1:(Integer) obj[0]);
-						activeTaskDto.setVersion(obj[1]==null?1f:(Float) obj[1]);
-						activeTaskDto.setShortTitle(obj[2]==null?"":(String) obj[2]);
-						activityMap.put(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId(), activeTaskDto);
-						activeTaskIdsList.add(activeTaskDto.getId());
+					for(ActiveTaskDto activeTask : activeTaskList){
+						activityMap.put(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTask.getId(), activeTask);
+						activeTaskIdsList.add(activeTask.getId());
 					}
 				}
 				
 				//Questionnaire details
-				query = session.createQuery("select QDTO.id, QDTO.version, QDTO.shortTitle from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
+				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.createQuery("select QDTO.id, QDTO.version, QDTO.shortTitle from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
 				questionnaireList = query.list();
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
-					for(Object[] obj :questionnaireList){
-						QuestionnairesDto questionnaireDto = new QuestionnairesDto();
-						questionnaireDto.setId(obj[0]==null?1:(Integer) obj[0]);
-						questionnaireDto.setVersion(obj[1]==null?1f:(Float) obj[1]);
-						questionnaireDto.setShortTitle(obj[2]==null?"":(String) obj[2]);
+					for(QuestionnairesDto questionnaireDto :questionnaireList){
 						questionnaireMap.put(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId(), questionnaireDto);
 						questionnaireIdsList.add(questionnaireDto.getId());
 					}
 					
 					if(questionnaireIdsList != null && !questionnaireIdsList.isEmpty()){
-						query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"') and QSDTO.active=true and QSDTO.status=true ORDER BY QSDTO.questionnairesId,QSDTO.sequenceNo");
+						query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"') and QSDTO.active=true and QSDTO.status=true ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo");
 						questionnaireStepsList = query.list();
 						if(questionnaireStepsList != null && !questionnaireStepsList.isEmpty()){
 							for(QuestionnairesStepsDto questionnaireSteps : questionnaireStepsList){
