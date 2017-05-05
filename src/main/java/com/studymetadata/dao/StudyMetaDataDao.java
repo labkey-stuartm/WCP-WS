@@ -1,5 +1,6 @@
 package com.studymetadata.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -19,9 +20,13 @@ import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
 import com.studymetadata.dto.ConsentMasterInfoDto;
 import com.studymetadata.dto.EligibilityDto;
+import com.studymetadata.dto.FormDto;
+import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
 import com.studymetadata.dto.QuestionnairesDto;
+import com.studymetadata.dto.QuestionnairesStepsDto;
+import com.studymetadata.dto.QuestionsDto;
 import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
@@ -580,6 +585,8 @@ public class StudyMetaDataDao {
 		List<ResourcesDto> resourcesDtoList = null;
 		//Integer actualStudyId = null;
 		StudyDto studyDto = null;
+		Boolean isAnchorDateExists = false;
+		BigInteger count = null;
 		try{
 			session = sessionFactory.openSession();
 			//get studyId from studies table
@@ -596,13 +603,27 @@ public class StudyMetaDataDao {
 					List<ResourcesBean> resourcesBeanList = new ArrayList<>();
 					for(ResourcesDto resourcesDto : resourcesDtoList){
 						ResourcesBean resourcesBean = new ResourcesBean();
+						/*String questionQuery = "select count(q.use_anchor_date) from questions q where q.id in ((select qsq.instruction_form_id from questionnaires_steps qsq where qsq.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
+											  +" and qsq.questionnaires_id in (select qq.id from questionnaires qq where qq.study_id="+studyDto.getId()+"))) and q.response_type=10 and q.use_anchor_date=1";
+						count = (BigInteger) session.createSQLQuery(questionQuery).uniqueResult();
+						if(count != null && count.intValue() > 0){
+							isAnchorDateExists = true;
+						}else{
+							String formQuestionQuery = "select count(q.use_anchor_date) from questions q where q.id in (select fm.question_id from form_mapping fm where fm.form_id in"
+									  +"( select f.form_id from form f where f.active=1 and f.form_id in (select qsf.instruction_form_id from questionnaires_steps qsf where qsf.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
+									  +"and qsf.questionnaires_id in (select qf.id from questionnaires qf where qf.study_id="+studyDto.getId()+")))) and q.response_type=10 and q.use_anchor_date=1";
+							count = (BigInteger) session.createSQLQuery(formQuestionQuery).uniqueResult();
+							if(count != null && count.intValue() > 0){
+								isAnchorDateExists = true;
+							}
+						}*/
 						if(studyDto.getType().equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)){
 							resourcesBean.setAudience(StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
 						}else{
-							//need to check based on the paticipants
 							resourcesBean.setAudience(StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED);
 						}
-
+						
+						//resourcesBean.setAudience(isAnchorDateExists?StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED:StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
 						resourcesBean.setTitle(StringUtils.isEmpty(resourcesDto.getTitle())?"":resourcesDto.getTitle());
 						if(!resourcesDto.isTextOrPdf()){
 							resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
@@ -723,7 +744,7 @@ public class StudyMetaDataDao {
 				studyInfoResponse.setWithdrawalConfig(withdrawConfig);
 				
 				//check the anchor date details
-				/*questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
+				questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
 									+"where qt.response_type=10 and qt.use_anchor_date=true and qt.id=qs.instruction_form_id and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
 									+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
 				query = session.createSQLQuery(questionQuery);
@@ -739,7 +760,7 @@ public class StudyMetaDataDao {
 					if(obj != null){
 						isAnchorDateExists = true;
 					}
-				}*/
+				}
 				
 				if(isAnchorDateExists){
 					AnchorDateBean anchorDate = new AnchorDateBean();

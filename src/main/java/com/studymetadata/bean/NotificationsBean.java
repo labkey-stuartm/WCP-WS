@@ -8,6 +8,7 @@ public class NotificationsBean {
 	private String audience = "";
 	private String title = "";
 	private String message = "";
+	private String date = "";
 	
 	public String getNotificationId() {
 		return notificationId;
@@ -50,6 +51,12 @@ public class NotificationsBean {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 }
