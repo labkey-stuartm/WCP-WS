@@ -1,5 +1,8 @@
 package com.studymetadata.bean;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class ResourcesBean {
 	/*/gatewayInfo*/
 	private String title = "";
@@ -7,7 +10,8 @@ public class ResourcesBean {
 	private String resourcesId = "";
 	private String content = ""; //text/pdf link
 	private String audience = "";
-	private ResourceConfigurationBean availability = new ResourceConfigurationBean();
+	//private ResourceConfigurationBean availability = new ResourceConfigurationBean();
+	private Map<String, Object> availability = new LinkedHashMap<>();
 	
 	public String getTitle() {
 		return title;
@@ -39,10 +43,10 @@ public class ResourcesBean {
 	public void setAudience(String audience) {
 		this.audience = audience;
 	}
-	public ResourceConfigurationBean getAvailability() {
+	public Map<String, Object> getAvailability() {
 		return availability;
 	}
-	public void setAvailability(ResourceConfigurationBean availability) {
+	public void setAvailability(Map<String, Object> availability) {
 		this.availability = availability;
 	}
 	

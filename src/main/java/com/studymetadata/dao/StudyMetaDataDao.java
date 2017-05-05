@@ -4,7 +4,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
@@ -635,12 +637,20 @@ public class StudyMetaDataDao {
 						resourcesBean.setResourcesId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
 
 						//configuration details for the study
-						ResourceConfigurationBean availability = new ResourceConfigurationBean();
-						availability.setAvailableDate(StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
-						availability.setExpiryDate(StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
-						availability.setStartDays(resourcesDto.getTimePeriodFromDays()==null?0:resourcesDto.getTimePeriodFromDays());
-						availability.setEndDays(resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
-						resourcesBean.setAvailability(availability);
+						if(!resourcesDto.isResourceVisibility()){
+							Map<String, Object> availability = new LinkedHashMap<>();
+							availability.put("availableDate", StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
+							availability.put("expiryDate", StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
+							availability.put("startDays", resourcesDto.getTimePeriodFromDays()==null?0:resourcesDto.getTimePeriodFromDays());
+							availability.put("endDays", resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
+							resourcesBean.setAvailability(availability);
+							/*ResourceConfigurationBean availability = new ResourceConfigurationBean();
+							availability.setAvailableDate(StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
+							availability.setExpiryDate(StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
+							availability.setStartDays(resourcesDto.getTimePeriodFromDays()==null?0:resourcesDto.getTimePeriodFromDays());
+							availability.setEndDays(resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
+							resourcesBean.setAvailability(availability);*/
+						}
 						resourcesBeanList.add(resourcesBean);
 					}
 					resourcesResponse.setResources(resourcesBeanList);
