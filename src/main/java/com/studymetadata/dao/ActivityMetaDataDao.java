@@ -1567,7 +1567,7 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
-					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage());
+					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image")+subType.getImage()));
 					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image")+subType.getSelectedImage()));
 					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
