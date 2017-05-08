@@ -360,8 +360,8 @@ public class StudyMetaDataDao {
 							//set correctAnswers details for eligibility
 							List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
 							HashMap<String,Object> correctAnsHashMap = new HashMap<>();
-							correctAnsHashMap.put("key", "");
 							correctAnsHashMap.put("answer", false);
+							correctAnsHashMap.put("key", "");
 							correctAnswers.add(correctAnsHashMap);
 							eligibility.setCorrectAnswers(correctAnswers);
 							eligibilityConsentResponse.setEligibility(eligibility);
