@@ -158,7 +158,7 @@ public class StudyMetaDataDao {
 			if(StringUtils.isNotEmpty(platformType)){
 				/*version related query*/
 				//query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) ");
-				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) and RDTO.status=true");
+				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) and RDTO.status=true ORDER BY RDTO.id DESC");
 				resourcesList = query.list();
 				if( null != resourcesList && !resourcesList.isEmpty()){
 					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
@@ -587,8 +587,6 @@ public class StudyMetaDataDao {
 		List<ResourcesDto> resourcesDtoList = null;
 		//Integer actualStudyId = null;
 		StudyDto studyDto = null;
-		Boolean isAnchorDateExists = false;
-		BigInteger count = null;
 		try{
 			session = sessionFactory.openSession();
 			//get studyId from studies table
@@ -605,27 +603,7 @@ public class StudyMetaDataDao {
 					List<ResourcesBean> resourcesBeanList = new ArrayList<>();
 					for(ResourcesDto resourcesDto : resourcesDtoList){
 						ResourcesBean resourcesBean = new ResourcesBean();
-						/*String questionQuery = "select count(q.use_anchor_date) from questions q where q.id in ((select qsq.instruction_form_id from questionnaires_steps qsq where qsq.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
-											  +" and qsq.questionnaires_id in (select qq.id from questionnaires qq where qq.study_id="+studyDto.getId()+"))) and q.response_type=10 and q.use_anchor_date=1";
-						count = (BigInteger) session.createSQLQuery(questionQuery).uniqueResult();
-						if(count != null && count.intValue() > 0){
-							isAnchorDateExists = true;
-						}else{
-							String formQuestionQuery = "select count(q.use_anchor_date) from questions q where q.id in (select fm.question_id from form_mapping fm where fm.form_id in"
-									  +"( select f.form_id from form f where f.active=1 and f.form_id in (select qsf.instruction_form_id from questionnaires_steps qsf where qsf.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
-									  +"and qsf.questionnaires_id in (select qf.id from questionnaires qf where qf.study_id="+studyDto.getId()+")))) and q.response_type=10 and q.use_anchor_date=1";
-							count = (BigInteger) session.createSQLQuery(formQuestionQuery).uniqueResult();
-							if(count != null && count.intValue() > 0){
-								isAnchorDateExists = true;
-							}
-						}*/
-						if(studyDto.getType().equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)){
-							resourcesBean.setAudience(StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
-						}else{
-							resourcesBean.setAudience(StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED);
-						}
-						
-						//resourcesBean.setAudience(isAnchorDateExists?StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED:StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
+						resourcesBean.setAudience(resourcesDto.isResourceType()?StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED:StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
 						resourcesBean.setTitle(StringUtils.isEmpty(resourcesDto.getTitle())?"":resourcesDto.getTitle());
 						if(!resourcesDto.isTextOrPdf()){
 							resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);

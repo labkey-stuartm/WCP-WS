@@ -21,6 +21,7 @@ import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.AppVersionDto;
 import com.studymetadata.dto.NotificationDto;
+import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
@@ -113,7 +114,7 @@ public class AppMetaDataDao {
 								notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
 							}else{
 								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
-								notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
+								notifyBean.setAudience(notificationDto.isAnchorDate()?StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED:StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
 							}
 							notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
 							notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
