@@ -25,6 +25,7 @@ import org.hibernate.annotations.Type;
 	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO where SDTO.id =:id"),
 	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
 	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
+	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
 })
 public class StudyDto implements Serializable{
 	

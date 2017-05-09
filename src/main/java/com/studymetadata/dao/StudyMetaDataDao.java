@@ -521,6 +521,11 @@ public class StudyMetaDataDao {
 			actualStudyId = (Integer) query.uniqueResult();*/
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto == null){
+				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
+				studyDto = (StudyDto) query.uniqueResult();
+			}
+			
 			if(studyDto != null){
 				//consentQuery += actualStudyId;
 				//query = session.createQuery(consentQuery);
@@ -529,25 +534,42 @@ public class StudyMetaDataDao {
 				}else{
 					studyVersionQuery += " and ROUND(SVDTO.activityVersion, 1)="+activityVersion+" ORDER BY SVDTO.versionId DESC";
 				}
-				query = session.createQuery(studyVersionQuery);
-				query.setMaxResults(1);
-				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				
+				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+					query = session.createQuery(studyVersionQuery);
+					query.setMaxResults(1);
+					studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				}else{
+					studyVersionDto = new StudyVersionDto();
+					studyVersionDto.setConsentVersion(0f);
+				}
 				if(studyVersionDto != null){
-					query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
-					consent = (ConsentDto) query.uniqueResult();
+					if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+						query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
+						consent = (ConsentDto) query.uniqueResult();
+					}else{
+						query = session.getNamedQuery("consentDtoByStudyId").setInteger("studyId", studyDto.getId());
+						consent = (ConsentDto) query.uniqueResult();
+					}
 
 					//check the consentBo is empty or not
 					if( consent != null){
 						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
 						consentDocumentBean.setType("text/html");
-						consentDocumentBean.setVersion((consent.getVersion() == null || consent.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
+						consentDocumentBean.setVersion((consent.getVersion() == null)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
 
 						if(consent.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 							consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent());
 						}else{
 							//query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", actualStudyId);
-							query = session.getNamedQuery("consentInfoDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
-							consentInfoDtoList = query.list();
+							if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+								query = session.getNamedQuery("consentInfoDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
+								consentInfoDtoList = query.list();
+							}else{
+								query = session.getNamedQuery("consentInfoDtoByStudyId").setInteger("studyId", studyDto.getId());
+								consentInfoDtoList = query.list();
+							}
+							
 							if( consentInfoDtoList != null && !consentInfoDtoList.isEmpty()){
 								StringBuilder contentBuilder = new StringBuilder();
 								for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
@@ -674,10 +696,16 @@ public class StudyMetaDataDao {
 			actualStudyId = (Integer) query.uniqueResult();*/
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto == null){
+				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
+				studyDto = (StudyDto) query.uniqueResult();
+			}
 			if(studyDto != null){
-				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
-				query.setMaxResults(1);
-				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+					query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
+					query.setMaxResults(1);
+					studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				}
 				
 				//get study welcome info and page details by studyId
 				studyInfoResponse.setStudyWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())?"":studyDto.getStudyWebsite());
@@ -732,21 +760,23 @@ public class StudyMetaDataDao {
 				studyInfoResponse.setWithdrawalConfig(withdrawConfig);
 				
 				//check the anchor date details
-				questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
-									+"where qt.response_type=10 and qt.use_anchor_date=true and qt.id=qs.instruction_form_id and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
-									+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
-				query = session.createSQLQuery(questionQuery);
-				obj = (Object[]) query.uniqueResult();
-				if(obj != null){
-					isAnchorDateExists = true;
-				}else{
-					formQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt,form f, form_mapping fm "
-							+" where qt.response_type=10 and qt.use_anchor_date=true and qt.id=fm.question_id and fm.form_id=f.form_id and f.active=true and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
+				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+					questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
+							+"where qt.response_type=10 and qt.use_anchor_date=true and qt.id=qs.instruction_form_id and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
 							+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
-					query = session.createSQLQuery(formQuery);
+					query = session.createSQLQuery(questionQuery);
 					obj = (Object[]) query.uniqueResult();
 					if(obj != null){
 						isAnchorDateExists = true;
+					}else{
+						formQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt,form f, form_mapping fm "
+								+" where qt.response_type=10 and qt.use_anchor_date=true and qt.id=fm.question_id and fm.form_id=f.form_id and f.active=true and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
+								+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
+						query = session.createSQLQuery(formQuery);
+						obj = (Object[]) query.uniqueResult();
+						if(obj != null){
+							isAnchorDateExists = true;
+						}
 					}
 				}
 				
@@ -797,6 +827,10 @@ public class StudyMetaDataDao {
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			//query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto == null){
+				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
+				studyDto = (StudyDto) query.uniqueResult();
+			}
 			isValidStudy = (studyDto == null)?false:true;
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
