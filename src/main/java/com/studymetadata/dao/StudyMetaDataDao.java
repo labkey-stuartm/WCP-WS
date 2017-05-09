@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -761,10 +762,11 @@ public class StudyMetaDataDao {
 				
 				//check the anchor date details
 				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
-					questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
+					/*questionQuery = "select q.id,q.version,qs.step_type,qs.step_short_title,qt.short_title from questionnaires q, questionnaires_steps qs, questions qt "
 							+"where qt.response_type=10 and qt.use_anchor_date=true and qt.id=qs.instruction_form_id and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"'"
 							+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
 					query = session.createSQLQuery(questionQuery);
+					query.setMaxResults(1);
 					obj = (Object[]) query.uniqueResult();
 					if(obj != null){
 						isAnchorDateExists = true;
@@ -773,17 +775,119 @@ public class StudyMetaDataDao {
 								+" where qt.response_type=10 and qt.use_anchor_date=true and qt.id=fm.question_id and fm.form_id=f.form_id and f.active=true and qs.step_type='"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"'"
 								+"and qs.questionnaires_id=q.id and q.active=true and q.status=true and q.custom_study_id='"+studyVersionDto.getCustomStudyId()+"' and ROUND(q.version, 1)="+studyVersionDto.getActivityVersion();
 						query = session.createSQLQuery(formQuery);
+						query.setMaxResults(1);
 						obj = (Object[]) query.uniqueResult();
 						if(obj != null){
 							isAnchorDateExists = true;
 						}
+					}*/
+					
+					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyVersionDto.getCustomStudyId()+"' and ROUND(QDTO.version, 1)="+studyVersionDto.getActivityVersion());
+					List<QuestionnairesDto> questionnairesList = query.list();
+					if(questionnairesList != null && !questionnairesList.isEmpty()){
+						List<Integer> questionnaireIdsList = new ArrayList<>();
+						Map<Integer, QuestionnairesDto> questionnaireMap = new TreeMap<>();
+						Map<String, QuestionnairesStepsDto> stepsMap = new TreeMap<>();
+						Map<Integer, QuestionsDto> questionsMap = null;
+						Map<Integer, FormMappingDto> formMappingMap = new TreeMap<>();
+						
+						for(QuestionnairesDto questionnaire : questionnairesList){
+							questionnaireIdsList.add(questionnaire.getId());
+							questionnaireMap.put(questionnaire.getId(), questionnaire);
+						}
+						
+						if(!questionnaireIdsList.isEmpty()){
+							List<Integer> questionIdsList = new ArrayList<>();
+							List<Integer> formIdsList = new ArrayList<>();
+							query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"')");
+							List<QuestionnairesStepsDto> questionnairesStepsList = query.list();
+							if(questionnairesStepsList != null && !questionnairesStepsList.isEmpty()){
+								for(QuestionnairesStepsDto stepsDto : questionnairesStepsList){
+									if(stepsDto.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)){
+										questionIdsList.add(stepsDto.getInstructionFormId());
+										stepsMap.put(stepsDto.getInstructionFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, stepsDto);
+									}else{
+										formIdsList.add(stepsDto.getInstructionFormId());
+										stepsMap.put(stepsDto.getInstructionFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, stepsDto);
+									}
+								}
+								
+								if(!questionIdsList.isEmpty()){
+									query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+									query.setMaxResults(1);
+									List<QuestionsDto> questionnsList = query.list();
+									if(questionnsList != null && !questionnsList.isEmpty()){
+										questionsMap = new TreeMap<>();
+										for(QuestionsDto question : questionnsList){
+											questionsMap.put(question.getId(), question);
+										}
+									}
+								}
+								
+								if(questionsMap == null && !formIdsList.isEmpty()){
+									List<Integer> formQuestionsList = new ArrayList<>();
+									query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+") and FDTO.active=true) ORDER BY FMDTO.formId, FMDTO.sequenceNo");
+									List<FormMappingDto> formMappingList = query.list();
+									if(formMappingList!= null && !formMappingList.isEmpty()){
+										for(FormMappingDto formMapping : formMappingList){
+											formQuestionsList.add(formMapping.getQuestionId());
+											formMappingMap.put(formMapping.getQuestionId(), formMapping);
+										}
+										
+										if(!formQuestionsList.isEmpty()){
+											query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(formQuestionsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+											query.setMaxResults(1);
+											List<QuestionsDto> questionnsList = query.list();
+											if(questionnsList != null && !questionnsList.isEmpty()){
+												questionsMap = new TreeMap<>();
+												for(QuestionsDto question : questionnsList){
+													questionsMap.put(question.getId(), question);
+												}
+											}
+										}
+									}
+								}
+								
+								if(questionsMap != null){
+									AnchorDateBean anchorDate = new AnchorDateBean();
+									anchorDate.setType(StudyMetaDataConstants.ANCHORDATE_TYPE_QUESTION);
+									for(Map.Entry<Integer, QuestionsDto> map : questionsMap.entrySet()){
+										QuestionsDto questionDto = map.getValue();
+										if(questionDto != null){
+											QuestionnairesStepsDto questionnairesSteps;
+											if(StringUtils.isNotEmpty(questionDto.getShortTitle())){
+												FormMappingDto formMapping = formMappingMap.get(questionDto.getId());
+												questionnairesSteps = stepsMap.get(formMapping.getFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM);
+											}else{
+												questionnairesSteps = stepsMap.get(questionDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+											}
+											
+											if(questionnairesSteps != null){
+												QuestionnairesDto questionnairesDto = questionnaireMap.get(questionnairesSteps.getQuestionnairesId());
+												if(questionnairesDto != null){
+													QuestionInfoBean questionInfoBean = new QuestionInfoBean();
+													questionInfoBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnairesDto.getId());
+													questionInfoBean.setActivityVersion(questionnairesDto.getVersion().toString());
+													if(questionnairesSteps.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)){
+														questionInfoBean.setKey(questionDto.getShortTitle());
+													}else{
+														questionInfoBean.setKey(questionnairesSteps.getStepShortTitle());
+													}
+													anchorDate.setQuestionInfo(questionInfoBean);
+												}
+											}
+										}
+									}
+									studyInfoResponse.setAnchorDate(anchorDate);
+								}
+							}
+						}
 					}
 				}
 				
-				if(isAnchorDateExists){
+				/*if(isAnchorDateExists){
 					AnchorDateBean anchorDate = new AnchorDateBean();
 					anchorDate.setType(StudyMetaDataConstants.ANCHORDATE_TYPE_QUESTION);
-					
 					QuestionInfoBean questionInfoBean = new QuestionInfoBean();
 					questionInfoBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+obj[0].toString());
 					questionInfoBean.setActivityVersion(obj[1]==null?"":obj[1].toString());
@@ -794,7 +898,7 @@ public class StudyMetaDataDao {
 					}
 					anchorDate.setQuestionInfo(questionInfoBean);
 					studyInfoResponse.setAnchorDate(anchorDate);
-				}
+				}*/
 				studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 			}else{
 				studyInfoResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
