@@ -1,8 +1,11 @@
 package com.studymetadata.dao;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,8 +14,8 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -1444,8 +1447,8 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:reponseType.getMaxValue());
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:reponseType.getMinValue());
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
 			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepCount(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getScaleDefaultValue((Integer) questionFormat.get("step"), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
@@ -1900,11 +1903,8 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
 		String base64Image = "";
 		try{
-			File file = new File(imagePath);
-			if(file.exists()){
-				byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
-				base64Image = new String(encoded, StandardCharsets.UTF_8);
-			}
+	        byte[] imageBytes = IOUtils.toByteArray(new URL(imagePath));
+	        base64Image = Base64.getEncoder().encodeToString(imageBytes);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
 		}
@@ -1948,6 +1948,31 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
+	 * This method is used to get the default value based on the maxValue, minValue and stepcount
+	 * 
+	 * @author Mohan
+	 * @param step
+	 * @param maxValue
+	 * @param minValue
+	 * @param defaultValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getScaleDefaultValue(Integer step, Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Starts");
+		Integer scaleDefaultValue = minValue+step;
+		try{
+			if(((defaultValue-minValue)%step)==0){
+				scaleDefaultValue = defaultValue;
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getScaleDefaultValue() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Ends");
+		return scaleDefaultValue;
+	}
+	
+	/**
 	 * This method is used to get the maximum fraction digits based on the maxValue and minValue
 	 * 
 	 * @author Mohan
@@ -1958,20 +1983,36 @@ public class ActivityMetaDataDao {
 	 */
 	public Integer getContinuousScaleMaxFractionDigits(Integer maxValue, Integer minValue) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
-		Integer maxFracDigits = 4;
+		Integer maxFracDigits=0;
+		Integer minTemp=0;
+		Integer maxTemp=0;
 		try{
-			Integer diff = maxValue - minValue;
-			if(diff > 2000 || diff == 20000){
-				maxFracDigits = 0;
-			}else if (diff > 200 || diff == 2000){
-				maxFracDigits = 1;
-			}else if (diff > 20 || diff == 200){
-				maxFracDigits = 2;
-			}else if (diff > 2 || diff == 20){
-				maxFracDigits = 3;
-			}else{
-				maxFracDigits = 4;
+			//max value check
+			if(maxValue>0&&maxValue<=1){
+				maxTemp = 4;
+			}else if(maxValue>1&&maxValue<=10){
+				maxTemp = 3;
+			}else if(maxValue>10&&maxValue<=100){
+				maxTemp = 2;
+			}else if(maxValue>100&&maxValue<=1000){
+				maxTemp = 1;
+			}else if(maxValue>1000&&maxValue<=10000){
+				maxTemp = 0;
 			}
+			
+			//min value check
+			if(minValue>=-10000&&minValue<-1000){
+				minTemp = 0;
+			}else if(minValue>=-1000&&minValue<-100){
+				minTemp = 1;
+			}else if(minValue>=-100&&minValue<-10){
+				minTemp = 2;
+			}else if(minValue>=-10&&minValue<-1){
+				minTemp = 3;
+			}else if(minValue>=-1){
+				minTemp = 4;
+			}
+			maxFracDigits = (maxTemp>minTemp)?minTemp:maxTemp;
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
 		}
@@ -1988,7 +2029,7 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	public Integer getTimeIntervalStep(Integer stepValue) throws DAOException{
-		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
+		LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Starts");
 		Integer step = 1;
 		String stepIds = "1,2,3,4,5,6,10,12,15,30";
 		try{
@@ -2002,9 +2043,9 @@ public class ActivityMetaDataDao {
 				 }
 			 }
 		}catch(Exception e){
-			LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
+			LOGGER.error("ActivityMetaDataDao - getTimeIntervalStep() :: ERROR", e);
 		}
-		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
+		LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Ends");
 		return step;
 	}
 	

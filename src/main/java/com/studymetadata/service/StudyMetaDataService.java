@@ -184,7 +184,7 @@ public class StudyMetaDataService {
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		Boolean isValidFlag = false;
 		try{
-			if(StringUtils.isNotEmpty(studyId) && (StringUtils.isNotEmpty(consentVersion) || (StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)))){	
+			if(StringUtils.isNotEmpty(studyId)){	
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);

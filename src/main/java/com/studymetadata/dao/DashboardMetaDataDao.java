@@ -392,6 +392,8 @@ public class DashboardMetaDataDao {
 					break;
 				case StudyMetaDataConstants.RUN_BASED: type = StudyMetaDataConstants.CHART_RUNS;
 					break;
+				case StudyMetaDataConstants.MULTIPLE_TIMES_A_DAY: type = StudyMetaDataConstants.CHART_HOURS_A_DAY;
+					break;
 				default:
 					break;
 			}

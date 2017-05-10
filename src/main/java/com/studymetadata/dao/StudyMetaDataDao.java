@@ -532,8 +532,10 @@ public class StudyMetaDataDao {
 				//query = session.createQuery(consentQuery);
 				if(StringUtils.isNotEmpty(consentVersion)){
 					studyVersionQuery += " and ROUND(SVDTO.consentVersion, 1)="+consentVersion+" ORDER BY SVDTO.versionId DESC";
-				}else{
+				}else if(StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
 					studyVersionQuery += " and ROUND(SVDTO.activityVersion, 1)="+activityVersion+" ORDER BY SVDTO.versionId DESC";
+				}else{
+					studyVersionQuery += " ORDER BY SVDTO.versionId DESC";
 				}
 				
 				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){

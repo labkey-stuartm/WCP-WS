@@ -174,6 +174,7 @@ public interface StudyMetaDataConstants {
 	public static final String CHART_WEEK_OF_MONTH = "weeks_of_month";
 	public static final String CHART_MONTHS_OF_YEAR = "months_of_year";
 	public static final String CHART_RUNS = "runs";
+	public static final String CHART_HOURS_A_DAY = "hours_of_day";
 	
 	public static final String CHART_TYPE_PIE = "pie-chart";
 	public static final String CHART_TYPE_BAR = "bar-chart";
