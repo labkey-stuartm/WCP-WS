@@ -1517,7 +1517,7 @@ public class ActivityMetaDataDao {
 				}
 			}
 			questionFormat.put("textChoices", textChoicesList);
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?1:reponseType.getDefaultValue());
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
@@ -2066,7 +2066,7 @@ public class ActivityMetaDataDao {
 	public Integer getTimeIntervalStep(Integer stepValue) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Starts");
 		Integer step = 1;
-		String stepIds = "1,2,3,4,5,6,10,12,15,30";
+		String stepIds = "1,2,3,4,5,6,10,12,15,20,30";
 		try{
 			 String[] stepArray = stepIds.split(",");
 			 for(int i=0; i<stepArray.length; i++){
