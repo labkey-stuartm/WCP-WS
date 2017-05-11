@@ -210,4 +210,21 @@ public class StudyMetaDataOrchestration {
 		return flag;
 	}
 	
+	/**
+	 * @author Mohan
+	 * @param activityId
+	 * @return boolean
+	 * @throws OrchestrationException
+	 */
+	public boolean isActivityTypeQuestionnaire(String activityId) throws OrchestrationException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
+		boolean flag = false;
+		try{
+			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId);
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
+		return flag;
+	}
 }

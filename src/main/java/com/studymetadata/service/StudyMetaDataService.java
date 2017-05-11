@@ -359,6 +359,7 @@ public class StudyMetaDataService {
 		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
 		Boolean isValidFlag = false;
+		Boolean isActivityTypeQuestionnaire = false;
 		try{
 			if(StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
@@ -373,35 +374,32 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
 				}
 				
-				if(activityId.contains("-")){
-					String[] activityInfoArray = activityId.split("-");
-					if(activityInfoArray[0].equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
-						activeTaskActivityMetaDataResponse = activityMetaDataOrchestration.studyActiveTaskActivityMetadata(studyId, activityInfoArray[1], activityVersion);
-						if(!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-							StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-							return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-						}
-						return activeTaskActivityMetaDataResponse;
-					}else{
-						questionnaireActivityMetaDataResponse = activityMetaDataOrchestration.studyQuestionnaireActivityMetadata(studyId, activityInfoArray[1], activityVersion);
-						if(!questionnaireActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-							StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-							return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-						}
-						return questionnaireActivityMetaDataResponse;
+				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId);
+				if(!isActivityTypeQuestionnaire){
+					activeTaskActivityMetaDataResponse = activityMetaDataOrchestration.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
+					if(!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
 					}
+					return activeTaskActivityMetaDataResponse;
+				}else{
+					questionnaireActivityMetaDataResponse = activityMetaDataOrchestration.studyQuestionnaireActivityMetadata(studyId, activityId, activityVersion);
+					if(!questionnaireActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+					}
+					return questionnaireActivityMetaDataResponse;
 				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
+			
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityMetadata() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
 		}
-		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Ends");
-		return null;
 	}
 	
 	/**

@@ -127,7 +127,8 @@ public class ActivityMetaDataDao {
 
 						//get the time details for the activity by activityId
 						activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
-						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+						//activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+						activityBean.setActivityId(activeTaskDto.getShortTitle());
 						activitiesBeanList.add(activityBean);
 					}
 				}
@@ -148,7 +149,9 @@ public class ActivityMetaDataDao {
 						frequencyDetails.setType(StringUtils.isEmpty(questionaire.getFrequency())?"":questionaire.getFrequency());
 						activityBean.setFrequency(frequencyDetails);
 
-						activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
+						//activityBean.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionaire.getId());
+						activityBean.setActivityId(questionaire.getShortTitle());
+						
 						activityBean.setActivityVersion((questionaire.getVersion() == null || questionaire.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionaire.getVersion().toString());
 						activityBean.setBranching((questionaire.getBranching() == null || !questionaire.getBranching())?false:true);
 						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
@@ -272,7 +275,7 @@ public class ActivityMetaDataDao {
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 		try{
 			//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId);
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId+" and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1 and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
@@ -283,7 +286,8 @@ public class ActivityMetaDataDao {
 				activeTaskActivityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
-				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+				//metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskDto.getId());
+				metadata.setActivityId(activeTaskDto.getShortTitle());
 
 				ActivitiesBean activityBean = new ActivitiesBean();
 				activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
@@ -294,7 +298,7 @@ public class ActivityMetaDataDao {
 				metadata.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 				metadata.setStudyId(studyId);
-				metadata.setVersion(activeTaskDto.getStudyVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
+				metadata.setVersion(activeTaskDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 				activeTaskActivityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
@@ -373,14 +377,15 @@ public class ActivityMetaDataDao {
 		List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+activityId+"'  and QDTO.live=1 and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
 			//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
 				activityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
 
 				ActivityMetadataBean metadata = new ActivityMetadataBean();
-				metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
+				//metadata.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
+				metadata.setActivityId(questionnaireDto.getShortTitle());
 
 				ActivitiesBean activityBean = new ActivitiesBean();
 				activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionnaireDto, activityBean, session);
@@ -1471,10 +1476,10 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?1:reponseType.getMaxValue());
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-1:reponseType.getMinValue());
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:reponseType.getDefaultValue());
-			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?4:getContinuousScaleMaxFractionDigits((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:reponseType.getMaxValue());
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:reponseType.getMinValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getContinuousScaleDefaultValue((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));
+			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?4:getContinuousScaleMaxFractionDigits((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getMaxFractionDigits()));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
@@ -1960,11 +1965,13 @@ public class ActivityMetaDataDao {
 	 */
 	public Integer getScaleDefaultValue(Integer step, Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Starts");
-		Integer scaleDefaultValue = minValue+step;
+		Integer stepSize = (maxValue-minValue)/step;
+		Integer scaleDefaultValue = minValue;
 		try{
-			if(((defaultValue-minValue)%step)==0){
+			if(((defaultValue)%stepSize)==0){
 				scaleDefaultValue = defaultValue;
 			}
+			//scaleDefaultValue += (stepSize*defaultValue);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getScaleDefaultValue() :: ERROR", e);
 		}
@@ -1981,7 +1988,7 @@ public class ActivityMetaDataDao {
 	 * @return Integer
 	 * @throws DAOException
 	 */
-	public Integer getContinuousScaleMaxFractionDigits(Integer maxValue, Integer minValue) throws DAOException{
+	public Integer getContinuousScaleMaxFractionDigits(Integer maxValue, Integer minValue, Integer actualFractionDigits) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
 		Integer maxFracDigits=0;
 		Integer minTemp=0;
@@ -2013,11 +2020,39 @@ public class ActivityMetaDataDao {
 				minTemp = 4;
 			}
 			maxFracDigits = (maxTemp>minTemp)?minTemp:maxTemp;
+			
+			if(actualFractionDigits<=maxFracDigits){
+				maxFracDigits = actualFractionDigits;
+			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
 		return maxFracDigits;
+	}
+	
+	/**
+	 * This method is used to check the default value for constinuous scale response type
+	 * 
+	 * @author Mohan
+	 * @param maxValue
+	 * @param minValue
+	 * @param defaultValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getContinuousScaleDefaultValue(Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Starts");
+		Integer continuousScaleDefaultValue = minValue;
+		try{
+			if(defaultValue!=null&&(defaultValue>=minValue)&&(defaultValue<=maxValue)){
+				continuousScaleDefaultValue = defaultValue;
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getContinuousScaleDefaultValue() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Ends");
+		return continuousScaleDefaultValue;
 	}
 	
 	/**
