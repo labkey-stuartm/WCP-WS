@@ -198,11 +198,11 @@ public class StudyMetaDataOrchestration {
 	 * @return boolean
 	 * @throws OrchestrationException
 	 */
-	public boolean isValidActivity(String activityId) throws OrchestrationException{
+	public boolean isValidActivity(String activityId, String studyId) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
 		boolean flag = false;
 		try{
-			flag = studyMetaDataDao.isValidActivity(activityId);
+			flag = studyMetaDataDao.isValidActivity(activityId, studyId);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
 		}

@@ -1968,10 +1968,10 @@ public class ActivityMetaDataDao {
 		Integer stepSize = (maxValue-minValue)/step;
 		Integer scaleDefaultValue = minValue;
 		try{
-			if(((defaultValue)%stepSize)==0){
+			/*if(((defaultValue)%stepSize)==0){
 				scaleDefaultValue = defaultValue;
-			}
-			//scaleDefaultValue += (stepSize*defaultValue);
+			}*/
+			scaleDefaultValue += (stepSize*defaultValue);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getScaleDefaultValue() :: ERROR", e);
 		}

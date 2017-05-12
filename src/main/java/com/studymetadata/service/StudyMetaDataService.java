@@ -368,7 +368,7 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
-				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId);
+				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId, studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_ACTIVITY_ID, response);
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();

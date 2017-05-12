@@ -933,7 +933,7 @@ public class StudyMetaDataDao {
 	 * @return boolean
 	 * @throws DAOException
 	 */
-	public boolean isValidActivity(String activityId) throws DAOException{
+	public boolean isValidActivity(String activityId, String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
 		boolean isValidActivity = false;
 		//String[] activityInfoArray = null;
@@ -941,11 +941,11 @@ public class StudyMetaDataDao {
 		QuestionnairesDto questionnaireDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1 and ATDTO.customStudyId='"+studyId+"'");
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			isValidActivity = (activeTaskDto == null)?false:true;
 			if(!isValidActivity){
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+activityId+"' and QDTO.active=true and QDTO.live=1");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+activityId+"' and QDTO.active=true and QDTO.live=1 and QDTO.customStudyId='"+studyId+"'");
 				questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 				isValidActivity = (questionnaireDto == null)?false:true;
 			}
