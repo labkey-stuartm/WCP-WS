@@ -419,7 +419,7 @@ public class StudyMetaDataDao {
 									consentBean.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM.toLowerCase());
 								}
 								consentBean.setDescription("");
-								consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getElaborated())?"":consentInfoDto.getElaborated().replaceAll("&#34;", "'"));
+								consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getElaborated())?"":consentInfoDto.getElaborated().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
 								consentBean.setUrl(StringUtils.isEmpty(consentInfoDto.getUrl())?"":consentInfoDto.getUrl());
 								//Yes=true and No=false
 								if(StringUtils.isNotEmpty(consentInfoDto.getVisualStep()) && consentInfoDto.getVisualStep().equalsIgnoreCase(StudyMetaDataConstants.YES)){
@@ -469,7 +469,7 @@ public class StudyMetaDataDao {
 					if( consentDto != null){
 						ReviewBean reviewBean = new ReviewBean();
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
-							reviewBean.setReviewHTML(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent().replaceAll("&#34;", "'"));
+							reviewBean.setReviewHTML(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
 						}
 						reviewBean.setReasonForConsent(StudyMetaDataConstants.REASON_FOR_CONSENT);
 						consent.setReview(reviewBean);
@@ -558,7 +558,7 @@ public class StudyMetaDataDao {
 						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
 						consentDocumentBean.setType("text/html");
 						consentDocumentBean.setVersion((consent.getVersion() == null)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
-						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent().replaceAll("&#34;", "'"));
+						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
 						consentDocumentResponse.setConsent(consentDocumentBean);
 					}
 					consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
