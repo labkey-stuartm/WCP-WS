@@ -1450,10 +1450,12 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:reponseType.getMaxValue());
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:reponseType.getMinValue());
-			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepCount(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getScaleDefaultValue((Integer) questionFormat.get("step"), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Integer.parseInt(reponseType.getMaxValue()));
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Integer.parseInt(reponseType.getMinValue()));
+			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:reponseType.getStep());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Integer) questionFormat.get("minValue"):Integer.parseInt(reponseType.getDefaultValue()));
+			/*questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepCount(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getScaleDefaultValue((Integer) questionFormat.get("step"), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));*/
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
@@ -1476,10 +1478,12 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:reponseType.getMaxValue());
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:reponseType.getMinValue());
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getContinuousScaleDefaultValue((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));
-			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?4:getContinuousScaleMaxFractionDigits((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getMaxFractionDigits()));
+			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Double.parseDouble(reponseType.getMaxValue()));
+			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Double.parseDouble(reponseType.getMinValue()));
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Double) questionFormat.get("minValue"):Double.parseDouble(reponseType.getDefaultValue()));
+			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?0:reponseType.getMaxFractionDigits());
+			/*questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?0:getContinuousScaleDefaultValue((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getDefaultValue()));
+			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?4:getContinuousScaleMaxFractionDigits((Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), reponseType.getMaxFractionDigits()));*/
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
