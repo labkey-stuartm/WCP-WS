@@ -1054,7 +1054,7 @@ public class ActivityMetaDataDao {
 		try{
 			switch (type) {
 			case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION:
-				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getInstructionDetailsForQuestionnaire(instructionsDtoList, sequenceNoMap, stepsSequenceTreeMap, questionnaireStepDetailsMap);
+				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getInstructionDetailsForQuestionnaire(instructionsDtoList, sequenceNoMap, stepsSequenceTreeMap, questionnaireStepDetailsMap, questionnaireDto);
 				break;
 			case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION:
 				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);
@@ -1081,7 +1081,7 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
-	public SortedMap<Integer, QuestionnaireActivityStepsBean> getInstructionDetailsForQuestionnaire(List<InstructionsDto> instructionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap) throws DAOException{
+	public SortedMap<Integer, QuestionnaireActivityStepsBean> getInstructionDetailsForQuestionnaire(List<InstructionsDto> instructionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, QuestionnairesDto questionnaireDto) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Starts");
 		try{
 			if( instructionsDtoList != null && !instructionsDtoList.isEmpty()){
@@ -1101,6 +1101,11 @@ public class ActivityMetaDataDao {
 
 					List<DestinationBean> destinations = new ArrayList<>();
 					DestinationBean dest = new DestinationBean();
+					/*if(questionnaireDto.getBranching()){
+						dest.setCondition(StudyMetaDataConstants.STEP_CONDITION_DEFAULT);
+					}else{
+						dest.setCondition("");
+					}*/
 					dest.setCondition("");
 					dest.setDestination((instructionStepDetails.getDestinationStepType()==null || instructionStepDetails.getDestinationStepType().isEmpty())?"":instructionStepDetails.getDestinationStepType());
 					destinations.add(dest);
@@ -1156,24 +1161,29 @@ public class ActivityMetaDataDao {
 
 					//destination logic based on the branching
 					List<DestinationBean> destinationsList = new ArrayList<>();
-					query = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionsDto.getId()+" and QRSTDTO.destinationStepId is not null");
+					query = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionsDto.getId());
 					destinationConditionList = query.list();
 					if(destinationConditionList != null && !destinationConditionList.isEmpty() && questionnaireDto.getBranching()){
 						for(QuestionResponseSubTypeDto destinationDto : destinationConditionList){
 							DestinationBean destination = new DestinationBean();
 							destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
-							destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
+							if(destinationDto.getDestinationStepId()!=null){
+								destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
+							}else{
+								destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
+							}
 							destinationsList.add(destination);
 						}
 					}
 					
 					//get branching exists or not
 					DestinationBean destination = new DestinationBean();
-					if(questionnaireDto.getBranching() && questionBean.getSkippable()){
+					/*if(questionnaireDto.getBranching()){
 						destination.setCondition(StudyMetaDataConstants.STEP_CONDITION_DEFAULT);
 					}else{
 						destination.setCondition("");
-					}
+					}*/
+					destination.setCondition("");
 					destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
 					destinationsList.add(destination);
 					
@@ -1230,11 +1240,12 @@ public class ActivityMetaDataDao {
 
 					List<DestinationBean> destinations = new ArrayList<>();
 					DestinationBean dest = new DestinationBean();
-					if(questionnaireDto.getBranching() && formBean.getSkippable()){
+					/*if(questionnaireDto.getBranching()){
 						dest.setCondition(StudyMetaDataConstants.STEP_CONDITION_DEFAULT);
 					}else{
 						dest.setCondition("");
-					}
+					}*/
+					dest.setCondition("");
 					dest.setDestination((formStepDetails.getDestinationStepType()==null || formStepDetails.getDestinationStepType().isEmpty())?"":formStepDetails.getDestinationStepType());
 					destinations.add(dest);
 					formBean.setDestinations(destinations);
