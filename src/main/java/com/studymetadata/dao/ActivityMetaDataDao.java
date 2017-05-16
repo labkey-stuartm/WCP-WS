@@ -1163,14 +1163,15 @@ public class ActivityMetaDataDao {
 					List<DestinationBean> destinationsList = new ArrayList<>();
 					query = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionsDto.getId());
 					destinationConditionList = query.list();
-					if(destinationConditionList != null && !destinationConditionList.isEmpty() && questionnaireDto.getBranching()){
+					if(destinationConditionList != null && !destinationConditionList.isEmpty()){
 						for(QuestionResponseSubTypeDto destinationDto : destinationConditionList){
 							DestinationBean destination = new DestinationBean();
 							destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
-							if(destinationDto.getDestinationStepId()!=null){
-								destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
-							}else{
-								destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
+							destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
+							if(questionnaireDto.getBranching()){
+								if(destinationDto.getDestinationStepId()!=null){
+									destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
+								}
 							}
 							destinationsList.add(destination);
 						}
