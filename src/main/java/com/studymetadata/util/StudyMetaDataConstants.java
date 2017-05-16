@@ -166,7 +166,7 @@ public interface StudyMetaDataConstants {
 	public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
 	public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
 	public static final String WEEKS_OF_THE_CURRENT_MONTH = "Weeks of the current month";
-	public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year ";
+	public static final String MONTHS_OF_THE_CURRENT_YEAR  = "Months of the current year";
 	public static final String RUN_BASED = "Run-based";
 	
 	public static final String CHART_DAY_OF_WEEK = "days_of_week";

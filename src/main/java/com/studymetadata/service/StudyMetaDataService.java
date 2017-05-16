@@ -374,7 +374,7 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
 				}
 				
-				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId);
+				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId, studyId);
 				if(!isActivityTypeQuestionnaire){
 					activeTaskActivityMetaDataResponse = activityMetaDataOrchestration.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
 					if(!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){

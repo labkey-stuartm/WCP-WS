@@ -275,7 +275,7 @@ public class ActivityMetaDataDao {
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 		try{
 			//query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.id ="+activityId);
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1 and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1 and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
@@ -377,7 +377,7 @@ public class ActivityMetaDataDao {
 		List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+activityId+"'  and QDTO.live=1 and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyId+"' and  QDTO.shortTitle='"+activityId+"' and QDTO.live=1 and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
 			//query = session.createQuery("from QuestionnairesDto QDTO where QDTO.id="+activityId+" and QDTO.active=true");
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
@@ -1060,7 +1060,7 @@ public class ActivityMetaDataDao {
 				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getQuestionDetailsForQuestionnaire(questionsDtoList, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);
 				break;
 			case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM:
-				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getFormDetailsForQuestionnaire(formsList, sequenceNoMap, session, stepsSequenceTreeMap, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList);
+				stepsOrderSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getFormDetailsForQuestionnaire(formsList, sequenceNoMap, session, stepsSequenceTreeMap, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionnaireDto);
 				break;
 			default:
 				break;
@@ -1165,12 +1165,18 @@ public class ActivityMetaDataDao {
 							destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
 							destinationsList.add(destination);
 						}
-					}else{
-						DestinationBean destinationBean = new DestinationBean();
-						destinationBean.setCondition("");
-						destinationBean.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
-						destinationsList.add(destinationBean);
 					}
+					
+					//get branching exists or not
+					DestinationBean destination = new DestinationBean();
+					if(questionnaireDto.getBranching() && questionBean.getSkippable()){
+						destination.setCondition(StudyMetaDataConstants.STEP_CONDITION_DEFAULT);
+					}else{
+						destination.setCondition("");
+					}
+					destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
+					destinationsList.add(destination);
+					
 					questionBean.setDestinations(destinationsList);
 					questionBean.setHealthDataKey("");
 
@@ -1195,7 +1201,7 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public SortedMap<Integer, QuestionnaireActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList) throws DAOException{
+	public SortedMap<Integer, QuestionnaireActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList, QuestionnairesDto questionnaireDto) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
 		try{
 			if( formsList != null && !formsList.isEmpty()){
@@ -1222,13 +1228,17 @@ public class ActivityMetaDataDao {
 					formBean.setRepeatable((formStepDetails.getRepeatable() == null || StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getRepeatable()))?false:true);
 					formBean.setRepeatableText(formStepDetails.getRepeatableText() == null?"":formStepDetails.getRepeatableText());
 
-
 					List<DestinationBean> destinations = new ArrayList<>();
 					DestinationBean dest = new DestinationBean();
-					dest.setCondition("");
+					if(questionnaireDto.getBranching() && formBean.getSkippable()){
+						dest.setCondition(StudyMetaDataConstants.STEP_CONDITION_DEFAULT);
+					}else{
+						dest.setCondition("");
+					}
 					dest.setDestination((formStepDetails.getDestinationStepType()==null || formStepDetails.getDestinationStepType().isEmpty())?"":formStepDetails.getDestinationStepType());
 					destinations.add(dest);
 					formBean.setDestinations(destinations);
+					
 					List<QuestionsDto> formQuestionsList;
 					query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(formQuestionIdsList, ',')+")");
 					formQuestionsList = query.list();

@@ -216,11 +216,11 @@ public class StudyMetaDataOrchestration {
 	 * @return boolean
 	 * @throws OrchestrationException
 	 */
-	public boolean isActivityTypeQuestionnaire(String activityId) throws OrchestrationException{
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
 		boolean flag = false;
 		try{
-			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId);
+			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId, studyId);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
 		}

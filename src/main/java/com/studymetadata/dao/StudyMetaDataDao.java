@@ -976,13 +976,13 @@ public class StudyMetaDataDao {
 	 * @return boolean
 	 * @throws DAOException
 	 */
-	public boolean isActivityTypeQuestionnaire(String activityId) throws DAOException{
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
 		boolean isActivityTypeQuestionnaire = true;
 		ActiveTaskDto activeTaskDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+activityId+"' and ATDTO.live=1 and ATDTO.customStudyId='"+studyId+"'");
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if(activeTaskDto != null){
 				isActivityTypeQuestionnaire = false;

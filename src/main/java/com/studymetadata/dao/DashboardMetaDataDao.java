@@ -383,21 +383,18 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: DashboardMetaDataDao - getTimeRangeType() :: Starts");
 		String type = timeRange;
 		try{
-			switch (timeRange) {
-				case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_WEEK: type = StudyMetaDataConstants.CHART_DAY_OF_WEEK;
-					break;
-				case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_MONTH: type = StudyMetaDataConstants.CHART_DAYS_OF_MONTH;
-					break;
-				case StudyMetaDataConstants.WEEKS_OF_THE_CURRENT_MONTH: type = StudyMetaDataConstants.CHART_WEEK_OF_MONTH;
-					break;
-				case StudyMetaDataConstants.MONTHS_OF_THE_CURRENT_YEAR: type = StudyMetaDataConstants.CHART_MONTHS_OF_YEAR;
-					break;
-				case StudyMetaDataConstants.RUN_BASED: type = StudyMetaDataConstants.CHART_RUNS;
-					break;
-				case StudyMetaDataConstants.MULTIPLE_TIMES_A_DAY: type = StudyMetaDataConstants.CHART_HOURS_A_DAY;
-					break;
-				default:
-					break;
+			if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.DAYS_OF_THE_CURRENT_WEEK)){
+				type=StudyMetaDataConstants.CHART_DAY_OF_WEEK;
+			}else if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.DAYS_OF_THE_CURRENT_MONTH)){
+				type=StudyMetaDataConstants.CHART_DAYS_OF_MONTH;
+			}else if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.WEEKS_OF_THE_CURRENT_MONTH)){
+				type=StudyMetaDataConstants.CHART_WEEK_OF_MONTH;
+			}else if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.MONTHS_OF_THE_CURRENT_YEAR)){
+				type=StudyMetaDataConstants.CHART_MONTHS_OF_YEAR;
+			}else if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.RUN_BASED)){
+				type=StudyMetaDataConstants.CHART_RUNS;
+			}else if(timeRange.equalsIgnoreCase(StudyMetaDataConstants.MULTIPLE_TIMES_A_DAY)){
+				type=StudyMetaDataConstants.CHART_HOURS_A_DAY;
 			}
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - getTimeRangeType() :: ERROR", e);
