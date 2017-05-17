@@ -1166,7 +1166,11 @@ public class ActivityMetaDataDao {
 					if(destinationConditionList != null && !destinationConditionList.isEmpty()){
 						for(QuestionResponseSubTypeDto destinationDto : destinationConditionList){
 							DestinationBean destination = new DestinationBean();
-							destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
+							if(questionBean.getResultType().equalsIgnoreCase("boolean")){
+								destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue().toLowerCase());
+							}else{
+								destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
+							}
 							destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
 							if(questionnaireDto.getBranching()){
 								if(destinationDto.getDestinationStepId()!=null){
