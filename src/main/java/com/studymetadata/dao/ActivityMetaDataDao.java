@@ -1171,11 +1171,17 @@ public class ActivityMetaDataDao {
 							}else{
 								destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
 							}
-							destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
+							
 							if(questionnaireDto.getBranching()){
-								if(destinationDto.getDestinationStepId()!=null){
+								if(destinationDto.getDestinationStepId()!=null&&destinationDto.getDestinationStepId().intValue()>0){
 									destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
+								}else if(destinationDto.getDestinationStepId()!=null&&destinationDto.getDestinationStepId().intValue()==0){
+									destination.setDestination("");
+								}else{
+									destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
 								}
+							}else{
+								destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
 							}
 							destinationsList.add(destination);
 						}
