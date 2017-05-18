@@ -385,8 +385,8 @@ public class StudyMetaDataDao {
 							List<ConsentBean> consentBeanList = new ArrayList<>();
 							for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
 								ConsentBean consentBean = new ConsentBean();
-								consentBean.setText(StringUtils.isEmpty(consentInfoDto.getBriefSummary())?"":consentInfoDto.getBriefSummary());
-								consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getDisplayTitle())?"":consentInfoDto.getDisplayTitle());
+								consentBean.setText(StringUtils.isEmpty(consentInfoDto.getBriefSummary())?"":consentInfoDto.getBriefSummary().replaceAll("&#34;", "\"").replaceAll("&#39;", "'"));
+								consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getDisplayTitle())?"":consentInfoDto.getDisplayTitle().replaceAll("&#34;", "\"").replaceAll("&#39;", "'"));
 								if(consentInfoDto.getConsentItemTitleId() != null){
 									if(consentMasterInfoList != null && !consentMasterInfoList.isEmpty()){
 										for(ConsentMasterInfoDto masterInfo : consentMasterInfoList){
@@ -400,7 +400,7 @@ public class StudyMetaDataDao {
 									consentBean.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM.toLowerCase());
 								}
 								consentBean.setDescription("");
-								consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getElaborated())?"":consentInfoDto.getElaborated().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+								consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getElaborated())?"":consentInfoDto.getElaborated().replaceAll("&#34;", "\"").replaceAll("&#39;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
 								consentBean.setUrl(StringUtils.isEmpty(consentInfoDto.getUrl())?"":consentInfoDto.getUrl());
 								//Yes=true and No=false
 								if(StringUtils.isNotEmpty(consentInfoDto.getVisualStep()) && consentInfoDto.getVisualStep().equalsIgnoreCase(StudyMetaDataConstants.YES)){
@@ -531,7 +531,7 @@ public class StudyMetaDataDao {
 						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
 						consentDocumentBean.setType("text/html");
 						consentDocumentBean.setVersion((consent.getVersion() == null)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
-						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent().replaceAll("&#34;", "\"").replaceAll("&#39;", "\'").replaceAll("em>", "i>").replaceAll("<a", "<a style=\"text-decoration:underline;color:blue;\""));
 						consentDocumentResponse.setConsent(consentDocumentBean);
 					}
 					consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
