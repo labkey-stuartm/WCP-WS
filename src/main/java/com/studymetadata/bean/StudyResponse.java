@@ -5,7 +5,7 @@ import java.util.List;
 
 public class StudyResponse {
 	private String message = "FAILURE";
-	private List<StudyBean> studies = new ArrayList<StudyBean>();
+	private List<StudyBean> studies = new ArrayList<>();
 	
 	public String getMessage() {
 		return message;

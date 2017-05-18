@@ -2,13 +2,11 @@ package com.studymetadata.web.servlet;
 
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 

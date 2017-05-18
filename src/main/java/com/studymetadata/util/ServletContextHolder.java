@@ -12,7 +12,7 @@ public class ServletContextHolder implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		setServletContext(sce.getServletContext());
-		TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
+		//TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
 	}
 
 	@Override

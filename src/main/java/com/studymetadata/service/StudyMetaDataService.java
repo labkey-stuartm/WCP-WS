@@ -1,10 +1,6 @@
 package com.studymetadata.service;
 
-import java.text.ParseException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -678,11 +674,11 @@ public class StudyMetaDataService {
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try{
 			JSONObject serviceJson = new JSONObject(params);
-			String forceUpdate = serviceJson.getString("forceUpdate").toString();
-			String osType = serviceJson.getString("osType").toString();
-			String appVersion = serviceJson.getString("appVersion").toString();
-			String bundleId = serviceJson.getString("bundleId").toString();
-			String customStudyId = serviceJson.getString("studyId").toString();
+			String forceUpdate = serviceJson.getString("forceUpdate");
+			String osType = serviceJson.getString("osType");
+			String appVersion = serviceJson.getString("appVersion");
+			String bundleId = serviceJson.getString("bundleId");
+			String customStudyId = serviceJson.getString("studyId");
 			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(bundleId)){
 				if(Integer.parseInt(forceUpdate) > 1){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
@@ -743,7 +739,7 @@ public class StudyMetaDataService {
 				response = "Sending mail failed";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataService - sampleMail() :: ERROR ", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataService - sampleMail() :: Ends ");
 		return response;

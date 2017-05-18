@@ -1,9 +1,6 @@
 package com.studymetadata.integration;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import com.studymetadata.bean.ActiveTaskActivityMetaDataResponse;

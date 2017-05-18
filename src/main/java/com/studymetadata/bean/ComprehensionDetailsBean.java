@@ -5,8 +5,8 @@ import java.util.List;
 
 public class ComprehensionDetailsBean {
 	private Integer passScore = 0;
-	private List<ComprehensionBean> questions = new ArrayList<ComprehensionBean>();
-	private List<CorrectAnswersBean> correctAnswers = new ArrayList<CorrectAnswersBean>();
+	private List<ComprehensionBean> questions = new ArrayList<>();
+	private List<CorrectAnswersBean> correctAnswers = new ArrayList<>();
 	
 	public Integer getPassScore() {
 		return passScore;

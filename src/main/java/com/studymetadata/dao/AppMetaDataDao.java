@@ -21,11 +21,8 @@ import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.AppVersionDto;
 import com.studymetadata.dto.NotificationDto;
-import com.studymetadata.dto.ResourcesDto;
-import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
-import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
@@ -96,8 +93,6 @@ public class AppMetaDataDao {
 				if(appVersion != null){
 					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
 						notificationStudyTypeQuery = " and NDTO.customStudyId in (select SDTO.customStudyId from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_SD+"' and SDTO.platform like '%"+platformType+"%' and SDTO.customStudyId='"+appVersion.getCustomStudyId()+"') and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
-					}else{
-						//notificationStudyTypeQuery = " and NDTO.customStudyId in (select SDTO.customStudyId from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%')";
 					}
 					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ");
 					query.setFirstResult(Integer.parseInt(skip));

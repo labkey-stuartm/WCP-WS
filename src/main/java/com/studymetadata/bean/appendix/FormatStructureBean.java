@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public class FormatStructureBean {
-	List<String> textChoices = new ArrayList<String>();
+	List<String> textChoices = new ArrayList<>();
 	private String unit="";
 	private int minValue=0;
 	private int maxValue=0;

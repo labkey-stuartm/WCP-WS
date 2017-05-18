@@ -3,16 +3,14 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class EligibilityBean {
 	/*/eligibilityConsent*/
 	private String type = "";
 	private String tokenTitle = "";
-	private List<QuestionStepStructureBean> test = new ArrayList<QuestionStepStructureBean>(); //<refer Appendix 3 for question structures>
-	private List<HashMap<String,Object>> correctAnswers = new ArrayList<HashMap<String,Object>>();
+	private List<QuestionStepStructureBean> test = new ArrayList<>(); //<refer Appendix 3 for question structures>
+	private List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
 	
 	public String getType() {
 		return type;

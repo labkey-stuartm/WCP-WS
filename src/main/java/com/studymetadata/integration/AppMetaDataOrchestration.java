@@ -1,9 +1,6 @@
 package com.studymetadata.integration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import com.studymetadata.bean.AppResponse;
@@ -12,7 +9,6 @@ import com.studymetadata.bean.NotificationsResponse;
 import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dao.AppMetaDataDao;
-import com.studymetadata.dto.UserDto;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.Mail;
 import com.studymetadata.util.StudyMetaDataConstants;

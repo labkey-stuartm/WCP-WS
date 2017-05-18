@@ -68,7 +68,6 @@ public class DashboardMetaDataDao {
 		Map<String, Object> questionnaireMap = new LinkedHashMap<>();
 		List<Integer> activeTaskIdsList = new ArrayList<>();
 		List<Integer> questionnaireIdsList = new ArrayList<>();
-		//Integer actualStudyId = null;
 		List<ActiveTaskDto> activeTaskList = null;
 		List<QuestionnairesDto> questionnaireList = null;
 		List<ActiveTaskAttrtibutesValuesDto> activeTaskValuesList = null;
@@ -81,8 +80,6 @@ public class DashboardMetaDataDao {
 		StudyVersionDto studyVersionDto= null;
 		try{
 			session = sessionFactory.openSession();
-			/*query =  session.getNamedQuery("getStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			actualStudyId = (Integer) query.uniqueResult();*/
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
 			if(studyDto != null){
@@ -92,7 +89,6 @@ public class DashboardMetaDataDao {
 				
 				//Active Task details
 				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
-				//query = session.createQuery("select ATDTO.id, ATDTO.version, ATDTO.shortTitle  from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcActiveTask='Y' and SSDTO.studyId="+actualStudyId+")");
 				activeTaskList = query.list();
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
 					for(ActiveTaskDto activeTask : activeTaskList){
@@ -103,7 +99,6 @@ public class DashboardMetaDataDao {
 				
 				//Questionnaire details
 				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
-				//query = session.createQuery("select QDTO.id, QDTO.version, QDTO.shortTitle from QuestionnairesDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.studyId in (select SSDTO.studyId from StudySequenceDto SSDTO where SSDTO.studyExcQuestionnaries='Y' and SSDTO.studyId="+actualStudyId+")");
 				questionnaireList = query.list();
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
 					for(QuestionnairesDto questionnaireDto :questionnaireList){
@@ -149,10 +144,9 @@ public class DashboardMetaDataDao {
 								activeTaskAttrDto.setActivityType(StudyMetaDataConstants.DASHBOARD_ACTIVE_TASK);
 								activeTaskAttrDto.setActivityStepKey(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 								activeTaskAttrDto.setActivityVersion(activeTaskDto.getStudyVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
-								//activeTaskAttrDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskAttrDto.getActiveTaskId());
 								activeTaskAttrDto.setActivityId(activeTaskDto.getShortTitle());
 								if(activeTaskAttrDto.isAddToLineChart()){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, chartsList);
+									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, chartsList, activeTaskDto.getShortTitle());
 								}
 								
 								if(activeTaskAttrDto.isUseForStatistic()){
@@ -176,10 +170,9 @@ public class DashboardMetaDataDao {
 								questionDto.setActivityType(StudyMetaDataConstants.DASHBOARD_QUESTIONNAIRE);
 								questionDto.setActivityStepKey(StringUtils.isEmpty(questionnaireSteps.getStepShortTitle())?"":questionnaireSteps.getStepShortTitle());
 								questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
-								//questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 								questionDto.setActivityId(questionnaireDto.getShortTitle());
 								if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList);
+									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList, questionnaireSteps.getStepShortTitle());
 								}
 								
 								if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
@@ -222,7 +215,7 @@ public class DashboardMetaDataDao {
 													questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 													questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 													if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList);
+														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList, questionDto.getShortTitle());
 													}
 													
 													if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
@@ -266,16 +259,15 @@ public class DashboardMetaDataDao {
 	 * @return List<ChartsBean>
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unchecked")
-	public List<ChartsBean> getChartDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<ChartsBean> chartsList) throws DAOException{
+	public List<ChartsBean> getChartDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<ChartsBean> chartsList, String chartTitle) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Starts");
 		ChartsBean chart = new ChartsBean();
 		ChartDataSourceBean dataSource = new ChartDataSourceBean();
 		DashboardActivityBean activity = new DashboardActivityBean();
 		try{
 			if(activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
-				chart.setTitle(StringUtils.isEmpty(activeTask.getTitleChat())?"":activeTask.getTitleChat());
-				chart.setDisplayName("");
+				chart.setTitle(chartTitle);
+				chart.setDisplayName(StringUtils.isEmpty(activeTask.getTitleChat())?"":activeTask.getTitleChat());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
 				chart.setConfiguration(singleBarChartDetails());
 				
@@ -292,8 +284,8 @@ public class DashboardMetaDataDao {
 				
 				chart.setDataSource(dataSource);
 			}else{
-				chart.setTitle(StringUtils.isEmpty(question.getChartTitle())?"":question.getChartTitle());
-				chart.setDisplayName("");
+				chart.setTitle(chartTitle);
+				chart.setDisplayName(StringUtils.isEmpty(question.getChartTitle())?"":question.getChartTitle());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
 				chart.setConfiguration(singleBarChartDetails());
 				

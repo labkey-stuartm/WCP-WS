@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 /**
  * 
  * @author Mohan
@@ -20,15 +18,15 @@ public class StepsStructureBean {
 	private String text="";
 	private String image="";
 	private boolean skippable=false;
-	private Map<String, Object> destinations = new HashMap<String, Object>();
+	private Map<String, Object> destinations = new HashMap<>();
 	private String groupName="";
 	private String phi="";
 	private boolean repeatable=false;
 	private String repeatableText="";
-	private List<String> randomizationSets = new ArrayList<String>();
-	private List<ResourceContextStructureBean> resourceContext = new ArrayList<ResourceContextStructureBean>();
-	private List<StepsStructureBean> steps = new ArrayList<StepsStructureBean>();
-	private Map<String, List<Object>> format = new HashMap<String, List<Object>>();
+	private List<String> randomizationSets = new ArrayList<>();
+	private List<ResourceContextStructureBean> resourceContext = new ArrayList<>();
+	private List<StepsStructureBean> steps = new ArrayList<>();
+	private Map<String, List<Object>> format = new HashMap<>();
 	
 	public String getType() {
 		return type;

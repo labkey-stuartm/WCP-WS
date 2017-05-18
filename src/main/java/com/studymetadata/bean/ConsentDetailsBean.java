@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ConsentDetailsBean {
 	private String version = "";
-	private List<ConsentBean> visualScreens = new ArrayList<ConsentBean>();
+	private List<ConsentBean> visualScreens = new ArrayList<>();
 	private ComprehensionDetailsBean comprehension = new ComprehensionDetailsBean();
 	private SharingBean sharing = new SharingBean();
 	private ReviewBean review = new ReviewBean();

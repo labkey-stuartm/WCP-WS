@@ -11,7 +11,7 @@ import java.util.List;
 public class QuestionnaireConfigurationStructureBean {
 	private boolean branching=false;
 	private boolean randomization=false;
-	private List<FrequencyBean> frequency= new ArrayList<FrequencyBean>();
+	private List<FrequencyBean> frequency= new ArrayList<>();
 	
 	public boolean isBranching() {
 		return branching;
