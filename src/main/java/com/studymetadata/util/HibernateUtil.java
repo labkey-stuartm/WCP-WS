@@ -20,6 +20,7 @@ public class HibernateUtil {
 			synchronized (obj) {
 				if(sessionFactory != null && !sessionFactory.isClosed()){
 					sessionFactory.close();
+					sessionFactory = null;
 				}
 				
 				//get the DB Config details from external property file
@@ -29,7 +30,6 @@ public class HibernateUtil {
 			}
 		} catch (Throwable e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
-			e.printStackTrace();
 		}
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
 		return sessionFactory;
