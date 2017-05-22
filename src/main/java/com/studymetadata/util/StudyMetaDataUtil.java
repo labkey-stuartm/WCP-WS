@@ -1029,5 +1029,21 @@ public class StudyMetaDataUtil {
 		logger.info("INFO: AuthenticationService - getBundleIdFromAuthorization() - Ends");
 		return appBundleId;
 	}
+	
+	/**
+	 * This method is used to replace all the single quotes with the escape characters
+	 * 
+	 * @author Mohan
+	 * @param activityId
+	 * @return
+	 */
+	public static String replaceSingleQuotes(String activityId){
+		logger.info("INFO: AuthenticationService - replaceSingleQuotes() - Starts");
+		if(activityId.indexOf("'") > -1){
+			activityId = activityId.replaceAll("'", "''");
+		}
+		logger.info("INFO: AuthenticationService - replaceSingleQuotes() - Ends");
+		return activityId;
+	} 
 	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }
