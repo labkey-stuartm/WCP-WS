@@ -12,6 +12,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.NamedQuery;
 
 import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsBean;
@@ -21,6 +22,8 @@ import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 import com.studymetadata.dto.AppVersionDto;
 import com.studymetadata.dto.NotificationDto;
+import com.studymetadata.dto.ResourcesDto;
+import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
@@ -202,9 +205,10 @@ public class AppMetaDataDao {
 		List<StudyVersionDto> studyVersionList = null;
 		StudyVersionDto currentVersion = null;
 		StudyVersionDto latestVersion = null;
+		ResourcesDto resource = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.getNamedQuery("getStudyVersionsByCustomStudyId").setString("customStudyId", studyId);
+			query = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion").setString("customStudyId", studyId).setFloat("studyVersion", Float.valueOf(studyVersion));
 			studyVersionList = query.list();
 			if(studyVersionList != null && !studyVersionList.isEmpty()){
 				currentVersion = studyVersionList.get(0);
@@ -212,6 +216,12 @@ public class AppMetaDataDao {
 				updates.setConsent(latestVersion.getConsentVersion().floatValue() > currentVersion.getConsentVersion().floatValue()?true:false);
 				updates.setActivities(latestVersion.getActivityVersion().floatValue() > currentVersion.getActivityVersion().floatValue()?true:false);
 				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
+				//check whether resources are available for the latest version or not
+				query = session.createQuery("from ResourcesDto RDTO where RDTO.studyId in (select SDTO.id from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' and ROUND(SDTO.version, 1)="+latestVersion.getStudyVersion()+")");
+				resource = (ResourcesDto) query.uniqueResult();
+				if(resource==null){
+					updates.setResources(false);
+				}
 				updates.setInfo(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 				studyUpdates.setUpdates(updates);
 				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
