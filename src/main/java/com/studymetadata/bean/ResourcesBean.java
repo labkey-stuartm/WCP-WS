@@ -10,6 +10,7 @@ public class ResourcesBean {
 	private String resourcesId = "";
 	private String content = ""; //text/pdf link
 	private String audience = "";
+	private String notificationText = "";
 	//private ResourceConfigurationBean availability = new ResourceConfigurationBean();
 	private Map<String, Object> availability = new LinkedHashMap<>();
 	
@@ -48,6 +49,12 @@ public class ResourcesBean {
 	}
 	public void setAvailability(Map<String, Object> availability) {
 		this.availability = availability;
+	}
+	public String getNotificationText() {
+		return notificationText;
+	}
+	public void setNotificationText(String notificationText) {
+		this.notificationText = notificationText;
 	}
 	
 }

@@ -594,6 +594,7 @@ public class StudyMetaDataDao {
 							availability.put("endDays", resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
 							resourcesBean.setAvailability(availability);
 						}
+						resourcesBean.setNotificationText(StringUtils.isEmpty(resourcesDto.getResourceText())?"":resourcesDto.getResourceText());
 						resourcesBeanList.add(resourcesBean);
 					}
 					resourcesResponse.setResources(resourcesBeanList);
