@@ -205,7 +205,7 @@ public class AppMetaDataDao {
 		List<StudyVersionDto> studyVersionList = null;
 		StudyVersionDto currentVersion = null;
 		StudyVersionDto latestVersion = null;
-		ResourcesDto resource = null;
+		List<ResourcesDto> resourcesList = null;
 		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
@@ -219,8 +219,8 @@ public class AppMetaDataDao {
 				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 				//check whether resources are available for the latest version or not
 				query = session.createQuery("from ResourcesDto RDTO where RDTO.studyId in (select SDTO.id from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' and ROUND(SDTO.version, 1)="+latestVersion.getStudyVersion()+")");
-				resource = (ResourcesDto) query.uniqueResult();
-				if(resource==null){
+				resourcesList = query.list();
+				if(resourcesList==null||resourcesList.isEmpty()){
 					updates.setResources(false);
 				}
 				updates.setInfo(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
