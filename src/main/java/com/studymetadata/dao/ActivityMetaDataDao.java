@@ -95,7 +95,8 @@ public class ActivityMetaDataDao {
 				studyVersionDto = (StudyVersionDto) query.uniqueResult();
 				
 				//get the Activities (type : Active Task list) by studyId
-				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
@@ -120,7 +121,8 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
 					for(QuestionnairesDto questionaire : questionnairesList){
@@ -1414,7 +1416,7 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Integer.parseInt(reponseType.getMaxValue()));
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Integer.parseInt(reponseType.getMinValue()));
-			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:reponseType.getStep());
+			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepSize(reponseType.getStep(),(Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
 			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Integer) questionFormat.get("minValue"):getScaleDefaultValue((Integer) questionFormat.get("step"), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), Integer.parseInt(reponseType.getDefaultValue())));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
@@ -1911,6 +1913,28 @@ public class ActivityMetaDataDao {
 			LOGGER.error("ActivityMetaDataDao - getScaleStepCount() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Ends");
+		return scaleStepCount;
+	}
+	
+	/**
+	 * This method is used to get the step size based on the number of steps, maxvalue and minvalue
+	 * 
+	 * @author Mohan
+	 * @param step
+	 * @param maxValue
+	 * @param minValue
+	 * @return Integer
+	 * @throws DAOException
+	 */
+	public Integer getScaleStepSize(Integer step, Integer maxValue, Integer minValue) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Starts");
+		Integer scaleStepCount = step;
+		try{
+			scaleStepCount = (maxValue-minValue)/step;
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getScaleStepSize() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Ends");
 		return scaleStepCount;
 	}
 	

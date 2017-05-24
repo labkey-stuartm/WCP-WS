@@ -206,6 +206,7 @@ public class AppMetaDataDao {
 		StudyVersionDto currentVersion = null;
 		StudyVersionDto latestVersion = null;
 		ResourcesDto resource = null;
+		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
 			query = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion").setString("customStudyId", studyId).setFloat("studyVersion", Float.valueOf(studyVersion));
@@ -223,11 +224,29 @@ public class AppMetaDataDao {
 					updates.setResources(false);
 				}
 				updates.setInfo(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
-				studyUpdates.setUpdates(updates);
 				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
 			}else{
 				studyUpdates.setCurrentVersion(studyVersion);
 			}
+			//get the status of the latest study
+			query = session.createQuery("from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' ORDER BY SDTO.id DESC");
+			query.setMaxResults(1);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto!=null){
+				switch (studyDto.getStatus()) {
+					case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: updates.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
+						break;
+					case StudyMetaDataConstants.STUDY_STATUS_PAUSED: updates.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
+						break;
+					case StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH: updates.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
+						break;
+					case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: updates.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
+						break;
+					default:
+						break;
+				}
+			}
+			studyUpdates.setUpdates(updates);
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - studyUpdates() :: ERROR", e);

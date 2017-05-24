@@ -88,7 +88,8 @@ public class DashboardMetaDataDao {
 				studyVersionDto = (StudyVersionDto) query.uniqueResult();
 				
 				//Active Task details
-				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				activeTaskList = query.list();
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
 					for(ActiveTaskDto activeTask : activeTaskList){
@@ -98,7 +99,8 @@ public class DashboardMetaDataDao {
 				}
 				
 				//Questionnaire details
-				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				//query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
+				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				questionnaireList = query.list();
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
 					for(QuestionnairesDto questionnaireDto :questionnaireList){

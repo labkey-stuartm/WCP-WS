@@ -5,6 +5,7 @@ public class StudyUpdatesBean {
 	private Boolean activities = false;
 	private Boolean resources = false;
 	private Boolean info = false;
+	private String status = "";
 	
 	public Boolean getConsent() {
 		return consent;
@@ -29,6 +30,12 @@ public class StudyUpdatesBean {
 	}
 	public void setInfo(Boolean info) {
 		this.info = info;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }
