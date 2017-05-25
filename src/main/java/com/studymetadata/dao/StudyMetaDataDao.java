@@ -865,11 +865,13 @@ public class StudyMetaDataDao {
 		QuestionnairesDto questionnaireDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" and ATDTO.customStudyId='"+studyId+"'");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" and ATDTO.customStudyId='"+studyId+"' ORDER BY ATDTO.id DESC");
+			query.setMaxResults(1);
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			isValidActivity = (activeTaskDto == null)?false:true;
 			if(!isValidActivity){
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"'");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"' ORDER BY QDTO.id DESC");
+				query.setMaxResults(1);
 				questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 				isValidActivity = (questionnaireDto == null)?false:true;
 			}
@@ -896,7 +898,8 @@ public class StudyMetaDataDao {
 		ActiveTaskDto activeTaskDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and ATDTO.customStudyId='"+studyId+"'");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and ATDTO.customStudyId='"+studyId+"' ORDER BY ATDTO.id DESC");
+			query.setMaxResults(1);
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if(activeTaskDto != null){
 				isActivityTypeQuestionnaire = false;

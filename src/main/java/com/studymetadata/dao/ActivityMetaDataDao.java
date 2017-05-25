@@ -251,7 +251,8 @@ public class ActivityMetaDataDao {
 		ActiveTaskDto activeTaskDto = null;
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 		try{
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY ATDTO.id DESC");
+			query.setMaxResults(1);
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
@@ -351,7 +352,8 @@ public class ActivityMetaDataDao {
 		List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyId+"' and  QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion));
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyId+"' and  QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY QDTO.id DESC");
+			query.setMaxResults(1);
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
 				activityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
