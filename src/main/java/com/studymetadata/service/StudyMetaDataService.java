@@ -130,7 +130,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("eligibilityConsent")
-	public Object eligibilityConsentMetadata(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object eligibilityConsentMetadata(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
 		Boolean isValidFlag = false;
@@ -175,7 +175,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("consentDocument")
-	public Object consentDocument(@HeaderParam("studyId") String studyId, @HeaderParam("consentVersion") String consentVersion, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object consentDocument(@QueryParam("studyId") String studyId, @QueryParam("consentVersion") String consentVersion, @QueryParam("activityId") String activityId, @QueryParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		Boolean isValidFlag = false;
@@ -218,7 +218,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("resources")
-	public Object resourcesForStudy(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object resourcesForStudy(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		Boolean isValidFlag = false;
@@ -261,7 +261,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyInfo")
-	public Object studyInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyInfo(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		Boolean isValidFlag = false;
@@ -304,7 +304,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activityList")
-	public Object studyActivityList(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityList(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		Boolean isValidFlag = false;
@@ -350,7 +350,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activity")
-	public Object studyActivityMetadata(@HeaderParam("studyId") String studyId, @HeaderParam("activityId") String activityId, @HeaderParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityMetadata(@QueryParam("studyId") String studyId, @QueryParam("activityId") String activityId, @QueryParam("activityVersion") String activityVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
 		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
@@ -411,7 +411,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyDashboard")
-	public Object studyDashboardInfo(@HeaderParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyDashboardInfo(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
 		Boolean isValidFlag = false;
@@ -485,7 +485,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("notifications")
-	public Object notifications(@HeaderParam("skip") String skip, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object notifications(@QueryParam("skip") String skip, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try{
@@ -593,7 +593,7 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("appUpdates")
-	public Object appUpdates(@HeaderParam("appVersion") String appVersion, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object appUpdates(@QueryParam("appVersion") String appVersion, @HeaderParam("Authorization") String authorization, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
 		try{
@@ -628,7 +628,7 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("studyUpdates")
-	public Object studyUpdates(@HeaderParam("studyId") String studyId, @HeaderParam("studyVersion") String studyVersion, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyUpdates(@QueryParam("studyId") String studyId, @QueryParam("studyVersion") String studyVersion, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
 		Boolean isValidFlag = false;
