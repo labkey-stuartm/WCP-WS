@@ -590,8 +590,17 @@ public class StudyMetaDataDao {
 							Map<String, Object> availability = new LinkedHashMap<>();
 							availability.put("availableDate", StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
 							availability.put("expiryDate", StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
-							availability.put("startDays", resourcesDto.getTimePeriodFromDays()==null?0:resourcesDto.getTimePeriodFromDays());
-							availability.put("endDays", resourcesDto.getTimePeriodToDays()==null?0:resourcesDto.getTimePeriodToDays());
+							if(resourcesDto.getTimePeriodFromDays()!=null){
+								availability.put("startDays", resourcesDto.isxDaysSign()?Integer.parseInt("-"+resourcesDto.getTimePeriodFromDays()):resourcesDto.getTimePeriodFromDays());
+							}else{
+								availability.put("startDays", 0);
+							}
+							
+							if(resourcesDto.getTimePeriodToDays()!=null){
+								availability.put("endDays", resourcesDto.isyDaysSign()?Integer.parseInt("-"+resourcesDto.getTimePeriodToDays()):resourcesDto.getTimePeriodToDays());
+							}else{
+								availability.put("endDays", 0);
+							}
 							resourcesBean.setAvailability(availability);
 						}
 						resourcesBean.setNotificationText(StringUtils.isEmpty(resourcesDto.getResourceText())?"":resourcesDto.getResourceText());

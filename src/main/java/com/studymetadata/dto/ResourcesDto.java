@@ -99,6 +99,12 @@ public class ResourcesDto implements Serializable{
 	
 	@Column(name = "custom_study_id")
 	private String customStudyId;
+	 
+	@Column(name = "x_days_sign", length = 1)
+	private boolean xDaysSign = false;
+	 
+	@Column(name = "y_days_sign", length = 1)
+	private boolean yDaysSign = false;
 	
 	public Integer getId() {
 		return id;
@@ -290,6 +296,22 @@ public class ResourcesDto implements Serializable{
 
 	public void setCustomStudyId(String customStudyId) {
 		this.customStudyId = customStudyId;
+	}
+
+	public boolean isxDaysSign() {
+		return xDaysSign;
+	}
+
+	public void setxDaysSign(boolean xDaysSign) {
+		this.xDaysSign = xDaysSign;
+	}
+
+	public boolean isyDaysSign() {
+		return yDaysSign;
+	}
+
+	public void setyDaysSign(boolean yDaysSign) {
+		this.yDaysSign = yDaysSign;
 	}
 	
 }
