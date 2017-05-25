@@ -364,13 +364,13 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
-				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId, studyId);
+				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId, studyId, activityVersion);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_ACTIVITY_ID, response);
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
 				}
 				
-				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId, studyId);
+				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId, studyId, activityVersion);
 				if(!isActivityTypeQuestionnaire){
 					activeTaskActivityMetaDataResponse = activityMetaDataOrchestration.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
 					if(!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){

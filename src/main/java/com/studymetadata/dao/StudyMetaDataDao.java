@@ -849,18 +849,18 @@ public class StudyMetaDataDao {
 	 * @return boolean
 	 * @throws DAOException
 	 */
-	public boolean isValidActivity(String activityId, String studyId) throws DAOException{
+	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
 		boolean isValidActivity = false;
 		ActiveTaskDto activeTaskDto = null;
 		QuestionnairesDto questionnaireDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ATDTO.live=1 and ATDTO.customStudyId='"+studyId+"'");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" and ATDTO.customStudyId='"+studyId+"'");
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			isValidActivity = (activeTaskDto == null)?false:true;
 			if(!isValidActivity){
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and QDTO.live=1 and QDTO.customStudyId='"+studyId+"'");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"'");
 				questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 				isValidActivity = (questionnaireDto == null)?false:true;
 			}
@@ -881,13 +881,13 @@ public class StudyMetaDataDao {
 	 * @return boolean
 	 * @throws DAOException
 	 */
-	public boolean isActivityTypeQuestionnaire(String activityId, String studyId) throws DAOException{
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
 		boolean isActivityTypeQuestionnaire = true;
 		ActiveTaskDto activeTaskDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ATDTO.live=1 and ATDTO.customStudyId='"+studyId+"'");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and ATDTO.customStudyId='"+studyId+"'");
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if(activeTaskDto != null){
 				isActivityTypeQuestionnaire = false;

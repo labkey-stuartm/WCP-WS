@@ -198,11 +198,11 @@ public class StudyMetaDataOrchestration {
 	 * @return boolean
 	 * @throws OrchestrationException
 	 */
-	public boolean isValidActivity(String activityId, String studyId) throws OrchestrationException{
+	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
 		boolean flag = false;
 		try{
-			flag = studyMetaDataDao.isValidActivity(activityId, studyId);
+			flag = studyMetaDataDao.isValidActivity(activityId, studyId, activityVersion);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
 		}
@@ -216,11 +216,11 @@ public class StudyMetaDataOrchestration {
 	 * @return boolean
 	 * @throws OrchestrationException
 	 */
-	public boolean isActivityTypeQuestionnaire(String activityId, String studyId) throws OrchestrationException{
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
 		boolean flag = false;
 		try{
-			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId, studyId);
+			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId, studyId, activityVersion);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
 		}
