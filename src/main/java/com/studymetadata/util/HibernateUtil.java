@@ -18,14 +18,16 @@ public class HibernateUtil {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
 			synchronized (obj) {
-				if(sessionFactory != null && !sessionFactory.isClosed()){
+				/*if(sessionFactory != null && !sessionFactory.isClosed()){
 					sessionFactory.close();
-				}
+				}*/
 				
 				//get the DB Config details from external property file
-				Properties properties = new Properties();
-				properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
-				sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
+				if(sessionFactory==null){
+					Properties properties = new Properties();
+					properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
+					sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
+				}
 			}
 		} catch (Throwable e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
