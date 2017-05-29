@@ -207,6 +207,7 @@ public class AppMetaDataDao {
 		StudyVersionDto latestVersion = null;
 		List<ResourcesDto> resourcesList = null;
 		StudyDto studyDto = null;
+		StudyDto studyActivityStatus = null;
 		try{
 			session = sessionFactory.openSession();
 			query = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion").setString("customStudyId", studyId).setFloat("studyVersion", Float.valueOf(studyVersion));
@@ -215,7 +216,19 @@ public class AppMetaDataDao {
 				currentVersion = studyVersionList.get(0);
 				latestVersion = studyVersionList.get(studyVersionList.size()-1);
 				updates.setConsent(latestVersion.getConsentVersion().floatValue() > currentVersion.getConsentVersion().floatValue()?true:false);
-				updates.setActivities(latestVersion.getActivityVersion().floatValue() > currentVersion.getActivityVersion().floatValue()?true:false);
+				//check whether activityUpdated or not
+				query = session.getNamedQuery("getActivityUpdatedOrNotByStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", latestVersion.getStudyVersion());
+				studyActivityStatus = (StudyDto) query.uniqueResult();
+				if(studyActivityStatus!=null){
+					if(studyActivityStatus.getHasActivetaskDraft()!=null&&studyActivityStatus.getHasQuestionnaireDraft()!=null){
+						if(studyActivityStatus.getHasActivetaskDraft().intValue()==0&&studyActivityStatus.getHasQuestionnaireDraft().intValue()==0){
+							updates.setActivities(false);
+						}else{
+							updates.setActivities(true);
+						}
+						//updates.setActivities(latestVersion.getActivityVersion().floatValue() > currentVersion.getActivityVersion().floatValue()?true:false);
+					}
+				}
 				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 				//check whether resources are available for the latest version or not
 				query = session.createQuery("from ResourcesDto RDTO where RDTO.studyId in (select SDTO.id from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' and ROUND(SDTO.version, 1)="+latestVersion.getStudyVersion()+")");

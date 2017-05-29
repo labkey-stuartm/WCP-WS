@@ -26,6 +26,7 @@ import org.hibernate.annotations.Type;
 	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
 	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
 	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
+	@NamedQuery(name="getActivityUpdatedOrNotByStudyIdAndVersion", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
 })
 public class StudyDto implements Serializable{
 	
@@ -138,6 +139,12 @@ public class StudyDto implements Serializable{
 	
 	@Column(name = "has_consent_draft")
 	private Integer hasConsentDraft = 0;
+	
+	@Column(name = "has_questionnaire_draft")
+	private Integer hasQuestionnaireDraft = 0;
+	
+	@Column(name = "has_activitetask_draft")
+	private Integer hasActivetaskDraft = 0;
 
 	public Integer getId() {
 		return id;
@@ -417,6 +424,22 @@ public class StudyDto implements Serializable{
 
 	public void setHasConsentDraft(Integer hasConsentDraft) {
 		this.hasConsentDraft = hasConsentDraft;
+	}
+
+	public Integer getHasQuestionnaireDraft() {
+		return hasQuestionnaireDraft;
+	}
+
+	public void setHasQuestionnaireDraft(Integer hasQuestionnaireDraft) {
+		this.hasQuestionnaireDraft = hasQuestionnaireDraft;
+	}
+
+	public Integer getHasActivetaskDraft() {
+		return hasActivetaskDraft;
+	}
+
+	public void setHasActivetaskDraft(Integer hasActivetaskDraft) {
+		this.hasActivetaskDraft = hasActivetaskDraft;
 	}
 	
 }
