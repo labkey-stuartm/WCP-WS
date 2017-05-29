@@ -1263,8 +1263,12 @@ public class ActivityMetaDataDao {
 			if(StringUtils.isNotEmpty(taskType)){
 				switch (taskType) {
 				case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
-					StringTokenizer tokenizer = new StringTokenizer(attributeValues.getAttributeVal(), ":");
-					activeTaskFormat.put("duration", StringUtils.isEmpty(attributeValues.getAttributeVal())?"00:00":tokenizer.nextToken()+"."+tokenizer.nextToken()); //in hours
+					if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
+						String[] durationArray = attributeValues.getAttributeVal().split(":");
+						activeTaskFormat.put("duration", (Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+					}else{
+						activeTaskFormat.put("duration", 0);
+					}
 					break;
 				case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
 					activeTaskFormat = spatialSpanMemoryDetails(attributeValues, masterAttributeValue);
