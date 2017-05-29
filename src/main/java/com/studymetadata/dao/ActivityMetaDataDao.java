@@ -1,6 +1,10 @@
 package com.studymetadata.dao;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -10,6 +14,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1877,9 +1883,19 @@ public class ActivityMetaDataDao {
 	public String getBase64Image(String imagePath) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
 		String base64Image = "";
+		byte[] imageBytes = null;
 		try{
-	        byte[] imageBytes = IOUtils.toByteArray(new URL(imagePath));
-	        base64Image = Base64.getEncoder().encodeToString(imageBytes);
+			/*System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
+			Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());*/
+			URL url = new URL(imagePath);
+			if(url.getProtocol().equalsIgnoreCase("https")){
+				HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+				InputStream ins = con.getInputStream();
+				imageBytes = IOUtils.toByteArray(ins);
+			}else{
+				imageBytes = IOUtils.toByteArray(new URL(imagePath));
+			}
+			base64Image = Base64.getEncoder().encodeToString(imageBytes);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
 		}
