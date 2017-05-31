@@ -255,12 +255,12 @@ public class AppMetaDataDao {
 					default:
 						break;
 				}
+				
+				//get the latest version of study
+				if(StringUtils.isEmpty(studyUpdates.getCurrentVersion())){
+					studyUpdates.setCurrentVersion(studyDto.getVersion().toString());
+				}
 			}
-			
-			if(StringUtils.isEmpty(studyUpdates.getCurrentVersion())){
-				studyUpdates.setCurrentVersion(studyDto.getVersion().toString());
-			}
-			
 			studyUpdates.setUpdates(updates);
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
