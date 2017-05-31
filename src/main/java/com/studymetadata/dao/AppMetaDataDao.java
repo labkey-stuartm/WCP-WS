@@ -223,9 +223,8 @@ public class AppMetaDataDao {
 						if(studyActivityStatus.getHasActivetaskDraft().intValue()==0&&studyActivityStatus.getHasQuestionnaireDraft().intValue()==0){
 							updates.setActivities(false);
 						}else{
-							updates.setActivities(true);
+							updates.setActivities(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 						}
-						//updates.setActivities(latestVersion.getActivityVersion().floatValue() > currentVersion.getActivityVersion().floatValue()?true:false);
 					}
 				}
 				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
@@ -237,9 +236,8 @@ public class AppMetaDataDao {
 				}
 				updates.setInfo(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 				studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
-			}else{
-				studyUpdates.setCurrentVersion(studyVersion);
 			}
+			
 			//get the status of the latest study
 			query = session.createQuery("from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' ORDER BY SDTO.id DESC");
 			query.setMaxResults(1);
@@ -258,6 +256,11 @@ public class AppMetaDataDao {
 						break;
 				}
 			}
+			
+			if(StringUtils.isEmpty(studyUpdates.getCurrentVersion())){
+				studyUpdates.setCurrentVersion(studyDto.getVersion().toString());
+			}
+			
 			studyUpdates.setUpdates(updates);
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){

@@ -635,7 +635,6 @@ public class StudyMetaDataDao {
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		List<StudyPageDto> studyPageDtoList = null;
 		StudyDto studyDto = null;
-		StudyVersionDto studyVersionDto = null;
 		try{
 			session = sessionFactory.openSession();
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
@@ -645,12 +644,6 @@ public class StudyMetaDataDao {
 				studyDto = (StudyDto) query.uniqueResult();
 			}
 			if(studyDto != null){
-				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
-					query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
-					query.setMaxResults(1);
-					studyVersionDto = (StudyVersionDto) query.uniqueResult();
-				}
-				
 				//get study welcome info and page details by studyId
 				studyInfoResponse.setStudyWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())?"":studyDto.getStudyWebsite());
 				List<InfoBean> infoList = new ArrayList<>();
@@ -705,7 +698,7 @@ public class StudyMetaDataDao {
 				
 				//check the anchor date details
 				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
-					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyVersionDto.getCustomStudyId()+"' and ROUND(QDTO.version, 1)="+studyVersionDto.getActivityVersion());
+					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyDto.getCustomStudyId()+"' and QDTO.live=1");
 					List<QuestionnairesDto> questionnairesList = query.list();
 					if(questionnairesList != null && !questionnairesList.isEmpty()){
 						List<Integer> questionnaireIdsList = new ArrayList<>();
