@@ -37,6 +37,9 @@ public class AppVersionDto implements Serializable{
 	
 	@Column(name="custom_study_id")
 	private String customStudyId;
+	
+	@Column(name="message")
+	private String message;
 
 	public Integer getAvId() {
 		return avId;
@@ -92,6 +95,14 @@ public class AppVersionDto implements Serializable{
 
 	public void setCustomStudyId(String customStudyId) {
 		this.customStudyId = customStudyId;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

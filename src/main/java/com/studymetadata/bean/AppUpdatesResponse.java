@@ -1,9 +1,7 @@
 package com.studymetadata.bean;
 
-import com.studymetadata.util.StudyMetaDataConstants;
-
 public class AppUpdatesResponse {
-	private String message = StudyMetaDataConstants.FAILURE;
+	private String message = "";
 	private Boolean forceUpdate = false;
 	private String currentVersion = "";
 	

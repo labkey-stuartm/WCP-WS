@@ -174,11 +174,11 @@ public class AppMetaDataDao {
 			if(appVersionDto != null){
 				appUpdates.setCurrentVersion(String.valueOf(appVersionDto.getAppVersion()));
 				appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
+				appUpdates.setMessage(StringUtils.isEmpty(appVersionDto.getMessage())?"":appVersionDto.getMessage());
 			}else{
 				appUpdates.setForceUpdate(false);
 				appUpdates.setCurrentVersion(appVersion);
 			}
-			appUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - appUpdates() :: ERROR", e);
 		}finally{
@@ -282,7 +282,7 @@ public class AppMetaDataDao {
 	 * @return String
 	 * @throws DAOException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId) throws DAOException{
+	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId, String message) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		List<AppVersionDto> appVersionDtoList = null;
@@ -331,6 +331,7 @@ public class AppMetaDataDao {
 				appVersionDto.setCreatedOn(StudyMetaDataUtil.getCurrentDateTime());
 				appVersionDto.setBundleId(bundleId);
 				appVersionDto.setCustomStudyId(customStudyId);
+				appVersionDto.setMessage(message);
 				
 				session.saveOrUpdate(appVersionDto);
 				

@@ -599,10 +599,6 @@ public class StudyMetaDataService {
 		try{
 			if(StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(authorization)){
 				appUpdatesResponse = appMetaDataOrchestration.appUpdates(appVersion, authorization);
-				if(!appUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
-					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
-				}
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -679,7 +675,8 @@ public class StudyMetaDataService {
 			String appVersion = serviceJson.getString("appVersion");
 			String bundleId = serviceJson.getString("bundleId");
 			String customStudyId = serviceJson.getString("studyId");
-			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(bundleId)){
+			String message = serviceJson.getString("message");
+			if(StringUtils.isNotEmpty(forceUpdate) && StringUtils.isNotEmpty(osType) && StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(bundleId) && StringUtils.isNotEmpty(message)){
 				if(Integer.parseInt(forceUpdate) > 1){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
@@ -695,7 +692,7 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 				}
 				
-				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion, bundleId, customStudyId);
+				updateAppVersionResponse = appMetaDataOrchestration.updateAppVersionDetails(forceUpdate, osType, appVersion, bundleId, customStudyId, message);
 			}else{
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
