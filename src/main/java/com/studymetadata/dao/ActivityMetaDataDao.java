@@ -1551,8 +1551,8 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
-					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image")+subType.getImage()));
-					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image")+subType.getSelectedImage()));
+					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getImage()));
+					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getSelectedImage()));
 					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
 					imageChoicesList.add(imageChoiceMap);
@@ -1885,8 +1885,6 @@ public class ActivityMetaDataDao {
 		String base64Image = "";
 		byte[] imageBytes = null;
 		try{
-			/*System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");
-			Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());*/
 			URL url = new URL(imagePath);
 			if(url.getProtocol().equalsIgnoreCase("https")){
 				HttpsURLConnection con = (HttpsURLConnection)url.openConnection();

@@ -159,6 +159,8 @@ public class AppMetaDataDao {
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
+		List<AppVersionDto> appVersionList = null;
+		boolean versionExistsFlag = false;
 		String os = "";
 		String bundleId = "";
 		try{
@@ -166,9 +168,40 @@ public class AppMetaDataDao {
 			bundleId = StudyMetaDataUtil.getBundleIdFromAuthorization(authCredentials);
 			if(StringUtils.isNotEmpty(os)){
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
-				query.setMaxResults(1);
-				appVersionDto = (AppVersionDto) query.uniqueResult();
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion");
+				appVersionList = query.list();
+				if(appVersionList!=null&&!appVersionList.isEmpty()){
+					if(Float.parseFloat(appVersion)>appVersionList.get(appVersionList.size()-1).getAppVersion().floatValue()){
+						appVersionDto = new AppVersionDto();
+						appVersionDto.setForceUpdate(0);
+						appVersionDto.setAppVersion(Float.parseFloat(appVersion));
+						appVersionDto.setMessage("");
+					}else{
+						for(AppVersionDto appVersionBo : appVersionList){
+							if(Float.parseFloat(appVersion)==appVersionBo.getAppVersion().floatValue()){
+								appVersionDto = appVersionBo;
+								if(Float.parseFloat(appVersion)<appVersionList.get(appVersionList.size()-1).getAppVersion().floatValue()){
+									appVersionDto.setMessage(appVersionList.get(appVersionList.size()-1).getMessage());
+									appVersionDto.setForceUpdate(1);
+									appVersionDto.setAppVersion(appVersionList.get(appVersionList.size()-1).getAppVersion());
+								}
+								
+								if(appVersionDto.getAvId().intValue()==appVersionList.get(appVersionList.size()-1).getAvId().intValue()){
+									appVersionDto.setForceUpdate(0);
+								}
+								versionExistsFlag = true;
+								break;
+							}
+						}
+						
+						if(!versionExistsFlag){
+							appVersionDto = appVersionList.get(appVersionList.size()-1);
+							appVersionDto.setMessage(appVersionList.get(appVersionList.size()-1).getMessage());
+							appVersionDto.setForceUpdate(1);
+							appVersionDto.setAppVersion(appVersionList.get(appVersionList.size()-1).getAppVersion());
+						}
+					}
+				}
 			}
 			
 			if(appVersionDto != null){
