@@ -88,7 +88,6 @@ public class DashboardMetaDataDao {
 				studyVersionDto = (StudyVersionDto) query.uniqueResult();
 				
 				//Active Task details
-				//query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				activeTaskList = query.list();
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
@@ -99,7 +98,6 @@ public class DashboardMetaDataDao {
 				}
 				
 				//Questionnaire details
-				//query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				questionnaireList = query.list();
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
@@ -193,7 +191,7 @@ public class DashboardMetaDataDao {
 						for(FormDto form : formDtoList){
 							List<Integer> formQuestionIdsList = new ArrayList<>();
 							List<FormMappingDto> formMappingDtoList;
-							query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId="+form.getFormId()+" order by FMDTO.sequenceNo");
+							query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId="+form.getFormId()+" and FMDTO.active=true order by FMDTO.sequenceNo");
 							formMappingDtoList = query.list();
 							if(formMappingDtoList != null && !formMappingDtoList.isEmpty()){
 								for(FormMappingDto formMappingDto : formMappingDtoList){

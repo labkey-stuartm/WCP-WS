@@ -34,6 +34,9 @@ public class FormMappingDto implements Serializable{
 	@Column(name="sequence_no")
 	private Integer sequenceNo;
 
+	@Column(name="active")
+	private Boolean active=true;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -64,6 +67,14 @@ public class FormMappingDto implements Serializable{
 
 	public void setSequenceNo(Integer sequenceNo) {
 		this.sequenceNo = sequenceNo;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 	
 }

@@ -698,7 +698,7 @@ public class StudyMetaDataDao {
 				
 				//check the anchor date details
 				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
-					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyDto.getCustomStudyId()+"' and QDTO.live=1");
+					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyDto.getCustomStudyId()+"' and QDTO.active=true and QDTO.status=true and QDTO.live=1");
 					List<QuestionnairesDto> questionnairesList = query.list();
 					if(questionnairesList != null && !questionnairesList.isEmpty()){
 						List<Integer> questionnaireIdsList = new ArrayList<>();
@@ -715,7 +715,7 @@ public class StudyMetaDataDao {
 						if(!questionnaireIdsList.isEmpty()){
 							List<Integer> questionIdsList = new ArrayList<>();
 							List<Integer> formIdsList = new ArrayList<>();
-							query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"')");
+							query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.active=true and QSDTO.status=true and QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"')");
 							List<QuestionnairesStepsDto> questionnairesStepsList = query.list();
 							if(questionnairesStepsList != null && !questionnairesStepsList.isEmpty()){
 								for(QuestionnairesStepsDto stepsDto : questionnairesStepsList){
@@ -729,7 +729,7 @@ public class StudyMetaDataDao {
 								}
 								
 								if(!questionIdsList.isEmpty()){
-									query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+									query = session.createQuery("from QuestionsDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.id in ("+StringUtils.join(questionIdsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
 									query.setMaxResults(1);
 									List<QuestionsDto> questionnsList = query.list();
 									if(questionnsList != null && !questionnsList.isEmpty()){
@@ -742,7 +742,7 @@ public class StudyMetaDataDao {
 								
 								if(questionsMap == null && !formIdsList.isEmpty()){
 									List<Integer> formQuestionsList = new ArrayList<>();
-									query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+") and FDTO.active=true) ORDER BY FMDTO.formId, FMDTO.sequenceNo");
+									query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+") and FDTO.active=true) and FMDTO.active=true ORDER BY FMDTO.formId, FMDTO.sequenceNo");
 									List<FormMappingDto> formMappingList = query.list();
 									if(formMappingList!= null && !formMappingList.isEmpty()){
 										for(FormMappingDto formMapping : formMappingList){
@@ -751,7 +751,7 @@ public class StudyMetaDataDao {
 										}
 										
 										if(!formQuestionsList.isEmpty()){
-											query = session.createQuery("from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(formQuestionsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+											query = session.createQuery("from QuestionsDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.id in ("+StringUtils.join(formQuestionsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
 											query.setMaxResults(1);
 											List<QuestionsDto> questionnsList = query.list();
 											if(questionnsList != null && !questionnsList.isEmpty()){
@@ -863,7 +863,7 @@ public class StudyMetaDataDao {
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			isValidActivity = (activeTaskDto == null)?false:true;
 			if(!isValidActivity){
-				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"' ORDER BY QDTO.id DESC");
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"' ORDER BY QDTO.id DESC");
 				query.setMaxResults(1);
 				questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 				isValidActivity = (questionnaireDto == null)?false:true;

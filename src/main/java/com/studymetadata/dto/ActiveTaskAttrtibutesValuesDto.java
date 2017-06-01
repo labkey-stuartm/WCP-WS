@@ -70,6 +70,9 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
+	@Column(name="active")
+	private Integer active=0;
+	
 	@Transient
 	private String activityId;
 	
@@ -240,6 +243,14 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 
 	public void setActivityStepKey(String activityStepKey) {
 		this.activityStepKey = activityStepKey;
+	}
+
+	public Integer getActive() {
+		return active;
+	}
+
+	public void setActive(Integer active) {
+		this.active = active;
 	}
 	
 }

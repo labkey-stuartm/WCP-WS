@@ -101,7 +101,6 @@ public class ActivityMetaDataDao {
 				studyVersionDto = (StudyVersionDto) query.uniqueResult();
 				
 				//get the Activities (type : Active Task list) by studyId
-				//query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
@@ -127,7 +126,6 @@ public class ActivityMetaDataDao {
 				}
 
 				//get the Activities (type : Questionaires list) by studyId
-				//query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getActivityVersion());
 				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
 				questionnairesList = query.list();
 				if( questionnairesList != null && !questionnairesList.isEmpty()){
@@ -257,7 +255,7 @@ public class ActivityMetaDataDao {
 		ActiveTaskDto activeTaskDto = null;
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
 		try{
-			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ATDTO.action=1 and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY ATDTO.id DESC");
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY ATDTO.id DESC");
 			query.setMaxResults(1);
 			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
 			if( activeTaskDto != null){
@@ -358,7 +356,7 @@ public class ActivityMetaDataDao {
 		List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 		List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList = null;
 		try{
-			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyId+"' and  QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.active=true and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY QDTO.id DESC");
+			query = session.createQuery("from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyId+"' and  QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and QDTO.status=true and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY QDTO.id DESC");
 			query.setMaxResults(1);
 			questionnaireDto = (QuestionnairesDto) query.uniqueResult();
 			if(questionnaireDto != null){
@@ -378,7 +376,7 @@ public class ActivityMetaDataDao {
 				metadata.setVersion(questionnaireDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 				activityStructureBean.setMetadata(metadata);
 
-				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.active=true and QSDTO.status=true ORDER BY QSDTO.sequenceNo");
+				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.status=true ORDER BY QSDTO.sequenceNo");
 				questionaireStepsList = query.list();
 				if(questionaireStepsList != null && !questionaireStepsList.isEmpty()){
 					List<Integer> instructionIdList = new ArrayList<>();
@@ -421,7 +419,7 @@ public class ActivityMetaDataDao {
 					//get the instructionsList
 					if(!instructionIdList.isEmpty()){
 						List<InstructionsDto> instructionsDtoList;
-						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.active=true and IDTO.status=true");
+						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.status=true");
 						instructionsDtoList = query.list();
 						if(instructionsDtoList != null && !instructionsDtoList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, instructionsDtoList, null, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, null, questionaireStepsList, questionnaireDto);
@@ -431,7 +429,7 @@ public class ActivityMetaDataDao {
 					//get the questionaire List
 					if(!questionIdList.isEmpty()){
 						List<QuestionsDto> questionsList;
-						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.active=true and QDTO.status=true");
+						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.status=true");
 						questionsList = query.list();
 						if( questionsList != null && !questionsList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, null, questionsList, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);
@@ -442,7 +440,7 @@ public class ActivityMetaDataDao {
 					if(!formIdList.isEmpty()){
 						for(Integer formId : formIdList){
 							List<FormMappingDto> formList;
-							query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId="+formId+" and FDTO.active=true) ORDER BY FMDTO.sequenceNo ");
+							query = session.createQuery(" from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId="+formId+") and FMDTO.active=true ORDER BY FMDTO.sequenceNo ");
 							formList = query.list();
 							if(formList != null && !formList.isEmpty()){
 								stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, null, null, formList, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);
@@ -2073,7 +2071,7 @@ public class ActivityMetaDataDao {
 		try{
 			 String[] stepArray = stepIds.split(",");
 			 for(int i=0; i<stepArray.length; i++){
-				 if(stepValue > Integer.parseInt(stepArray[i]) ){
+				 if(stepValue > Integer.parseInt(stepArray[i])){
 					 step = Integer.parseInt(stepArray[i]);
 				 }else{
 					 step = Integer.parseInt(stepArray[i]);
