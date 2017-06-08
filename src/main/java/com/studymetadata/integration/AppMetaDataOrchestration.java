@@ -1,6 +1,7 @@
 package com.studymetadata.integration;
 
 import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import com.studymetadata.bean.AppResponse;
@@ -196,4 +197,22 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		return updateAppVersionResponse;
 	}
 	
+	
+	/**
+	 * @author Mohan
+	 * @param dbQuery
+	 * @return String
+	 * @throws OrchestrationException
+	 */
+	public String interceptorDataBaseQuery(String dbQuery) throws OrchestrationException{
+		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
+		String message = "OOPS! Something went wrong.";
+		try{
+			message = appMetaDataDao.interceptorDataBaseQuery(dbQuery);
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR", e);
+		}
+		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
+		return message;
+	}
 }

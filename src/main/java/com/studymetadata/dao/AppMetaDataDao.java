@@ -371,7 +371,6 @@ public class AppMetaDataDao {
 				transaction.commit();
 				updateAppVersionResponse = "App Version was successfully updated to v"+appVersion+" for "+osType+" os.";
 			}
-			
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - updateAppVersionDetails() :: ERROR", e);
 			if(transaction.isActive()){
@@ -384,5 +383,32 @@ public class AppMetaDataDao {
 		}
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Ends");
 		return updateAppVersionResponse;
+	}
+	
+	
+	/**
+	 * This method is used to update the database from the input query
+	 * 
+	 * @author Mohan
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String interceptorDataBaseQuery(String dbQuery) throws DAOException{
+		LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Starts");
+		String message = StudyMetaDataConstants.FAILURE;
+		try{
+			session = sessionFactory.openSession();
+			query = session.createSQLQuery(dbQuery);
+			query.executeUpdate();
+			message = StudyMetaDataConstants.SUCCESS;
+		}catch(Exception e){
+			LOGGER.error("AppMetaDataDao - interceptorDataBaseQuery() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Ends");
+		return message;
 	}
 }

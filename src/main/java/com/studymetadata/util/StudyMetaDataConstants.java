@@ -76,7 +76,7 @@ public interface StudyMetaDataConstants {
 	
 	public static final String CONSENT_DOC_TYPE_NEW = "New";
 	public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
-	public static final String REASON_FOR_CONSENT = "By Agreeing this you confirm that you read the consent and that you wish to take part in this research study";
+	public static final String REASON_FOR_CONSENT = "By Agreeing this you confirm that you read the consent and that you wish to take part in this research study.";
 	
 	public static final String ACTIVITY_ACTIVE_TASK = "task";
 	public static final String ACTIVITY_QUESTIONNAIRE = "questionnaire";
@@ -207,5 +207,15 @@ public interface StudyMetaDataConstants {
 	
 	public static final String ANCHORDATE_TYPE_QUESTION = "date-question";
 	public static final String ANCHORDATE_TYPE_ENROLLMENT = "enrollment-date";
+	
+	public static final String INTERCEPTOR_URL_PING = "/ping";
+	public static final String INTERCEPTOR_URL_MAIL = "/mail";
+	public static final String INTERCEPTOR_URL_APP_VERSION = "/updateAppVersion";
+	public static final String INTERCEPTOR_URL_DB_QUERY = "/testQuery";
+	
+	public static final String QUERY_INSERT = "INSERT";
+	public static final String QUERY_UPDATE = "UPDATE";
+	public static final String QUERY_DELETE = "DELETE";
+	public static final String QUERY_ALTER = "ALTER";
 	
 }

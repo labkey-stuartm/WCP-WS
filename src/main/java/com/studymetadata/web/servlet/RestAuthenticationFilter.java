@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -27,9 +28,6 @@ public class RestAuthenticationFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-			String pingPath = "/ping";
-			String emailPath = "/mail";
-			String appVersion = "/updateAppVersion";
 			if(StringUtils.isNotEmpty(authCredentials)){
 				AuthenticationService authenticationService = new AuthenticationService();
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials);
@@ -45,8 +43,8 @@ public class RestAuthenticationFilter implements Filter {
 					}
 				}
 			}else{
-				//to ping the Web Services
-				if(pingPath.equalsIgnoreCase(httpServletRequest.getPathInfo()) || emailPath.equalsIgnoreCase(httpServletRequest.getPathInfo()) || appVersion.equalsIgnoreCase(httpServletRequest.getPathInfo())){
+				//interceptor test url's
+				if(StudyMetaDataConstants.INTERCEPTOR_URL_PING.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_MAIL.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_APP_VERSION.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_DB_QUERY.equalsIgnoreCase(httpServletRequest.getPathInfo())){
 					filter.doFilter(request, response);
 				}else{
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;

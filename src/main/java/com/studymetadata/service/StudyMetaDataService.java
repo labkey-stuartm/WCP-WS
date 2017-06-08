@@ -1,6 +1,7 @@
 package com.studymetadata.service;
 
 import java.util.HashMap;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.studymetadata.exception.ErrorCodes;
@@ -706,6 +708,40 @@ public class StudyMetaDataService {
 		return updateAppVersionResponse;
 	}
 	
+	
+	/**
+	 * This method is used to insert, update, alter or delete the DB changes
+	 * 
+	 * @author Mohan
+	 * @param params
+	 * @param context
+	 * @param response
+	 * @return Object
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("testQuery")
+	public Object interceptorDataBaseQuery(String params, @Context ServletContext context, @Context HttpServletResponse response){
+		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
+		String message = "OOPS! Something went wrong.";
+		try {
+			JSONObject serviceJson = new JSONObject(params);
+			String dbQuery = serviceJson.getString("dbQuery");
+			if(StringUtils.isNotEmpty(dbQuery)){
+				message = appMetaDataOrchestration.interceptorDataBaseQuery(dbQuery);
+			}else{
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN, StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataService - interceptorDataBaseQuery() :: ERROR", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
+		return message;
+	}
 	
 	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	
