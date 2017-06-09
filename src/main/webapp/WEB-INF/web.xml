@@ -57,9 +57,7 @@
 			<url-pattern>/*</url-pattern>
 		</web-resource-collection>
 		<user-data-constraint>
-			<!-- available only through HTTPS  -->
 			<!-- <transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
-			<!-- available through both HTTP and HTTPS  -->
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>

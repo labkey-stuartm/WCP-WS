@@ -1431,6 +1431,7 @@ public class ActivityMetaDataDao {
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			//update in phase 1B
 			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
 			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
 		}catch(Exception e){
@@ -1457,6 +1458,7 @@ public class ActivityMetaDataDao {
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			//update in phase 1B
 			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
 			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
 		}catch(Exception e){
@@ -1549,7 +1551,7 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
-					imageChoiceMap.put("image", subType.getImage()==null?"":subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getImage()));
+					imageChoiceMap.put("image", subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getImage()));
 					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getSelectedImage()));
 					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
 					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
@@ -1611,7 +1613,7 @@ public class ActivityMetaDataDao {
 			questionFormat.put("unit", (reponseType==null || reponseType.getUnit()==null)?"":reponseType.getUnit());
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
-			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?0:reponseType.getPlaceholder());
+			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
 		}

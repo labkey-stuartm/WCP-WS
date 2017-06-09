@@ -71,7 +71,7 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		AppResponse response = new AppResponse();
 		Boolean flag = false;
 		try{
-			String feedbackSubject = "App Feedback Mail: "+subject;
+			String feedbackSubject = "My Studies App Feedback: "+subject;
 			String feedbackBody = "<div>"
 								 +"<div><span>Hi</span></div><br>"
 								 +"<div><span>A user of the FDA My Studies mobile app has provided feedback via the app. Here&#39;s the content of the feedback:</span></div><br>"
@@ -108,10 +108,10 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		AppResponse response = new AppResponse();
 		Boolean flag = false;
 		try{
-			String contactUsSubject = "App Helpdesk Mail: "+subject;
+			String contactUsSubject = "My Studies App Helpdesk: '"+subject+"'";
 			String contactUsContent = "<div>"
 									 +"<div><span>Hi</span></div><br>"
-									 +"<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the HelpDesk. Below are the contact form details:</span></div>"
+									 +"<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk. Below are the contact form details:</span></div>"
 									 +"<div>"
 									 +"<div>___________________________________________</div>"
 									 +"<div style='padding-top:20px;'>First Name: "+firstName+"</div>"
