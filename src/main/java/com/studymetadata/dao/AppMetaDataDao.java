@@ -12,8 +12,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.NamedQuery;
-
 import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;

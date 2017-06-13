@@ -58,7 +58,6 @@ public class StudyMetaDataService {
 	DashboardMetaDataOrchestration dashboardMetaDataOrchestration = new DashboardMetaDataOrchestration();
 	AppMetaDataOrchestration appMetaDataOrchestration = new AppMetaDataOrchestration();
 
-	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
 	/**
 	 * This Method is used to getGatewayAppResourcesInfo
 	 * @author Mohan
@@ -709,6 +708,18 @@ public class StudyMetaDataService {
 	}
 	
 	
+	//application ping url's
+	@GET
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Path("ping")
+	public String ping() {
+		LOGGER.info("INFO: StudyMetaDataService - ping() :: Starts ");
+		String response = "It Works!";
+		LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
+		return response;
+	}
+	
 	/**
 	 * This method is used to insert, update, alter or delete the DB changes
 	 * 
@@ -741,19 +752,6 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
 		return message;
-	}
-	
-	/*------------------------------------FDA-HPHI Study Meta Data Web Services Starts------------------------------------*/
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Path("ping")
-	public String ping() {
-		LOGGER.info("INFO: StudyMetaDataService - ping() :: Starts ");
-		String response = "It Works!";
-		LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
-		return response;
 	}
 
 	@GET

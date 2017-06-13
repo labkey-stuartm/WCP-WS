@@ -452,7 +452,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	
-	/*-----------------------------Manipulate chart data methods starts----------------------------------*/
+	/*-----------------------------Manipulate chart data methods Phase 1B starts----------------------------------*/
 	/**
 	 * This method is used to fetch the chart configuration details for single line chart
 	 * 
@@ -668,5 +668,5 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Ends");
 		return configuration;
 	}
-	/*-----------------------------Manipulate chart data methods ends----------------------------------*/
+	/*-----------------------------Manipulate chart data methods Phase 1B ends----------------------------------*/
 }

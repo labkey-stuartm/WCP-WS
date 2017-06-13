@@ -117,6 +117,12 @@ public class ActivityMetaDataDao {
 
 						//get the time details for the activity by activityId
 						activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
+						
+						//modifiedDateTime will be the endDateTime for the deleted activities
+						if(activeTaskDto.getActive()==null || activeTaskDto.getActive()==0){
+							activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+						}
+						
 						activityBean.setActivityId(activeTaskDto.getShortTitle());
 						activitiesBeanList.add(activityBean);
 					}
@@ -141,6 +147,11 @@ public class ActivityMetaDataDao {
 						activityBean.setBranching((questionaire.getBranching() == null || !questionaire.getBranching())?false:true);
 						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 						activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
+						
+						//modifiedDateTime will be the endDateTime for the deleted activities
+						if(!questionaire.getActive()){
+							activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+						}
 						activitiesBeanList.add(activityBean);
 					}
 				}
@@ -269,13 +280,16 @@ public class ActivityMetaDataDao {
 
 				ActivitiesBean activityBean = new ActivitiesBean();
 				activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
-
 				metadata.setStartDate(activityBean.getStartTime());
 				metadata.setEndDate(activityBean.getEndTime());
 				metadata.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //column not there in the database
 				metadata.setName(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 				metadata.setStudyId(studyId);
 				metadata.setVersion(activeTaskDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
+				//modifiedDateTime will be the endDateTime for the deleted activities
+				if(activeTaskDto.getActive()==null || activeTaskDto.getActive()==0){
+					metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+				}
 				activeTaskActivityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
@@ -365,13 +379,17 @@ public class ActivityMetaDataDao {
 
 				ActivitiesBean activityBean = new ActivitiesBean();
 				activityBean = getTimeDetailsByActivityIdForQuestionnaire(questionnaireDto, activityBean, session);
-
+				
 				metadata.setStartDate(activityBean.getStartTime());
 				metadata.setEndDate(activityBean.getEndTime());
 				metadata.setLastModified(StringUtils.isEmpty(questionnaireDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 				metadata.setName(StringUtils.isEmpty(questionnaireDto.getShortTitle())?"":questionnaireDto.getShortTitle());
 				metadata.setStudyId(studyId);
 				metadata.setVersion(questionnaireDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
+				//modifiedDateTime will be the endDateTime for the deleted activities
+				if(!questionnaireDto.getActive()){
+					metadata.setEndDate(StudyMetaDataUtil.getFormattedDateTimeZone(questionnaireDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+				}
 				activityStructureBean.setMetadata(metadata);
 
 				query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId="+questionnaireDto.getId()+" and QSDTO.status=true ORDER BY QSDTO.sequenceNo");
