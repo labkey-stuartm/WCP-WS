@@ -9,7 +9,7 @@ public class ActivitiesBean {
 	private String endTime = "";
 	private Boolean branching = false;
 	private String lastModified = "";
-	private String status = "";
+	private String state = "";
 	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 	
 	public String getActivityId() {
@@ -60,11 +60,11 @@ public class ActivitiesBean {
 	public void setLastModified(String lastModified) {
 		this.lastModified = lastModified;
 	}
-	public String getStatus() {
-		return status;
+	public String getState() {
+		return state;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(String state) {
+		this.state = state;
 	}
 	public ActivityFrequencyBean getFrequency() {
 		return frequency;

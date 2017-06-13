@@ -104,7 +104,7 @@ public class ActivityMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
-						activityBean.setStatus((activeTaskDto.getActive()!=null&&activeTaskDto.getActive()>0)?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
+						activityBean.setState((activeTaskDto.getActive()!=null&&activeTaskDto.getActive()>0)?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
 
 						activityBean.setActivityVersion((activeTaskDto.getVersion() == null || activeTaskDto.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 						activityBean.setBranching(false);
@@ -130,7 +130,7 @@ public class ActivityMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(questionaire.getTitle())?"":questionaire.getTitle());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
-						activityBean.setStatus(questionaire.getActive()?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
+						activityBean.setState(questionaire.getActive()?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
 
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						frequencyDetails = getFrequencyRunsDetailsForQuestionaires(questionaire, frequencyDetails, session);
