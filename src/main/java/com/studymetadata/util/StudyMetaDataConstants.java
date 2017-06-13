@@ -218,4 +218,6 @@ public interface StudyMetaDataConstants {
 	public static final String QUERY_DELETE = "DELETE";
 	public static final String QUERY_ALTER = "ALTER";
 	
+	public static final String ACTIVITY_STATUS_ACTIVE = "active";
+	public static final String ACTIVITY_STATUS_DELETED = "deleted";
 }

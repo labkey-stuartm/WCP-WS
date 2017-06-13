@@ -1,10 +1,7 @@
 package com.studymetadata.dao;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -12,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -108,6 +104,7 @@ public class ActivityMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
+						activityBean.setStatus((activeTaskDto.getActive()!=null&&activeTaskDto.getActive()>0)?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
 
 						activityBean.setActivityVersion((activeTaskDto.getVersion() == null || activeTaskDto.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 						activityBean.setBranching(false);
@@ -133,6 +130,7 @@ public class ActivityMetaDataDao {
 						ActivitiesBean activityBean = new ActivitiesBean();
 						activityBean.setTitle(StringUtils.isEmpty(questionaire.getTitle())?"":questionaire.getTitle());
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
+						activityBean.setStatus(questionaire.getActive()?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
 
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						frequencyDetails = getFrequencyRunsDetailsForQuestionaires(questionaire, frequencyDetails, session);
