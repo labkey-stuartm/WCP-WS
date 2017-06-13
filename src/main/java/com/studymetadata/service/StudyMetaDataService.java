@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.studymetadata.exception.ErrorCodes;
@@ -790,7 +789,7 @@ public class StudyMetaDataService {
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService.signin() :: ERROR ==> 'type' is missing... ", e);
 		}
-		if(StudyMetaDataUtil.isNotEmpty(type1) && "1".equals(type1)){
+		if(StringUtils.isNotEmpty(type1) && "1".equals(type1)){
 			SuccessResponse sr = new SuccessResponse();
 			sr.setResultType(StudyMetaDataConstants.SUCCESS);
 			LOGGER.info("INFO: StudyMetaDataService - test() :: Ends ");
