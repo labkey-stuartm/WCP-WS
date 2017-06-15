@@ -21,7 +21,7 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name="active_task")
 @NamedQueries({
 	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active) GROUP BY ATDTO.shortTitle ORDER BY ATDTO.createdDate DESC")
+	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active) ORDER BY ATDTO.createdDate DESC")
 })
 public class ActiveTaskDto implements Serializable{
 
