@@ -175,8 +175,8 @@ public class DashboardMetaDataDao {
 							activeTaskDto = (ActiveTaskDto) activityMap.get(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskAttrDto.getActiveTaskId());
 							if(activeTaskDto != null){
 								activeTaskAttrDto.setActivityType(StudyMetaDataConstants.DASHBOARD_ACTIVE_TASK);
-								activeTaskAttrDto.setActivityStepKey(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
-								activeTaskAttrDto.setActivityVersion(activeTaskDto.getStudyVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getStudyVersion().toString());
+ 								activeTaskAttrDto.setActivityStepKey(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
+								activeTaskAttrDto.setActivityVersion(activeTaskDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 								activeTaskAttrDto.setActivityId(activeTaskDto.getShortTitle());
 								if(activeTaskAttrDto.isAddToLineChart()){
 									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, chartsList, activeTaskDto.getShortTitle());
@@ -302,6 +302,8 @@ public class DashboardMetaDataDao {
 				chart.setTitle(chartTitle);
 				chart.setDisplayName(StringUtils.isEmpty(activeTask.getTitleChat())?"":activeTask.getTitleChat());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
+				chart.setScrollable((StringUtils.isNotEmpty(activeTask.getRollbackChat())&&activeTask.getRollbackChat().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
+				
 				chart.setConfiguration(singleBarChartDetails());
 				
 				dataSource.setType(activeTask.getActivityType());
@@ -320,6 +322,7 @@ public class DashboardMetaDataDao {
 				chart.setTitle(chartTitle);
 				chart.setDisplayName(StringUtils.isEmpty(question.getChartTitle())?"":question.getChartTitle());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
+				chart.setScrollable((StringUtils.isNotEmpty(question.getAllowRollbackChart())&&question.getAllowRollbackChart().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 				chart.setConfiguration(singleBarChartDetails());
 				
 				dataSource.setType(question.getActivityType());
@@ -484,21 +487,6 @@ public class DashboardMetaDataDao {
 		return formulaType;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * This method is used to get the start and end date time of active task
 	 * 
@@ -643,25 +631,6 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
 		return questionaire;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/*-----------------------------Manipulate chart data methods Phase 1B starts----------------------------------*/
 	/**

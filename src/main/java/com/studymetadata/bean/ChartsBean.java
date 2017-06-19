@@ -8,6 +8,7 @@ public class ChartsBean {
 	private String displayName = "";
 	private String type = "";
 	private Map<String, Object> configuration = new HashMap<>();
+	private boolean scrollable = true;
 	private ChartDataSourceBean dataSource = new ChartDataSourceBean();
 	
 	public String getTitle() {
@@ -33,6 +34,12 @@ public class ChartsBean {
 	}
 	public void setConfiguration(Map<String, Object> configuration) {
 		this.configuration = configuration;
+	}
+	public boolean isScrollable() {
+		return scrollable;
+	}
+	public void setScrollable(boolean scrollable) {
+		this.scrollable = scrollable;
 	}
 	public ChartDataSourceBean getDataSource() {
 		return dataSource;
