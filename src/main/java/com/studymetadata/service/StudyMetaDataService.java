@@ -76,12 +76,12 @@ public class StudyMetaDataService {
 			gatewayInfo = studyMetaDataOrchestration.gatewayAppResourcesInfo(authorization);
 			if(!gatewayInfo.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - gatewayAppResourcesInfo() :: ERROR ", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - gatewayAppResourcesInfo() :: Ends");
 		return gatewayInfo;
@@ -106,12 +106,12 @@ public class StudyMetaDataService {
 			studyResponse = studyMetaDataOrchestration.studyList(authorization);
 			if(!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
-				return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
 		return studyResponse;
@@ -139,7 +139,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
@@ -154,7 +154,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - eligibilityConsentMetadata() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
@@ -184,7 +184,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				consentDocumentResponse = studyMetaDataOrchestration.consentDocument(studyId, consentVersion, activityId, activityVersion);
@@ -199,7 +199,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
 		return consentDocumentResponse;
@@ -227,7 +227,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
@@ -242,7 +242,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
 		return resourcesResponse;
@@ -270,7 +270,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
@@ -285,7 +285,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Ends");
 		return studyInfoResponse;
@@ -313,7 +313,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				activityResponse = activityMetaDataOrchestration.studyActivityList(studyId);
@@ -328,7 +328,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityList() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Ends");
 		return activityResponse;
@@ -361,13 +361,13 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId, studyId, activityVersion);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_ACTIVITY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID).build();
 				}
 				
 				isActivityTypeQuestionnaire = studyMetaDataOrchestration.isActivityTypeQuestionnaire(activityId, studyId, activityVersion);
@@ -394,7 +394,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyActivityMetadata() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 	}
 	
@@ -420,7 +420,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId);
@@ -435,7 +435,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - studyDashboardInfo() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Ends");
 		return studyDashboardResponse;
@@ -466,7 +466,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - termsPolicy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Ends");
 		return termsPolicyResponse;
@@ -502,7 +502,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - notifications() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Ends");
 		return notificationsResponse;
@@ -537,7 +537,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - feedbackDetails() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - feedbackDetails() :: Ends");
 		return appResponse;
@@ -575,7 +575,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - contactUsDetails() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - contactUsDetails() :: Ends");
 		return appResponse;
@@ -606,7 +606,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
 		return appUpdatesResponse;
@@ -633,7 +633,7 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if(!isValidFlag){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT, StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
 				studyUpdatesResponse = appMetaDataOrchestration.studyUpdates(studyId, studyVersion);
@@ -647,6 +647,8 @@ public class StudyMetaDataService {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
@@ -700,7 +702,7 @@ public class StudyMetaDataService {
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataService - updateAppVersionDetails() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - updateAppVersionDetails() :: Ends");
 		return updateAppVersionResponse;
@@ -747,7 +749,7 @@ public class StudyMetaDataService {
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - interceptorDataBaseQuery() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.FAILURE).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
 		return message;
