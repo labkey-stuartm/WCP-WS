@@ -220,4 +220,8 @@ public interface StudyMetaDataConstants {
 	
 	public static final String ACTIVITY_STATUS_ACTIVE = "active";
 	public static final String ACTIVITY_STATUS_DELETED = "deleted";
+	
+	public static final String DEFAULT_MIN_TIME = "00:00:00";
+	public static final String DEFAULT_MAX_TIME = "23:59:59";
+	public static final String RESULT_TYPE_GROUPED = "grouped";
 }

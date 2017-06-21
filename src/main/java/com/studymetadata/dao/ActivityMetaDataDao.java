@@ -414,16 +414,16 @@ public class ActivityMetaDataDao {
 					for(QuestionnairesStepsDto questionnairesStep : questionaireStepsList){
 						switch (questionnairesStep.getStepType()) {
 							case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION: instructionIdList.add(questionnairesStep.getInstructionFormId());
-							sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, questionnairesStep.getSequenceNo());
-							questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, questionnairesStep);
+								sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, questionnairesStep.getSequenceNo());
+								questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, questionnairesStep);
 								break;
 							case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION: questionIdList.add(questionnairesStep.getInstructionFormId());
-							sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, questionnairesStep.getSequenceNo());
-							questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, questionnairesStep);
+								sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, questionnairesStep.getSequenceNo());
+								questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, questionnairesStep);
 								break;
 							case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM: formIdList.add(questionnairesStep.getInstructionFormId());
-							sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, questionnairesStep.getSequenceNo());
-							questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, questionnairesStep);
+								sequenceNoMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, questionnairesStep.getSequenceNo());
+								questionnaireStepDetailsMap.put(String.valueOf(questionnairesStep.getInstructionFormId())+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, questionnairesStep);
 								break;
 							default:
 								break;
@@ -494,14 +494,14 @@ public class ActivityMetaDataDao {
 		List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<>();
 		try{
 			switch (activeTask.getFrequency()) {
-			case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
-				runDetailsBean = getActiveTaskFrequencyDetailsForDaily(activeTask, runDetailsBean, session);
-				break;
-			case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
-				runDetailsBean = getActiveTaskFrequencyDetailsForManuallySchedule(activeTask, runDetailsBean, session);
-				break;
-			default:
-				break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_DAILY:
+					runDetailsBean = getActiveTaskFrequencyDetailsForDaily(activeTask, runDetailsBean, session);
+					break;
+				case StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
+					runDetailsBean = getActiveTaskFrequencyDetailsForManuallySchedule(activeTask, runDetailsBean, session);
+					break;
+				default:
+					break;
 			}
 			frequencyDetails.setRuns(runDetailsBean);
 		}catch(Exception e){
@@ -561,7 +561,7 @@ public class ActivityMetaDataDao {
 						String activeTaskEndTime;
 						activeTaskStartTime = activeTaskDailyFrequencyList.get(i).getFrequencyTime();
 						if(i == (activeTaskDailyFrequencyList.size()-1)){
-							activeTaskEndTime = "23:59:59";
+							activeTaskEndTime = StudyMetaDataConstants.DEFAULT_MAX_TIME;
 						}else{
 							activeTaskEndTime = StudyMetaDataUtil.addSeconds(StudyMetaDataUtil.getCurrentDate()+" "+activeTaskDailyFrequencyList.get(i+1).getFrequencyTime(), -1);
 							activeTaskEndTime = activeTaskEndTime.substring(11, activeTaskEndTime.length());
@@ -826,7 +826,7 @@ public class ActivityMetaDataDao {
 						String activeTaskEndTime;
 						activeTaskStartTime = dailyFrequencyList.get(i).getFrequencyTime();
 						if(i == (dailyFrequencyList.size()-1)){
-							activeTaskEndTime = "23:59:59";
+							activeTaskEndTime = StudyMetaDataConstants.DEFAULT_MAX_TIME;
 						}else{
 							activeTaskEndTime = StudyMetaDataUtil.addSeconds(StudyMetaDataUtil.getCurrentDate()+" "+dailyFrequencyList.get(i+1).getFrequencyTime(), -1);
 							activeTaskEndTime = activeTaskEndTime.substring(11, activeTaskEndTime.length());
@@ -1135,7 +1135,7 @@ public class ActivityMetaDataDao {
 						if(destinationConditionList != null && !destinationConditionList.isEmpty()){
 							for(QuestionResponseSubTypeDto destinationDto : destinationConditionList){
 								DestinationBean destination = new DestinationBean();
-								if(questionBean.getResultType().equalsIgnoreCase("boolean")){
+								if(questionBean.getResultType().equalsIgnoreCase(StudyMetaDataConstants.QUESTION_BOOLEAN)){
 									destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue().toLowerCase());
 								}else{
 									destination.setCondition(StringUtils.isEmpty(destinationDto.getValue())?"":destinationDto.getValue());
@@ -1205,7 +1205,7 @@ public class ActivityMetaDataDao {
 					HashMap<Integer, QuestionnaireActivityStepsBean> formStepsMap = new HashMap<>();
 
 					formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
-					formBean.setResultType("grouped");
+					formBean.setResultType(StudyMetaDataConstants.RESULT_TYPE_GROUPED);
 					formBean.setKey(StringUtils.isEmpty(formStepDetails.getStepShortTitle())?"":formStepDetails.getStepShortTitle());
 					formBean.setTitle("");
 					formBean.setText("");
@@ -1284,22 +1284,22 @@ public class ActivityMetaDataDao {
 		try{
 			if(StringUtils.isNotEmpty(taskType)){
 				switch (taskType) {
-				case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
-					if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
-						String[] durationArray = attributeValues.getAttributeVal().split(":");
-						activeTaskFormat.put("duration", (Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
-					}else{
-						activeTaskFormat.put("duration", 0);
-					}
-					break;
-				case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
-					activeTaskFormat = spatialSpanMemoryDetails(attributeValues, masterAttributeValue);
-					break;
-				case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
-					activeTaskFormat.put("numberOfDisks", "");
-					break;
-				default:
-					break;
+					case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
+						if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
+							String[] durationArray = attributeValues.getAttributeVal().split(":");
+							activeTaskFormat.put("duration", (Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+						}else{
+							activeTaskFormat.put("duration", 0);
+						}
+						break;
+					case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
+						activeTaskFormat = spatialSpanMemoryDetails(attributeValues, masterAttributeValue);
+						break;
+					case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
+						activeTaskFormat.put("numberOfDisks", "");
+						break;
+					default:
+						break;
 				}
 			}
 		}catch(Exception e){
@@ -1380,49 +1380,49 @@ public class ActivityMetaDataDao {
 				query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionDto.getId());
 				reponseType = (QuestionReponseTypeDto) query.uniqueResult();
 				switch (questionResultType) {
-				case StudyMetaDataConstants.QUESTION_SCALE:
-					questionFormat = formatQuestionScaleDetails(questionDto, reponseType);
-					break;
-				case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
-					questionFormat = formatQuestionContinuousScaleDetails(questionDto, reponseType);
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
-					questionFormat = formatQuestionTextScaleDetails(questionDto, reponseType, session);
-					break;
-				case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
-					questionFormat = formatQuestionValuePickerDetails(questionDto, reponseType, session);
-					break;
-				case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
-					questionFormat = formatQuestionImageChoiceDetails(questionDto, reponseType, session);
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
-					questionFormat = formatQuestionTextChoiceDetails(questionDto, reponseType, session);
-					break;
-				case StudyMetaDataConstants.QUESTION_NUMERIC:
-					questionFormat = formatQuestionNumericDetails(questionDto, reponseType);
-					break;
-				case StudyMetaDataConstants.QUESTION_DATE:
-					questionFormat = formatQuestionDateDetails(questionDto, reponseType);
-					break;
-				case StudyMetaDataConstants.QUESTION_TEXT: 
-					questionFormat = formatQuestionTextDetails(questionDto, reponseType);
-					break;
-				case StudyMetaDataConstants.QUESTION_EMAIL:
-					questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
-					break;
-				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
-					questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:reponseType.getDefaultValue());
-					questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
-					break;
-				case StudyMetaDataConstants.QUESTION_HEIGHT:
-					questionFormat.put("measurementSystem", (reponseType == null || reponseType.getMeasurementSystem() == null)?"":reponseType.getMeasurementSystem()); //Local/Metric/US
-					questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
-					break;
-				case StudyMetaDataConstants.QUESTION_LOCATION:
-					questionFormat.put("useCurrentLocation", (reponseType == null || (reponseType.getUseCurrentLocation() == null || !reponseType.getUseCurrentLocation()))?false:true);
-					break;
-				default:
-					break;
+					case StudyMetaDataConstants.QUESTION_SCALE:
+						questionFormat = formatQuestionScaleDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
+						questionFormat = formatQuestionContinuousScaleDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
+						questionFormat = formatQuestionTextScaleDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
+						questionFormat = formatQuestionValuePickerDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
+						questionFormat = formatQuestionImageChoiceDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
+						questionFormat = formatQuestionTextChoiceDetails(questionDto, reponseType, session);
+						break;
+					case StudyMetaDataConstants.QUESTION_NUMERIC:
+						questionFormat = formatQuestionNumericDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_DATE:
+						questionFormat = formatQuestionDateDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_TEXT: 
+						questionFormat = formatQuestionTextDetails(questionDto, reponseType);
+						break;
+					case StudyMetaDataConstants.QUESTION_EMAIL:
+						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
+						break;
+					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
+						questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:reponseType.getDefaultValue());
+						questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
+						break;
+					case StudyMetaDataConstants.QUESTION_HEIGHT:
+						questionFormat.put("measurementSystem", (reponseType == null || reponseType.getMeasurementSystem() == null)?"":reponseType.getMeasurementSystem()); //Local/Metric/US
+						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
+						break;
+					case StudyMetaDataConstants.QUESTION_LOCATION:
+						questionFormat.put("useCurrentLocation", (reponseType == null || (reponseType.getUseCurrentLocation() == null || !reponseType.getUseCurrentLocation()))?false:true);
+						break;
+					default:
+						break;
 				}
 			}
 		}catch(Exception e){
@@ -1729,7 +1729,7 @@ public class ActivityMetaDataDao {
 					activeTaskFrequencyList = query.list();
 					if(activeTaskFrequencyList != null && !activeTaskFrequencyList.isEmpty()){
 						startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+activeTaskFrequencyList.get(0).getFrequencyTime();
-						endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+"23:59:59";
+						endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 					}
 					activityBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 					activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
@@ -1802,7 +1802,7 @@ public class ActivityMetaDataDao {
 					questionnairesFrequencyList = query.list();
 					if(questionnairesFrequencyList != null && !questionnairesFrequencyList.isEmpty()){
 						startDateTime = questionaire.getStudyLifetimeStart()+" "+questionnairesFrequencyList.get(0).getFrequencyTime();
-						endDateTime = questionaire.getStudyLifetimeEnd()+" "+"23:59:59";
+						endDateTime = questionaire.getStudyLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 					}
 					activityBean.setStartTime(StudyMetaDataUtil.getFormattedDateTimeZone(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 					activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
