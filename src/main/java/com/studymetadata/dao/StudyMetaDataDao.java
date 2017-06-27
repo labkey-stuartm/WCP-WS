@@ -827,12 +827,9 @@ public class StudyMetaDataDao {
 		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			query = session.createQuery("from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' ORDER BY SDTO.id DESC");
+			query.setMaxResults(1);
 			studyDto = (StudyDto) query.uniqueResult();
-			if(studyDto == null){
-				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
-				studyDto = (StudyDto) query.uniqueResult();
-			}
 			isValidStudy = (studyDto == null)?false:true;
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
