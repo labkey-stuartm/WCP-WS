@@ -108,7 +108,7 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		AppResponse response = new AppResponse();
 		Boolean flag = false;
 		try{
-			String contactUsSubject = "My Studies App Helpdesk: '"+subject+"'";
+			String contactUsSubject = "My Studies App HelpDesk: '"+subject+"'";
 			String contactUsContent = "<div>"
 									 +"<div><span>Hi</span></div><br>"
 									 +"<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk. Below are the contact form details:</span></div>"
