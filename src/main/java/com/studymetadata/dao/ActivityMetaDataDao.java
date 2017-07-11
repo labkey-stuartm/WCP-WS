@@ -1444,7 +1444,7 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Integer.parseInt(reponseType.getMaxValue()));
 			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Integer.parseInt(reponseType.getMinValue()));
-			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:reponseType.getStep());
+			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepSize(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
 			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Integer) questionFormat.get("minValue"):getScaleDefaultValue(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), Integer.parseInt(reponseType.getDefaultValue())));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
