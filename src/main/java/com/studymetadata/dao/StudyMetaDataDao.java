@@ -18,10 +18,12 @@ import org.hibernate.Transaction;
 
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
+import com.studymetadata.dto.ComprehensionTestResponseDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
 import com.studymetadata.dto.ConsentMasterInfoDto;
 import com.studymetadata.dto.EligibilityDto;
+import com.studymetadata.dto.EligibilityTestDto;
 import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
@@ -52,6 +54,7 @@ import com.studymetadata.bean.GatewayInfoResourceBean;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
 import com.studymetadata.bean.QuestionInfoBean;
+import com.studymetadata.bean.QuestionnaireActivityStepsBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
@@ -304,6 +307,7 @@ public class StudyMetaDataDao {
 		StudySequenceDto studySequenceDto = null;
 		StudyDto studyDto = null;
 		StudyVersionDto studyVersionDto = null;
+		List<EligibilityTestDto> eligibilityTestList = null;
 		try{
 			session = sessionFactory.openSession();
 
@@ -342,13 +346,49 @@ public class StudyMetaDataDao {
 							}
 							eligibility.setTokenTitle(StringUtils.isEmpty(eligibilityDto.getInstructionalText())?"":eligibilityDto.getInstructionalText());
 
-							//set correctAnswers details for eligibility
-							List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
-							HashMap<String,Object> correctAnsHashMap = new HashMap<>();
-							correctAnsHashMap.put("answer", false);
-							correctAnsHashMap.put("key", "");
-							correctAnswers.add(correctAnsHashMap);
-							eligibility.setCorrectAnswers(correctAnswers);
+							//get the eligibility test list based on the eligibility id
+							query = session.createQuery("from EligibilityTestDto ETDTO where ETDTO.eligibilityId="+eligibilityDto.getId()+" and ETDTO.status=true and ETDTO.active=true order by ETDTO.sequenceNo");
+							eligibilityTestList = query.list();
+							if(eligibilityTestList!=null && !eligibilityTestList.isEmpty()){
+								List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
+								
+								//set correctAnswers details for eligibility
+								List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
+								for(EligibilityTestDto eligibilityTest : eligibilityTestList){
+									QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
+									questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+									questionStep.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
+									questionStep.setKey(eligibilityTest.getShortTitle());
+									questionStep.setTitle(eligibilityTest.getShortTitle());
+									questionStep.setText(eligibilityTest.getQuestion());
+									questionStep.setSkippable(false);
+									questionStep.setGroupName("");
+									questionStep.setRepeatable(false);
+									questionStep.setRepeatableText("");
+									//questionStep.setDestinations(null);
+									questionStep.setHealthDataKey("");
+									//questionStep.setFormat(null);
+									test.add(questionStep);
+									
+									//yes option
+									if(eligibilityTest.getResponseYesOption()){
+										HashMap<String,Object> correctAnsHashMap = new HashMap<>();
+										correctAnsHashMap.put("key", eligibilityTest.getShortTitle());
+										correctAnsHashMap.put("answer", true);
+										correctAnswers.add(correctAnsHashMap);
+									}
+									
+									//no option
+									if(eligibilityTest.getResponseNoOption()){
+										HashMap<String,Object> correctAnsHashMap = new HashMap<>();
+										correctAnsHashMap.put("key", eligibilityTest.getShortTitle());
+										correctAnsHashMap.put("answer", false);
+										correctAnswers.add(correctAnsHashMap);
+									}
+								}
+								eligibility.setTest(test);
+								eligibility.setCorrectAnswers(correctAnswers);
+							}
 							eligibilityConsentResponse.setEligibility(eligibility);
 						}
 					}
@@ -415,7 +455,7 @@ public class StudyMetaDataDao {
 					}
 
 					//Check whether Comprehension List module is done or not
-					if(studySequenceDto.getComprehensionTest().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)){
+					if(studySequenceDto.getComprehensionTest().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y) && (consentDto!=null && consentDto.getNeedComprehensionTest()!=null && consentDto.getNeedComprehensionTest().equalsIgnoreCase(StudyMetaDataConstants.YES))){
 						//Comprehension Question Details
 						query = session.getNamedQuery("comprehensionQuestionByStudyId").setInteger("studyId", studyDto.getId());
 						comprehensionQuestionList = query.list();
@@ -429,18 +469,45 @@ public class StudyMetaDataDao {
 							}
 
 							List<ComprehensionBean> comprehensionList = new ArrayList<>();
+							List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
 							for(ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList){
-								QuestionStepStructureBean questionStepStructure = new QuestionStepStructureBean();
+								QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
 								ComprehensionBean comprehensionBean = new ComprehensionBean();
-								questionStepStructure.setTitle(StringUtils.isEmpty(comprehensionQuestionDto.getQuestionText())?"":comprehensionQuestionDto.getQuestionText());
-								comprehensionBean.setQuestionStepStructureBean(questionStepStructure);
+								questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+								questionStep.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
+								questionStep.setKey(comprehensionQuestionDto.getId().toString());
+								questionStep.setTitle("");
+								questionStep.setText(comprehensionQuestionDto.getQuestionText());
+								questionStep.setSkippable(false);
+								questionStep.setGroupName("");
+								questionStep.setRepeatable(false);
+								questionStep.setRepeatableText("");
+								questionStep.setHealthDataKey("");
+								comprehensionBean.setQuestionStepStructureBean(questionStep);
 								comprehensionList.add(comprehensionBean);
+								
+								//get the comprehension test response based on the compTestId
+								List<ComprehensionTestResponseDto> comprehensionTestResponseList = null;
+								query = session.getNamedQuery("comprehensionQuestionResponseByCTID").setInteger("comprehensionTestQuestionId", comprehensionQuestionDto.getId());
+								comprehensionTestResponseList = query.list();
+								if(comprehensionTestResponseList!=null && !comprehensionTestResponseList.isEmpty()){
+									CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
+									String answers = "";
+									for(ComprehensionTestResponseDto compResp : comprehensionTestResponseList){
+										if(compResp.getCorrectAnswer()){
+											answers += StringUtils.isEmpty(answers)?compResp.getResponseOption().trim():","+compResp.getResponseOption().trim();
+										}
+										
+									}
+									if(StringUtils.isNotEmpty(answers)){
+										correctAnswerBean.setAnswer(answers.split(","));
+									}
+									correctAnswerBean.setKey(comprehensionQuestionDto.getId().toString());
+									correctAnswerBean.setEvaluation(comprehensionQuestionDto.getStructureOfCorrectAns()?StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ALL:StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ANY);
+									correctAnswerBeanList.add(correctAnswerBean);
+								}
 							}
 							comprehensionDetailsBean.setQuestions(comprehensionList);
-
-							List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
-							CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
-							correctAnswerBeanList.add(correctAnswerBean);
 							comprehensionDetailsBean.setCorrectAnswers(correctAnswerBeanList);
 							consent.setComprehension(comprehensionDetailsBean);
 						}

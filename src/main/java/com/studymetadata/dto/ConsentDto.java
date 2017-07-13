@@ -105,6 +105,9 @@ public class ConsentDto implements Serializable{
 	@Column(name = "is_live")
 	private Integer live = 0;
 	
+	@Column(name = "need_comprehension_test")
+	private String needComprehensionTest;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -304,6 +307,14 @@ public class ConsentDto implements Serializable{
 
 	public void setLive(Integer live) {
 		this.live = live;
+	}
+
+	public String getNeedComprehensionTest() {
+		return needComprehensionTest;
+	}
+
+	public void setNeedComprehensionTest(String needComprehensionTest) {
+		this.needComprehensionTest = needComprehensionTest;
 	}
 	
 }

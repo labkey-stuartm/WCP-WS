@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * 
  * @author Mohan
@@ -16,6 +19,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="comprehension_test_response")
+@NamedQueries({
+	@NamedQuery(name="comprehensionQuestionResponseByCTID", query=" from ComprehensionTestResponseDto CTRDTO where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"),
+})
 public class ComprehensionTestResponseDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -32,8 +38,8 @@ public class ComprehensionTestResponseDto implements Serializable{
 	private String responseOption;
 
 	@Column(name="correct_answer")
-	private Integer correctAnswer;
-
+	private Boolean correctAnswer=false;
+	
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
@@ -61,11 +67,11 @@ public class ComprehensionTestResponseDto implements Serializable{
 		this.responseOption = responseOption;
 	}
 
-	public Integer getCorrectAnswer() {
+	public Boolean getCorrectAnswer() {
 		return correctAnswer;
 	}
 
-	public void setCorrectAnswer(Integer correctAnswer) {
+	public void setCorrectAnswer(Boolean correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
 

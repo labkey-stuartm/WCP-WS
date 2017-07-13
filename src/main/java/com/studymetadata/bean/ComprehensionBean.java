@@ -1,16 +1,13 @@
 package com.studymetadata.bean;
 
-import com.studymetadata.bean.appendix.QuestionStepStructureBean;
-
 public class ComprehensionBean {
-	private QuestionStepStructureBean questionStepStructureBean = new QuestionStepStructureBean(); //<refer Appendix 3 for choice question format>
+	private QuestionnaireActivityStepsBean questionStepStructureBean = new QuestionnaireActivityStepsBean(); //<refer Appendix 3 for choice question format>
 
-	public QuestionStepStructureBean getQuestionStepStructureBean() {
+	public QuestionnaireActivityStepsBean getQuestionStepStructureBean() {
 		return questionStepStructureBean;
 	}
 
-	public void setQuestionStepStructureBean(
-			QuestionStepStructureBean questionStepStructureBean) {
+	public void setQuestionStepStructureBean(QuestionnaireActivityStepsBean questionStepStructureBean) {
 		this.questionStepStructureBean = questionStepStructureBean;
 	}
 	
