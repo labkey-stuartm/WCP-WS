@@ -1,15 +1,18 @@
 package com.studymetadata.bean;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class ResourcesBean {
 	/*/gatewayInfo*/
 	private String title = "";
 	private String type = ""; //html/pdf
+	private String resourcesId = "";
 	private String content = ""; //text/pdf link
-
-	
 	private String audience = "";
-	private String studyId = "";
-	private ConfigurationBean configuration = new ConfigurationBean();
+	private String notificationText = "";
+	//private ResourceConfigurationBean availability = new ResourceConfigurationBean();
+	private Map<String, Object> availability = new LinkedHashMap<>();
 	
 	public String getTitle() {
 		return title;
@@ -23,6 +26,12 @@ public class ResourcesBean {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getResourcesId() {
+		return resourcesId;
+	}
+	public void setResourcesId(String resourcesId) {
+		this.resourcesId = resourcesId;
+	}
 	public String getContent() {
 		return content;
 	}
@@ -35,16 +44,17 @@ public class ResourcesBean {
 	public void setAudience(String audience) {
 		this.audience = audience;
 	}
-	public String getStudyId() {
-		return studyId;
+	public Map<String, Object> getAvailability() {
+		return availability;
 	}
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
+	public void setAvailability(Map<String, Object> availability) {
+		this.availability = availability;
 	}
-	public ConfigurationBean getConfiguration() {
-		return configuration;
+	public String getNotificationText() {
+		return notificationText;
 	}
-	public void setConfiguration(ConfigurationBean configuration) {
-		this.configuration = configuration;
+	public void setNotificationText(String notificationText) {
+		this.notificationText = notificationText;
 	}
+	
 }

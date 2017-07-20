@@ -17,7 +17,7 @@ public class QuestionStepStructureBean {
 	private boolean skippable=false;
 	private String groupName="";
 	private String phi="";
-	private Map<String, Object> destinations = new HashMap<String, Object>(); //Dictionary; nil if branching is false
+	private Map<String, Object> destinations = new HashMap<>(); //Dictionary; nil if branching is false
 	private FormatStructureBean format= new FormatStructureBean(); //Dictionary; specific to each question type, nil in case of no formatting or	validation required
 	
 	public String getTitle() {

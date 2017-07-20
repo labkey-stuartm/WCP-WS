@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 
@@ -25,65 +26,93 @@ public class QuestionsDto implements Serializable{
 	@Column(name="id")
 	private Integer id;
 	
-	@Column(name="short_title")
-	private String shortTitle;
-	
 	@Column(name="question")
 	private String question;
 	
-	@Column(name="mandatory")
-	private Integer mandatory;
-	
-	@Column(name="skip_and_return")
-	private Integer skip_and_return;
-	
-	@Column(name="phi")
-	private Integer phi;
-	
-	@Column(name="otc")
-	private Integer otc;
-	
-	@Column(name="demographics")
-	private Integer demographics;
-	
-	@Column(name="randomize")
-	private String randomize;
-	
-	@Column(name="data_for_health")
-	private Integer dataForHealth;
-	
-	@Column(name="health_data_type")
-	private String healthDataType;
-	
-	@Column(name="time_range")
-	private String timeRange;
+	@Column(name="description")
+	private String description;
 	
 	@Column(name="response_type")
-	private String responseType;
+	private Integer responseType;
 	
-	@Column(name="condition_definition")
-	private String conditionDefinition;
+	@Column(name="skippable")
+	private String skippable;
 	
-	@Column(name="define_condition")
-	private String define_Condition;
+	@Column(name="add_line_chart")
+	private String addLineChart;
 	
-	@Column(name="form_id")
-	private Integer formId;
+	@Column(name="line_chart_timerange")
+	private String lineChartTimeRange;
+	
+	@Column(name="allow_rollback_chart")
+	private String allowRollbackChart;
+	
+	@Column(name="chart_title")
+	private String chartTitle;
+	
+	@Column(name="use_stastic_data")
+	private String useStasticData;
+	
+	@Column(name="stat_short_name")
+	private String statShortName;
+	
+	@Column(name="stat_display_name")
+	private String statDisplayName;
+	
+	@Column(name="stat_diaplay_units")
+	private String statDisplayUnits;
+	
+	@Column(name="stat_type")
+	private Integer statType;
+	
+	@Column(name="stat_formula")
+	private Integer statFormula;
+	
+	@Column(name = "created_on")
+	private String createdOn;
+	
+	@Column(name = "modified_on")
+	private String modifiedOn;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "modified_by")
+	private Integer modifiedBy;
+	
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	@Column(name="active")
+	private Boolean active;
+	
+	@Column(name = "short_title")
+	private String shortTitle;
+	
+	@Column(name="status")
+	private Boolean status;
+	
+	@Column(name="use_anchor_date")
+	private Boolean useAnchorDate=false;
 
+	@Transient
+	private String activityId;
+	
+	@Transient
+	private String activityVersion;
+	
+	@Transient
+	private String activityType;
+	
+	@Transient
+	private String activityStepKey;
+	
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getShortTitle() {
-		return shortTitle;
-	}
-
-	public void setShortTitle(String shortTitle) {
-		this.shortTitle = shortTitle;
 	}
 
 	public String getQuestion() {
@@ -94,108 +123,212 @@ public class QuestionsDto implements Serializable{
 		this.question = question;
 	}
 
-	public Integer getMandatory() {
-		return mandatory;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMandatory(Integer mandatory) {
-		this.mandatory = mandatory;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public Integer getSkip_and_return() {
-		return skip_and_return;
-	}
-
-	public void setSkip_and_return(Integer skip_and_return) {
-		this.skip_and_return = skip_and_return;
-	}
-
-	public Integer getPhi() {
-		return phi;
-	}
-
-	public void setPhi(Integer phi) {
-		this.phi = phi;
-	}
-
-	public Integer getOtc() {
-		return otc;
-	}
-
-	public void setOtc(Integer otc) {
-		this.otc = otc;
-	}
-
-	public Integer getDemographics() {
-		return demographics;
-	}
-
-	public void setDemographics(Integer demographics) {
-		this.demographics = demographics;
-	}
-
-	public String getRandomize() {
-		return randomize;
-	}
-
-	public void setRandomize(String randomize) {
-		this.randomize = randomize;
-	}
-
-	public Integer getDataForHealth() {
-		return dataForHealth;
-	}
-
-	public void setDataForHealth(Integer dataForHealth) {
-		this.dataForHealth = dataForHealth;
-	}
-
-	public String getHealthDataType() {
-		return healthDataType;
-	}
-
-	public void setHealthDataType(String healthDataType) {
-		this.healthDataType = healthDataType;
-	}
-
-	public String getTimeRange() {
-		return timeRange;
-	}
-
-	public void setTimeRange(String timeRange) {
-		this.timeRange = timeRange;
-	}
-
-	public String getResponseType() {
+	public Integer getResponseType() {
 		return responseType;
 	}
 
-	public void setResponseType(String responseType) {
+	public void setResponseType(Integer responseType) {
 		this.responseType = responseType;
 	}
 
-	public String getConditionDefinition() {
-		return conditionDefinition;
+	public String getSkippable() {
+		return skippable;
 	}
 
-	public void setConditionDefinition(String conditionDefinition) {
-		this.conditionDefinition = conditionDefinition;
+	public void setSkippable(String skippable) {
+		this.skippable = skippable;
 	}
 
-	public String getDefine_Condition() {
-		return define_Condition;
+	public String getAddLineChart() {
+		return addLineChart;
 	}
 
-	public void setDefine_Condition(String define_Condition) {
-		this.define_Condition = define_Condition;
+	public void setAddLineChart(String addLineChart) {
+		this.addLineChart = addLineChart;
 	}
 
-	public Integer getFormId() {
-		return formId;
+	public String getLineChartTimeRange() {
+		return lineChartTimeRange;
 	}
 
-	public void setFormId(Integer formId) {
-		this.formId = formId;
+	public void setLineChartTimeRange(String lineChartTimeRange) {
+		this.lineChartTimeRange = lineChartTimeRange;
+	}
+
+	public String getAllowRollbackChart() {
+		return allowRollbackChart;
+	}
+
+	public void setAllowRollbackChart(String allowRollbackChart) {
+		this.allowRollbackChart = allowRollbackChart;
+	}
+
+	public String getChartTitle() {
+		return chartTitle;
+	}
+
+	public void setChartTitle(String chartTitle) {
+		this.chartTitle = chartTitle;
+	}
+
+	public String getUseStasticData() {
+		return useStasticData;
+	}
+
+	public void setUseStasticData(String useStasticData) {
+		this.useStasticData = useStasticData;
+	}
+
+	public String getStatShortName() {
+		return statShortName;
+	}
+
+	public void setStatShortName(String statShortName) {
+		this.statShortName = statShortName;
+	}
+
+	public String getStatDisplayName() {
+		return statDisplayName;
+	}
+
+	public void setStatDisplayName(String statDisplayName) {
+		this.statDisplayName = statDisplayName;
+	}
+
+	public String getStatDisplayUnits() {
+		return statDisplayUnits;
+	}
+
+	public void setStatDisplayUnits(String statDisplayUnits) {
+		this.statDisplayUnits = statDisplayUnits;
+	}
+
+	public Integer getStatType() {
+		return statType;
+	}
+
+	public void setStatType(Integer statType) {
+		this.statType = statType;
+	}
+
+	public Integer getStatFormula() {
+		return statFormula;
+	}
+
+	public void setStatFormula(Integer statFormula) {
+		this.statFormula = statFormula;
+	}
+
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getShortTitle() {
+		return shortTitle;
+	}
+
+	public void setShortTitle(String shortTitle) {
+		this.shortTitle = shortTitle;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
+	}
+
+	public String getActivityVersion() {
+		return activityVersion;
+	}
+
+	public void setActivityVersion(String activityVersion) {
+		this.activityVersion = activityVersion;
+	}
+
+	public String getActivityType() {
+		return activityType;
+	}
+
+	public void setActivityType(String activityType) {
+		this.activityType = activityType;
+	}
+
+	public String getActivityStepKey() {
+		return activityStepKey;
+	}
+
+	public void setActivityStepKey(String activityStepKey) {
+		this.activityStepKey = activityStepKey;
+	}
+
+	public Boolean getUseAnchorDate() {
+		return useAnchorDate;
+	}
+
+	public void setUseAnchorDate(Boolean useAnchorDate) {
+		this.useAnchorDate = useAnchorDate;
 	}
 	
 }

@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesList", query=" from ResourcesDto R "),
+	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"),
 })
 public class ResourcesDto implements Serializable{
 	
@@ -37,8 +37,8 @@ public class ResourcesDto implements Serializable{
 	@Column(name="title")
 	private String title;
 	
-	@Column(name="text_or_pdf")
-	private String textOrPdf;
+	@Column(name = "text_or_pdf", length = 1)
+	private boolean textOrPdf;
 	
 	@Column(name="rich_text")
 	private String richText;
@@ -46,21 +46,66 @@ public class ResourcesDto implements Serializable{
 	@Column(name="pdf_url")
 	private String pdfUrl;
 	
-	@Column(name="created_by")
-	private String createdBy;
+	@Column(name="pdf_name")
+	private String pdfName;
 	
-	@Column(name="created_on")
+	@Column(name = "resource_visibility", length = 1)
+	private boolean resourceVisibility;
+	
+	@Column(name="time_period_from_days")
+	private Integer timePeriodFromDays;
+	
+	@Column(name="time_period_to_days")
+	private Integer timePeriodToDays;
+	
+	@Column(name="start_date")
+	private String startDate;
+	
+	@Column(name="end_date")
+	private String endDate;
+	
+	@Column(name="resource_text")
+	private String resourceText;
+	
+	@Column(name = "action", length = 1)
+	private boolean action;
+	
+	@Column(name = "study_protocol", length = 1)
+	private boolean studyProtocol;
+	
+	@Column(name = "status", length = 1)
+	private boolean status;
+	
+	@Column(name = "created_by")
+	private Integer createdBy;
+	
+	@Column(name = "created_on")
 	private String createdOn;
 	
-	@Column(name="modified_by")
-	private String modifiedBy;
+	@Column(name = "modified_by")
+	private Integer modifiedBy;
 	
-	@Column(name="modified_on")
+	@Column(name = "modified_on")
 	private String modifiedOn;
 	
-	@Column(name="status")
-	private String status;
-
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	@Column(name="anchor_date")
+	private String anchorDate;
+	
+	@Column(name = "resource_type", length = 1)
+	private boolean resourceType=false;
+	
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	 
+	@Column(name = "x_days_sign", length = 1)
+	private boolean xDaysSign = false;
+	 
+	@Column(name = "y_days_sign", length = 1)
+	private boolean yDaysSign = false;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -85,11 +130,11 @@ public class ResourcesDto implements Serializable{
 		this.title = title;
 	}
 
-	public String getTextOrPdf() {
+	public boolean isTextOrPdf() {
 		return textOrPdf;
 	}
 
-	public void setTextOrPdf(String textOrPdf) {
+	public void setTextOrPdf(boolean textOrPdf) {
 		this.textOrPdf = textOrPdf;
 	}
 
@@ -109,11 +154,91 @@ public class ResourcesDto implements Serializable{
 		this.pdfUrl = pdfUrl;
 	}
 
-	public String getCreatedBy() {
+	public String getPdfName() {
+		return pdfName;
+	}
+
+	public void setPdfName(String pdfName) {
+		this.pdfName = pdfName;
+	}
+
+	public boolean isResourceVisibility() {
+		return resourceVisibility;
+	}
+
+	public void setResourceVisibility(boolean resourceVisibility) {
+		this.resourceVisibility = resourceVisibility;
+	}
+
+	public Integer getTimePeriodFromDays() {
+		return timePeriodFromDays;
+	}
+
+	public void setTimePeriodFromDays(Integer timePeriodFromDays) {
+		this.timePeriodFromDays = timePeriodFromDays;
+	}
+
+	public Integer getTimePeriodToDays() {
+		return timePeriodToDays;
+	}
+
+	public void setTimePeriodToDays(Integer timePeriodToDays) {
+		this.timePeriodToDays = timePeriodToDays;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getResourceText() {
+		return resourceText;
+	}
+
+	public void setResourceText(String resourceText) {
+		this.resourceText = resourceText;
+	}
+
+	public boolean isAction() {
+		return action;
+	}
+
+	public void setAction(boolean action) {
+		this.action = action;
+	}
+
+	public boolean isStudyProtocol() {
+		return studyProtocol;
+	}
+
+	public void setStudyProtocol(boolean studyProtocol) {
+		this.studyProtocol = studyProtocol;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -125,11 +250,11 @@ public class ResourcesDto implements Serializable{
 		this.createdOn = createdOn;
 	}
 
-	public String getModifiedBy() {
+	public Integer getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -141,13 +266,52 @@ public class ResourcesDto implements Serializable{
 		this.modifiedOn = modifiedOn;
 	}
 
-	public String getStatus() {
-		return status;
+	public Integer getStudyVersion() {
+		return studyVersion;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
-	
+
+	public String getAnchorDate() {
+		return anchorDate;
+	}
+
+	public void setAnchorDate(String anchorDate) {
+		this.anchorDate = anchorDate;
+	}
+
+	public boolean isResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(boolean resourceType) {
+		this.resourceType = resourceType;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
+	}
+
+	public boolean isxDaysSign() {
+		return xDaysSign;
+	}
+
+	public void setxDaysSign(boolean xDaysSign) {
+		this.xDaysSign = xDaysSign;
+	}
+
+	public boolean isyDaysSign() {
+		return yDaysSign;
+	}
+
+	public void setyDaysSign(boolean yDaysSign) {
+		this.yDaysSign = yDaysSign;
+	}
 	
 }

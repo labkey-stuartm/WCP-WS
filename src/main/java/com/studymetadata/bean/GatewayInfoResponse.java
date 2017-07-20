@@ -5,8 +5,8 @@ import java.util.List;
 
 public class GatewayInfoResponse{
 	private String message = "FAILURE";
-	private List<InfoBean> info = new ArrayList<InfoBean>();
-	private List<ResourcesBean> resources = new ArrayList<ResourcesBean>();
+	private List<InfoBean> info = new ArrayList<>();
+	private List<GatewayInfoResourceBean> resources = new ArrayList<>();
 	
 	public String getMessage() {
 		return message;
@@ -20,10 +20,10 @@ public class GatewayInfoResponse{
 	public void setInfo(List<InfoBean> info) {
 		this.info = info;
 	}
-	public List<ResourcesBean> getResources() {
+	public List<GatewayInfoResourceBean> getResources() {
 		return resources;
 	}
-	public void setResources(List<ResourcesBean> resources) {
+	public void setResources(List<GatewayInfoResourceBean> resources) {
 		this.resources = resources;
 	}
 	

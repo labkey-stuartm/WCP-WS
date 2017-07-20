@@ -34,6 +34,17 @@ public class QuestionsResponseTypeDto implements Serializable{
 	@Column(name="parameter_value")
 	private String parameterValue;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

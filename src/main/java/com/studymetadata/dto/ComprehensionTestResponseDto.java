@@ -34,6 +34,9 @@ public class ComprehensionTestResponseDto implements Serializable{
 	@Column(name="correct_answer")
 	private Integer correctAnswer;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -64,6 +67,14 @@ public class ComprehensionTestResponseDto implements Serializable{
 
 	public void setCorrectAnswer(Integer correctAnswer) {
 		this.correctAnswer = correctAnswer;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 
 	

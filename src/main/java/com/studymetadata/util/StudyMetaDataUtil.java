@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.security.MessageDigest;
 import java.text.ParseException;
@@ -12,12 +13,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,25 +35,48 @@ public class StudyMetaDataUtil {
 
 	/* Read Properties file */
 	@SuppressWarnings("rawtypes")
-	public static HashMap configMap = StudyMetaDataUtil.getAppProperties();
+	protected static final  HashMap configMap = StudyMetaDataUtil.getAppProperties();
+	
+//	@SuppressWarnings("unchecked")	
+//	private static final  HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+
+	//Authorization properties file
+	@SuppressWarnings("rawtypes")
+	protected static final HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
+	
 	@SuppressWarnings("unchecked")	
-	private static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	private static final HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+
 
 	/**
 	 * @return HashMap
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static HashMap getAppProperties(){
+	public static HashMap getAppProperties(){
 		HashMap hm = new HashMap<String, String>();
-		logger.info("INFO: StudyMetaDataUtil - getAppProperties() :: Starts");
-		ResourceBundle rb = ResourceBundle.getBundle("messageResource");
-		Enumeration<String> keys = rb.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			String value = rb.getString(key);
-			hm.put(key, value);
-		}
-		logger.info("INFO: StudyMetaDataUtil - getAppProperties() :: Ends");
+		logger.warn("StudyMetaDataUtil - getAppProperties() :: Properties Initialization");
+		Enumeration<String> keys = null;
+		Enumeration<Object> objectKeys = null;
+		try {
+			ResourceBundle rb = ResourceBundle.getBundle("messageResource");
+			keys = rb.getKeys();
+			while (keys.hasMoreElements()) {
+				String key = keys.nextElement();
+				String value = rb.getString(key);
+				hm.put(key, value);
+			}
+			ServletContext context = ServletContextHolder.getServletContext();
+			Properties prop = new Properties();
+			prop.load(new FileInputStream(context.getInitParameter("property_file_location_path")));
+			objectKeys = prop.keys();
+			while (objectKeys.hasMoreElements()) {
+				String key = (String) objectKeys.nextElement();
+				String value = prop.getProperty(key);
+				hm.put(key, value);
+			}
+		} catch (Exception e) {
+			logger.error("StudyMetaDataUtil - getAppProperties() - ERROR " , e);
+		} 
 		return hm;
 	}
 
@@ -80,26 +107,6 @@ public class StudyMetaDataUtil {
 		logger.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Ends");
 	}
 
-	public static boolean isEmpty(String str) {
-		logger.info("INFO: StudyMetaDataUtil - isEmpty() :: Starts");
-		boolean flag = false;
-		if(null == str || (null != str && "".equals(str.trim()))){
-			flag = true;
-		}
-		logger.info("INFO: StudyMetaDataUtil - isEmpty() :: Ends");
-		return flag;
-	}
-
-	public static boolean isNotEmpty(String str) {
-		logger.info("INFO: StudyMetaDataUtil - isNotEmpty() :: Starts");
-		boolean flag = false;
-		if(null != str && !"".equals(str.trim())){
-			flag = true;
-		}
-		logger.info("INFO: StudyMetaDataUtil - isNotEmpty() :: Ends");
-		return flag;
-	}
-
 	public static int noOfDaysForMonthYear(int month, int year) {
 		logger.info("INFO: StudyMetaDataUtil - noOfDaysForMonthYear() :: Starts");
 		int numDays = 30;
@@ -115,8 +122,6 @@ public class StudyMetaDataUtil {
 		return numDays;
 	}
 
-
-
 	public static int noOfDaysBetweenTwoDates(String startDate, String endDate) {
 		logger.info("INFO: StudyMetaDataUtil - noOfDaysBetweenTwoDates() :: Starts");
 		int daysdiff=0;
@@ -131,26 +136,23 @@ public class StudyMetaDataUtil {
 		return daysdiff;
 	}
 
-
-
-	/* Get Current Date */
-	/*public static String getCurrentDate() {
-		Calendar currentDate = Calendar.getInstance();
-		String dateNow = commonMavenWSConstants.SDF_DATE.format(currentDate.getTime());
-		return dateNow;
-	}*/
-
 	public static String getCurrentDate() {
-		Calendar currentDate = Calendar.getInstance();
-		/*String dateNow = AcuityLinkConstants.DB_SDF_DATE.format(currentDate.getTime());*/
-		//SimpleDateFormat formatter = AcuityLinkConstants.DB_SDF_DATE;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-		String dateNow = formatter.format(currentDate.getTime());
+		logger.info("INFO: StudyMetaDataUtil - getCurrentDate() :: Starts");
+		String dateNow = "";
+		try {
+			Calendar currentDate = Calendar.getInstance();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+			dateNow = formatter.format(currentDate.getTime());
+		} catch (Exception e) {
+			logger.error("ERROR: StudyMetaDataUtil - getCurrentDate() " + e);
+		}
+		logger.info("INFO: StudyMetaDataUtil - getCurrentDate() :: Ends");
 		return dateNow;
 	}
 
 	public static String getCurrentDateTime() {
+		logger.info("StudyMetaDataUtil: getCurrentDateTime() - Starts ");
 		String getToday = "";
 		try {
 			Date today = new Date();
@@ -158,12 +160,14 @@ public class StudyMetaDataUtil {
 			formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 			getToday = formatter.format(today.getTime());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getCurrentDateTime() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getCurrentDateTime() - Ends ");
 		return getToday;
 	}
 
 	public static String getFormattedDate1(String inputDate, String inputFormat, String outputFormat) {
+		logger.info("StudyMetaDataUtil: getFormattedDate1() - Starts ");
 		String finalDate = "";
 		java.sql.Date formattedDate = null; 
 		if (inputDate != null && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)){
@@ -174,13 +178,15 @@ public class StudyMetaDataUtil {
 				formatter = new SimpleDateFormat(outputFormat);
 				finalDate = formatter.format(formattedDate);
 			} catch (Exception e){
-				logger.error("ERROR: getFormattedDate() ",e);
+				logger.error("StudyMetaDataUtil: getFormattedDate1() - ERROR",e);
 			}
 		}
+		logger.info("StudyMetaDataUtil: getFormattedDate1() - Ends ");
 		return finalDate;
 	}
 
 	public static String getDateDiffernce(String date1,String date2,boolean liveStreamCreated){
+		logger.info("StudyMetaDataUtil: getDateDiffernce() - Starts ");
 		//HH converts hour in 24 hours format (0-23), day calculation
 		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 		Date d1 = null;
@@ -263,12 +269,14 @@ public class StudyMetaDataUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getDateDiffernce() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getDateDiffernce() - Ends ");
 		return statusFlag;
 	}
 
 	public static String getScheduler(String date1,String date2){
+		logger.info("StudyMetaDataUtil: getScheduler() - Starts ");
 		//HH converts hour in 24 hours format (0-23), day calculation
 		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 		Date d1 = null;
@@ -303,48 +311,58 @@ public class StudyMetaDataUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getScheduler() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getScheduler() - Ends ");
 		return statusFlag;
 	}
 
 
 	public static String getTimeDiffInDaysHoursMins(Date dateOne, Date dateTwo) {
+		logger.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
 		String diff = "";
-		long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-		diff = String.format("%d Day(s) %d hour(s) %d min(s)", TimeUnit.MILLISECONDS.toDays(timeDiff), TimeUnit.MILLISECONDS.toHours(timeDiff) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeDiff)), 
-				TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));
+		try {
+			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+			diff = String.format("%d Day(s) %d hour(s) %d min(s)", TimeUnit.MILLISECONDS.toDays(timeDiff), TimeUnit.MILLISECONDS.toHours(timeDiff) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeDiff)), 
+					TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));
+		} catch (Exception e) {
+			logger.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR " , e);
+		}
+		logger.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
 		return diff;
 	}
 
 	public static String getTimeDiffInDaysHoursMins(String dateOne1, String dateTwo2) {
+		logger.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
 		String diff = "";
 		try{
 			Date dateOne = StudyMetaDataConstants.SDF_DATE_TIME.parse(dateOne1);
 			Date dateTwo = StudyMetaDataConstants.SDF_DATE_TIME.parse(dateTwo2);
 			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
 			diff = String.format("%d",TimeUnit.MILLISECONDS.toMinutes(timeDiff));
-			/*diff = String.format("%d", TimeUnit.MILLISECONDS.toDays(timeDiff), TimeUnit.MILLISECONDS.toHours(timeDiff) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeDiff)), 
-					TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));*/
 		}catch(ParseException e){
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
 		return diff;
 	}
 
 	public static String getEncodedStringByBase64(String plainText) {
+		logger.info("StudyMetaDataUtil: getEncodedStringByBase64() - Starts ");
 		if(StringUtils.isEmpty(plainText)){return "";}
 		try {
 			// encrypt data on your side using BASE64
 			byte[]   bytesEncoded = Base64.encode(plainText.getBytes());
 			return new String(bytesEncoded);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getEncodedStringByBase64() - ERROR " , e);
 
 		}
+		logger.info("StudyMetaDataUtil: getEncodedStringByBase64() - Ends ");
 		return "";
 	}
 	public static String getDecodedStringByBase64(String encodedText) {
+		logger.info("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
 		if(StringUtils.isEmpty(encodedText)){return "";}
 		try {
 			// Decrypt data on other side, by processing encoded data
@@ -352,18 +370,19 @@ public class StudyMetaDataUtil {
 			return  new String(valueDecoded);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getDecodedStringByBase64() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getDecodedStringByBase64() - Ends ");
 		return "";
 
 	}
 
 	public static String getEncryptedString(String input) {
+		logger.info("INFO: getEncryptedString :: Starts");
 		StringBuffer sb = new StringBuffer();
-		logger.info("INFO: getEncodedString :: Starts");
 		if(StringUtils.isNotEmpty(input)){
 			/** Add the password salt to input parameter */
-			input = input + StudyMetaDataConstants.PASSWORD_SALT;
+			input = input + StudyMetaDataConstants.PASS_SALT;
 			try {
 				MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 				messageDigest.update(input.getBytes("UTF-8"));
@@ -377,15 +396,16 @@ public class StudyMetaDataUtil {
 				}
 			}
 			catch (Exception e) {
-				logger.error("ERROR: getEncodedString ",e);
+				logger.error("ERROR: getEncryptedString ",e);
 			}
 		}
-		logger.info("INFO: getEncodedString :: Ends");
+		logger.info("INFO: getEncryptedString :: Ends");
 		return sb.toString();
 	}
 
 
 	public static String getFormattedDate(String inputDate, String inputFormat, String outputFormat) {
+		logger.info("StudyMetaDataUtil: getFormattedDate() - Starts ");
 		String finalDate = "";
 		java.sql.Date formattedDate = null; 
 		if (inputDate != null && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)){
@@ -399,10 +419,12 @@ public class StudyMetaDataUtil {
 				logger.error("ERROR: getFormattedDate ",e);
 			}
 		}
+		logger.info("StudyMetaDataUtil: getFormattedDate() - Ends ");
 		return finalDate;
 	}
 
 	public static String getTimeFromSec(String secs){
+		logger.info("StudyMetaDataUtil: getTimeFromSec() - Starts ");
 		String time ="";
 		int hours = Integer.parseInt(secs) / 3600,
 				remainder = Integer.parseInt(secs) % 3600,
@@ -414,10 +436,12 @@ public class StudyMetaDataUtil {
 				disSec = (seconds < 10 ? "0" : "") + seconds ; 
 		System.out.println(disHour +":"+ disMinu+":"+disSec); 
 		time = disHour +":"+ disMinu+":"+disSec;
+		logger.info("StudyMetaDataUtil: getTimeFromSec() - End ");
 		return time;
 	}
 
 	public static String addMinutes(String dtStr, int minutes) {
+		logger.info("StudyMetaDataUtil: addMinutes() - Starts ");
 		String newdateStr = "";
 		try {
 			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -428,30 +452,14 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = date.format(newDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - addMinutes() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: addMinutes() - Ends ");
 		return newdateStr; 
 	}
 
-
-
-	/*public static String addDays(String dtStr, int minutes) {
-		String newdateStr = "";
-		try {
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date dt = date.parse(dtStr);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(dt);
-			cal.add(Calendar.MINUTE, minutes);
-			Date newDate = cal.getTime();
-			newdateStr = date.format(newDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-        return newdateStr; 
-	}*/
-
 	public static String addDays(String dtStr, int days) {
+		logger.info("StudyMetaDataUtil: addDays() - Starts ");
 		String newdateStr = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE_TIME.parse(dtStr);
@@ -461,12 +469,14 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = StudyMetaDataConstants.SDF_DATE_TIME.format(newDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - addDays() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: addDays() - Ends ");
 		return newdateStr; 
 	}
 
 	public static String addMonth(String dtStr, int months) {
+		logger.info("StudyMetaDataUtil: addMonth() - Starts ");
 		String newdateStr = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(dtStr);
@@ -476,13 +486,15 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr =StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - addMonth() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: addMonth() - Ends ");
 		return newdateStr;
 
 	}
 
 	public static String addYear(String dtStr, int years) {
+		logger.info("StudyMetaDataUtil: addYear() - Starts ");
 		String newdateStr = "";
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(dtStr);
@@ -492,8 +504,9 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - addYear() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: addYear() - Ends ");
 		return newdateStr ;
 	}
 
@@ -520,13 +533,15 @@ public class StudyMetaDataUtil {
 	}
 
 	public static Long getDateToSeconds(String getCurrentDate) {
+		logger.info("StudyMetaDataUtil: getDateToSeconds() - Starts ");
 		Long getInSeconds = null;
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(getCurrentDate);
 			getInSeconds=dt.getTime();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getDateToSeconds() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getDateToSeconds() - Ends ");
 		return getInSeconds;
 	}
 
@@ -546,8 +561,6 @@ public class StudyMetaDataUtil {
 	public static String getToDate(String value) {
 		logger.info("StudyMetaDataUtil: getToDate() - Starts ");
 		String dateText;
-		/* long getLongValue = Long.parseLong(value);*/
-		/* Date date=new Date(value);*/
 		SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");// yyyy-MM-dd
 		df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		dateText = df2.format(value);
@@ -557,53 +570,30 @@ public class StudyMetaDataUtil {
 
 
 	public static Long getDateAndTimeToSeconds(String getCurrentDateTime) {
+		logger.info("StudyMetaDataUtil: getDateAndTimeToSeconds() - Starts ");
 		Long getInSeconds = null;
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE_TIME.parse(getCurrentDateTime);
 			getInSeconds=dt.getTime();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("StudyMetaDataUtil - getDateAndTimeToSeconds() - ERROR " , e);
 		}
+		logger.info("StudyMetaDataUtil: getDateAndTimeToSeconds() - Ends ");
 		return getInSeconds;
 	}
 
 
 	public static String getSecondsToDateandTime(String value) {
-		logger.info("StudyMetaDataUtil: getSecondsToDate() - Starts ");
+		logger.info("StudyMetaDataUtil: getSecondsToDateandTime() - Starts ");
 		String dateText;
 		long getLongValue = Long.parseLong(value);
 		Date date=new Date(getLongValue);
 		SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");// yyyy-MM-dd HH:mm:ss
 		df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		dateText = df2.format(date);
-		logger.info("StudyMetaDataUtil: getSecondsToDate() - Ends ");
+		logger.info("StudyMetaDataUtil: getSecondsToDateandTime() - Ends ");
 		return dateText;
-
-		/*Calendar currentDate = Calendar.getInstance();
-			String dateNow = AcuityLinkConstants.DB_SDF_DATE.format(currentDate.getTime());
-			//SimpleDateFormat formatter = AcuityLinkConstants.DB_SDF_DATE;
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-			String dateNow = formatter.format(currentDate.getTime());
-			return dateNow;*/
 	}
-
-	/* public static String addMinutesForLonDate(String dtStr, int minutes) {
-			String newdateStr = "";
-			try {
-				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date dt = date.parse(dtStr);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(dt);
-				cal.add(Calendar.MINUTE, minutes);
-				Date newDate = cal.getTime();
-				newdateStr = date.format(newDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-	        return newdateStr; 
-		}*/
-
 
 	public static String getSecondsToDateTimeMin(String value) {
 		logger.info("StudyMetaDataUtil: getSecondsToDateTimeMin() - Starts ");
@@ -618,153 +608,15 @@ public class StudyMetaDataUtil {
 	}
 
 	public static String getSecondsToDateForm(String value) {
-		logger.info("StudyMetaDataUtil: getSecondsToDateTimeMin() - Starts ");
+		logger.info("StudyMetaDataUtil: getSecondsToDateForm() - Starts ");
 		String dateText;
 		long getLongValue = Long.parseLong(value);
 		Date date=new Date(getLongValue* 1000);
 		SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");// yyyy-MM-dd HH:mm:ss
 		df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		dateText = df2.format(date);
-		logger.info("StudyMetaDataUtil: getSecondsToDateTimeMin() - Ends ");
+		logger.info("StudyMetaDataUtil: getSecondsToDateForm() - Ends ");
 		return dateText;
-	}
-
-	public static void main(String[] args) {
-		/*try {
-				String imagePath = convertStringBase64ToImage("iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NjVBRkU3MTYyNjBFMTFFNTlCRDY4MzZBNTJERTRFQzUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NjVBRkU3MTcyNjBFMTFFNTlCRDY4MzZBNTJERTRFQzUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo2NUFGRTcxNDI2MEUxMUU1OUJENjgzNkE1MkRFNEVDNSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo2NUFGRTcxNTI2MEUxMUU1OUJENjgzNkE1MkRFNEVDNSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiYpslsAAARkSURBVHja7J1dTuMwEMeHigNY4gLhBGtO0PLKy5YTUE7Q8I6UVuIdOEG7J2ifeG04wfYIuQBSOAFrS442qpLi0NiecWYkCzVUTeKf//PhOMnZ19cXsOGxMwbCQNgYCANhYyAMhI2BMBA2BsJAev/Rj6e3EOeSqFb08UMXjzfBgIwiGVgr1f6qJqmfSAxAUtVmqgkDRjCQcKZBPNc+a4XsGEgYkwcw6ttXDMSvCaMEcUQ5KQPxZzuLWKHVM2EgfjIq22xqY9JhBuIwiM86urYNpcyLEpCfBuu24M9ATgzimxOVlTKQ/qyPWPBMoZKnAGTRY7aEPp5gB6JBZD3+XoK9aMQMRDjqvCnmeIIZyMphDYE2nmAFkpqR7Bq4YCB2fj7zsB/paT/kgfjMhFJANt+FDcgigG9H5bowAQnlQhJA5LowAQlZH6BxXViAhHBVKF0XBiDaZcwHlN2hB4IpqKahlRoayBTwXWZdDRWIAJwTffLj6S0dIpAU8E6FZwqKGBIQVLl/i3qzIQGhcI07VSpJhgBkAu5ncskOnBBAMqBjU6WSScxAJkBvNWEWM5AM6NnEp0pGrA5cA2nE6rBWiYwJiCSsjsrmMQGZA32b+ahLfADRVe8M4rBZDEBigaHtLgYgdxEBSZTbmlIGIiGCe8cP7DdlIFOIz0grpG005artiQIRLit3l0BEg7sqVbtS7dr8vWe35Q9I0yhaHyhjTVQpkiKQpoP+bNhWEgRC0mWNLb9HMpa4mttyCcR2muGTak0SA5BfDdsKokDIKcQWUg5szoHII9tFg0IKRuEWiOiYoWwZhVsgecei6pVRhIkh2qYtbotjSSAgApon6B6I9V1ODcixA85aCsQXQkBKakCKb9LftEUlJCr3i8ebPTUg79/8P2vJxm4B//yWs3g3CnjQbTfsaGVdI4fyThFIYeF+2p7MszdQsBaMW4pAtP2x+E7b41w1lCuERWPhKn74ALK2/J5+volsyWR0TLlH5MKcFrGugZSWUKonVcsjYC9VWwZ2Y2WHQYa2MFx2KBj1KydmRzpjYcDcmo7xDedVuSunSj334XMNFNvV7zrzGpuapDwSVLc1kNLUNonZNob+L7MWPgpXX2/YqUZ/0rEDHk4I6ivodxnrrVKH8wTD11xWCd2X/CQm2O9+ONqXPR7/1gcMn0CqQvEnnTQxUKr4YntDf1+XWAvwuH4sxEvBNnD6cszcVMu5qVfKFnXJHpR97bLuwADkuxT3lJFc1FQF1GA4A2IBzBWUPmOedxjBgNSgPAO+G3qCwQgKpAZmAXju0N2b9DbYbEDwJ8qpk9dAMMzs6gzwKvRxoHgIpoKSm85YBth9te8Fhr5A93Jic+txBs2rU1zURXnDABm2Qg46oyrELqH/a+zVbG1101CO7fzPAa/pznsxLTGKGcP/icQuStibQhL9CslzoGFFDU5VXMraFIk4yJRKILpmmF9wz0DYGAgDYWMgDISNgTAQNgbCQBgIJvsnwAAQ6kbUuyqCkQAAAABJRU5ErkJggg==", "D://temp/");
-				System.out.println("imagePath ==> " + imagePath);
-				BufferedImage image = ImageIO.read(new File("D://temp/" + imagePath));
-				 int imageWidth = image.getWidth();
-				 int imageHeight = image.getHeight();
-				 System.out.println("imageWidth ==> " + imageWidth);
-				 System.out.println("imageHeight ==> " + imageHeight);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
-
-		/*String getCurrentDate=CommonUtil.getCurrentDate();
-			try {
-				Date dt = CommonContants.SDF_DATE.parse(getCurrentDate);
-				 System.out.println("check:---"+dt.getTime());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-
-		/*String getCurrentDate=StudyMetaDataUtil.getCurrentDate();
-			Long long1=StudyMetaDataUtil.getDateToSeconds(getCurrentDate);
-			System.out.println("check:---"+long1);
-			Integer i = (int) (long) long1;
-			System.out.println("ch In:---"+i);*/
-
-		String	uploadImagePath = (String)propMap.get("uploadImagePath");
-		/*StudyMetaDataUtil.getCurrentDateTime();*/
-		/*Long long2=StudyMetaDataUtil.getDateToSeconds(StudyMetaDataUtil.getCurrentDate());
-			System.out.println("vv:---"+StudyMetaDataUtil.getCurrentDate());
-			System.out.println("date in seconds:---"+long2);*/ //1483784940000 
-
-		/*Long long1=StudyMetaDataUtil.getDateAndTimeToSeconds(StudyMetaDataUtil.getCurrentDateTime())/1000;
-			System.out.println("dateTime in seconds:---"+long1);
-			Date d = new Date(long1 * 1000);
-			SimpleDateFormat df2 = new SimpleDateFormat("dd MMM yyyy  HH:mm:ss");// yyyy-MM-dd HH:mm:ss
-		    String dateText = df2.format(d);
-			System.out.println("dateText:----"+ dateText);*/
-
-		/*String currentDateTime=StudyMetaDataUtil.getCurrentDateTime();
-			Long long1=StudyMetaDataUtil.getDateAndTimeToSeconds(currentDateTime)/1000;
-			System.out.println("current time in sec::---"+long1);
-			String subHoursDate=StudyMetaDataUtil.addMinutes(currentDateTime, -60);
-			System.out.println("subHoursDate:---"+subHoursDate);
-			Long long2=StudyMetaDataUtil.getDateAndTimeToSeconds(subHoursDate)/1000;
-		    System.out.println("before 1 hour in sec:---"+long2);*/
-
-		/*String ch=StudyMetaDataUtil.getSecondsToDateandTime(long1.toString() * 1000);
-			System.out.println("ch:---"+ch);*/
-
-		/* File f = null;
-			   boolean bool = false;
-	         f = new File("test.txt");
-	         try {
-				bool = f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-	         // prints
-	         System.out.println("File created: "+bool);*/
-		FileWriter fWriter = null;
-		BufferedWriter writer = null;
-		try {
-			fWriter = new FileWriter("alertCh.html");
-			writer = new BufferedWriter(fWriter);
-			writer.write(""
-					+ " <head>"
-					+ " <script type=\"text/javascript\" src=\"http://player.wowza.com/player/latest/wowzaplayer.min.js\"></script>"
-					+ " </head>"
-					+ "<body>"
-					+ "<div id=\"playerElement\" style=\"width:100%; height:0; padding:0 0 56.25% 0\"></div>"
-					+ "</body>"
-					+ ""
-					+ "<script type=\"text/javascript\">"
-					+ " WowzaPlayer.create('playerElement',"
-					+ " {"
-					+ "\"license\":\"PLAY1-kmQfa-pm8xW-JC7bG-W7Pkv-nkzaT\","
-					+ "\"title\":\"\","
-					+ "\"description\":\"\","
-					+ "\"sourceURL\":\"http://wowzaprod121-i.akamaihd.net/hls/live/266523/6d02f644/playlist.m3u8\","
-					+ "\"autoPlay\":false,"
-					+ "\"volume\":\"75\","
-					+ "\"mute\":false,"
-					+ "\"loop\":false,"
-					+ "\"uiShowQuickRewind\":false"
-					+ " }"
-					+ " );"
-					+ "</script>");
-			/* writer.newLine();*/ //this is not actually needed for html files - can make your code more readable though 
-			writer.close(); //make sure you close the writer object 
-		} catch (Exception e) {
-			//catch any exceptions here
-		}
-	}
-
-	public static String getYoutubeURLFile(String url,String liveStreamId){
-		String result =StudyMetaDataConstants.SUCCESS;
-		FileWriter fWriter = null;
-		BufferedWriter writer = null;
-		String localiveStreamFiles = (String)propMap.get("localiveStreamFiles");
-		try {
-			fWriter = new FileWriter(localiveStreamFiles+"/"+liveStreamId+".html");
-			writer = new BufferedWriter(fWriter);
-			writer.write(""
-					+ " <head>"
-					+ " <script type=\"text/javascript\" src=\"http://player.wowza.com/player/latest/wowzaplayer.min.js\"></script>"
-					+ " </head>"
-					+ "<body>"
-					+ "<div id=\"playerElement\" style=\"width:100%; height:0; padding:0 0 56.25% 0\"></div>"
-					+ "</body>"
-					+ ""
-					+ "<script type=\"text/javascript\">"
-					+ " WowzaPlayer.create('playerElement',"
-					+ " {"
-					+ "\"license\":\"PLAY1-kmQfa-pm8xW-JC7bG-W7Pkv-nkzaT\","
-					+ "\"title\":\"\","
-					+ "\"description\":\"\","
-					+ "\"sourceURL\":\""
-					+ url+"\","
-					+ "\"autoPlay\":false,"
-					+ "\"volume\":\"75\","
-					+ "\"mute\":false,"
-					+ "\"loop\":false,"
-					+ "\"uiShowQuickRewind\":false"
-					+ " }"
-					+ " );"
-					+ "</script>");
-			/* writer.newLine();*/ //this is not actually needed for html files - can make your code more readable though 
-			writer.close(); //make sure you close the writer object 
-		} catch (Exception e) {
-			//catch any exceptions here
-		}
-		return result;
 	}
 
 	public static String getCurrentDateTimeInUTC() {
@@ -785,10 +637,10 @@ public class StudyMetaDataUtil {
 		logger.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Ends ");
 		return dateNow;
 	}
-	
+
 	/*---------------------------------------------FDA util methods------------------------------------------*/
-	
-	public static String platformType(String authCredentials) {
+	/*-----------------------------------------FDA WCP WS related methods starts-----------------------------------------*/
+	public static String platformType(String authCredentials, String type) {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Starts");
 		String bundleIdAndAppToken = null;
 		String platform = "";
@@ -802,10 +654,44 @@ public class StudyMetaDataUtil {
 						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 						final String bundleId = tokenizer.nextToken();
 						final String appToken = tokenizer.nextToken();
-						if(bundleId.equals(StudyMetaDataConstants.ANDROID_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.ANDROID_APP_TOKEN)){
-							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
-						}else if(bundleId.equals(StudyMetaDataConstants.IOS_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.IOS_APP_TOKEN)){
-							platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
+							String appBundleId = "";
+							String appTokenId = "";
+							for(Map.Entry<String, String> map : authPropMap.entrySet()){
+								if(map.getKey().equals(appToken)){
+									appTokenId = map.getValue();
+								}
+								
+								if(map.getKey().equals(bundleId)){
+									appBundleId = map.getValue();
+								}
+							}
+							
+							if(StringUtils.isNotEmpty(appBundleId) && StringUtils.isNotEmpty(appTokenId)){
+								final StringTokenizer authTokenizer = new StringTokenizer(appTokenId, ".");
+								final String platformType = authTokenizer.nextToken();
+								final String key = authTokenizer.nextToken();
+								if(platformType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
+									switch (type) {
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = bundleId;
+											break;
+									}
+								}else{
+									switch (type) {
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
+											break;
+										case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: platform = bundleId;
+											break;
+									}
+								}
+							}
+							
 						}
 					}
 				}
@@ -816,5 +702,182 @@ public class StudyMetaDataUtil {
 		logger.info("INFO: StudyMetaDataUtil - platformType() - Ends");
 		return platform;
 	}
+
+	/**
+	 * @author Mohan
+	 * @return HashMap
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static HashMap getAuthorizationProperties(){
+		logger.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
+		HashMap hashMap = new HashMap<String, String>();
+		ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
+		Enumeration<String> keys = rb.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			String value = rb.getString(key);
+			hashMap.put(key, value);
+		}
+		logger.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
+		return hashMap;
+	}
+
+	public static String getDayByDate(String input){
+		logger.info("StudyMetaDataUtil: getDayByDate() - Starts ");
+		String actualDay = "";
+		try {
+			if(StringUtils.isNotEmpty(input)){
+				SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date MyDate = newDateFormat.parse(input);
+				newDateFormat.applyPattern(StudyMetaDataConstants.SDF_DAY);
+				actualDay = newDateFormat.format(MyDate);
+			}
+		} catch (Exception e) {
+			logger.error("StudyMetaDataUtil - getDayByDate() - ERROR " , e);
+		}
+		logger.info("StudyMetaDataUtil: getDayByDate() - Ends ");
+		return actualDay;
+	}
+
+	public static String addDaysToDate(String input, int days){
+		logger.info("StudyMetaDataUtil: addDaysToDate() - Starts ");
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.DATE, days);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			logger.error("StudyMetaDataUtil - addDaysToDate() - ERROR " , e);
+		}
+		logger.info("StudyMetaDataUtil: addDaysToDate() - Ends ");
+		return output;
+	}
+
+	public static String addWeeksToDate(String input, int weeks){
+		logger.info("StudyMetaDataUtil: addWeeksToDate() - Starts ");
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.WEEK_OF_MONTH, weeks);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			logger.error("StudyMetaDataUtil - addWeeksToDate() - ERROR " , e);
+		}
+		logger.info("StudyMetaDataUtil: addWeeksToDate() - Ends ");
+		return output;
+	}
+
+	public static String addMonthsToDate(String input, int months){
+		logger.info("StudyMetaDataUtil: addMonthsToDate() - Starts ");
+		String output = "";
+		try {
+			Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.MONTH, months);
+			Date newDate = cal.getTime();
+			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
+		} catch (ParseException e) {
+			logger.error("StudyMetaDataUtil - addMonthsToDate() - ERROR " , e);
+		}
+		logger.info("StudyMetaDataUtil: addMonthsToDate() - Ends ");
+		return output;
+	}
+
+	public static String getFormattedDateTimeZone(String input, String inputFormat, String outputFormat){
+		logger.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Starts ");
+		String output = "";
+		try{
+			if(StringUtils.isNotEmpty(input)){
+				SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
+				Date inputDate = inputSDF.parse(input);
+				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat); //yyyy-MM-dd'T'hh:mm:ssZ, yyyy-MM-dd'T'HH:mm:ss.SSSZ
+				//outputSDF.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+				//outputSDF.setTimeZone(TimeZone.getDefault()); //TimeZone.getTimeZone("CST")
+				output = outputSDF.format(inputDate);
+			}
+		}catch(Exception e){
+			logger.error("AuthenticationService - getFormattedDateTimeZone() :: ERROR", e);
+		}
+		logger.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Ends ");
+		return output;
+	}
 	
+	public static String addSeconds(String dtStr, int seconds) {
+		logger.info("StudyMetaDataUtil: addSeconds() - Starts ");
+		String newdateStr = "";
+		try {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date dt = date.parse(dtStr);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dt);
+			cal.add(Calendar.SECOND, seconds);
+			Date newDate = cal.getTime();
+			newdateStr = date.format(newDate);
+		} catch (ParseException e) {
+			logger.error("AuthenticationService - addSeconds() :: ERROR", e);
+		}
+		logger.info("StudyMetaDataUtil: addSeconds() - Ends ");
+		return newdateStr;
+	}
+	
+	public static String getMilliSecondsForImagePath() {
+		logger.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Starts ");
+		String milliSeconds;
+		Calendar cal = Calendar.getInstance();
+		milliSeconds = "?v="+cal.getTimeInMillis();
+		logger.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
+		return milliSeconds;
+	}
+	
+	public static String getBundleIdFromAuthorization(String authCredentials) {
+		logger.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Starts");
+		String bundleIdAndAppToken = null;
+		String appBundleId = "";
+		try{
+			if(StringUtils.isNotEmpty(authCredentials)){
+				if(authCredentials.contains("Basic")){
+					final String encodedUserPassword = authCredentials.replaceFirst("Basic"+ " ", "");
+					byte[] decodedBytes = Base64.decode(encodedUserPassword);
+					bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
+					if(bundleIdAndAppToken.contains(":")){
+						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
+						final String bundleId = tokenizer.nextToken();
+						final String appToken = tokenizer.nextToken();
+						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
+							appBundleId = bundleId;
+						}
+						
+					}
+				}
+			}
+		}catch(Exception e){
+			logger.error("StudyMetaDataUtil - getBundleIdFromAuthorization() :: ERROR", e);
+		}
+		logger.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Ends");
+		return appBundleId;
+	}
+	
+	/**
+	 * This method is used to replace all the single quotes with the escape characters
+	 * 
+	 * @author Mohan
+	 * @param activityId
+	 * @return
+	 */
+	public static String replaceSingleQuotes(String activityId){
+		logger.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Starts");
+		if(activityId.indexOf("'") > -1){
+			activityId = activityId.replaceAll("'", "''");
+		}
+		logger.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Ends");
+		return activityId;
+	} 
+	/*-----------------------------------------FDA WCP WS related methods ends-----------------------------------------*/
 }

@@ -20,7 +20,8 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name="consent")
 @NamedQueries({
-	@NamedQuery(name="consentDtoByStudyId", query="from ConsentDto CDTO where CDTO.studyId =:studyId"),
+	@NamedQuery(name="consentDtoByStudyId", query=" from ConsentDto CDTO where CDTO.studyId =:studyId "),
+	@NamedQuery(name="consentDetailsByCustomStudyIdAndVersion", query=" from ConsentDto CDTO where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"),
 })
 public class ConsentDto implements Serializable{
 	
@@ -40,14 +41,27 @@ public class ConsentDto implements Serializable{
 	@Column(name = "share_data_permissions")
 	private Integer shareDataPermissions;
 	
-	@Column(name = "text_of_the_permission")
-	private String textOfThePermission;
+	@Column(name = "title")
+	private String title;
 	
-	@Column(name = "affirmation_text")
-	private String affirmationText;
+	@Column(name = "tagline_description")
+	private String taglineDescription;
 	
-	@Column(name = "denial_text")
-	private String denialText;
+	@Column(name = "short_description")
+	private String shortDescription;
+	
+	@Column(name = "long_description")
+	private String longDescription;
+	
+	
+	@Column(name = "learn_more_text")
+	private String learnMoreText;
+	
+	@Column(name = "consent_doc_type")
+	private String consentDocType;
+	
+	@Column(name = "consent_doc_content")
+	private String consentDocContent;
 	
 	@Column(name = "allow_without_permission")
 	private Integer allowWithoutPermission;
@@ -62,10 +76,13 @@ public class ConsentDto implements Serializable{
 	private String eConsentLastName;
 	
 	@Column(name = "e_consent_agree")
-	private Integer e_consent_agree;
+	private String eConsentAgree;
 	
 	@Column(name = "e_consent_signature")
 	private String eConsentSignature;
+	
+	@Column(name = "e_consent_datetime")
+	private String eConsentDatetime;
 	
 	@Column(name = "created_on")
 	private String createdOn;
@@ -78,7 +95,16 @@ public class ConsentDto implements Serializable{
 	
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-
+	
+	@Column(name = "version")
+	private Float version = 0f;
+	
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -99,7 +125,8 @@ public class ConsentDto implements Serializable{
 		return comprehensionTestMinimumScore;
 	}
 
-	public void setComprehensionTestMinimumScore(Integer comprehensionTestMinimumScore) {
+	public void setComprehensionTestMinimumScore(
+			Integer comprehensionTestMinimumScore) {
 		this.comprehensionTestMinimumScore = comprehensionTestMinimumScore;
 	}
 
@@ -111,28 +138,60 @@ public class ConsentDto implements Serializable{
 		this.shareDataPermissions = shareDataPermissions;
 	}
 
-	public String getTextOfThePermission() {
-		return textOfThePermission;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setTextOfThePermission(String textOfThePermission) {
-		this.textOfThePermission = textOfThePermission;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getAffirmationText() {
-		return affirmationText;
+	public String getTaglineDescription() {
+		return taglineDescription;
 	}
 
-	public void setAffirmationText(String affirmationText) {
-		this.affirmationText = affirmationText;
+	public void setTaglineDescription(String taglineDescription) {
+		this.taglineDescription = taglineDescription;
 	}
 
-	public String getDenialText() {
-		return denialText;
+	public String getShortDescription() {
+		return shortDescription;
 	}
 
-	public void setDenialText(String denialText) {
-		this.denialText = denialText;
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
+	}
+
+	public String getLearnMoreText() {
+		return learnMoreText;
+	}
+
+	public void setLearnMoreText(String learnMoreText) {
+		this.learnMoreText = learnMoreText;
+	}
+
+	public String getConsentDocType() {
+		return consentDocType;
+	}
+
+	public void setConsentDocType(String consentDocType) {
+		this.consentDocType = consentDocType;
+	}
+
+	public String getConsentDocContent() {
+		return consentDocContent;
+	}
+
+	public void setConsentDocContent(String consentDocContent) {
+		this.consentDocContent = consentDocContent;
 	}
 
 	public Integer getAllowWithoutPermission() {
@@ -167,12 +226,12 @@ public class ConsentDto implements Serializable{
 		this.eConsentLastName = eConsentLastName;
 	}
 
-	public Integer getE_consent_agree() {
-		return e_consent_agree;
+	public String geteConsentAgree() {
+		return eConsentAgree;
 	}
 
-	public void setE_consent_agree(Integer e_consent_agree) {
-		this.e_consent_agree = e_consent_agree;
+	public void seteConsentAgree(String eConsentAgree) {
+		this.eConsentAgree = eConsentAgree;
 	}
 
 	public String geteConsentSignature() {
@@ -181,6 +240,14 @@ public class ConsentDto implements Serializable{
 
 	public void seteConsentSignature(String eConsentSignature) {
 		this.eConsentSignature = eConsentSignature;
+	}
+
+	public String geteConsentDatetime() {
+		return eConsentDatetime;
+	}
+
+	public void seteConsentDatetime(String eConsentDatetime) {
+		this.eConsentDatetime = eConsentDatetime;
 	}
 
 	public String getCreatedOn() {
@@ -213,6 +280,30 @@ public class ConsentDto implements Serializable{
 
 	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
 	}
 	
 }

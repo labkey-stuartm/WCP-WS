@@ -44,8 +44,7 @@ public class StudyMetaDataController extends HttpServlet {
 		try {
 			jsonp_callback = (String) req.getSession().getServletContext().getAttribute("jsonp.callback");
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataController - doPost() :: ERROR ==> jsonp_callback key is missing... ");
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataController - doPost() :: ERROR ==> jsonp_callback key is missing... ", e);
 		}
 		
 		try {

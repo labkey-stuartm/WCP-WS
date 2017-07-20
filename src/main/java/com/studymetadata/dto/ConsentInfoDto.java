@@ -20,19 +20,21 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name="consent_info")
 @NamedQueries({
-	@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),
+	/*@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),*/
+	@NamedQuery(name="consentInfoDtoByStudyId", query=" from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
+	@NamedQuery(name="consentInfoDetailsByCustomStudyIdAndVersion", query=" from ConsentInfoDto CIDTO where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version ORDER BY CIDTO.sequenceNo"),
 })
 public class ConsentInfoDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	private Integer id;
 	
-	@Column(name = "consent_id")
-	private Integer consentId;
+	@Column(name = "study_id")
+	private Integer studyId;
 	
 	@Column(name = "consent_item_type")
 	private String consentItemType;
@@ -58,8 +60,8 @@ public class ConsentInfoDto implements Serializable{
 	@Column(name = "visual_step")
 	private String visualStep;
 	
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
 	
 	@Column(name = "created_on")
 	private String createdOn;
@@ -72,7 +74,29 @@ public class ConsentInfoDto implements Serializable{
 	
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
+	
+	@Column(name = "display_title")
+	private String displayTitle;
+	
+	@Column(name="status")
+	private Boolean status;
 
+	@Column(name="active")
+	private Boolean active=true;
+	
+	@Column(name = "consent_item_title_id")
+	private Integer consentItemTitleId;
+	
+	@Column(name = "version")
+	private Float version = 0f;
+	
+	@Column(name = "custom_study_id")
+	private String customStudyId;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -81,12 +105,12 @@ public class ConsentInfoDto implements Serializable{
 		this.id = id;
 	}
 
-	public Integer getConsentId() {
-		return consentId;
+	public Integer getStudyId() {
+		return studyId;
 	}
 
-	public void setConsentId(Integer consentId) {
-		this.consentId = consentId;
+	public void setStudyId(Integer studyId) {
+		this.studyId = studyId;
 	}
 
 	public String getConsentItemType() {
@@ -152,13 +176,13 @@ public class ConsentInfoDto implements Serializable{
 	public void setVisualStep(String visualStep) {
 		this.visualStep = visualStep;
 	}
-
-	public Integer getOrder() {
-		return order;
+	
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
 	public String getCreatedOn() {
@@ -191,6 +215,62 @@ public class ConsentInfoDto implements Serializable{
 
 	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public String getDisplayTitle() {
+		return displayTitle;
+	}
+
+	public void setDisplayTitle(String displayTitle) {
+		this.displayTitle = displayTitle;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public Integer getConsentItemTitleId() {
+		return consentItemTitleId;
+	}
+
+	public void setConsentItemTitleId(Integer consentItemTitleId) {
+		this.consentItemTitleId = consentItemTitleId;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
+	}
+
+	public String getCustomStudyId() {
+		return customStudyId;
+	}
+
+	public void setCustomStudyId(String customStudyId) {
+		this.customStudyId = customStudyId;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
 	}
 	
 }

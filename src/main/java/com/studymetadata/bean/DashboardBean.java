@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardBean {
-	private List<StatisticsBean> statistics = new ArrayList<StatisticsBean>();
-	private List<ChartsBean> charts = new ArrayList<ChartsBean>();
+	private List<StatisticsBean> statistics = new ArrayList<>();
+	private List<ChartsBean> charts = new ArrayList<>();
 	
 	public List<StatisticsBean> getStatistics() {
 		return statistics;

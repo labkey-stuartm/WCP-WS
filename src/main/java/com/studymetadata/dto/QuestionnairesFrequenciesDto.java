@@ -33,7 +33,17 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	
 	@Column(name="frequency_time")
 	private String frequencyTime;
-
+	
+	@Column(name="is_launch_study")
+	private Boolean isLaunchStudy = false;
+	
+	@Column(name="is_study_life_time")
+	private Boolean isStudyLifeTime=false;
+	
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -64,6 +74,30 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 
 	public void setFrequencyTime(String frequencyTime) {
 		this.frequencyTime = frequencyTime;
+	}
+
+	public Boolean getIsLaunchStudy() {
+		return isLaunchStudy;
+	}
+
+	public void setIsLaunchStudy(Boolean isLaunchStudy) {
+		this.isLaunchStudy = isLaunchStudy;
+	}
+
+	public Boolean getIsStudyLifeTime() {
+		return isStudyLifeTime;
+	}
+
+	public void setIsStudyLifeTime(Boolean isStudyLifeTime) {
+		this.isStudyLifeTime = isStudyLifeTime;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 }

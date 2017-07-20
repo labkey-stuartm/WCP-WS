@@ -3,55 +3,64 @@ package com.studymetadata.dao;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.json.JSONObject;
 
 import com.studymetadata.dto.ActiveTaskDto;
-import com.studymetadata.dto.BrandingDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ConsentDto;
 import com.studymetadata.dto.ConsentInfoDto;
+import com.studymetadata.dto.ConsentMasterInfoDto;
 import com.studymetadata.dto.EligibilityDto;
+import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.GatewayInfoDto;
 import com.studymetadata.dto.GatewayWelcomeInfoDto;
+import com.studymetadata.dto.QuestionnairesDto;
+import com.studymetadata.dto.QuestionnairesStepsDto;
+import com.studymetadata.dto.QuestionsDto;
+import com.studymetadata.dto.ReferenceTablesDto;
 import com.studymetadata.dto.ResourcesDto;
 import com.studymetadata.dto.StudyDto;
 import com.studymetadata.dto.StudyPageDto;
+import com.studymetadata.dto.StudySequenceDto;
+import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
-import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
-import com.studymetadata.bean.ActivitiesBean;
-import com.studymetadata.bean.ActivityResponse;
-import com.studymetadata.bean.BrandingBean;
+import com.studymetadata.bean.AnchorDateBean;
 import com.studymetadata.bean.ComprehensionBean;
-import com.studymetadata.bean.ConfigurationBean;
+import com.studymetadata.bean.ComprehensionDetailsBean;
 import com.studymetadata.bean.ConsentBean;
+import com.studymetadata.bean.ConsentDetailsBean;
+import com.studymetadata.bean.ConsentDocumentBean;
+import com.studymetadata.bean.ConsentDocumentResponse;
+import com.studymetadata.bean.CorrectAnswersBean;
 import com.studymetadata.bean.EligibilityBean;
 import com.studymetadata.bean.EligibilityConsentResponse;
+import com.studymetadata.bean.GatewayInfoResourceBean;
 import com.studymetadata.bean.GatewayInfoResponse;
 import com.studymetadata.bean.InfoBean;
-import com.studymetadata.bean.NotificationsResponse;
+import com.studymetadata.bean.QuestionInfoBean;
 import com.studymetadata.bean.ResourcesBean;
 import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.ReviewBean;
+import com.studymetadata.bean.SettingsBean;
 import com.studymetadata.bean.SharingBean;
 import com.studymetadata.bean.StudyBean;
-import com.studymetadata.bean.StudyDashboardResponse;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
-import com.studymetadata.bean.TermsPolicyResponse;
+import com.studymetadata.bean.WithdrawalConfigBean;
 import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class StudyMetaDataDao {
@@ -59,14 +68,16 @@ public class StudyMetaDataDao {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
-	
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
+
+	@SuppressWarnings("unchecked")
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
+
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
 	Transaction transaction = null;
 	Query query = null;
 	String queryString = "";
-	String fdaSmdImagePath = propMap.get("fda.smd.currentPath")+propMap.get("fda.smd.study.imagePath");
 
 	/**
 	 * @author Mohan
@@ -74,43 +85,39 @@ public class StudyMetaDataDao {
 	 * @return hasValidAuthorization
 	 * @throws DAOException
 	 */
-	public boolean isValidAuthorizationId(String authorization) throws OrchestrationException{
+	public boolean isValidAuthorizationId(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
 		boolean hasValidAuthorization = false;
 		String bundleIdAndAppToken = null;
 		try{
 			byte[] decodedBytes = Base64.getDecoder().decode(authorization);
-			bundleIdAndAppToken =  new String(decodedBytes, "UTF-8");
+			bundleIdAndAppToken =  new String(decodedBytes, StudyMetaDataConstants.TYPE_UTF8);
 			final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 			final String bundleId = tokenizer.nextToken();
 			final String appToken = tokenizer.nextToken();
-			if((bundleId.equals(StudyMetaDataConstants.ANDROID_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.ANDROID_APP_TOKEN)) || (bundleId.equals(StudyMetaDataConstants.IOS_BUNDLE_ID) && appToken.equals(StudyMetaDataConstants.IOS_APP_TOKEN))){
+			if(authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)){
 				hasValidAuthorization = true;
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
-			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
-			}
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
 		return hasValidAuthorization;
 	}
-	
+
 	/**
 	 * @author Mohan
 	 * @return GatewayInfoResponse
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public GatewayInfoResponse gatewayAppResourcesInfo() throws DAOException{
+	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Starts");
 		GatewayInfoResponse gatewayInfoResponse = new GatewayInfoResponse();
 		GatewayInfoDto gatewayInfo = null;
 		List<GatewayWelcomeInfoDto> gatewayWelcomeInfoList = null;
 		List<ResourcesDto> resourcesList = null;
+		String platformType = "";
 		try{
 			session = sessionFactory.openSession();
 			query = session.getNamedQuery("getGatewayInfo");
@@ -119,61 +126,60 @@ public class StudyMetaDataDao {
 				//get info details
 				query = session.getNamedQuery("getGatewayWelcomeInfoList");
 				gatewayWelcomeInfoList = query.list();
-				if( null != gatewayWelcomeInfoList && gatewayWelcomeInfoList.size() > 0){
-					List<InfoBean> infoBeanList = new ArrayList<InfoBean>();
+				if( null != gatewayWelcomeInfoList && !gatewayWelcomeInfoList.isEmpty()){
+					List<InfoBean> infoBeanList = new ArrayList<>();
 					for(GatewayWelcomeInfoDto gatewayWelcomeInfo : gatewayWelcomeInfoList){
 						InfoBean infoBean = new InfoBean();
-						infoBean.setTitle(StringUtils.isEmpty(gatewayWelcomeInfo.getAppTitle())==true?"":gatewayWelcomeInfo.getAppTitle());
-						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())==true?"":fdaSmdImagePath+gatewayWelcomeInfo.getImagePath());
-						infoBean.setText(StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())==true?"":gatewayWelcomeInfo.getDescription());
-						infoBean.setFdaLink(StringUtils.isEmpty(gatewayInfo.getFdaWebsiteUrl())==true?"":gatewayInfo.getFdaWebsiteUrl());
-						if(infoBeanList.size() == 0){
-							infoBean.setType("video");
-							infoBean.setLink(StringUtils.isEmpty(gatewayInfo.getVideoUrl())==true?"":gatewayInfo.getVideoUrl());
+						infoBean.setTitle(StringUtils.isEmpty(gatewayWelcomeInfo.getAppTitle())?"":gatewayWelcomeInfo.getAppTitle());
+						infoBean.setImage(StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())?"":propMap.get("fda.smd.study.thumbnailPath")+gatewayWelcomeInfo.getImagePath()+StudyMetaDataUtil.getMilliSecondsForImagePath());
+						infoBean.setText(StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())?"":gatewayWelcomeInfo.getDescription());
+						if(infoBeanList.isEmpty()){
+							infoBean.setType(StudyMetaDataConstants.TYPE_VIDEO);
+							infoBean.setVideoLink(StringUtils.isEmpty(gatewayInfo.getVideoUrl())?"":gatewayInfo.getVideoUrl());
 						}else{
-							infoBean.setType("text");
+							infoBean.setType(StudyMetaDataConstants.TYPE_TEXT);
 						}
 						infoBeanList.add(infoBean);
 					}
 					gatewayInfoResponse.setInfo(infoBeanList);
 				}
-				
-				//get resources details
-				query = session.getNamedQuery("getResourcesList");
+			}
+
+			//get resources details
+			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
+			if(StringUtils.isNotEmpty(platformType)){
+				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) and RDTO.status=true and RDTO.action=true ORDER BY RDTO.id DESC");
 				resourcesList = query.list();
-				if( null != resourcesList && resourcesList.size() > 0){
-					List<ResourcesBean> resourceBeanList = new ArrayList<ResourcesBean>();
+				if( null != resourcesList && !resourcesList.isEmpty()){
+					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
 					for(ResourcesDto resource : resourcesList){
-						ResourcesBean resourceBean = new ResourcesBean();
-						resourceBean.setTitle(StringUtils.isEmpty(resource.getTitle())==true?"":resource.getTitle());
-						if(StringUtils.isNotEmpty(resource.getTextOrPdf())){
-							if(resource.getTextOrPdf().equals(1)){
-								resourceBean.setType("html");
-								resourceBean.setContent(resource.getRichText());
-							}else{
-								resourceBean.setType("pdf");
-								resourceBean.setContent(resource.getPdfUrl());
-							}
+						GatewayInfoResourceBean resourceBean = new GatewayInfoResourceBean();
+						resourceBean.setTitle(StringUtils.isEmpty(resource.getTitle())?"":resource.getTitle());
+						if(!resource.isTextOrPdf()){
+							resourceBean.setType(StudyMetaDataConstants.TYPE_HTML);
+							resourceBean.setContent(StringUtils.isEmpty(resource.getRichText())?"":resource.getRichText());
 						}else{
-							resourceBean.setType("");
+							resourceBean.setType(StudyMetaDataConstants.TYPE_PDF);
+							resourceBean.setContent(StringUtils.isEmpty(resource.getPdfUrl())?"":propMap.get("fda.smd.resource.pdfPath")+resource.getPdfUrl());
 						}
+						resourceBean.setResourcesId(resource.getId() == null?"":String.valueOf(resource.getId()));
 						resourceBeanList.add(resourceBean);
 					}
+					gatewayInfoResponse.setResources(resourceBeanList);
 				}
 			}
 			gatewayInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - gatewayAppResourcesInfo() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Ends");
 		return gatewayInfoResponse;
 	}
-	
+
 	/**
 	 * @author Mohan
 	 * @return StudyResponse
@@ -185,25 +191,83 @@ public class StudyMetaDataDao {
 		StudyResponse studyResponse = new StudyResponse();
 		List<StudyDto> studiesList = null;
 		String platformType = "";
+		String studyListQuery = "";
 		try{
-			platformType = StudyMetaDataUtil.platformType(authorization);
+			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if(StringUtils.isNotEmpty(platformType)){
 				session = sessionFactory.openSession();
-				
+
 				//fetch all Gateway studies based on the platform supported (iOS/android)
-				query = session.getNamedQuery("gatewayStudiesListByPlatform").setString("type", StudyMetaDataConstants.STUDY_TYPE_GT).setString("platform", platformType);
-				//query = session.createQuery(" from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' ");
+				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and SDTO.status = '"+StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH+"' OR SDTO.live=1";
+				query = session.createQuery(studyListQuery);
 				studiesList = query.list();
-				if(null != studiesList && studiesList.size() > 0){
-					List<StudyBean> studyBeanList = new ArrayList<StudyBean>();
+				if(null != studiesList && !studiesList.isEmpty()){
+					List<StudyBean> studyBeanList = new ArrayList<>();
 					for(StudyDto studyDto : studiesList){
 						StudyBean studyBean = new StudyBean();
-						studyBean.setCategory(StringUtils.isEmpty(studyDto.getCategory())==true?"":studyDto.getCategory());
-						studyBean.setDescription(StringUtils.isEmpty(studyDto.getDescription())==true?"":studyDto.getDescription());
-						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor())==true?"":studyDto.getResearchSponsor());
-						studyBean.setStatus(StringUtils.isEmpty(studyDto.getStatus())==true?"":studyDto.getStatus());
-						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())==true?"":studyDto.getName());
-						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())==true?"":fdaSmdImagePath+studyDto.getThumbnailImage());
+						studyBean.setStudyVersion(studyDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:studyDto.getVersion().toString());
+						studyBean.setTagline(StringUtils.isEmpty(studyDto.getStudyTagline())?"":studyDto.getStudyTagline());
+						
+						//for sprint 1 if the admin completes overview, settings & admins and basic info details and marked as complete assume that the study is active 
+						switch (studyDto.getStatus()) {
+							case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_PAUSED: studyBean.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH: studyBean.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
+								break;
+							case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: studyBean.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
+								break;
+							default:
+								break;
+						}
+						
+						studyBean.setTitle(StringUtils.isEmpty(studyDto.getName())?"":studyDto.getName());
+						studyBean.setLogo(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage()+StudyMetaDataUtil.getMilliSecondsForImagePath());
+						//set the custom studyid of studies table
+						studyBean.setStudyId(StringUtils.isEmpty(studyDto.getCustomStudyId())?"":studyDto.getCustomStudyId());
+
+						//get category and sponser details
+						if(StringUtils.isNotEmpty(studyDto.getCategory()) && StringUtils.isNotEmpty(studyDto.getResearchSponsor())){
+							List<ReferenceTablesDto> referenceTablesList;
+							query = session.createQuery(" from ReferenceTablesDto RTDTO where RTDTO.id IN ("+studyDto.getCategory()+","+studyDto.getResearchSponsor()+")");
+							referenceTablesList = query.list();
+							if(null != referenceTablesList && !referenceTablesList.isEmpty()){
+								for(ReferenceTablesDto reference : referenceTablesList){
+									if(reference.getCategory().equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)){
+										studyBean.setCategory(StringUtils.isEmpty(reference.getValue())?"":reference.getValue());
+									}else{
+										studyBean.setSponsorName(StringUtils.isEmpty(reference.getValue())?"":reference.getValue());
+									}
+								}
+							}
+						}
+
+						//study settings details
+						SettingsBean settings = new SettingsBean();
+						if(studyDto.getPlatform().contains(",")){
+							settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ALL);
+						}else{
+							switch (studyDto.getPlatform()) {
+								case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_IOS);
+									break;
+								case StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID:	settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID);
+									break;
+								default:
+									break;
+							}
+						}
+						if(StringUtils.isNotEmpty(studyDto.getAllowRejoin()) && studyDto.getAllowRejoin().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+							settings.setRejoin(true);
+						}else{
+							settings.setRejoin(false);
+						}
+						if(StringUtils.isNotEmpty(studyDto.getEnrollingParticipants()) && studyDto.getEnrollingParticipants().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+							settings.setEnrolling(true);
+						}else{
+							settings.setEnrolling(false);
+						}
+						studyBean.setSettings(settings);
 						studyBeanList.add(studyBean);
 					}
 					studyResponse.setStudies(studyBeanList);
@@ -212,16 +276,15 @@ public class StudyMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Ends");
 		return studyResponse;
 	}
-	
+
 	/**
 	 * @author Mohan
 	 * @param studyId
@@ -236,122 +299,330 @@ public class StudyMetaDataDao {
 		ConsentDto consentDto = null;
 		List<ConsentInfoDto> consentInfoDtoList = null;
 		List<ComprehensionTestQuestionDto> comprehensionQuestionList = null;
+		List<ConsentMasterInfoDto> consentMasterInfoList = null;
+		ConsentDetailsBean consent = new ConsentDetailsBean();
+		StudySequenceDto studySequenceDto = null;
+		StudyDto studyDto = null;
+		StudyVersionDto studyVersionDto = null;
 		try{
 			session = sessionFactory.openSession();
-			
-			//Eligibility details by studyId
-			query = session.getNamedQuery("eligibilityDtoByStudyId").setInteger("studyId", Integer.valueOf(studyId));
-			eligibilityDto = (EligibilityDto) query.uniqueResult();
-			if( null != eligibilityDto){
-				EligibilityBean eligibility = new EligibilityBean();
-				//1 - ID validation only (token), 2 - ID validation + Eligibility Test(both), 3 - Eligibility Test only(test)
-				if(null != eligibilityDto.getEligibilityMechanism()){
-					switch (eligibilityDto.getEligibilityMechanism()) {
-					case 1: eligibility.setType("token");
-							break;
-					case 2: eligibility.setType("both");
-							break;
-					case 3: eligibility.setType("test");
-							break;
-					default:eligibility.setType("");
-							break;
-					}
-				}
-				eligibility.setTokenTitle(StringUtils.isEmpty(eligibilityDto.getInstructionalText())==true?"":eligibilityDto.getInstructionalText());
-				eligibilityConsentResponse.setEligibility(eligibility);
-			}
-			
-			//Consent Details
-			query = session.getNamedQuery("consentDtoByStudyId").setInteger("studyId", Integer.valueOf(studyId));
-			consentDto = (ConsentDto) query.uniqueResult();
-			if( null != consentDto){
-				//get Consent Info details by consentId
-				query = session.getNamedQuery("consentInfoDtoByConsentId").setInteger("consentId", consentDto.getId());
-				consentInfoDtoList = query.list();
-				if( null != consentInfoDtoList && consentInfoDtoList.size() > 0){
-					List<ConsentBean> consentBeanList = new ArrayList<ConsentBean>();
-					for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
-						ConsentBean consentBean = new ConsentBean();
-						consentBean.setDescription(StringUtils.isEmpty(consentInfoDto.getBriefSummary())==true?"":consentInfoDto.getBriefSummary());
-						consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getTitle())==true?"":consentInfoDto.getTitle());
-						consentBean.setText(StringUtils.isEmpty(consentInfoDto.getElaborated())==true?"":consentInfoDto.getElaborated());
-						consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getHtmlContent())==true?"":consentInfoDto.getHtmlContent());
-						consentBean.setType(StringUtils.isEmpty(consentInfoDto.getContentType())==true?"":consentInfoDto.getContentType());
-						consentBean.setUrl(StringUtils.isEmpty(consentInfoDto.getUrl())==true?"":consentInfoDto.getUrl());
-						consentBean.setVisualStep(false); //Yes=true and No=false
-						if(StringUtils.isNotEmpty(consentInfoDto.getVisualStep()) && consentInfoDto.getVisualStep().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-							consentBean.setVisualStep(true);
+
+			//get studyId from studies table
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
+				query.setMaxResults(1);
+				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				
+				//get the studySequence details by studyId to check the status of the modules for a study
+				query = session.getNamedQuery("getStudySequenceDetailsByStudyId").setInteger("studyId", studyDto.getId());
+				studySequenceDto = (StudySequenceDto) query.uniqueResult();
+				if(studySequenceDto != null){
+
+					//Check whether Eligibility module is done or not
+					if(studySequenceDto.getEligibility().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)){
+						//Eligibility details by studyId
+						query = session.getNamedQuery("eligibilityDtoByStudyId").setInteger("studyId", studyDto.getId());
+						eligibilityDto = (EligibilityDto) query.uniqueResult();
+						if( eligibilityDto != null){
+							EligibilityBean eligibility = new EligibilityBean();
+							//1 - ID validation only (token), 2 - ID validation + Eligibility Test(both), 3 - Eligibility Test only(test)
+							if(null != eligibilityDto.getEligibilityMechanism()){
+								switch (eligibilityDto.getEligibilityMechanism()) {
+									case 1: eligibility.setType(StudyMetaDataConstants.TYPE_TOKEN);
+										break;
+									case 2: eligibility.setType(StudyMetaDataConstants.TYPE_BOTH);
+										break;
+									case 3: eligibility.setType(StudyMetaDataConstants.TYPE_TEST);
+										break;
+									default:eligibility.setType("");
+										break;
+								}
+							}
+							eligibility.setTokenTitle(StringUtils.isEmpty(eligibilityDto.getInstructionalText())?"":eligibilityDto.getInstructionalText());
+
+							//set correctAnswers details for eligibility
+							List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
+							HashMap<String,Object> correctAnsHashMap = new HashMap<>();
+							correctAnsHashMap.put("answer", false);
+							correctAnsHashMap.put("key", "");
+							correctAnswers.add(correctAnsHashMap);
+							eligibility.setCorrectAnswers(correctAnswers);
+							eligibilityConsentResponse.setEligibility(eligibility);
 						}
-						consentBeanList.add(consentBean);
 					}
-					eligibilityConsentResponse.setConsent(consentBeanList);
-				}
-				
-				//Comprehension Question Details
-				query = session.getNamedQuery("comprehensionQuestionByConsentId").setInteger("consentId", consentDto.getId());
-				comprehensionQuestionList = query.list();
-				if( null != comprehensionQuestionList && comprehensionQuestionList.size() > 0){
-					List<ComprehensionBean> comprehensionList = new ArrayList<ComprehensionBean>();
-					for(ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList){
-						QuestionStepStructureBean questionStepStructure = new QuestionStepStructureBean();
-						ComprehensionBean comprehensionBean = new ComprehensionBean();
-						questionStepStructure.setTitle(StringUtils.isEmpty(comprehensionQuestionDto.getQuestionText())==true?"":comprehensionQuestionDto.getQuestionText());
-						comprehensionBean.setQuestionStepStructureBean(questionStepStructure);
-						comprehensionList.add(comprehensionBean);
+
+					//Consent Details
+					query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getConsentVersion());
+					consentDto = (ConsentDto) query.uniqueResult();
+					if( null != consentDto){
+						consent.setVersion(consentDto.getVersion() == null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:consentDto.getVersion().toString());
+
+						//Sharing
+						SharingBean sharingBean = new SharingBean();
+						sharingBean.setTitle(StringUtils.isEmpty(consentDto.getTitle())?"":consentDto.getTitle());
+						sharingBean.setText(StringUtils.isEmpty(consentDto.getTaglineDescription())?"":consentDto.getTaglineDescription());
+						sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())?"":consentDto.getLearnMoreText());
+						sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())?"":consentDto.getLongDescription());
+						sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())?"":consentDto.getShortDescription());
+						if(consentDto.getAllowWithoutPermission() != null && consentDto.getAllowWithoutPermission() == 1){
+							sharingBean.setAllowWithoutSharing(true);
+						}
+						consent.setSharing(sharingBean);
 					}
-					eligibilityConsentResponse.setComprehension(comprehensionList);
+
+					//get consent master info list
+					query = session.createQuery(" from ConsentMasterInfoDto CMIDTO");
+					consentMasterInfoList = query.list();
+
+					//Check whether ConsentEduInfo module is done or not
+					if(studySequenceDto.getConsentEduInfo().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)){
+						//get Consent Info details by consentId
+						query = session.getNamedQuery("consentInfoDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyVersionDto.getCustomStudyId()).setFloat("version", studyVersionDto.getConsentVersion());
+						consentInfoDtoList = query.list();
+						if( null != consentInfoDtoList && !consentInfoDtoList.isEmpty()){
+							List<ConsentBean> consentBeanList = new ArrayList<>();
+							for(ConsentInfoDto consentInfoDto : consentInfoDtoList){
+								ConsentBean consentBean = new ConsentBean();
+								consentBean.setText(StringUtils.isEmpty(consentInfoDto.getBriefSummary())?"":consentInfoDto.getBriefSummary().replaceAll("&#34;", "\"").replaceAll("&#39;", "'"));
+								consentBean.setTitle(StringUtils.isEmpty(consentInfoDto.getDisplayTitle())?"":consentInfoDto.getDisplayTitle().replaceAll("&#34;", "\"").replaceAll("&#39;", "'"));
+								if(consentInfoDto.getConsentItemTitleId() != null){
+									if(consentMasterInfoList != null && !consentMasterInfoList.isEmpty()){
+										for(ConsentMasterInfoDto masterInfo : consentMasterInfoList){
+											if(masterInfo.getId().intValue() == consentInfoDto.getConsentItemTitleId().intValue()){
+												consentBean.setType(masterInfo.getCode());
+												break;
+											}
+										}
+									}
+								}else{
+									consentBean.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM.toLowerCase());
+								}
+								consentBean.setDescription("");
+								consentBean.setHtml(StringUtils.isEmpty(consentInfoDto.getElaborated())?"":consentInfoDto.getElaborated().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+								consentBean.setUrl(StringUtils.isEmpty(consentInfoDto.getUrl())?"":consentInfoDto.getUrl());
+								//Yes=true and No=false
+								if(StringUtils.isNotEmpty(consentInfoDto.getVisualStep()) && consentInfoDto.getVisualStep().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+									consentBean.setVisualStep(true);
+								}else{
+									consentBean.setVisualStep(false);
+								}
+								consentBeanList.add(consentBean);
+							}
+							consent.setVisualScreens(consentBeanList);
+						}
+					}
+
+					//Check whether Comprehension List module is done or not
+					if(studySequenceDto.getComprehensionTest().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)){
+						//Comprehension Question Details
+						query = session.getNamedQuery("comprehensionQuestionByStudyId").setInteger("studyId", studyDto.getId());
+						comprehensionQuestionList = query.list();
+						if( null != comprehensionQuestionList && !comprehensionQuestionList.isEmpty()){
+							ComprehensionDetailsBean comprehensionDetailsBean = new ComprehensionDetailsBean();
+							//set pass score for comprehension test
+							if(consentDto != null && consentDto.getComprehensionTestMinimumScore() != null){
+								comprehensionDetailsBean.setPassScore(consentDto.getComprehensionTestMinimumScore());
+							}else{
+								comprehensionDetailsBean.setPassScore(0);
+							}
+
+							List<ComprehensionBean> comprehensionList = new ArrayList<>();
+							for(ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList){
+								QuestionStepStructureBean questionStepStructure = new QuestionStepStructureBean();
+								ComprehensionBean comprehensionBean = new ComprehensionBean();
+								questionStepStructure.setTitle(StringUtils.isEmpty(comprehensionQuestionDto.getQuestionText())?"":comprehensionQuestionDto.getQuestionText());
+								comprehensionBean.setQuestionStepStructureBean(questionStepStructure);
+								comprehensionList.add(comprehensionBean);
+							}
+							comprehensionDetailsBean.setQuestions(comprehensionList);
+
+							List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
+							CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
+							correctAnswerBeanList.add(correctAnswerBean);
+							comprehensionDetailsBean.setCorrectAnswers(correctAnswerBeanList);
+							consent.setComprehension(comprehensionDetailsBean);
+						}
+					}
+
+					//Review
+					if( consentDto != null){
+						ReviewBean reviewBean = new ReviewBean();
+						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
+							reviewBean.setReviewHTML(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+						}
+						reviewBean.setReasonForConsent(StudyMetaDataConstants.REASON_FOR_CONSENT);
+						consent.setReview(reviewBean);
+					}
+					eligibilityConsentResponse.setConsent(consent);
+
+					eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 				}
-				
-				//Sharing
-				SharingBean sharingBean = new SharingBean();
-				sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getHtmlConsent())==true?"":consentDto.getHtmlConsent());
-				sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getAffirmationText())==true?"":consentDto.getAffirmationText());
-				sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getDenialText())==true?"":consentDto.getDenialText());
-				eligibilityConsentResponse.setSharing(sharingBean);
-				
-				//Review
-				ReviewBean reviewBean = new ReviewBean();
-				reviewBean.setSignatureContent("");
-				reviewBean.setSignatureTitle("");
-				reviewBean.setTitle("");
-				eligibilityConsentResponse.setReview(reviewBean);
+			}else{
+				eligibilityConsentResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
-			eligibilityConsentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - eligibilityConsentMetadata() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
 	}
-	
+
+	/**
+	 * 
+	 * @author Mohan
+	 * @param studyId
+	 * @param consentVersion
+	 * @param activityId
+	 * @param activityVersion
+	 * @return ConsentDocumentResponse
+	 * @throws DAOException
+	 */
+	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
+		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
+		ConsentDto consent = null;
+		StudyDto studyDto = null;
+		StudyVersionDto studyVersionDto = null;
+		String studyVersionQuery = "from StudyVersionDto SVDTO where SVDTO.customStudyId='"+studyId+"' ";
+		try{
+			session = sessionFactory.openSession();
+			//get studyId from studies table
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto == null){
+				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
+				studyDto = (StudyDto) query.uniqueResult();
+			}
+			
+			if(studyDto != null){
+				if(StringUtils.isNotEmpty(consentVersion)){
+					studyVersionQuery += " and ROUND(SVDTO.consentVersion, 1)="+consentVersion+" ORDER BY SVDTO.versionId DESC";
+				}else if(StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)){
+					studyVersionQuery += " and ROUND(SVDTO.activityVersion, 1)="+activityVersion+" ORDER BY SVDTO.versionId DESC";
+				}else{
+					studyVersionQuery += " ORDER BY SVDTO.versionId DESC";
+				}
+				
+				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+					query = session.createQuery(studyVersionQuery);
+					query.setMaxResults(1);
+					studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				}else{
+					studyVersionDto = new StudyVersionDto();
+					studyVersionDto.setConsentVersion(0f);
+				}
+				if(studyVersionDto != null){
+					if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+						query = session.getNamedQuery("consentDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", studyVersionDto.getConsentVersion());
+						consent = (ConsentDto) query.uniqueResult();
+					}else{
+						query = session.getNamedQuery("consentDtoByStudyId").setInteger("studyId", studyDto.getId());
+						consent = (ConsentDto) query.uniqueResult();
+					}
+
+					//check the consentBo is empty or not
+					if( consent != null){
+						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
+						consentDocumentBean.setType("text/html");
+						consentDocumentBean.setVersion((consent.getVersion() == null)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:String.valueOf(consent.getVersion()));
+						consentDocumentBean.setContent(StringUtils.isEmpty(consent.getConsentDocContent())?"":consent.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+						consentDocumentResponse.setConsent(consentDocumentBean);
+					}
+					consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+				}
+			}else{
+				consentDocumentResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
+			}
+		}catch(Exception e){
+			LOGGER.error("StudyMetaDataDao - consentDocument() :: ERROR", e);
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Ends");
+		return consentDocumentResponse;
+	}
+
 	/**
 	 * @author Mohan
 	 * @param studyId
 	 * @return ResourcesResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ResourcesResponse resourcesForStudy(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
+		List<ResourcesDto> resourcesDtoList = null;
+		StudyDto studyDto = null;
 		try{
-			
+			session = sessionFactory.openSession();
+			//get studyId from studies table
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
+			studyDto = (StudyDto) query.uniqueResult();
+			if(studyDto != null){
+				query = session.getNamedQuery("getResourcesListByStudyId").setInteger("studyId", studyDto.getId());
+				resourcesDtoList = query.list();
+				if( null != resourcesDtoList && !resourcesDtoList.isEmpty()){
+					List<ResourcesBean> resourcesBeanList = new ArrayList<>();
+					for(ResourcesDto resourcesDto : resourcesDtoList){
+						ResourcesBean resourcesBean = new ResourcesBean();
+						resourcesBean.setAudience(resourcesDto.isResourceType()?StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED:StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
+						resourcesBean.setTitle(StringUtils.isEmpty(resourcesDto.getTitle())?"":resourcesDto.getTitle());
+						if(!resourcesDto.isTextOrPdf()){
+							resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
+							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getRichText())?"":resourcesDto.getRichText());
+						}else{
+							resourcesBean.setType(StudyMetaDataConstants.TYPE_PDF);
+							resourcesBean.setContent(StringUtils.isEmpty(resourcesDto.getPdfUrl())?"":propMap.get("fda.smd.resource.pdfPath")+resourcesDto.getPdfUrl());
+						}
+						resourcesBean.setResourcesId(resourcesDto.getId() == null?"":String.valueOf(resourcesDto.getId()));
+
+						//configuration details for the study
+						if(!resourcesDto.isResourceVisibility()){
+							Map<String, Object> availability = new LinkedHashMap<>();
+							availability.put("availableDate", StringUtils.isEmpty(resourcesDto.getStartDate())?"":resourcesDto.getStartDate());
+							availability.put("expiryDate", StringUtils.isEmpty(resourcesDto.getEndDate())?"":resourcesDto.getEndDate());
+							if(resourcesDto.getTimePeriodFromDays()!=null){
+								availability.put("startDays", resourcesDto.isxDaysSign()?Integer.parseInt("-"+resourcesDto.getTimePeriodFromDays()):resourcesDto.getTimePeriodFromDays());
+							}else{
+								availability.put("startDays", 0);
+							}
+							
+							if(resourcesDto.getTimePeriodToDays()!=null){
+								availability.put("endDays", resourcesDto.isyDaysSign()?Integer.parseInt("-"+resourcesDto.getTimePeriodToDays()):resourcesDto.getTimePeriodToDays());
+							}else{
+								availability.put("endDays", 0);
+							}
+							resourcesBean.setAvailability(availability);
+						}
+						resourcesBean.setNotificationText(StringUtils.isEmpty(resourcesDto.getResourceText())?"":resourcesDto.getResourceText());
+						resourcesBeanList.add(resourcesBean);
+					}
+					resourcesResponse.setResources(resourcesBeanList);
+				}
+				resourcesResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				resourcesResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
+			}
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - resourcesForStudy() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Ends");
 		return resourcesResponse;
 	}
-	
+
 	/**
 	 * @author Mohan
 	 * @param studyId
@@ -362,54 +633,181 @@ public class StudyMetaDataDao {
 	public StudyInfoResponse studyInfo(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
+		List<StudyPageDto> studyPageDtoList = null;
 		StudyDto studyDto = null;
-		List<StudyPageDto> StudyPageDtoList = null;
-		BrandingDto brandingDto = null;
 		try{
 			session = sessionFactory.openSession();
-			//get study welcome info and page details by studyId
-			query = session.getNamedQuery("studyDetailsByStudyId").setInteger("id", Integer.valueOf(studyId));
-			//query = session.createQuery(" from StudyDto SDTO where SDTO.id="+studyId);
+			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
-			if(null != studyDto){
-				query = session.getNamedQuery("studyPageDetailsByStudyId").setInteger("studyId", Integer.valueOf(studyId));
-				StudyPageDtoList = query.list();
-				if( null != StudyPageDtoList && StudyPageDtoList.size() > 0){
-					List<InfoBean> infoList = new ArrayList<InfoBean>();
-					for(StudyPageDto studyPageInfo : StudyPageDtoList){
+			if(studyDto == null){
+				query =  session.getNamedQuery("getPublishedStudyByCustomId").setString("customStudyId", studyId);
+				studyDto = (StudyDto) query.uniqueResult();
+			}
+			if(studyDto != null){
+				//get study welcome info and page details by studyId
+				studyInfoResponse.setStudyWebsite(StringUtils.isEmpty(studyDto.getStudyWebsite())?"":studyDto.getStudyWebsite());
+				List<InfoBean> infoList = new ArrayList<>();
+				query = session.getNamedQuery("studyPageDetailsByStudyId").setInteger("studyId", studyDto.getId());
+				studyPageDtoList = query.list();
+				if( null != studyPageDtoList && !studyPageDtoList.isEmpty()){
+					for(StudyPageDto studyPageInfo : studyPageDtoList){
 						InfoBean info = new InfoBean();
-						if(infoList.size() == 0){
-							info.setType("video");
-							info.setLink("");
+						if(infoList.isEmpty()){
+							info.setType(StudyMetaDataConstants.TYPE_VIDEO);
+							info.setVideoLink(StringUtils.isEmpty(studyDto.getMediaLink())?"":studyDto.getMediaLink());
 						}else{
-							info.setType("text");
-							info.setLink("");
+							info.setType(StudyMetaDataConstants.TYPE_TEXT);
+							info.setVideoLink("");
 						}
-						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())==true?"":studyPageInfo.getTitle());
-						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())==true?"":fdaSmdImagePath+studyPageInfo.getImagePath());
-						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())==true?"":studyPageInfo.getDescription());
+						info.setTitle(StringUtils.isEmpty(studyPageInfo.getTitle())?"":studyPageInfo.getTitle());
+						info.setImage(StringUtils.isEmpty(studyPageInfo.getImagePath())?"":propMap.get("fda.smd.study.pagePath")+studyPageInfo.getImagePath()+StudyMetaDataUtil.getMilliSecondsForImagePath());
+						info.setText(StringUtils.isEmpty(studyPageInfo.getDescription())?"":studyPageInfo.getDescription());
+						infoList.add(info);
+					}
+				}else{
+					//for MS1 default value is added for study page1
+					InfoBean info = new InfoBean();
+					if(infoList.isEmpty()){
+						info.setType(StudyMetaDataConstants.TYPE_VIDEO);
+						info.setVideoLink(StringUtils.isEmpty(studyDto.getMediaLink())?"":studyDto.getMediaLink());
+					}else{
+						info.setType(StudyMetaDataConstants.TYPE_TEXT);
+						info.setVideoLink("");
+					}
+					info.setTitle(StringUtils.isEmpty(studyDto.getName())?"":studyDto.getName());
+					info.setImage(StringUtils.isEmpty(studyDto.getThumbnailImage())?"":propMap.get("fda.smd.study.thumbnailPath")+studyDto.getThumbnailImage()+StudyMetaDataUtil.getMilliSecondsForImagePath());
+					info.setText(StringUtils.isEmpty(studyDto.getFullName())?"":studyDto.getFullName());
+					infoList.add(info);
+				}
+				studyInfoResponse.setInfo(infoList);
+
+				//withdraw details
+				WithdrawalConfigBean withdrawConfig = new WithdrawalConfigBean();
+				switch (studyDto.getRetainParticipant()) {
+					case StudyMetaDataConstants.YES: withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_NO_ACTION);
+						break;
+					case StudyMetaDataConstants.NO: withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_DELETE_DATA);
+						break;
+					case StudyMetaDataConstants.ALL: withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_ASK_USER);
+						break;
+					default:
+						break;
+				}
+				withdrawConfig.setMessage(StringUtils.isEmpty(studyDto.getAllowRejoinText())?"":studyDto.getAllowRejoinText());
+				studyInfoResponse.setWithdrawalConfig(withdrawConfig);
+				
+				//check the anchor date details
+				if(!studyDto.getStatus().equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)){
+					query = session.createQuery(" from QuestionnairesDto QDTO where QDTO.customStudyId='"+studyDto.getCustomStudyId()+"' and QDTO.active=true and QDTO.status=true and QDTO.live=1");
+					List<QuestionnairesDto> questionnairesList = query.list();
+					if(questionnairesList != null && !questionnairesList.isEmpty()){
+						List<Integer> questionnaireIdsList = new ArrayList<>();
+						Map<Integer, QuestionnairesDto> questionnaireMap = new TreeMap<>();
+						Map<String, QuestionnairesStepsDto> stepsMap = new TreeMap<>();
+						Map<Integer, QuestionsDto> questionsMap = null;
+						Map<Integer, FormMappingDto> formMappingMap = new TreeMap<>();
+						
+						for(QuestionnairesDto questionnaire : questionnairesList){
+							questionnaireIdsList.add(questionnaire.getId());
+							questionnaireMap.put(questionnaire.getId(), questionnaire);
+						}
+						
+						if(!questionnaireIdsList.isEmpty()){
+							List<Integer> questionIdsList = new ArrayList<>();
+							List<Integer> formIdsList = new ArrayList<>();
+							query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.active=true and QSDTO.status=true and QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"')");
+							List<QuestionnairesStepsDto> questionnairesStepsList = query.list();
+							if(questionnairesStepsList != null && !questionnairesStepsList.isEmpty()){
+								for(QuestionnairesStepsDto stepsDto : questionnairesStepsList){
+									if(stepsDto.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)){
+										questionIdsList.add(stepsDto.getInstructionFormId());
+										stepsMap.put(stepsDto.getInstructionFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, stepsDto);
+									}else{
+										formIdsList.add(stepsDto.getInstructionFormId());
+										stepsMap.put(stepsDto.getInstructionFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM, stepsDto);
+									}
+								}
+								
+								if(!questionIdsList.isEmpty()){
+									query = session.createQuery("from QuestionsDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.id in ("+StringUtils.join(questionIdsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+									query.setMaxResults(1);
+									List<QuestionsDto> questionnsList = query.list();
+									if(questionnsList != null && !questionnsList.isEmpty()){
+										questionsMap = new TreeMap<>();
+										for(QuestionsDto question : questionnsList){
+											questionsMap.put(question.getId(), question);
+										}
+									}
+								}
+								
+								if(questionsMap == null && !formIdsList.isEmpty()){
+									List<Integer> formQuestionsList = new ArrayList<>();
+									query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+") and FDTO.active=true) and FMDTO.active=true ORDER BY FMDTO.formId, FMDTO.sequenceNo");
+									List<FormMappingDto> formMappingList = query.list();
+									if(formMappingList!= null && !formMappingList.isEmpty()){
+										for(FormMappingDto formMapping : formMappingList){
+											formQuestionsList.add(formMapping.getQuestionId());
+											formMappingMap.put(formMapping.getQuestionId(), formMapping);
+										}
+										
+										if(!formQuestionsList.isEmpty()){
+											query = session.createQuery("from QuestionsDto QDTO where QDTO.active=true and QDTO.status=true and QDTO.id in ("+StringUtils.join(formQuestionsList, ',')+") and QDTO.responseType=10 and QDTO.useAnchorDate=true");
+											query.setMaxResults(1);
+											List<QuestionsDto> questionnsList = query.list();
+											if(questionnsList != null && !questionnsList.isEmpty()){
+												questionsMap = new TreeMap<>();
+												for(QuestionsDto question : questionnsList){
+													questionsMap.put(question.getId(), question);
+												}
+											}
+										}
+									}
+								}
+								
+								if(questionsMap != null){
+									AnchorDateBean anchorDate = new AnchorDateBean();
+									anchorDate.setType(StudyMetaDataConstants.ANCHORDATE_TYPE_QUESTION);
+									for(Map.Entry<Integer, QuestionsDto> map : questionsMap.entrySet()){
+										QuestionsDto questionDto = map.getValue();
+										if(questionDto != null){
+											QuestionnairesStepsDto questionnairesSteps;
+											if(StringUtils.isNotEmpty(questionDto.getShortTitle())){
+												FormMappingDto formMapping = formMappingMap.get(questionDto.getId());
+												questionnairesSteps = stepsMap.get(formMapping.getFormId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM);
+											}else{
+												questionnairesSteps = stepsMap.get(questionDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+											}
+											
+											if(questionnairesSteps != null){
+												QuestionnairesDto questionnairesDto = questionnaireMap.get(questionnairesSteps.getQuestionnairesId());
+												if(questionnairesDto != null){
+													QuestionInfoBean questionInfoBean = new QuestionInfoBean();
+													questionInfoBean.setActivityId(questionnairesDto.getShortTitle());
+													questionInfoBean.setActivityVersion(questionnairesDto.getVersion().toString());
+													if(questionnairesSteps.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)){
+														questionInfoBean.setKey(questionDto.getShortTitle());
+													}else{
+														questionInfoBean.setKey(questionnairesSteps.getStepShortTitle());
+													}
+													anchorDate.setQuestionInfo(questionInfoBean);
+												}
+											}
+										}
+									}
+									studyInfoResponse.setAnchorDate(anchorDate);
+								}
+							}
+						}
 					}
 				}
+				studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			}else{
+				studyInfoResponse.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
-			
-			//get branding details by studyId
-			query = session.getNamedQuery("brandingDetailsByStudyId").setInteger("studyId", Integer.valueOf(studyId));
-			brandingDto = (BrandingDto) query.uniqueResult();
-			if(null != brandingDto){
-				BrandingBean branding = new BrandingBean();
-				branding.setBgColor(StringUtils.isEmpty(brandingDto.getBackground())==true?"":brandingDto.getBackground());
-				branding.setLogo(StringUtils.isEmpty(brandingDto.getLogoImagePath())==true?"":fdaSmdImagePath+brandingDto.getLogoImagePath());
-				branding.setTintColor(StringUtils.isEmpty(brandingDto.getTint())==true?"":brandingDto.getTint());
-				branding.setTitleFont(StringUtils.isEmpty(brandingDto.getFont())==true?"":brandingDto.getFont());
-				studyInfoResponse.setBranding(branding);
-			}
-			
-			studyInfoResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataDao - studyInfo() :: ERROR", e);
-			e.printStackTrace();
 		}finally{
-			if(null != session){
+			if(session != null){
 				session.close();
 			}
 		}
@@ -420,142 +818,129 @@ public class StudyMetaDataDao {
 	/**
 	 * @author Mohan
 	 * @param studyId
-	 * @return ActivityResponse
+	 * @return boolean
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unchecked")
-	public ActivityResponse studyActivityList(String studyId) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - studyActivityList() :: Starts");
-		ActivityResponse activityResponse = new ActivityResponse();
-		List<ActiveTaskDto> activeTaskDtoList = null;
+	public boolean isValidStudy(String studyId) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+		boolean isValidStudy = false;
+		StudyDto studyDto = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.getNamedQuery("activeTaskByStudyId").setInteger("studyId", Integer.valueOf(studyId));
-			activeTaskDtoList = query.list();
-			if( null != activeTaskDtoList && activeTaskDtoList.size() > 0){
-				List<ActivitiesBean> activitiesBeanList = new ArrayList<ActivitiesBean>();
-				for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
-					ActivitiesBean activityBean = new ActivitiesBean();
-					activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getTaskName())==true?"":activeTaskDto.getTaskName());
-					activityBean.setType("active task");
-					activityBean.setFrequency(StringUtils.isEmpty(activeTaskDto.getDuration())==true?"":activeTaskDto.getDuration());
-					
-					//set configuration details
-					ConfigurationBean configurationBean = new ConfigurationBean();
-					configurationBean.setStartTime("");
-					configurationBean.setEndTime("");
-					configurationBean.setLifetime("");
-					configurationBean.setRunLifetime("");
-					activityBean.setConfiguration(configurationBean);
-					
-					activitiesBeanList.add(activityBean);
-				}
-				activityResponse.setActivities(activitiesBeanList);
-			}
-			activityResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+			query = session.createQuery("from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' ORDER BY SDTO.id DESC");
+			query.setMaxResults(1);
+			studyDto = (StudyDto) query.uniqueResult();
+			isValidStudy = (studyDto == null)?false:true;
 		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - studyActivityList() :: ERROR", e);
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null ){
 				session.close();
 			}
 		}
-		LOGGER.info("INFO: StudyMetaDataDao - studyActivityList() :: Ends");
-		return activityResponse;
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
+		return isValidStudy;
 	}
 	
 	/**
 	 * @author Mohan
-	 * @param studyId
 	 * @param activityId
-	 * @param activityVersion
-	 * @return ActivityResponse
+	 * @return boolean
 	 * @throws DAOException
 	 */
-	public ActivityResponse studyActivityMetadata(String studyId, String activityId, String activityVersion) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - studyActivityMetadata() :: Starts");
-		ActivityResponse activityResponse = new ActivityResponse();
+	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+		boolean isValidActivity = false;
+		ActiveTaskDto activeTaskDto = null;
+		QuestionnairesDto questionnaireDto = null;
 		try{
-			
+			session = sessionFactory.openSession();
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" and ATDTO.customStudyId='"+studyId+"' ORDER BY ATDTO.id DESC");
+			query.setMaxResults(1);
+			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
+			isValidActivity = (activeTaskDto == null)?false:true;
+			if(!isValidActivity){
+				query = session.createQuery("from QuestionnairesDto QDTO where QDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(QDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and QDTO.customStudyId='"+studyId+"' ORDER BY QDTO.id DESC");
+				query.setMaxResults(1);
+				questionnaireDto = (QuestionnairesDto) query.uniqueResult();
+				isValidActivity = (questionnaireDto == null)?false:true;
+			}
 		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - studyActivityMetadata() :: ERROR", e);
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null ){
 				session.close();
 			}
 		}
-		LOGGER.info("INFO: StudyMetaDataDao - studyActivityMetadata() :: Ends");
-		return activityResponse;
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
+		return isValidActivity;
 	}
 	
 	/**
 	 * @author Mohan
-	 * @param studyId
-	 * @return StudyDashboardResponse
+	 * @param activityId
+	 * @return boolean
 	 * @throws DAOException
 	 */
-	public StudyDashboardResponse studyDashboardInfo(String studyId) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - studyDashboardInfo() :: Starts");
-		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
+		boolean isActivityTypeQuestionnaire = true;
+		ActiveTaskDto activeTaskDto = null;
 		try{
-			
+			session = sessionFactory.openSession();
+			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+"  and ATDTO.customStudyId='"+studyId+"' ORDER BY ATDTO.id DESC");
+			query.setMaxResults(1);
+			activeTaskDto = (ActiveTaskDto) query.uniqueResult();
+			if(activeTaskDto != null){
+				isActivityTypeQuestionnaire = false;
+			}
 		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - studyDashboardInfo() :: ERROR", e);
-			e.printStackTrace();
+			LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
 		}finally{
-			if(null != session){
+			if(session != null ){
 				session.close();
 			}
 		}
-		LOGGER.info("INFO: StudyMetaDataDao - studyDashboardInfo() :: Ends");
-		return studyDashboardResponse;
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
+		return isActivityTypeQuestionnaire;
 	}
 	
 	/**
 	 * @author Mohan
-	 * @param studyId
-	 * @return TermsPolicyResponse
-	 * @throws DAOException
+	 * @param displaytitle
+	 * @return consentTitle
 	 */
-	public TermsPolicyResponse termsPolicy(String studyId) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Starts");
-		TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
-		try{
-			
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - termsPolicy() :: ERROR", e);
-			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
+	public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException{
+		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
+		String consentTitle = "";
+		try {
+			switch (displaytitle) {
+				case "overview": consentTitle = "Overview";
+					break;
+				case "dataGathering": consentTitle = "Data Gathering";
+					break;
+				case "privacy": consentTitle = "Privacy";
+					break;
+				case "dataUse": consentTitle = "Data Use";
+					break;
+				case "timeCommitment": consentTitle = "Time Commitment";
+					break;
+				case "studySurvey": consentTitle = "Study Survey";
+					break;
+				case "studyTasks": consentTitle = "Study Tasks";
+					break;
+				case "withdrawing": consentTitle = "Withdrawing";
+					break;
+				case "customService": consentTitle = "Custom Service";
+					break;
+				default: consentTitle = displaytitle;
+					break;
 			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataDao - getconsentDocumentDisplayTitle() :: ERROR", e);
 		}
-		LOGGER.info("INFO: StudyMetaDataDao - termsPolicy() :: Ends");
-		return termsPolicyResponse;
+		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Ends");
+		return consentTitle;
 	}
 	
-	/**
-	 * @author Mohan
-	 * @param skip
-	 * @return NotificationsResponse
-	 * @throws DAOException
-	 */
-	public NotificationsResponse notifications(String skip) throws DAOException{
-		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Starts");
-		NotificationsResponse notificationsResponse = new NotificationsResponse();
-		try{
-			
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataDao - notifications() :: ERROR", e);
-			e.printStackTrace();
-		}finally{
-			if(null != session){
-				session.close();
-			}
-		}
-		LOGGER.info("INFO: StudyMetaDataDao - notifications() :: Ends");
-		return notificationsResponse;
-	}
 }

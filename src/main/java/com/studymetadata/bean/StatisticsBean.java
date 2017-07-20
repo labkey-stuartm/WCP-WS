@@ -3,10 +3,10 @@ package com.studymetadata.bean;
 public class StatisticsBean {
 	private String title = "";
 	private String displayName = "";
-	private String activityType = "";
+	private String statType = "";
 	private String unit = "";
 	private String calculation = "";
-	private ConfigurationBean dataSource = new ConfigurationBean();
+	private StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
 	
 	public String getTitle() {
 		return title;
@@ -20,11 +20,11 @@ public class StatisticsBean {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-	public String getActivityType() {
-		return activityType;
+	public String getStatType() {
+		return statType;
 	}
-	public void setActivityType(String activityType) {
-		this.activityType = activityType;
+	public void setStatType(String statType) {
+		this.statType = statType;
 	}
 	public String getUnit() {
 		return unit;
@@ -38,12 +38,11 @@ public class StatisticsBean {
 	public void setCalculation(String calculation) {
 		this.calculation = calculation;
 	}
-	public ConfigurationBean getDataSource() {
+	public StatisticsDataSourceBean getDataSource() {
 		return dataSource;
 	}
-	public void setDataSource(ConfigurationBean dataSource) {
+	public void setDataSource(StatisticsDataSourceBean dataSource) {
 		this.dataSource = dataSource;
 	}
-	
 	
 }

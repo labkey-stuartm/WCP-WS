@@ -1,5 +1,8 @@
 package com.studymetadata.util;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -15,13 +18,19 @@ public class HibernateUtil {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
 			synchronized (obj) {
-				if(null == sessionFactory){
-					sessionFactory = new AnnotationConfiguration().configure("hibernate.cfg.xml").buildSessionFactory();
+				/*if(sessionFactory != null && !sessionFactory.isClosed()){
+					sessionFactory.close();
+				}*/
+				
+				//get the DB Config details from external property file
+				if(sessionFactory==null){
+					Properties properties = new Properties();
+					properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
+					sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
 				}
 			}
 		} catch (Throwable e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
-			e.printStackTrace();
 		}
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
 		return sessionFactory;

@@ -20,25 +20,26 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "comprehension_test_question")
 @NamedQueries({
-	@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),
+	/*@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),*/
+	@NamedQuery(name="comprehensionQuestionByStudyId", query=" from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId "),
 })
 public class ComprehensionTestQuestionDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Integer id;
 	
 	@Column(name = "question_text")
 	private String questionText;
 	
-	@Column(name = "consent_id")
-	private Integer consentId;
+	@Column(name = "study_id")
+	private Integer studyId;
 	
-	@Column(name = "order")
-	private Integer order;
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
 	
 	@Column(name = "structure_of_correct_ans")
 	private Integer structureOfCorrectAns;
@@ -55,6 +56,9 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	@Column(name = "modified_on")
 	private Integer modifiedOn;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -70,21 +74,21 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-
-	public Integer getConsentId() {
-		return consentId;
+	
+	public Integer getStudyId() {
+		return studyId;
 	}
 
-	public void setConsentId(Integer consentId) {
-		this.consentId = consentId;
+	public void setStudyId(Integer studyId) {
+		this.studyId = studyId;
+	}
+	
+	public Integer getSequenceNo() {
+		return sequenceNo;
 	}
 
-	public Integer getOrder() {
-		return order;
-	}
-
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
 	}
 
 	public Integer getStructureOfCorrectAns() {
@@ -125,6 +129,14 @@ public class ComprehensionTestQuestionDto implements Serializable{
 
 	public void setModifiedOn(Integer modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 	
 	

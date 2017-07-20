@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.annotations.Type;
 
 /**
  * 
@@ -20,8 +21,12 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "studies")
 @NamedQueries({
-	@NamedQuery(name="gatewayStudiesListByPlatform", query="from StudyDto SDTO where SDTO.type =:type and SDTO.platform like CONCAT(:platform, '%')"),
+	//@NamedQuery(name="gatewayStudiesListByPlatform", query="from StudyDto SDTO where SDTO.type =:type and SDTO.platform like CONCAT('%',:platform,'%')"),
 	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO where SDTO.id =:id"),
+	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
+	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
+	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
+	@NamedQuery(name="getActivityUpdatedOrNotByStudyIdAndVersion", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
 })
 public class StudyDto implements Serializable{
 	
@@ -74,6 +79,9 @@ public class StudyDto implements Serializable{
 	@Column(name = "allow_rejoin")
 	private String allowRejoin;
 	
+	@Column(name = "allow_rejoin_text")
+	private String allowRejoinText;
+	
 	@Column(name = "irb_review")
 	private String irbReview;
 	
@@ -96,11 +104,48 @@ public class StudyDto implements Serializable{
 	private String status;
 	
 	@Column(name = "sequence_number")
-	private String sequenceNumber;
+	private Integer sequenceNumber;
 	
 	@Column(name = "thumbnail_image")
 	private String thumbnailImage;
 	
+	@Column(name="media_link")
+	private String mediaLink;
+	
+	@Column(name="study_website")
+	private String studyWebsite;
+	
+	@Column(name="study_tagline")
+	private String studyTagline;
+	
+	@Column(name="version")
+	private Float version=0f;
+	
+	@Column(name="study_lunched_date")
+	private String studylunchDate;
+	
+	@Column(name = "study_pre_active_flag")
+	@Type(type="yes_no")
+	private boolean studyPreActiveFlag = false;
+	
+	@Column(name = "is_live")
+	private Integer live = 0;
+	
+	@Column(name = "has_study_draft")
+	private Integer hasStudyDraft = 0;
+	
+	@Column(name = "has_activity_draft")
+	private Integer hasActivityDraft = 0;
+	
+	@Column(name = "has_consent_draft")
+	private Integer hasConsentDraft = 0;
+	
+	@Column(name = "has_questionnaire_draft")
+	private Integer hasQuestionnaireDraft = 0;
+	
+	@Column(name = "has_activitetask_draft")
+	private Integer hasActivetaskDraft = 0;
+
 	public Integer getId() {
 		return id;
 	}
@@ -221,6 +266,14 @@ public class StudyDto implements Serializable{
 		this.allowRejoin = allowRejoin;
 	}
 
+	public String getAllowRejoinText() {
+		return allowRejoinText;
+	}
+
+	public void setAllowRejoinText(String allowRejoinText) {
+		this.allowRejoinText = allowRejoinText;
+	}
+
 	public String getIrbReview() {
 		return irbReview;
 	}
@@ -277,11 +330,11 @@ public class StudyDto implements Serializable{
 		this.status = status;
 	}
 
-	public String getSequenceNumber() {
+	public Integer getSequenceNumber() {
 		return sequenceNumber;
 	}
 
-	public void setSequenceNumber(String sequenceNumber) {
+	public void setSequenceNumber(Integer sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 
@@ -291,6 +344,102 @@ public class StudyDto implements Serializable{
 
 	public void setThumbnailImage(String thumbnailImage) {
 		this.thumbnailImage = thumbnailImage;
+	}
+
+	public String getMediaLink() {
+		return mediaLink;
+	}
+
+	public void setMediaLink(String mediaLink) {
+		this.mediaLink = mediaLink;
+	}
+
+	public String getStudyWebsite() {
+		return studyWebsite;
+	}
+
+	public void setStudyWebsite(String studyWebsite) {
+		this.studyWebsite = studyWebsite;
+	}
+
+	public String getStudyTagline() {
+		return studyTagline;
+	}
+
+	public void setStudyTagline(String studyTagline) {
+		this.studyTagline = studyTagline;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
+	}
+
+	public String getStudylunchDate() {
+		return studylunchDate;
+	}
+
+	public void setStudylunchDate(String studylunchDate) {
+		this.studylunchDate = studylunchDate;
+	}
+
+	public boolean isStudyPreActiveFlag() {
+		return studyPreActiveFlag;
+	}
+
+	public void setStudyPreActiveFlag(boolean studyPreActiveFlag) {
+		this.studyPreActiveFlag = studyPreActiveFlag;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
+	}
+
+	public Integer getHasStudyDraft() {
+		return hasStudyDraft;
+	}
+
+	public void setHasStudyDraft(Integer hasStudyDraft) {
+		this.hasStudyDraft = hasStudyDraft;
+	}
+
+	public Integer getHasActivityDraft() {
+		return hasActivityDraft;
+	}
+
+	public void setHasActivityDraft(Integer hasActivityDraft) {
+		this.hasActivityDraft = hasActivityDraft;
+	}
+
+	public Integer getHasConsentDraft() {
+		return hasConsentDraft;
+	}
+
+	public void setHasConsentDraft(Integer hasConsentDraft) {
+		this.hasConsentDraft = hasConsentDraft;
+	}
+
+	public Integer getHasQuestionnaireDraft() {
+		return hasQuestionnaireDraft;
+	}
+
+	public void setHasQuestionnaireDraft(Integer hasQuestionnaireDraft) {
+		this.hasQuestionnaireDraft = hasQuestionnaireDraft;
+	}
+
+	public Integer getHasActivetaskDraft() {
+		return hasActivetaskDraft;
+	}
+
+	public void setHasActivetaskDraft(Integer hasActivetaskDraft) {
+		this.hasActivetaskDraft = hasActivetaskDraft;
 	}
 	
 }

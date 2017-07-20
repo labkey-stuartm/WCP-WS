@@ -9,14 +9,14 @@ public class InitializeServlet extends HttpServlet {
 	private static final Logger LOGGER = Logger.getLogger(InitializeServlet.class);
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	@SuppressWarnings("unused")
 	public void init() throws ServletException {
 		LOGGER.info("INFO: InitializeServlet - init() :: Starts");
 		try {
-			System.out.println("Initializing NewsLetter PlugIn");
+			LOGGER.info("INFO: InitializeServlet - init() - Initializing NewsLetter PlugIn");
 			CronScheluder objPlugin = new CronScheluder();
 		}catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("InitializeServlet - init() - ERROR :: ", e);
 		}
 		LOGGER.info("INFO: InitializeServlet - init() :: Ends");

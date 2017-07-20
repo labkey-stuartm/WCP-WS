@@ -55,6 +55,17 @@ public class StudyPageDto implements Serializable{
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
 
+	@Column(name = "study_version")
+	private Integer studyVersion=1;
+	
+	public Integer getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
+	}
+	
 	public Integer getPageId() {
 		return pageId;
 	}
