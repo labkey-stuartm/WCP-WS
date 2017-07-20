@@ -35,22 +35,24 @@ public class StudyMetaDataUtil {
 
 	/* Read Properties file */
 	@SuppressWarnings("rawtypes")
-	public static HashMap configMap = StudyMetaDataUtil.getAppProperties();
-	@SuppressWarnings("unchecked")	
-	private static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	protected static final  HashMap configMap = StudyMetaDataUtil.getAppProperties();
+	
+//	@SuppressWarnings("unchecked")	
+//	private static final  HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
 
 	//Authorization properties file
 	@SuppressWarnings("rawtypes")
-	public static HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
+	protected static final HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
+	
 	@SuppressWarnings("unchecked")	
-	private static HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+	private static final HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
 
 
 	/**
 	 * @return HashMap
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static HashMap getAppProperties(){
+	public static HashMap getAppProperties(){
 		HashMap hm = new HashMap<String, String>();
 		logger.warn("StudyMetaDataUtil - getAppProperties() :: Properties Initialization");
 		Enumeration<String> keys = null;
@@ -380,7 +382,7 @@ public class StudyMetaDataUtil {
 		StringBuffer sb = new StringBuffer();
 		if(StringUtils.isNotEmpty(input)){
 			/** Add the password salt to input parameter */
-			input = input + StudyMetaDataConstants.PASSWORD_SALT;
+			input = input + StudyMetaDataConstants.PASS_SALT;
 			try {
 				MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 				messageDigest.update(input.getBytes("UTF-8"));
@@ -706,7 +708,7 @@ public class StudyMetaDataUtil {
 	 * @return HashMap
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static HashMap getAuthorizationProperties(){
+	public static HashMap getAuthorizationProperties(){
 		logger.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
 		HashMap hashMap = new HashMap<String, String>();
 		ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");

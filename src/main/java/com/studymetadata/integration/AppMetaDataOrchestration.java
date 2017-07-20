@@ -19,7 +19,7 @@ public class AppMetaDataOrchestration {
 private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 	
 	AppMetaDataDao appMetaDataDao = new AppMetaDataDao();
 	

@@ -50,7 +50,7 @@ public class StudyMetaDataService {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataService.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 	
 	StudyMetaDataOrchestration studyMetaDataOrchestration = new StudyMetaDataOrchestration();
 	ActivityMetaDataOrchestration activityMetaDataOrchestration = new ActivityMetaDataOrchestration();

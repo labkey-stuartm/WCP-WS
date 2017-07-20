@@ -68,10 +68,10 @@ public class StudyMetaDataDao {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
