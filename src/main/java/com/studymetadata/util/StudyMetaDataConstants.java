@@ -195,6 +195,7 @@ public interface StudyMetaDataConstants {
 	public static final String NOTIFICATION_SUBTYPE_ACTIVITY = "Activity";
 	public static final String NOTIFICATION_SUBTYPE_STUDY = "Study";
 	public static final String NOTIFICATION_SUBTYPE_RESOURCE = "Resource";
+	public static final String NOTIFICATION_SUBTYPE_STUDY_EVENT = "studyEvent";
 	
 	public static final String NOTIFICATION_AUDIENCE_ALL = "All";
 	public static final String NOTIFICATION_AUDIENCE_PARTICIPANTS = "Participants";

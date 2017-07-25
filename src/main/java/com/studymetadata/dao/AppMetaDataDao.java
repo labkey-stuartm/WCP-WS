@@ -94,7 +94,8 @@ public class AppMetaDataDao {
 					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
 						notificationStudyTypeQuery = " and NDTO.customStudyId in (select SDTO.customStudyId from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_SD+"' and SDTO.platform like '%"+platformType+"%' and SDTO.customStudyId='"+appVersion.getCustomStudyId()+"') and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
 					}
-					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ORDER BY NDTO.notificationId DESC");
+					//query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ORDER BY NDTO.notificationId DESC");
+					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ORDER BY NDTO.notificationId DESC");
 					query.setFirstResult(Integer.parseInt(skip));
 					query.setMaxResults(20);
 					notificationList = query.list();
@@ -111,7 +112,14 @@ public class AppMetaDataDao {
 								notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
 								notifyBean.setAudience(notificationDto.isAnchorDate()?StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED:StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
 							}
-							notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+							
+							//notification subType
+							if(notificationDto.getNotificationSubType().equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT)){
+								notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL);
+							}else{
+								notifyBean.setSubtype(StringUtils.isEmpty(notificationDto.getNotificationSubType())?"":notificationDto.getNotificationSubType());
+							}
+							
 							notifyBean.setTitle(propMap.get("fda.smd.notification.title")==null?"":propMap.get("fda.smd.notification.title"));
 							notifyBean.setMessage(StringUtils.isEmpty(notificationDto.getNotificationText())?"":notificationDto.getNotificationText());
 							notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
