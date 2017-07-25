@@ -1421,8 +1421,8 @@ public class ActivityMetaDataDao {
 		QuestionReponseTypeDto reponseType = null;
 		try{
 			if(StringUtils.isNotEmpty(questionResultType)){
-				query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionDto.getId());
-				reponseType = (QuestionReponseTypeDto) query.uniqueResult();
+				query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionDto.getId()+" ORDER BY QRTDTO.responseTypeId DESC");
+				reponseType = (QuestionReponseTypeDto) query.setMaxResults(1).uniqueResult();
 				switch (questionResultType) {
 					case StudyMetaDataConstants.QUESTION_SCALE:
 						questionFormat = formatQuestionScaleDetails(questionDto, reponseType);
