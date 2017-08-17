@@ -1200,8 +1200,17 @@ public class ActivityMetaDataDao {
 					destinationsList.add(destination);
 					
 					questionBean.setDestinations(destinationsList);
+					
+					/*phase_1B related code starts*/
+					//add data check for the healthKitData for the question is having the healthKitDataKey
 					questionBean.setHealthDataKey("");
-
+					if(StringUtils.isNotEmpty(questionsDto.getAllowHealthKit()) && StudyMetaDataConstants.YES.equalsIgnoreCase(questionsDto.getAllowHealthKit()) && StringUtils.isNotEmpty(questionsDto.getHealthkitDatatype())){
+						query = session.getNamedQuery("getHealthKitDisplayNameByKeyText").setString("key", questionsDto.getHealthkitDatatype().trim());
+						Object healthDataKey = query.uniqueResult();
+						if(healthDataKey!=null){
+							questionBean.setHealthDataKey(healthDataKey.toString().trim());
+						}
+					}
 					stepsSequenceTreeMap.put(sequenceNoMap.get((questionsDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION).toString()), questionBean);
 				}
 			}

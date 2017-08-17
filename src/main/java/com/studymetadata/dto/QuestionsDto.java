@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.studymetadata.util.StudyMetaDataConstants;
+
 /**
  * 
  * @author Mohan
@@ -106,6 +108,13 @@ public class QuestionsDto implements Serializable{
 	
 	@Transient
 	private String activityStepKey;
+	
+	/*phase_1B attributes*/
+	@Column(name="allow_healthkit")
+	private String allowHealthKit=StudyMetaDataConstants.NO;
+	
+	@Column(name="healthkit_datatype")
+	private String healthkitDatatype;
 	
 	public Integer getId() {
 		return id;
@@ -329,6 +338,22 @@ public class QuestionsDto implements Serializable{
 
 	public void setUseAnchorDate(Boolean useAnchorDate) {
 		this.useAnchorDate = useAnchorDate;
+	}
+
+	public String getAllowHealthKit() {
+		return allowHealthKit;
+	}
+
+	public void setAllowHealthKit(String allowHealthKit) {
+		this.allowHealthKit = allowHealthKit;
+	}
+
+	public String getHealthkitDatatype() {
+		return healthkitDatatype;
+	}
+
+	public void setHealthkitDatatype(String healthkitDatatype) {
+		this.healthkitDatatype = healthkitDatatype;
 	}
 	
 }
