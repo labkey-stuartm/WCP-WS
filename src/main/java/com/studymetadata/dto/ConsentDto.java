@@ -39,7 +39,7 @@ public class ConsentDto implements Serializable{
 	private Integer comprehensionTestMinimumScore;
 	
 	@Column(name = "share_data_permissions")
-	private Integer shareDataPermissions;
+	private String shareDataPermissions;
 	
 	@Column(name = "title")
 	private String title;
@@ -64,7 +64,7 @@ public class ConsentDto implements Serializable{
 	private String consentDocContent;
 	
 	@Column(name = "allow_without_permission")
-	private Integer allowWithoutPermission;
+	private String allowWithoutPermission;
 	
 	@Column(name = "html_consent")
 	private String htmlConsent;
@@ -133,11 +133,11 @@ public class ConsentDto implements Serializable{
 		this.comprehensionTestMinimumScore = comprehensionTestMinimumScore;
 	}
 
-	public Integer getShareDataPermissions() {
+	public String getShareDataPermissions() {
 		return shareDataPermissions;
 	}
 
-	public void setShareDataPermissions(Integer shareDataPermissions) {
+	public void setShareDataPermissions(String shareDataPermissions) {
 		this.shareDataPermissions = shareDataPermissions;
 	}
 
@@ -197,11 +197,11 @@ public class ConsentDto implements Serializable{
 		this.consentDocContent = consentDocContent;
 	}
 
-	public Integer getAllowWithoutPermission() {
+	public String getAllowWithoutPermission() {
 		return allowWithoutPermission;
 	}
 
-	public void setAllowWithoutPermission(Integer allowWithoutPermission) {
+	public void setAllowWithoutPermission(String allowWithoutPermission) {
 		this.allowWithoutPermission = allowWithoutPermission;
 	}
 

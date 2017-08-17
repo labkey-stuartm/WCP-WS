@@ -406,7 +406,7 @@ public class StudyMetaDataDao {
 						sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())?"":consentDto.getLearnMoreText());
 						sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())?"":consentDto.getLongDescription());
 						sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())?"":consentDto.getShortDescription());
-						if(consentDto.getAllowWithoutPermission() != null && consentDto.getAllowWithoutPermission() == 1){
+						if(consentDto.getAllowWithoutPermission() != null && StudyMetaDataConstants.YES.equalsIgnoreCase(consentDto.getAllowWithoutPermission())){
 							sharingBean.setAllowWithoutSharing(true);
 						}
 						consent.setSharing(sharingBean);

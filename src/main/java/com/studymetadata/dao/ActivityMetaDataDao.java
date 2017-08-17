@@ -295,7 +295,7 @@ public class ActivityMetaDataDao {
 				activeTaskActivityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
-				query = session.createQuery(" from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.activeTaskId="+activeTaskDto.getId());
+				query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.activeTaskId="+activeTaskDto.getId()+" ORDER BY ATAVDTO.activeTaskMasterAttrId");
 				activeTaskAttrtibuteValuesList = query.list();
 				if( activeTaskAttrtibuteValuesList != null && !activeTaskAttrtibuteValuesList.isEmpty()){
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
@@ -326,10 +326,10 @@ public class ActivityMetaDataDao {
 						if(!skipLoopFlag){
 							for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
 								if(!skipLoopFlag){
-									if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
+									if(attributeDto.getActiveTaskMasterAttrId().equals(masterAttributeDto.getMasterId())){
 										for(ActiveTaskListDto taskDto : activeTaskList){
 											if(!skipLoopFlag){
-												if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue() && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
+												if(taskDto.getActiveTaskListId().equals(masterAttributeDto.getTaskTypeId()) && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
 													activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 													activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
 													activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
@@ -349,17 +349,18 @@ public class ActivityMetaDataDao {
 															skipLoopFlag = true;
 															break;
 														case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
-															if(masterAttributeDto.getAttributeName().equalsIgnoreCase(StudyMetaDataConstants.SSM_REQUIRE_REVERSAL)){
-																activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
-																activeTaskActiveTaskStep.setFormat(activeTaskFormat);
+															activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
+															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
+															
+															//if the last attribute then skip the loop
+															if(attributeDto.getActiveTaskMasterAttrId().equals(activeTaskMaterList.get(activeTaskMaterList.size()-1).getMasterId())){
 																skipLoopFlag = true;
-															}else{
-																activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
 															}
 															break;
 														case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
-															activeTaskFormat.put("numberOfDisks", "");
+															activeTaskFormat.put("numberOfDisks", StringUtils.isEmpty(attributeDto.getAttributeVal())?0:Integer.parseInt(attributeDto.getAttributeVal()));
 															skipLoopFlag = true;
+															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
 															break;
 														default:
 															break;
@@ -1144,7 +1145,7 @@ public class ActivityMetaDataDao {
 					questionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
 					if(questionsDto.getResponseType() != null){
 						for(QuestionResponsetypeMasterInfoDto masterInfo : questionResponseTypeMasterInfoList){
-							if(masterInfo.getId().intValue() == questionsDto.getResponseType().intValue()){
+							if(masterInfo.getId().equals(questionsDto.getResponseType())){
 								questionBean.setResultType(masterInfo.getResponseTypeCode());
 								questionBean.setFormat(getQuestionaireQuestionFormatByType(questionsDto, masterInfo.getResponseTypeCode(), session));
 								break;
@@ -1164,7 +1165,7 @@ public class ActivityMetaDataDao {
 					//destination logic based on the branching
 					List<DestinationBean> destinationsList = new ArrayList<>();
 					//choice based branching allowed only for textchoice, textscale, imagechoice, boolean not for valuepicker
-					if(questionsDto.getResponseType().intValue()!=4){
+					if(!questionsDto.getResponseType().equals(4)){
 						query = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO where QRSTDTO.responseTypeId="+questionsDto.getId());
 						destinationConditionList = query.list();
 						if(destinationConditionList != null && !destinationConditionList.isEmpty()){
@@ -1179,7 +1180,7 @@ public class ActivityMetaDataDao {
 								if(questionnaireDto.getBranching()){
 									if(destinationDto.getDestinationStepId()!=null&&destinationDto.getDestinationStepId().intValue()>0){
 										destination = getDestinationStepTypeForResponseSubType(destination, destinationDto, questionaireStepsList);
-									}else if(destinationDto.getDestinationStepId()!=null&&destinationDto.getDestinationStepId().intValue()==0){
+									}else if(destinationDto.getDestinationStepId()!=null&&destinationDto.getDestinationStepId().equals(0)){
 										destination.setDestination("");
 									}else{
 										destination.setDestination((questionStepDetails.getDestinationStepType()==null || questionStepDetails.getDestinationStepType().isEmpty())?"":questionStepDetails.getDestinationStepType());
@@ -1265,7 +1266,7 @@ public class ActivityMetaDataDao {
 							formQuestionBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
 							if(formQuestionDto.getResponseType() != null){
 								for(QuestionResponsetypeMasterInfoDto masterInfo : questionResponseTypeMasterInfoList){
-									if(masterInfo.getId().intValue() == formQuestionDto.getResponseType().intValue()){
+									if(masterInfo.getId().equals(formQuestionDto.getResponseType())){
 										formQuestionBean.setResultType(masterInfo.getResponseTypeCode());
 										formQuestionBean.setFormat(getQuestionaireQuestionFormatByType(formQuestionDto, masterInfo.getResponseTypeCode(), session));
 										break;
@@ -1894,7 +1895,7 @@ public class ActivityMetaDataDao {
 		try{
 			for(QuestionnairesStepsDto questionnaireStepsDto : questionaireStepsList){
 				for(QuestionnairesStepsDto stepsDto : questionaireStepsList){
-					if(questionnaireStepsDto.getDestinationStep().intValue() == stepsDto.getStepId().intValue()){
+					if(questionnaireStepsDto.getDestinationStep().equals(stepsDto.getStepId())){
 						questionnaireStepsDto.setDestinationStepType(StringUtils.isEmpty(stepsDto.getStepShortTitle())?"":stepsDto.getStepShortTitle());
 						break;
 					}
@@ -1922,7 +1923,7 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Starts");
 		try{
 			for(QuestionnairesStepsDto stepsDto : questionaireStepsList){
-				if(destinationDto.getDestinationStepId().intValue() == stepsDto.getStepId().intValue()){
+				if(destinationDto.getDestinationStepId().equals(stepsDto.getStepId())){
 					destinationBean.setDestination(StringUtils.isEmpty(stepsDto.getStepShortTitle())?"":stepsDto.getStepShortTitle());
 					break;
 				}
