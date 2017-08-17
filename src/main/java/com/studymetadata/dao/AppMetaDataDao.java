@@ -12,6 +12,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
 import com.studymetadata.bean.AppUpdatesResponse;
 import com.studymetadata.bean.NotificationsBean;
 import com.studymetadata.bean.NotificationsResponse;
@@ -32,10 +33,10 @@ public class AppMetaDataDao {
 	private static final Logger LOGGER = Logger.getLogger(AppMetaDataDao.class);
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	Session session = null;
@@ -161,6 +162,7 @@ public class AppMetaDataDao {
 	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public AppUpdatesResponse appUpdates(String appVersion, String authCredentials) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
@@ -184,7 +186,7 @@ public class AppMetaDataDao {
 						appVersionDto.setMessage("");
 					}else{
 						for(AppVersionDto appVersionBo : appVersionList){
-							if(Float.parseFloat(appVersion)==appVersionBo.getAppVersion().floatValue()){
+							if(Float.compare(Float.parseFloat(appVersion),appVersionBo.getAppVersion().floatValue()) == 0){
 								appVersionDto = appVersionBo;
 								if(Float.parseFloat(appVersion)<appVersionList.get(appVersionList.size()-1).getAppVersion().floatValue()){
 									appVersionDto.setMessage(appVersionList.get(appVersionList.size()-1).getMessage());
@@ -321,6 +323,7 @@ public class AppMetaDataDao {
 	 * @return String
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId, String message) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
@@ -332,7 +335,7 @@ public class AppMetaDataDao {
 			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
 			appVersionDtoList = query.list();
 			if(appVersionDtoList != null && !appVersionDtoList.isEmpty()){
-				if(Float.parseFloat(appVersion) == appVersionDtoList.get(0).getAppVersion().floatValue()){
+				if(Float.compare(Float.parseFloat(appVersion), appVersionDtoList.get(0).getAppVersion().floatValue()) == 0){
 					if(Integer.parseInt(forceUpdate) == appVersionDtoList.get(0).getForceUpdate().intValue()){
 						updateAppVersionResponse = "v"+appVersion+" is already available for os "+osType+"";
 					}else{
@@ -346,7 +349,7 @@ public class AppMetaDataDao {
 							break;
 						}
 						
-						if(Float.parseFloat(appVersion) == avDto.getAppVersion().floatValue()){
+						if(Float.compare(Float.parseFloat(appVersion), avDto.getAppVersion().floatValue()) == 0){
 							if(Integer.parseInt(forceUpdate) == avDto.getForceUpdate().intValue()){
 								updateAppVersionResponse = "v"+appVersion+" is already available for os "+osType+"";
 								break;

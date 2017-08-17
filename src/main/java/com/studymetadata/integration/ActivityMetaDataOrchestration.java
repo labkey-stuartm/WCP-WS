@@ -15,7 +15,7 @@ public class ActivityMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 	
 	ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
 	

@@ -15,7 +15,7 @@ public class AuthenticationService {
 	public static final Logger logger = Logger.getLogger(AuthenticationService.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 	
 	public boolean authenticate(String authCredentials) {
 		logger.info("INFO: AuthenticationService - authenticate() - Starts");

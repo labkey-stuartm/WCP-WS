@@ -19,7 +19,7 @@ public class StudyMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 	
 	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 

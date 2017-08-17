@@ -13,7 +13,7 @@ public class DashboardMetaDataOrchestration {
 	private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
+	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 	
 	DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
 	

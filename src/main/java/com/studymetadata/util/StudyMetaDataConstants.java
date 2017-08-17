@@ -29,7 +29,7 @@ public interface StudyMetaDataConstants {
 	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	SimpleDateFormat SDF_DATE_TIME_TIMEZONE_MILLISECONDS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
-	public static final String PASSWORD_SALT = "BTCSoft";
+	public static final String PASS_SALT = "BTCSoft";
 	
 	//Study related constants
 	public static final String STUDY_TYPE_GT = "GT";
