@@ -40,8 +40,8 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
 
-	@Column(name = "status")
-	private Integer status;
+	@Column(name="status")
+	private Boolean status=false;
 
 	@Column(name="eligibility_test")
 	private Integer eligibilityTest;
@@ -49,14 +49,15 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name = "study_version")
 	private Integer studyVersion=1;
 	
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
-
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+	@Column(name="active")
+	private Boolean active=false;
 	
+	@Column(name="response_yes_option")
+	private Boolean responseYesOption=false;
+	
+	@Column(name="response_no_option")
+	private Boolean responseNoOption=false;
+
 	public Integer getId() {
 		return id;
 	}
@@ -105,6 +106,14 @@ public class EligibilityTestDto implements Serializable{
 		this.sequenceNo = sequenceNo;
 	}
 
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
 	public Integer getEligibilityTest() {
 		return eligibilityTest;
 	}
@@ -113,11 +122,36 @@ public class EligibilityTestDto implements Serializable{
 		this.eligibilityTest = eligibilityTest;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public Integer getStudyVersion() {
+		return studyVersion;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStudyVersion(Integer studyVersion) {
+		this.studyVersion = studyVersion;
 	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Boolean getResponseYesOption() {
+		return responseYesOption;
+	}
+
+	public void setResponseYesOption(Boolean responseYesOption) {
+		this.responseYesOption = responseYesOption;
+	}
+
+	public Boolean getResponseNoOption() {
+		return responseNoOption;
+	}
+
+	public void setResponseNoOption(Boolean responseNoOption) {
+		this.responseNoOption = responseNoOption;
+	}
+	
 }

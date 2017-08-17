@@ -77,7 +77,7 @@ public interface StudyMetaDataConstants {
 	
 	public static final String CONSENT_DOC_TYPE_NEW = "New";
 	public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
-	public static final String REASON_FOR_CONSENT = "By Agreeing this you confirm that you read the consent and that you wish to take part in this research study.";
+	public static final String REASON_FOR_CONSENT = "By agreeing to this you confirm that you read the consent and that you wish to take part in this research study.";
 	
 	public static final String ACTIVITY_ACTIVE_TASK = "task";
 	public static final String ACTIVITY_QUESTIONNAIRE = "questionnaire";
@@ -226,4 +226,18 @@ public interface StudyMetaDataConstants {
 	public static final String DEFAULT_MIN_TIME = "00:00:00";
 	public static final String DEFAULT_MAX_TIME = "23:59:59";
 	public static final String RESULT_TYPE_GROUPED = "grouped";
+	
+	public static final String COMPREHENSION_RESPONSE_STRUCTURE_ANY = "any";
+	public static final String COMPREHENSION_RESPONSE_STRUCTURE_ALL = "all";
+	
+	public static final String SSM_INITIAL = "Initial_Span_spatial";
+	public static final String SSM_MINIMUM = "Minimum_Span_spatial";
+	public static final String SSM_MAXIMUM = "Maximum_Span_spatial";
+	public static final String SSM_PLAY_SPEED = "Play_Speed_spatial";
+	public static final String SSM_MAX_TEST = "Maximum_Tests_spatial";
+	public static final String SSM_MAX_CONSECUTIVE_FAILURES = "Maximum_Consecutive_Failuress_spatial";
+	public static final String SSM_REQUIRE_REVERSAL = "Require_reversal_spatial";
+	public static final String SSM_SCORE = "Score_spatial";
+	public static final String SSM_NO_OF_GAMES = "Number_of_Games_spatial";
+	public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
 }

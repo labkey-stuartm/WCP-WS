@@ -319,25 +319,60 @@ public class ActivityMetaDataDao {
 				Boolean taskListFlag = activeTaskList != null && !activeTaskList.isEmpty();
 				if(attributeListFlag && masterAttributeListFlag && taskListFlag){
 					//get the steps details based on the activity type
+					ActiveTaskActivityStepsBean activeTaskActiveTaskStep = new ActiveTaskActivityStepsBean();
+					Map<String, Object> activeTaskFormat = new LinkedHashMap<>();
+					boolean skipLoopFlag = false;
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
-						for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
-							if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
-								for(ActiveTaskListDto taskDto : activeTaskList){
-									if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue() && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
-										ActiveTaskActivityStepsBean activeTaskActiveTaskStep = new ActiveTaskActivityStepsBean();
-										activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
-										activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
-										activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
-										activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
-										//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
-										activeTaskActiveTaskStep.setFormat(getActiveTaskStepFormatByType(attributeDto, masterAttributeDto, taskDto.getType()));
-										steps.add(activeTaskActiveTaskStep);
+						if(!skipLoopFlag){
+							for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
+								if(!skipLoopFlag){
+									if(attributeDto.getActiveTaskMasterAttrId().intValue() == masterAttributeDto.getMasterId().intValue()){
+										for(ActiveTaskListDto taskDto : activeTaskList){
+											if(!skipLoopFlag){
+												if(taskDto.getActiveTaskListId().intValue() == masterAttributeDto.getTaskTypeId().intValue() && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
+													activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
+													activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
+													activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
+													activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
+													//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
+													
+													//get the response steps
+													switch (taskDto.getType()) {
+														case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
+															if(StringUtils.isNotEmpty(attributeDto.getAttributeVal())){
+																String[] durationArray = attributeDto.getAttributeVal().split(":");
+																activeTaskFormat.put("duration", (Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+															}else{
+																activeTaskFormat.put("duration", 0);
+															}
+															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
+															skipLoopFlag = true;
+															break;
+														case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
+															if(masterAttributeDto.getAttributeName().equalsIgnoreCase(StudyMetaDataConstants.SSM_REQUIRE_REVERSAL)){
+																activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
+																activeTaskActiveTaskStep.setFormat(activeTaskFormat);
+																skipLoopFlag = true;
+															}else{
+																activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
+															}
+															break;
+														case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
+															activeTaskFormat.put("numberOfDisks", "");
+															skipLoopFlag = true;
+															break;
+														default:
+															break;
+													}
+												}
+											}
+										}
 									}
 								}
 							}
 						}
-						
 					}
+					steps.add(activeTaskActiveTaskStep);
 					activeTaskActivityStructureBean.setSteps(steps);
 				}
 			}
@@ -1277,7 +1312,7 @@ public class ActivityMetaDataDao {
 	 * @param taskType
 	 * @return activeTaskFormat
 	 * @throws DAOException
-	 */
+	 *//*
 	public Map<String, Object> getActiveTaskStepFormatByType(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, String taskType) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskStepFormatByType() :: Starts");
 		Map<String, Object> activeTaskFormat = new HashMap<>();
@@ -1307,7 +1342,7 @@ public class ActivityMetaDataDao {
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskStepFormatByType() :: Ends");
 		return activeTaskFormat;
-	}
+	}*/
 
 	/**
 	 * @author Mohan
@@ -1315,19 +1350,28 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Object> spatialSpanMemoryDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue) throws DAOException{
+	public Map<String, Object> spatialSpanMemoryDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, Map<String, Object> activeTaskFormat) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Starts");
-		Map<String, Object> activeTaskFormat = new LinkedHashMap<>();
 		try{
-			activeTaskFormat.put("initialSpan", 0);
-			activeTaskFormat.put("minimumSpan", 0);
-			activeTaskFormat.put("maximumSpan", 0);
-			activeTaskFormat.put("playSpeed", 0);
-			activeTaskFormat.put("maximumTests", 0);
-			activeTaskFormat.put("maximumConsecutiveFailures", 0);
-			activeTaskFormat.put("customTargetImage", "");
-			activeTaskFormat.put("customTargetPluralName", "");
-			activeTaskFormat.put("requireReversal", false);
+			switch (masterAttributeValue.getAttributeName().trim()) {
+				case StudyMetaDataConstants.SSM_INITIAL: activeTaskFormat.put("initialSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_MINIMUM: activeTaskFormat.put("minimumSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_MAXIMUM: activeTaskFormat.put("maximumSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_PLAY_SPEED: activeTaskFormat.put("playSpeed", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_MAX_TEST: activeTaskFormat.put("maximumTests", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_MAX_CONSECUTIVE_FAILURES: activeTaskFormat.put("maximumConsecutiveFailures", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+					break;
+				case StudyMetaDataConstants.SSM_REQUIRE_REVERSAL: 
+					activeTaskFormat.put("customTargetImage", "");
+					activeTaskFormat.put("customTargetPluralName", "");
+					activeTaskFormat.put("requireReversal", StringUtils.isNotEmpty(attributeValues.getAttributeVal())&&attributeValues.getAttributeVal().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)?true:false);
+					break;
+			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - spatialSpanMemoryDetails() :: ERROR", e);
 		}
