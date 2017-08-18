@@ -41,7 +41,6 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.AnchorDateBean;
-import com.studymetadata.bean.ComprehensionBean;
 import com.studymetadata.bean.ComprehensionDetailsBean;
 import com.studymetadata.bean.ConsentBean;
 import com.studymetadata.bean.ConsentDetailsBean;
@@ -64,7 +63,6 @@ import com.studymetadata.bean.StudyBean;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.WithdrawalConfigBean;
-import com.studymetadata.bean.appendix.QuestionStepStructureBean;
 
 public class StudyMetaDataDao {
 
@@ -468,11 +466,11 @@ public class StudyMetaDataDao {
 								comprehensionDetailsBean.setPassScore(0);
 							}
 
-							List<ComprehensionBean> comprehensionList = new ArrayList<>();
+							List<QuestionnaireActivityStepsBean> comprehensionList = new ArrayList<>();
 							List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
 							for(ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList){
 								QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
-								ComprehensionBean comprehensionBean = new ComprehensionBean();
+								//ComprehensionBean comprehensionBean = new ComprehensionBean();
 								questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
 								questionStep.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
 								questionStep.setKey(comprehensionQuestionDto.getId().toString());
@@ -483,8 +481,8 @@ public class StudyMetaDataDao {
 								questionStep.setRepeatable(false);
 								questionStep.setRepeatableText("");
 								questionStep.setHealthDataKey("");
-								comprehensionBean.setQuestionStepStructureBean(questionStep);
-								comprehensionList.add(comprehensionBean);
+								//comprehensionBean.setQuestionStepStructureBean(questionStep);
+								comprehensionList.add(questionStep);
 								
 								//get the comprehension test response based on the compTestId
 								List<ComprehensionTestResponseDto> comprehensionTestResponseList = null;

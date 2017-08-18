@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ComprehensionDetailsBean {
 	private Integer passScore = 0;
-	private List<ComprehensionBean> questions = new ArrayList<>();
+	private List<QuestionnaireActivityStepsBean> questions = new ArrayList<>();
 	private List<CorrectAnswersBean> correctAnswers = new ArrayList<>();
 	
 	public Integer getPassScore() {
@@ -14,10 +14,10 @@ public class ComprehensionDetailsBean {
 	public void setPassScore(Integer passScore) {
 		this.passScore = passScore;
 	}
-	public List<ComprehensionBean> getQuestions() {
+	public List<QuestionnaireActivityStepsBean> getQuestions() {
 		return questions;
 	}
-	public void setQuestions(List<ComprehensionBean> questions) {
+	public void setQuestions(List<QuestionnaireActivityStepsBean> questions) {
 		this.questions = questions;
 	}
 	public List<CorrectAnswersBean> getCorrectAnswers() {

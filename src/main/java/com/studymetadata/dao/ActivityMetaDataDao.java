@@ -1205,11 +1205,12 @@ public class ActivityMetaDataDao {
 					//add data check for the healthKitData for the question is having the healthKitDataKey
 					questionBean.setHealthDataKey("");
 					if(StringUtils.isNotEmpty(questionsDto.getAllowHealthKit()) && StudyMetaDataConstants.YES.equalsIgnoreCase(questionsDto.getAllowHealthKit()) && StringUtils.isNotEmpty(questionsDto.getHealthkitDatatype())){
-						query = session.getNamedQuery("getHealthKitDisplayNameByKeyText").setString("key", questionsDto.getHealthkitDatatype().trim());
+						questionBean.setHealthDataKey(questionsDto.getHealthkitDatatype().trim());
+						/*query = session.getNamedQuery("getHealthKitDisplayNameByKeyText").setString("key", questionsDto.getHealthkitDatatype().trim());
 						Object healthDataKey = query.uniqueResult();
 						if(healthDataKey!=null){
 							questionBean.setHealthDataKey(healthDataKey.toString().trim());
-						}
+						}*/
 					}
 					stepsSequenceTreeMap.put(sequenceNoMap.get((questionsDto.getId()+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION).toString()), questionBean);
 				}
@@ -1465,7 +1466,7 @@ public class ActivityMetaDataDao {
 						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
 						break;
 					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
-						questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:reponseType.getDefaultValue());
+						questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:Long.parseLong(reponseType.getDefaultValue()));
 						questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
 						break;
 					case StudyMetaDataConstants.QUESTION_HEIGHT:
@@ -1504,8 +1505,8 @@ public class ActivityMetaDataDao {
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
 			//update in phase 1B
-			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
-			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
+			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
+			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
 		}
@@ -1530,9 +1531,9 @@ public class ActivityMetaDataDao {
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
 			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
-			//update in phase 1B
-			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":reponseType.getMaxImage());
-			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":reponseType.getMinImage());
+			//update in phase_1B
+			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
+			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
 		}
