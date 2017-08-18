@@ -2,14 +2,17 @@ package com.studymetadata.dao;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -1466,7 +1469,7 @@ public class ActivityMetaDataDao {
 						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
 						break;
 					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
-						questionFormat.put("default", (reponseType == null || reponseType.getDefaultValue() == null)?0:Long.parseLong(reponseType.getDefaultValue()));
+						questionFormat.put("default", (reponseType == null ||  StringUtils.isEmpty(reponseType.getDefalutTime()))?0:getTimeInSeconds(reponseType.getDefalutTime()));
 						questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
 						break;
 					case StudyMetaDataConstants.QUESTION_HEIGHT:
@@ -1566,7 +1569,7 @@ public class ActivityMetaDataDao {
 				}
 			}
 			questionFormat.put("textChoices", textChoicesList);
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?1:reponseType.getDefaultValue());
+			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?1:Integer.parseInt(reponseType.getDefaultValue()));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
@@ -1684,8 +1687,13 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:reponseType.getStyle());
 			questionFormat.put("unit", (reponseType==null || reponseType.getUnit()==null)?"":reponseType.getUnit());
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:reponseType.getMinValue());
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:reponseType.getMaxValue());
+			if(questionFormat.get("style").toString().equalsIgnoreCase(StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER)){
+				questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:Integer.parseInt(reponseType.getMinValue()));
+				questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:Integer.parseInt(reponseType.getMaxValue()));
+			}else{
+				questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0d:Double.parseDouble(reponseType.getMinValue()));
+				questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0d:Double.parseDouble(reponseType.getMaxValue()));
+			}
 			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
@@ -1733,7 +1741,7 @@ public class ActivityMetaDataDao {
 		try{
 			questionFormat.put("maxLength", (reponseType==null || reponseType.getMaxLength()==null)?0:reponseType.getMaxLength());
 			questionFormat.put("validationRegex", (reponseType==null || reponseType.getValidationRegex()==null)?"":reponseType.getValidationRegex());
-			questionFormat.put("invalidMessage", (reponseType==null || reponseType.getInvalidMessage()==null)?"":reponseType.getInvalidMessage());
+			questionFormat.put("invalidMessage", (reponseType==null || reponseType.getInvalidMessage()==null)?"Invalid Input. Please try again.":reponseType.getInvalidMessage());
 			questionFormat.put("multipleLines", (reponseType==null || reponseType.getMultipleLines()==null || !reponseType.getMultipleLines())?false:true);
 			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
 		}catch(Exception e){
@@ -2160,4 +2168,26 @@ public class ActivityMetaDataDao {
 		return step;
 	}
 	
+	/*phase_1B starts*/
+	/**
+	 * This method is used to get the seconds from the input time
+	 * 
+	 * @author Mohan
+	 * @param time
+	 * @return Long
+	 * @throws DAOException
+	 */
+	public Long getTimeInSeconds(String time) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Starts");
+		Long defaultTime = 0l;
+		try{
+			String[] timeArray = time.split(":");
+			defaultTime += (long) (Integer.parseInt(timeArray[0])*3600);
+			defaultTime += (long) (Integer.parseInt(timeArray[1])*60);
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getTimeInSeconds() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Ends");
+		return defaultTime;
+	}
 }

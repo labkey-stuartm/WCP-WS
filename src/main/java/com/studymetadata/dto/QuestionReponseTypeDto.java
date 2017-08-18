@@ -103,6 +103,9 @@ public class QuestionReponseTypeDto implements Serializable {
 	
 	@Column(name="active")
 	private Boolean active;
+	
+	@Column(name="defalut_time")
+	private String defalutTime;
 
 	public Integer getResponseTypeId() {
 		return responseTypeId;
@@ -334,6 +337,14 @@ public class QuestionReponseTypeDto implements Serializable {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getDefalutTime() {
+		return defalutTime;
+	}
+
+	public void setDefalutTime(String defalutTime) {
+		this.defalutTime = defalutTime;
 	}
 	
 }
