@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
@@ -19,6 +22,9 @@ import com.studymetadata.util.StudyMetaDataConstants;
  */
 @Entity
 @Table(name="questions")
+@NamedQueries(value = { 
+	@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO where QDTO.status=true and QDTO.id IN (:questionIdList)"),
+})
 public class QuestionsDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

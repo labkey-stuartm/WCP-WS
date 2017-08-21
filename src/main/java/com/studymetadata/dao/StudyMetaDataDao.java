@@ -481,8 +481,6 @@ public class StudyMetaDataDao {
 								questionStep.setRepeatable(false);
 								questionStep.setRepeatableText("");
 								questionStep.setHealthDataKey("");
-								//comprehensionBean.setQuestionStepStructureBean(questionStep);
-								comprehensionList.add(questionStep);
 								
 								//get the comprehension test response based on the compTestId
 								List<ComprehensionTestResponseDto> comprehensionTestResponseList = null;
@@ -490,13 +488,27 @@ public class StudyMetaDataDao {
 								comprehensionTestResponseList = query.list();
 								if(comprehensionTestResponseList!=null && !comprehensionTestResponseList.isEmpty()){
 									CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
+									Map<String, Object> questionFormat = new LinkedHashMap<>();
+									List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
 									String answers = "";
 									for(ComprehensionTestResponseDto compResp : comprehensionTestResponseList){
 										if(compResp.getCorrectAnswer()){
 											answers += StringUtils.isEmpty(answers)?compResp.getResponseOption().trim():","+compResp.getResponseOption().trim();
+											LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+											textChoiceMap.put("text", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
+											textChoiceMap.put("value", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
+											textChoiceMap.put("detail", "");
+											textChoiceMap.put("exclusive", false);
+											textChoiceMapList.add(textChoiceMap);
 										}
-										
 									}
+									questionFormat.put("textChoices", textChoiceMapList);
+									if(comprehensionQuestionDto.getStructureOfCorrectAns()){
+										questionFormat.put("selectionStyle", "Multiple");
+									}else{
+										questionFormat.put("selectionStyle", "Single");
+									}
+									questionStep.setFormat(questionFormat);
 									if(StringUtils.isNotEmpty(answers)){
 										correctAnswerBean.setAnswer(answers.split(","));
 									}
@@ -504,6 +516,9 @@ public class StudyMetaDataDao {
 									correctAnswerBean.setEvaluation(comprehensionQuestionDto.getStructureOfCorrectAns()?StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ALL:StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ANY);
 									correctAnswerBeanList.add(correctAnswerBean);
 								}
+								
+								//comprehensionBean.setQuestionStepStructureBean(questionStep);
+								comprehensionList.add(questionStep);
 							}
 							comprehensionDetailsBean.setQuestions(comprehensionList);
 							comprehensionDetailsBean.setCorrectAnswers(correctAnswerBeanList);

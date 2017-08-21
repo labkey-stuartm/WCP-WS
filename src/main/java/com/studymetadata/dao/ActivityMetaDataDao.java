@@ -308,6 +308,7 @@ public class ActivityMetaDataDao {
 					if(taskMasterAttrIdList != null && !taskMasterAttrIdList.isEmpty()){
 						//get the active task master info based on the active task attribute ids
 						query = session.createQuery(" from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.masterId in ("+StringUtils.join(taskMasterAttrIdList, ",")+")");
+						//query = session.getNamedQuery("getActiveTaskMasterListFromIds").setParameterList("taskMasterAttrIdList", taskMasterAttrIdList);
 						activeTaskMaterList = query.list();
 					}
 
@@ -477,6 +478,7 @@ public class ActivityMetaDataDao {
 					if(!instructionIdList.isEmpty()){
 						List<InstructionsDto> instructionsDtoList;
 						query = session.createQuery(" from InstructionsDto IDTO where IDTO.id in ("+StringUtils.join(instructionIdList, ",")+") and IDTO.status=true");
+						//query = session.getNamedQuery("getInstructionsListFromIds").setParameterList("instructionIdList", instructionIdList);
 						instructionsDtoList = query.list();
 						if(instructionsDtoList != null && !instructionsDtoList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION, instructionsDtoList, null, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, null, questionaireStepsList, questionnaireDto);
@@ -487,6 +489,7 @@ public class ActivityMetaDataDao {
 					if(!questionIdList.isEmpty()){
 						List<QuestionsDto> questionsList;
 						query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdList, ",")+") and QDTO.status=true");
+						//query = session.getNamedQuery("getQuestionsListFromIds").setParameterList("questionIdList", questionIdList);
 						questionsList = query.list();
 						if( questionsList != null && !questionsList.isEmpty()){
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) getStepsInfoForQuestionnaires(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, null, questionsList, null, sequenceNoMap, stepsSequenceTreeMap, session, questionnaireStepDetailsMap, questionResponseTypeMasterInfoList, questionaireStepsList, questionnaireDto);

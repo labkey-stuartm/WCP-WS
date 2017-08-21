@@ -9,10 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="active_task_master_attribute")
+@NamedQueries(value = { 
+		@NamedQuery(name = "getActiveTaskMasterListFromIds", query = "from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.masterId IN (:taskMasterAttrIdList)"),
+})
 public class ActiveTaskMasterAttributeDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;

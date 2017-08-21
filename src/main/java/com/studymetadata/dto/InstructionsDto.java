@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * 
  * @author Mohan
@@ -16,6 +20,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="instructions")
+@NamedQueries(value = { 
+	@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
+})
 public class InstructionsDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
