@@ -23,10 +23,11 @@
 		<property name="hibernate.c3p0.idle_test_period">250</property>
 		<property name="hibernate.c3p0.acquire_increment">2</property>
 		
-		<!-- <property name="hibernate.c3p0.testConnectionOnCheckout">true</property>
+		<property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
+		<property name="hibernate.c3p0.testConnectionOnCheckout">true</property>
+		<property name="hibernate.c3p0.idleConnectionTestPeriod">200</property>
+		<!-- <property name="hibernate.c3p0.validationInterval">200</property>
 		<property name="hibernate.c3p0.validationQuery">SELECT 1</property> -->
-		<property name="hibernate.c3p0.validationInterval">200</property>
-		<property name="hibernate.c3p0.validationQuery">SELECT 1</property>
 
 		<property name="hibernate.cache.use_second_level_cache">false</property>
 		<property name="hibernate.cache.use_query_cache">false</property>

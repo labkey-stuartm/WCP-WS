@@ -1704,10 +1704,9 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Starts");
 		String startDateTime = "";
 		String endDateTime = "";
-		String time = "00:00:00";
 		try{
-			startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+time;
-			endDateTime = StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd()+" "+time;
+			startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+StudyMetaDataConstants.DEFAULT_MIN_TIME;
+			endDateTime = StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 			if(StringUtils.isNotEmpty(activeTaskDto.getFrequency())){
 				if((activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
 					ActiveTaskFrequencyDto activeTaskFrequency;
@@ -1777,10 +1776,9 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
 		String startDateTime = "";
 		String endDateTime = "";
-		String time = "00:00:00";
 		try{
-			startDateTime = questionaire.getStudyLifetimeStart()+" "+time;
-			endDateTime = StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd()+" "+time;
+			startDateTime = questionaire.getStudyLifetimeStart()+" "+StudyMetaDataConstants.DEFAULT_MIN_TIME;
+			endDateTime = StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 			if(StringUtils.isNotEmpty(questionaire.getFrequency())){
 				if((questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
 					QuestionnairesFrequenciesDto questionnairesFrequency;

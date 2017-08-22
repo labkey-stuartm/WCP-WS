@@ -175,49 +175,25 @@ public class AppMetaDataDao {
 			bundleId = StudyMetaDataUtil.getBundleIdFromAuthorization(authCredentials);
 			if(StringUtils.isNotEmpty(os)){
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion");
-				appVersionList = query.list();
-				if(appVersionList!=null&&!appVersionList.isEmpty()){
-					if(Float.parseFloat(appVersion)>appVersionList.get(appVersionList.size()-1).getAppVersion().floatValue()){
-						appVersionDto = new AppVersionDto();
-						appVersionDto.setForceUpdate(0);
-						appVersionDto.setAppVersion(Float.parseFloat(appVersion));
-						appVersionDto.setMessage("");
+				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
+				appVersionDto = (AppVersionDto) query.setMaxResults(1).uniqueResult();
+				if(appVersionDto != null){
+					if(Float.compare(Float.parseFloat(appVersion), appVersionDto.getAppVersion().floatValue())<0){
+						appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
+						appUpdates.setCurrentVersion(appVersionDto.getAppVersion().toString());
+						appUpdates.setMessage(StringUtils.isEmpty(appVersionDto.getMessage())?"":appVersionDto.getMessage());
 					}else{
-						for(AppVersionDto appVersionBo : appVersionList){
-							if(Float.compare(Float.parseFloat(appVersion),appVersionBo.getAppVersion().floatValue()) == 0){
-								appVersionDto = appVersionBo;
-								if(Float.parseFloat(appVersion)<appVersionList.get(appVersionList.size()-1).getAppVersion().floatValue()){
-									appVersionDto.setMessage(appVersionList.get(appVersionList.size()-1).getMessage());
-									appVersionDto.setForceUpdate(1);
-									appVersionDto.setAppVersion(appVersionList.get(appVersionList.size()-1).getAppVersion());
-								}
-								
-								if(appVersionDto.getAvId().intValue()==appVersionList.get(appVersionList.size()-1).getAvId().intValue()){
-									appVersionDto.setForceUpdate(0);
-								}
-								versionExistsFlag = true;
-								break;
-							}
-						}
-						
-						if(!versionExistsFlag){
-							appVersionDto = appVersionList.get(appVersionList.size()-1);
-							appVersionDto.setMessage(appVersionList.get(appVersionList.size()-1).getMessage());
-							appVersionDto.setForceUpdate(1);
-							appVersionDto.setAppVersion(appVersionList.get(appVersionList.size()-1).getAppVersion());
-						}
+						appUpdates.setForceUpdate(false);
+						appUpdates.setCurrentVersion(appVersionDto.getAppVersion().toString());
+						appUpdates.setMessage(StringUtils.isEmpty(appVersionDto.getMessage())?"":appVersionDto.getMessage());
 					}
 				}
 			}
 			
-			if(appVersionDto != null){
-				appUpdates.setCurrentVersion(String.valueOf(appVersionDto.getAppVersion()));
-				appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
-				appUpdates.setMessage(StringUtils.isEmpty(appVersionDto.getMessage())?"":appVersionDto.getMessage());
-			}else{
+			if(appVersionDto == null){
 				appUpdates.setForceUpdate(false);
 				appUpdates.setCurrentVersion(appVersion);
+				appUpdates.setMessage("");
 			}
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - appUpdates() :: ERROR", e);
