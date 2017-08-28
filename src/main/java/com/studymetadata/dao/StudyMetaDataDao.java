@@ -494,13 +494,13 @@ public class StudyMetaDataDao {
 									for(ComprehensionTestResponseDto compResp : comprehensionTestResponseList){
 										if(compResp.getCorrectAnswer()){
 											answers += StringUtils.isEmpty(answers)?compResp.getResponseOption().trim():","+compResp.getResponseOption().trim();
-											LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
-											textChoiceMap.put("text", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
-											textChoiceMap.put("value", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
-											textChoiceMap.put("detail", "");
-											textChoiceMap.put("exclusive", false);
-											textChoiceMapList.add(textChoiceMap);
 										}
+										LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+										textChoiceMap.put("text", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
+										textChoiceMap.put("value", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
+										textChoiceMap.put("detail", "");
+										textChoiceMap.put("exclusive", false);
+										textChoiceMapList.add(textChoiceMap);
 									}
 									questionFormat.put("textChoices", textChoiceMapList);
 									if(comprehensionQuestionDto.getStructureOfCorrectAns()){
