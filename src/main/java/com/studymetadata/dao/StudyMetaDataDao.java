@@ -532,7 +532,8 @@ public class StudyMetaDataDao {
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
 							reviewBean.setReviewHTML(StringUtils.isEmpty(consentDto.getConsentDocContent())?"":consentDto.getConsentDocContent().replaceAll("&#34;", "'").replaceAll("em>", "i>").replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
 						}
-						reviewBean.setReasonForConsent(StudyMetaDataConstants.REASON_FOR_CONSENT);
+						
+						reviewBean.setReasonForConsent(StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())?consentDto.getAggrementOfConsent():StudyMetaDataConstants.REASON_FOR_CONSENT);
 						consent.setReview(reviewBean);
 					}
 					eligibilityConsentResponse.setConsent(consent);
