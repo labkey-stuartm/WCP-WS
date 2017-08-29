@@ -11,25 +11,25 @@ public class HibernateUtil {
 	
 	private static Logger logger = Logger.getLogger(HibernateUtil.class);
 	
-	private static Object obj = new Object();
+	//private static Object obj = new Object();
 	private static SessionFactory sessionFactory = null;
 
+	private HibernateUtil() {
+		super();
+	}
+	
 	public static SessionFactory getSessionFactory() {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
-			synchronized (obj) {
-				/*if(sessionFactory != null && !sessionFactory.isClosed()){
-					sessionFactory.close();
-				}*/
-				
+			/*synchronized (obj) {*/
 				//get the DB Config details from external property file
 				if(sessionFactory==null){
 					Properties properties = new Properties();
 					properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
 					sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
 				}
-			}
-		} catch (Throwable e) {
+			/*}*/
+		} catch (Exception e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
 		}
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
