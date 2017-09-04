@@ -198,7 +198,7 @@ public class StudyMetaDataDao {
 				session = sessionFactory.openSession();
 
 				//fetch all Gateway studies based on the platform supported (iOS/android)
-				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and SDTO.status = '"+StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH+"' OR SDTO.live=1";
+				studyListQuery = " from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%' and (SDTO.status = '"+StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH+"' OR SDTO.live=1)";
 				query = session.createQuery(studyListQuery);
 				studiesList = query.list();
 				if(null != studiesList && !studiesList.isEmpty()){
