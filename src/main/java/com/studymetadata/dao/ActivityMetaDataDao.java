@@ -1469,7 +1469,7 @@ public class ActivityMetaDataDao {
 						questionFormat = formatQuestionTextDetails(questionDto, reponseType);
 						break;
 					case StudyMetaDataConstants.QUESTION_EMAIL:
-						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
+						questionFormat.put("placeholder", (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 						break;
 					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
 						questionFormat.put("default", (reponseType == null ||  StringUtils.isEmpty(reponseType.getDefalutTime()))?0:getTimeInSeconds(reponseType.getDefalutTime()));
@@ -1477,7 +1477,7 @@ public class ActivityMetaDataDao {
 						break;
 					case StudyMetaDataConstants.QUESTION_HEIGHT:
 						questionFormat.put("measurementSystem", (reponseType == null || reponseType.getMeasurementSystem() == null)?"":reponseType.getMeasurementSystem()); //Local/Metric/US
-						questionFormat.put("placeholder", (reponseType == null || reponseType.getPlaceholder() == null)?"":reponseType.getPlaceholder());
+						questionFormat.put("placeholder", (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 						break;
 					case StudyMetaDataConstants.QUESTION_LOCATION:
 						questionFormat.put("useCurrentLocation", (reponseType == null || (reponseType.getUseCurrentLocation() == null || !reponseType.getUseCurrentLocation()))?false:true);
@@ -1503,16 +1503,16 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Integer.parseInt(reponseType.getMaxValue()));
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Integer.parseInt(reponseType.getMinValue()));
+			questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?10000:Integer.parseInt(reponseType.getMaxValue()));
+			questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?-10000:Integer.parseInt(reponseType.getMinValue()));
 			questionFormat.put("step", (reponseType==null || reponseType.getStep()==null)?1:getScaleStepSize(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue")));
 			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Integer) questionFormat.get("minValue"):getScaleDefaultValue(reponseType.getStep(), (Integer) questionFormat.get("maxValue"), (Integer) questionFormat.get("minValue"), Integer.parseInt(reponseType.getDefaultValue())));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
-			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
-			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			questionFormat.put("maxDesc", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxDescription()))?"":reponseType.getMaxDescription());
+			questionFormat.put("minDesc", (reponseType==null || StringUtils.isEmpty(reponseType.getMinDescription()))?"":reponseType.getMinDescription());
 			//update in phase 1B
-			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
-			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
+			questionFormat.put("maxImage", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxImage()))?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
+			questionFormat.put("minImage", (reponseType==null || StringUtils.isEmpty(reponseType.getMinImage()))?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
 		}
@@ -1530,16 +1530,16 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?10000:Double.parseDouble(reponseType.getMaxValue()));
-			questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?-10000:Double.parseDouble(reponseType.getMinValue()));
+			questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?10000:Double.parseDouble(reponseType.getMaxValue()));
+			questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?-10000:Double.parseDouble(reponseType.getMinValue()));
 			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?(Double) questionFormat.get("minValue"):Double.parseDouble(reponseType.getDefaultValue()));
 			questionFormat.put("maxFractionDigits", (reponseType==null || reponseType.getMaxFractionDigits()==null)?0:reponseType.getMaxFractionDigits());
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
-			questionFormat.put("maxDesc", (reponseType==null || reponseType.getMaxDescription()==null)?"":reponseType.getMaxDescription());
-			questionFormat.put("minDesc", (reponseType==null || reponseType.getMinDescription()==null)?"":reponseType.getMinDescription());
+			questionFormat.put("maxDesc", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxDescription()))?"":reponseType.getMaxDescription());
+			questionFormat.put("minDesc", (reponseType==null || StringUtils.isEmpty(reponseType.getMinDescription()))?"":reponseType.getMinDescription());
 			//update in phase_1B
-			questionFormat.put("maxImage", (reponseType==null || reponseType.getMaxImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
-			questionFormat.put("minImage", (reponseType==null || reponseType.getMinImage()==null)?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
+			questionFormat.put("maxImage", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxImage()))?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMaxImage()));
+			questionFormat.put("minImage", (reponseType==null || StringUtils.isEmpty(reponseType.getMinImage()))?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+reponseType.getMinImage()));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
 		}
@@ -1564,15 +1564,15 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> textScaleMap = new LinkedHashMap<>();
-					textScaleMap.put("text", subType.getText()==null?"":subType.getText());
-					textScaleMap.put("value", subType.getValue()==null?"":subType.getValue());
-					textScaleMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
+					textScaleMap.put("text", StringUtils.isEmpty(subType.getText())?"":subType.getText());
+					textScaleMap.put("value", StringUtils.isEmpty(subType.getValue())?"":subType.getValue());
+					textScaleMap.put("detail", StringUtils.isEmpty(subType.getDetail())?"":subType.getDetail());
 					textScaleMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 					textChoicesList.add(textScaleMap);
 				}
 			}
 			questionFormat.put("textChoices", textChoicesList);
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultValue()==null)?1:Integer.parseInt(reponseType.getDefaultValue()));
+			questionFormat.put("default", (reponseType==null || StringUtils.isEmpty(reponseType.getDefaultValue()))?1:Integer.parseInt(reponseType.getDefaultValue()));
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
@@ -1598,10 +1598,10 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> valuePickerMap = new LinkedHashMap<>();
-					valuePickerMap.put("text", subType.getText()==null?"":subType.getText());
-					valuePickerMap.put("value", subType.getValue()==null?"":subType.getValue());
-					valuePickerMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
-					valuePickerMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
+					valuePickerMap.put("text", StringUtils.isEmpty(subType.getText())?"":subType.getText());
+					valuePickerMap.put("value", StringUtils.isEmpty(subType.getValue())?"":subType.getValue());
+					valuePickerMap.put("detail", StringUtils.isEmpty(subType.getDetail())?"":subType.getDetail());
+					valuePickerMap.put("exclusive", (StringUtils.isEmpty(subType.getExclusive()) || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 					valuePickerList.add(valuePickerMap);
 				}
 			}
@@ -1630,10 +1630,10 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> imageChoiceMap = new LinkedHashMap<>();
-					imageChoiceMap.put("image", subType.getImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getImage()));
-					imageChoiceMap.put("selectedImage", subType.getSelectedImage()==null?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getSelectedImage()));
-					imageChoiceMap.put("text", subType.getText()==null?"":subType.getText());
-					imageChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
+					imageChoiceMap.put("image", StringUtils.isEmpty(subType.getImage())?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getImage()));
+					imageChoiceMap.put("selectedImage", StringUtils.isEmpty(subType.getSelectedImage())?"":getBase64Image(propMap.get("fda.smd.questionnaire.image").trim()+subType.getSelectedImage()));
+					imageChoiceMap.put("text", StringUtils.isEmpty(subType.getText())?"":subType.getText());
+					imageChoiceMap.put("value", StringUtils.isEmpty(subType.getValue())?"":subType.getValue());
 					imageChoicesList.add(imageChoiceMap);
 				}
 			}
@@ -1662,15 +1662,15 @@ public class ActivityMetaDataDao {
 			if(responseSubTypeList != null && !responseSubTypeList.isEmpty()){
 				for(QuestionResponseSubTypeDto subType : responseSubTypeList){
 					LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
-					textChoiceMap.put("text", subType.getText()==null?"":subType.getText());
-					textChoiceMap.put("value", subType.getValue()==null?"":subType.getValue());
-					textChoiceMap.put("detail", subType.getDetail()==null?"":subType.getDetail());
+					textChoiceMap.put("text", StringUtils.isEmpty(subType.getText())?"":subType.getText());
+					textChoiceMap.put("value", StringUtils.isEmpty(subType.getValue())?"":subType.getValue());
+					textChoiceMap.put("detail", StringUtils.isEmpty(subType.getDetail())?"":subType.getDetail());
 					textChoiceMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					textChoiceMapList.add(textChoiceMap);
 				}
 			}
 			questionFormat.put("textChoices", textChoiceMapList);
-			questionFormat.put("selectionStyle", (reponseType==null || reponseType.getSelectionStyle()==null)?"":reponseType.getSelectionStyle()); //Single/Multiple
+			questionFormat.put("selectionStyle", (reponseType==null || StringUtils.isEmpty(reponseType.getSelectionStyle()))?"":reponseType.getSelectionStyle()); //Single/Multiple
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: ERROR", e);
 		}
@@ -1688,16 +1688,16 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
-			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:reponseType.getStyle());
-			questionFormat.put("unit", (reponseType==null || reponseType.getUnit()==null)?"":reponseType.getUnit());
+			questionFormat.put("style", (reponseType==null || StringUtils.isEmpty(reponseType.getStyle()))?StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:reponseType.getStyle());
+			questionFormat.put("unit", (reponseType==null || StringUtils.isEmpty(reponseType.getUnit()))?"":reponseType.getUnit());
 			if(questionFormat.get("style").toString().equalsIgnoreCase(StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER)){
-				questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0:Integer.parseInt(reponseType.getMinValue()));
-				questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0:Integer.parseInt(reponseType.getMaxValue()));
+				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?0:Integer.parseInt(reponseType.getMinValue()));
+				questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?0:Integer.parseInt(reponseType.getMaxValue()));
 			}else{
-				questionFormat.put("minValue", (reponseType==null || reponseType.getMinValue()==null)?0d:Double.parseDouble(reponseType.getMinValue()));
-				questionFormat.put("maxValue", (reponseType==null || reponseType.getMaxValue()==null)?0d:Double.parseDouble(reponseType.getMaxValue()));
+				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?0d:Double.parseDouble(reponseType.getMinValue()));
+				questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?0d:Double.parseDouble(reponseType.getMaxValue()));
 			}
-			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
+			questionFormat.put("placeholder", (reponseType==null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
 		}
@@ -1716,15 +1716,15 @@ public class ActivityMetaDataDao {
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		String dateFormat = "";
 		try{
-			questionFormat.put("style", (reponseType==null || reponseType.getStyle()==null)?"":reponseType.getStyle());
+			questionFormat.put("style", (reponseType==null || StringUtils.isEmpty(reponseType.getStyle()))?"":reponseType.getStyle());
 			if(reponseType != null && StringUtils.isNotEmpty(reponseType.getStyle()) && reponseType.getStyle().equalsIgnoreCase(StudyMetaDataConstants.QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE)){
 				dateFormat = "yyyy-MM-dd";
 			}else{
 				dateFormat = "yyyy-MM-dd HH:mm:ss";
 			}
-			questionFormat.put("minDate", (reponseType==null || reponseType.getMinDate()==null)?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMinDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-			questionFormat.put("maxDate", (reponseType==null || reponseType.getMaxDate()==null)?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMaxDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-			questionFormat.put("default", (reponseType==null || reponseType.getDefaultDate()==null)?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getDefaultDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //Date
+			questionFormat.put("minDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMinDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMinDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+			questionFormat.put("maxDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMaxDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+			questionFormat.put("default", (reponseType==null || StringUtils.isEmpty(reponseType.getDefaultDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getDefaultDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //Date
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
 		}
@@ -1743,10 +1743,10 @@ public class ActivityMetaDataDao {
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
 		try{
 			questionFormat.put("maxLength", (reponseType==null || reponseType.getMaxLength()==null)?0:reponseType.getMaxLength());
-			questionFormat.put("validationRegex", (reponseType==null || reponseType.getValidationRegex()==null)?"":reponseType.getValidationRegex());
-			questionFormat.put("invalidMessage", (reponseType==null || reponseType.getInvalidMessage()==null)?"Invalid Input. Please try again.":reponseType.getInvalidMessage());
+			questionFormat.put("validationRegex", (reponseType==null || StringUtils.isEmpty(reponseType.getValidationRegex()))?"":reponseType.getValidationRegex());
+			questionFormat.put("invalidMessage", (reponseType==null || StringUtils.isEmpty(reponseType.getInvalidMessage()))?"Invalid Input. Please try again.":reponseType.getInvalidMessage());
 			questionFormat.put("multipleLines", (reponseType==null || reponseType.getMultipleLines()==null || !reponseType.getMultipleLines())?false:true);
-			questionFormat.put("placeholder", (reponseType==null || reponseType.getPlaceholder()==null)?"":reponseType.getPlaceholder());
+			questionFormat.put("placeholder", (reponseType==null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
 		}
