@@ -1377,7 +1377,7 @@ public class ActivityMetaDataDao {
 					break;
 				case StudyMetaDataConstants.SSM_MAXIMUM: activeTaskFormat.put("maximumSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_PLAY_SPEED: activeTaskFormat.put("playSpeed", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_PLAY_SPEED: activeTaskFormat.put("playSpeed", StringUtils.isEmpty(attributeValues.getAttributeVal())?0f:Float.parseFloat(attributeValues.getAttributeVal()));
 					break;
 				case StudyMetaDataConstants.SSM_MAX_TEST: activeTaskFormat.put("maximumTests", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;

@@ -399,13 +399,16 @@ public class StudyMetaDataDao {
 
 						//Sharing
 						SharingBean sharingBean = new SharingBean();
-						sharingBean.setTitle(StringUtils.isEmpty(consentDto.getTitle())?"":consentDto.getTitle());
-						sharingBean.setText(StringUtils.isEmpty(consentDto.getTaglineDescription())?"":consentDto.getTaglineDescription());
-						sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())?"":consentDto.getLearnMoreText());
-						sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())?"":consentDto.getLongDescription());
-						sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())?"":consentDto.getShortDescription());
-						if(consentDto.getAllowWithoutPermission() != null && StudyMetaDataConstants.YES.equalsIgnoreCase(consentDto.getAllowWithoutPermission())){
-							sharingBean.setAllowWithoutSharing(true);
+						//check whether share data permission is yes or no
+						if(consentDto.getShareDataPermissions().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+							sharingBean.setTitle(StringUtils.isEmpty(consentDto.getTitle())?"":consentDto.getTitle());
+							sharingBean.setText(StringUtils.isEmpty(consentDto.getTaglineDescription())?"":consentDto.getTaglineDescription());
+							sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())?"":consentDto.getLearnMoreText());
+							sharingBean.setLongDesc(StringUtils.isEmpty(consentDto.getLongDescription())?"":consentDto.getLongDescription());
+							sharingBean.setShortDesc(StringUtils.isEmpty(consentDto.getShortDescription())?"":consentDto.getShortDescription());
+							if(consentDto.getAllowWithoutPermission() != null && StudyMetaDataConstants.YES.equalsIgnoreCase(consentDto.getAllowWithoutPermission())){
+								sharingBean.setAllowWithoutSharing(true);
+							}
 						}
 						consent.setSharing(sharingBean);
 					}
@@ -493,7 +496,7 @@ public class StudyMetaDataDao {
 									String answers = "";
 									for(ComprehensionTestResponseDto compResp : comprehensionTestResponseList){
 										if(compResp.getCorrectAnswer()){
-											answers += StringUtils.isEmpty(answers)?compResp.getResponseOption().trim():","+compResp.getResponseOption().trim();
+											answers += StringUtils.isEmpty(answers)?compResp.getResponseOption().trim():"&@##@&"+compResp.getResponseOption().trim();
 										}
 										LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
 										textChoiceMap.put("text", StringUtils.isEmpty(compResp.getResponseOption().trim())?"":compResp.getResponseOption().trim());
@@ -510,7 +513,7 @@ public class StudyMetaDataDao {
 									}
 									questionStep.setFormat(questionFormat);
 									if(StringUtils.isNotEmpty(answers)){
-										correctAnswerBean.setAnswer(answers.split(","));
+										correctAnswerBean.setAnswer(answers.split("&@##@&"));
 									}
 									correctAnswerBean.setKey(comprehensionQuestionDto.getId().toString());
 									correctAnswerBean.setEvaluation(comprehensionQuestionDto.getStructureOfCorrectAns()?StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ALL:StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ANY);
