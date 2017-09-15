@@ -43,8 +43,8 @@ public class StudyMetaDataUtil {
 	//Authorization properties file
 	@SuppressWarnings("rawtypes")
 	protected static final HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
-	
-	@SuppressWarnings("unchecked")	
+		
+	@SuppressWarnings("unchecked")
 	private static final HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
 
 
