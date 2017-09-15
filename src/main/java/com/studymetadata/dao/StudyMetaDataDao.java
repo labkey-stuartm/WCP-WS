@@ -400,7 +400,7 @@ public class StudyMetaDataDao {
 						//Sharing
 						SharingBean sharingBean = new SharingBean();
 						//check whether share data permission is yes or no
-						if(StringUtils.isEmpty(consentDto.getShareDataPermissions()) && consentDto.getShareDataPermissions().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+						if(consentDto.getShareDataPermissions().equalsIgnoreCase(StudyMetaDataConstants.YES)){
 							sharingBean.setTitle(StringUtils.isEmpty(consentDto.getTitle())?"":consentDto.getTitle());
 							sharingBean.setText(StringUtils.isEmpty(consentDto.getTaglineDescription())?"":consentDto.getTaglineDescription());
 							sharingBean.setLearnMore(StringUtils.isEmpty(consentDto.getLearnMoreText())?"":consentDto.getLearnMoreText());
