@@ -11,7 +11,9 @@ public class ActiveTaskActivityStepsBean {
 	private String key = "";
 	private String text = "";
 	private String[] options = new String[0];
-	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
+	//private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
+	
+	private Object format = new Object();
 	
 	private String title = "";
 	private Boolean skippable = false;
@@ -52,14 +54,21 @@ public class ActiveTaskActivityStepsBean {
 	public void setOptions(String[] options) {
 		this.options = options;
 	}
-	public Map<String, Object> getFormat() {
+	/*public Map<String, Object> getFormat() {
 		return format;
 	}
 	public void setFormat(Map<String, Object> format) {
 		this.format = format;
-	}
+	}*/
+	
 	public String getTitle() {
 		return title;
+	}
+	public Object getFormat() {
+		return format;
+	}
+	public void setFormat(Object format) {
+		this.format = format;
 	}
 	public void setTitle(String title) {
 		this.title = title;

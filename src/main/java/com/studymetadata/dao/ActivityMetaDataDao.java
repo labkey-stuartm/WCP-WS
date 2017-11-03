@@ -33,8 +33,11 @@ import com.studymetadata.bean.ActivityFrequencyScheduleBean;
 import com.studymetadata.bean.ActivityMetadataBean;
 import com.studymetadata.bean.ActivityResponse;
 import com.studymetadata.bean.DestinationBean;
+import com.studymetadata.bean.FetalKickCounterFormatBean;
 import com.studymetadata.bean.QuestionnaireActivityMetaDataResponse;
 import com.studymetadata.bean.QuestionnaireActivityStepsBean;
+import com.studymetadata.bean.SpatialSpanMemoryFormatBean;
+import com.studymetadata.bean.TowerOfHanoiFormatBean;
 import com.studymetadata.bean.appendix.QuestionnaireActivityStructureBean;
 import com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto;
 import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
@@ -268,6 +271,7 @@ public class ActivityMetaDataDao {
 		ActiveTaskActivityStructureBean activeTaskActivityStructureBean = new ActiveTaskActivityStructureBean();
 		ActiveTaskDto activeTaskDto = null;
 		List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
+		ActiveTaskListDto taskDto = null;
 		try{
 			query = session.createQuery("from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId='"+studyId+"' and ATDTO.shortTitle='"+StudyMetaDataUtil.replaceSingleQuotes(activityId)+"' and ROUND(ATDTO.version, 1)="+Float.parseFloat(activityVersion)+" ORDER BY ATDTO.id DESC");
 			query.setMaxResults(1);
@@ -298,78 +302,78 @@ public class ActivityMetaDataDao {
 				activeTaskActivityStructureBean.setMetadata(metadata);
 
 				//get the active task attribute values based on the activityId
-				query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.activeTaskId="+activeTaskDto.getId()+" ORDER BY ATAVDTO.activeTaskMasterAttrId");
+				query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.activeTaskId="+activeTaskDto.getId()
+						+" and ATAVDTO.activeTaskMasterAttrId in (select ATMADTO.masterId from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.attributeType='"+StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE+"')"
+						+" ORDER BY ATAVDTO.activeTaskMasterAttrId");
 				activeTaskAttrtibuteValuesList = query.list();
 				if( activeTaskAttrtibuteValuesList != null && !activeTaskAttrtibuteValuesList.isEmpty()){
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
 						taskMasterAttrIdList.add(attributeDto.getActiveTaskMasterAttrId());
 					}
 
-					if(taskMasterAttrIdList != null && !taskMasterAttrIdList.isEmpty()){
+					if(!taskMasterAttrIdList.isEmpty()){
 						//get the active task master info based on the active task attribute ids
 						query = session.createQuery(" from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.masterId in ("+StringUtils.join(taskMasterAttrIdList, ",")+")");
 						//query = session.getNamedQuery("getActiveTaskMasterListFromIds").setParameterList("taskMasterAttrIdList", taskMasterAttrIdList);
 						activeTaskMaterList = query.list();
+						if(activeTaskMaterList != null && !activeTaskMaterList.isEmpty()){
+							//get the active task list details
+							taskDto = (ActiveTaskListDto) session.createQuery("from ActiveTaskListDto ATDTO where ATDTO.activeTaskListId="+activeTaskMaterList.get(0).getTaskTypeId()).uniqueResult();
+						}
 					}
-
-					//get the active task list details
-					query = session.createQuery(" from ActiveTaskListDto ATDTO ");
-					activeTaskList = query.list();
 				}
-
 				//check the active task details are exists or not
 				Boolean attributeListFlag = activeTaskAttrtibuteValuesList != null && !activeTaskAttrtibuteValuesList.isEmpty();
 				Boolean masterAttributeListFlag = activeTaskMaterList != null && !activeTaskMaterList.isEmpty();
-				Boolean taskListFlag = activeTaskList != null && !activeTaskList.isEmpty();
+				Boolean taskListFlag = taskDto != null;
 				if(attributeListFlag && masterAttributeListFlag && taskListFlag){
 					//get the steps details based on the activity type
 					ActiveTaskActivityStepsBean activeTaskActiveTaskStep = new ActiveTaskActivityStepsBean();
-					Map<String, Object> activeTaskFormat = new LinkedHashMap<>();
+					//Map<String, Object> activeTaskFormat = new LinkedHashMap<>();
+					FetalKickCounterFormatBean fetalKickCounterFormat = new FetalKickCounterFormatBean();
+					SpatialSpanMemoryFormatBean spatialSpanMemoryFormat = new SpatialSpanMemoryFormatBean();
+					TowerOfHanoiFormatBean towerOfHanoiFormat = new TowerOfHanoiFormatBean();
 					boolean skipLoopFlag = false;
 					for(ActiveTaskAttrtibutesValuesDto attributeDto : activeTaskAttrtibuteValuesList){
 						if(!skipLoopFlag){
 							for(ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList){
 								if(!skipLoopFlag){
 									if(attributeDto.getActiveTaskMasterAttrId().equals(masterAttributeDto.getMasterId())){
-										for(ActiveTaskListDto taskDto : activeTaskList){
-											if(!skipLoopFlag){
-												if(taskDto.getActiveTaskListId().equals(masterAttributeDto.getTaskTypeId()) && masterAttributeDto.getAttributeType().equalsIgnoreCase(StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)){
-													activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
-													activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
-													activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
-													activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
-													//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
+										if(taskDto.getActiveTaskListId().equals(masterAttributeDto.getTaskTypeId())){
+											activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
+											activeTaskActiveTaskStep.setResultType(StringUtils.isEmpty(taskDto.getType())?"":taskDto.getType());
+											activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
+											activeTaskActiveTaskStep.setText(StringUtils.isEmpty(activeTaskDto.getInstruction())?"":activeTaskDto.getInstruction());
+											//activeTaskActiveTaskStep.setOptions(activeTaskOptions()); //activeTask options list
+											
+											//get the response steps
+											switch (taskDto.getType()) {
+												case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
+													fetalKickCounterFormat = (FetalKickCounterFormatBean) fetalKickCounterDetails(attributeDto, masterAttributeDto, fetalKickCounterFormat);
+													activeTaskActiveTaskStep.setFormat(fetalKickCounterFormat);
 													
-													//get the response steps
-													switch (taskDto.getType()) {
-														case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
-															if(StringUtils.isNotEmpty(attributeDto.getAttributeVal())){
-																String[] durationArray = attributeDto.getAttributeVal().split(":");
-																activeTaskFormat.put("duration", (Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
-															}else{
-																activeTaskFormat.put("duration", 0);
-															}
-															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
-															skipLoopFlag = true;
-															break;
-														case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
-															activeTaskFormat = spatialSpanMemoryDetails(attributeDto, masterAttributeDto, activeTaskFormat);
-															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
-															
-															//if the last attribute then skip the loop
-															if(attributeDto.getActiveTaskMasterAttrId().equals(activeTaskMaterList.get(activeTaskMaterList.size()-1).getMasterId())){
-																skipLoopFlag = true;
-															}
-															break;
-														case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
-															activeTaskFormat.put("numberOfDisks", StringUtils.isEmpty(attributeDto.getAttributeVal())?0:Integer.parseInt(attributeDto.getAttributeVal()));
-															skipLoopFlag = true;
-															activeTaskActiveTaskStep.setFormat(activeTaskFormat);
-															break;
-														default:
-															break;
+													
+													//if the last attribute then skip the loop
+													if(attributeDto.getActiveTaskMasterAttrId().equals(activeTaskMaterList.get(activeTaskMaterList.size()-1).getMasterId())){
+														skipLoopFlag = true;
 													}
-												}
+													break;
+												case StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY:
+													spatialSpanMemoryFormat = (SpatialSpanMemoryFormatBean) spatialSpanMemoryDetails(attributeDto, masterAttributeDto, spatialSpanMemoryFormat);
+													activeTaskActiveTaskStep.setFormat(spatialSpanMemoryFormat);
+													
+													//if the last attribute then skip the loop
+													if(attributeDto.getActiveTaskMasterAttrId().equals(activeTaskMaterList.get(activeTaskMaterList.size()-1).getMasterId())){
+														skipLoopFlag = true;
+													}
+													break;
+												case StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI:
+													towerOfHanoiFormat.setNumberOfDisks(StringUtils.isEmpty(attributeDto.getAttributeVal())?0:Integer.parseInt(attributeDto.getAttributeVal()));
+													skipLoopFlag = true;
+													activeTaskActiveTaskStep.setFormat(towerOfHanoiFormat);
+													break;
+												default:
+													break;
 											}
 										}
 									}
@@ -1364,36 +1368,58 @@ public class ActivityMetaDataDao {
 	/**
 	 * @author Mohan
 	 * @param questionDto
-	 * @return Map<String, Object>
+	 * @return Object
 	 * @throws DAOException
 	 */
-	public Map<String, Object> spatialSpanMemoryDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, Map<String, Object> activeTaskFormat) throws DAOException{
+	public Object fetalKickCounterDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, FetalKickCounterFormatBean fetalKickCounterFormat) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Starts");
+		try{
+			if(masterAttributeValue.getOrderByTaskType().equals(1)){
+				if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
+					String[] durationArray = attributeValues.getAttributeVal().split(":");
+					fetalKickCounterFormat.setDuration((Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+				}
+			}else{
+				fetalKickCounterFormat.setKickCount(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - fetalKickCounterDetails() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Ends");
+		return fetalKickCounterFormat;
+	}
+	
+	/**
+	 * @author Mohan
+	 * @param questionDto
+	 * @return Object
+	 * @throws DAOException
+	 */
+	public Object spatialSpanMemoryDetails(ActiveTaskAttrtibutesValuesDto attributeValues, ActiveTaskMasterAttributeDto masterAttributeValue, SpatialSpanMemoryFormatBean spatialSpanMemoryFormat) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Starts");
 		try{
 			switch (masterAttributeValue.getAttributeName().trim()) {
-				case StudyMetaDataConstants.SSM_INITIAL: activeTaskFormat.put("initialSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_INITIAL: spatialSpanMemoryFormat.setInitialSpan(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_MINIMUM: activeTaskFormat.put("minimumSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_MINIMUM: spatialSpanMemoryFormat.setMinimumSpan(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_MAXIMUM: activeTaskFormat.put("maximumSpan", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_MAXIMUM: spatialSpanMemoryFormat.setMaximumSpan(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_PLAY_SPEED: activeTaskFormat.put("playSpeed", StringUtils.isEmpty(attributeValues.getAttributeVal())?0f:Float.parseFloat(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_PLAY_SPEED: spatialSpanMemoryFormat.setPlaySpeed(StringUtils.isEmpty(attributeValues.getAttributeVal())?0f:Float.parseFloat(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_MAX_TEST: activeTaskFormat.put("maximumTests", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_MAX_TEST: spatialSpanMemoryFormat.setMaximumTests(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
-				case StudyMetaDataConstants.SSM_MAX_CONSECUTIVE_FAILURES: activeTaskFormat.put("maximumConsecutiveFailures", StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
+				case StudyMetaDataConstants.SSM_MAX_CONSECUTIVE_FAILURES: spatialSpanMemoryFormat.setMaximumConsecutiveFailures(StringUtils.isEmpty(attributeValues.getAttributeVal())?0:Integer.parseInt(attributeValues.getAttributeVal()));
 					break;
 				case StudyMetaDataConstants.SSM_REQUIRE_REVERSAL: 
-					activeTaskFormat.put("customTargetImage", "");
-					activeTaskFormat.put("customTargetPluralName", "");
-					activeTaskFormat.put("requireReversal", StringUtils.isNotEmpty(attributeValues.getAttributeVal())&&attributeValues.getAttributeVal().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)?true:false);
+					spatialSpanMemoryFormat.setRequireReversal(StringUtils.isNotEmpty(attributeValues.getAttributeVal())&&attributeValues.getAttributeVal().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)?true:false);
 					break;
 			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - spatialSpanMemoryDetails() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Ends");
-		return activeTaskFormat;
+		return spatialSpanMemoryFormat;
 	}
 
 	/**
@@ -1441,10 +1467,10 @@ public class ActivityMetaDataDao {
 				query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionDto.getId()+" ORDER BY QRTDTO.responseTypeId DESC");
 				reponseType = (QuestionReponseTypeDto) query.setMaxResults(1).uniqueResult();
 				switch (questionResultType) {
-					case StudyMetaDataConstants.QUESTION_SCALE:
+					case StudyMetaDataConstants.QUESTION_SCALE: //conditional branching
 						questionFormat = formatQuestionScaleDetails(questionDto, reponseType);
 						break;
-					case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
+					case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE: //conditional branching
 						questionFormat = formatQuestionContinuousScaleDetails(questionDto, reponseType);
 						break;
 					case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
@@ -1459,7 +1485,7 @@ public class ActivityMetaDataDao {
 					case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
 						questionFormat = formatQuestionTextChoiceDetails(questionDto, reponseType, session);
 						break;
-					case StudyMetaDataConstants.QUESTION_NUMERIC:
+					case StudyMetaDataConstants.QUESTION_NUMERIC: //conditional branching
 						questionFormat = formatQuestionNumericDetails(questionDto, reponseType);
 						break;
 					case StudyMetaDataConstants.QUESTION_DATE:
@@ -1471,11 +1497,11 @@ public class ActivityMetaDataDao {
 					case StudyMetaDataConstants.QUESTION_EMAIL:
 						questionFormat.put("placeholder", (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 						break;
-					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
+					case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:	//conditional branching
 						questionFormat.put("default", (reponseType == null ||  StringUtils.isEmpty(reponseType.getDefalutTime()))?0:getTimeInSeconds(reponseType.getDefalutTime()));
 						questionFormat.put("step", (reponseType == null || reponseType.getStep() == null)?1:getTimeIntervalStep(reponseType.getStep())); //In minutes 1-30
 						break;
-					case StudyMetaDataConstants.QUESTION_HEIGHT:
+					case StudyMetaDataConstants.QUESTION_HEIGHT: //conditional branching
 						questionFormat.put("measurementSystem", (reponseType == null || reponseType.getMeasurementSystem() == null)?"":reponseType.getMeasurementSystem()); //Local/Metric/US
 						questionFormat.put("placeholder", (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
 						break;

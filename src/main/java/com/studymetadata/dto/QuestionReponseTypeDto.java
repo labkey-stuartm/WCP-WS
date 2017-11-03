@@ -106,6 +106,21 @@ public class QuestionReponseTypeDto implements Serializable {
 	
 	@Column(name="defalut_time")
 	private String defalutTime;
+	
+	@Column(name="validation_characters")
+	private String validationCharacters;
+	
+	@Column(name="validation_condition")
+	private String validationCondition;
+	
+	@Column(name="validation_except_text")
+	private String validationExceptText;
+	
+	@Column(name="formula_based_logic")
+	private String formulaBasedLogic;
+	
+	@Column(name="condition_formula")
+	private String conditionFormula;
 
 	public Integer getResponseTypeId() {
 		return responseTypeId;
@@ -345,6 +360,46 @@ public class QuestionReponseTypeDto implements Serializable {
 
 	public void setDefalutTime(String defalutTime) {
 		this.defalutTime = defalutTime;
+	}
+
+	public String getValidationCharacters() {
+		return validationCharacters;
+	}
+
+	public void setValidationCharacters(String validationCharacters) {
+		this.validationCharacters = validationCharacters;
+	}
+
+	public String getValidationCondition() {
+		return validationCondition;
+	}
+
+	public void setValidationCondition(String validationCondition) {
+		this.validationCondition = validationCondition;
+	}
+
+	public String getValidationExceptText() {
+		return validationExceptText;
+	}
+
+	public void setValidationExceptText(String validationExceptText) {
+		this.validationExceptText = validationExceptText;
+	}
+
+	public String getFormulaBasedLogic() {
+		return formulaBasedLogic;
+	}
+
+	public void setFormulaBasedLogic(String formulaBasedLogic) {
+		this.formulaBasedLogic = formulaBasedLogic;
+	}
+
+	public String getConditionFormula() {
+		return conditionFormula;
+	}
+
+	public void setConditionFormula(String conditionFormula) {
+		this.conditionFormula = conditionFormula;
 	}
 	
 }
