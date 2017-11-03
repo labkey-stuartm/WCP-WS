@@ -735,7 +735,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("testQuery")
 	public Object interceptorDataBaseQuery(String params, @Context ServletContext context, @Context HttpServletResponse response){
-		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
+		//LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
 		String message = "OOPS! Something went wrong.";
 		try {
 			JSONObject serviceJson = new JSONObject(params);
@@ -747,11 +747,11 @@ public class StudyMetaDataService {
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataService - interceptorDataBaseQuery() :: ERROR", e);
+			//LOGGER.error("StudyMetaDataService - interceptorDataBaseQuery() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE).build();
 		}
-		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
+		//LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
 		return message;
 	}
 

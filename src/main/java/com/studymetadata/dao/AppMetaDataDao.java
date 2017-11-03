@@ -379,7 +379,7 @@ public class AppMetaDataDao {
 	 * @throws DAOException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws DAOException{
-		LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Starts");
+		//LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Starts");
 		String message = StudyMetaDataConstants.FAILURE;
 		try{
 			session = sessionFactory.openSession();
@@ -387,13 +387,13 @@ public class AppMetaDataDao {
 			query.executeUpdate();
 			message = StudyMetaDataConstants.SUCCESS;
 		}catch(Exception e){
-			LOGGER.error("AppMetaDataDao - interceptorDataBaseQuery() :: ERROR", e);
+			//LOGGER.error("AppMetaDataDao - interceptorDataBaseQuery() :: ERROR", e);
 		}finally{
 			if(session != null){
 				session.close();
 			}
 		}
-		LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Ends");
+		//LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Ends");
 		return message;
 	}
 }

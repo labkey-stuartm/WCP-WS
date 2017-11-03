@@ -205,14 +205,14 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	 * @throws OrchestrationException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws OrchestrationException{
-		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
+		//LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
 		String message = "OOPS! Something went wrong.";
 		try{
 			message = appMetaDataDao.interceptorDataBaseQuery(dbQuery);
 		}catch(Exception e){
-			LOGGER.error("AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR", e);
+			//LOGGER.error("AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR", e);
 		}
-		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
+		//LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
 		return message;
 	}
 }

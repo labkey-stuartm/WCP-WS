@@ -240,4 +240,22 @@ public interface StudyMetaDataConstants {
 	public static final String SSM_SCORE = "Score_spatial";
 	public static final String SSM_NO_OF_GAMES = "Number_of_Games_spatial";
 	public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
+	
+	/********** phase_1B conditional branching logic constants **********/
+	
+	public static final String CB_RESPONSE_TYPE_IDS = "1,2,8,13,14";
+	public static final String CB_RESPONSE_TYPE = "scale,continuousScale,numeric,timeInterval,height";
+	public static final String CBO_EQUAL_TO = "e";
+	public static final String CBO_NOT_EQUAL_TO = "ne";
+	public static final String CBO_GREATER_THAN = "gt";
+	public static final String CBO_LESSER_THAN = "lt";
+	public static final String CBO_GREATER_THAN_OR_EQUAL_TO = "gte";
+	public static final String CBO_LESSER_THAN_OR_EQUAL_TO = "lte";
+	public static final String CBO_RANGE = "range";
+	
+	public static final String CBO_OPERATOR_EQUAL = "==";
+	public static final String CBO_OPERATOR_NOT_EQUAL = "!=";
+	public static final String CBO_OPERATOR_GREATER_THAN = ">";
+	public static final String CBO_OPERATOR_LESSER_THAN = "<";
+	
 }

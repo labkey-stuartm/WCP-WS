@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,10 +12,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1203,6 +1208,15 @@ public class ActivityMetaDataDao {
 						}
 					}
 					
+					//conditional branching logic for sprint_1B
+					if(Arrays.asList(StudyMetaDataConstants.CB_RESPONSE_TYPE.split(",")).contains(questionBean.getResultType()) && questionnaireDto.getBranching()){
+						query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionsDto.getId()+" ORDER BY QRTDTO.responseTypeId DESC");
+						QuestionReponseTypeDto reponseType = (QuestionReponseTypeDto) query.setMaxResults(1).uniqueResult();
+						if(reponseType != null && StringUtils.isNotEmpty(reponseType.getFormulaBasedLogic()) && reponseType.getFormulaBasedLogic().equalsIgnoreCase(StudyMetaDataConstants.YES)){
+							//destinationsList = getConditionalBranchingDestinations(destinationsList, reponseType);
+						}
+					}
+					
 					//get branching exists or not
 					DestinationBean destination = new DestinationBean();
 					destination.setCondition("");
@@ -2216,5 +2230,147 @@ public class ActivityMetaDataDao {
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Ends");
 		return defaultTime;
+	}
+	
+	/**
+	 * This method is used to get the conditional branching destinations operators for finding value of 'x'
+	 * 
+	 * @author Mohan
+	 * @param destinationsList
+	 * @param reponseType
+	 * @return List<DestinationBean>
+	 * @throws DAOException
+	 */
+	public List<DestinationBean> getConditionalBranchingDestinations(List<DestinationBean> destinationsList, QuestionReponseTypeDto reponseType) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Starts");
+		try{
+			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
+				
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getConditionalBranchingDestinations() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Ends");
+		return destinationsList;
+	}
+	
+	/**
+	 * This method is used to evaluate the formula to solve for 'X'
+	 * 
+	 * @author Mohan
+	 * @param conditionFormula
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String evaluateFormulaToSolveForX(String conditionFormula) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - evaluateFormulaToSolveForX() :: Starts");
+		String operator = "";
+		StringTokenizer tokenizer = null;
+		String LHS = "";
+		String RHS = "";
+		String solveForXFormula = "";
+		try{
+			if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_EQUAL;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN;
+			}
+			
+			//evaluate the operator
+			if(StringUtils.isNotEmpty(operator)){
+				tokenizer = new StringTokenizer(conditionFormula, operator);
+				LHS = tokenizer.nextToken().trim();
+				RHS = tokenizer.nextToken().trim();
+			}
+			
+			//evaluate the LHS contains the 'X' or not
+			if(!LHS.contains("x") && RHS.contains("x") && StringUtils.isNotEmpty(operator)){
+				switch (operator) {
+				case StudyMetaDataConstants.CBO_OPERATOR_EQUAL:
+					operator = StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL;
+					break;
+				case StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL:
+					operator = StudyMetaDataConstants.CBO_OPERATOR_EQUAL;
+					break;
+				case StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN:
+					operator = StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN;
+					break;
+				case StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN:
+					operator = StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN;
+					break;
+				default:
+					break;
+				}
+				solveForXFormula = RHS + operator + LHS;
+			}else{
+				solveForXFormula = LHS + operator + RHS;
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - evaluateFormulaToSolveForX() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - evaluateFormulaToSolveForX() :: Ends");
+		return solveForXFormula;
+	}
+	
+	/**
+	 * This method is used to get the minimum value of 'X' to solve the conditionFormula
+	 * 
+	 * @author Mohan
+	 * @param conditionFormula
+	 * @param minValue
+	 * @param maxValue
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String findValueOfX(String conditionFormula, Integer minValue, Integer maxValue) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - findValueOfX() :: Starts");
+		ScriptEngineManager scriptEngMgr = new ScriptEngineManager();
+	    ScriptEngine scriptEngine = scriptEngMgr.getEngineByName("JavaScript");
+		Integer valueOfX = minValue;
+		String tempFormula = "";
+		boolean isSolveForX = false;
+		try{
+			if(StringUtils.isNotEmpty(conditionFormula)){
+				tempFormula = conditionFormula.replaceAll("x", minValue > 0 ? minValue.toString() : "(" + minValue.toString() + ")");
+				while(valueOfX <= maxValue) {
+					isSolveForX = (boolean) scriptEngine.eval(tempFormula);
+					if(isSolveForX){
+						break;
+					}else{
+						valueOfX++;
+					}
+					tempFormula = conditionFormula.replaceAll("x", valueOfX > 0 ? valueOfX.toString() : "(" + valueOfX.toString() + ")");
+				}
+			}
+		}catch(ScriptException e){
+			LOGGER.error("ActivityMetaDataDao - findValueOfX() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - findValueOfX() :: Ends");
+		return valueOfX.toString();
+	}
+	
+	/**
+	 * This method is used to get the conditional branching format for the solved 'X' value
+	 * 
+	 * @author Mohan
+	 * @param destinationsList
+	 * @param valueOfX
+	 * @param conditionFormula
+	 * @return List<DestinationBean>
+	 * @throws DAOException
+	 */
+	public List<DestinationBean> getConditionalBranchingFormat(List<DestinationBean> destinationsList, String valueOfX, String conditionFormula) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Starts");
+		try{
+			
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getConditionalBranchingFormat() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Ends");
+		return destinationsList;
 	}
 }
