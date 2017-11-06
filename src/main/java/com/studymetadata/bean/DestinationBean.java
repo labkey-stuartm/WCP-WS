@@ -25,4 +25,10 @@ public class DestinationBean {
 		this.destination = destination;
 	}
 	
+	@Override
+	public String toString() {
+		return "DestinationBean [condition=" + condition + ", operator="
+				+ operator + ", destination=" + destination + "]";
+	}
+	
 }

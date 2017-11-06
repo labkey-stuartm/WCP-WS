@@ -242,6 +242,7 @@ public interface StudyMetaDataConstants {
 	public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
 	
 	/********** phase_1B conditional branching logic constants **********/
+	public static final Integer MAX_KICK_COUNT = 99;
 	
 	public static final String CB_RESPONSE_TYPE_IDS = "1,2,8,13,14";
 	public static final String CB_RESPONSE_TYPE = "scale,continuousScale,numeric,timeInterval,height";
