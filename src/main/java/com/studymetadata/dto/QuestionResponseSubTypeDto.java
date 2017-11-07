@@ -50,6 +50,12 @@ public class QuestionResponseSubTypeDto implements Serializable{
 	
 	@Column(name="active")
 	private Boolean active;
+	
+	@Column(name="value_of_x")
+	private String valueOfX;
+	
+	@Column(name="operator")
+	private String operator;
 
 	public Integer getResponseSubTypeValueId() {
 		return responseSubTypeValueId;
@@ -137,6 +143,22 @@ public class QuestionResponseSubTypeDto implements Serializable{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getValueOfX() {
+		return valueOfX;
+	}
+
+	public void setValueOfX(String valueOfX) {
+		this.valueOfX = valueOfX;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 	
 }

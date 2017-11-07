@@ -75,8 +75,8 @@ public class StudyMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	Session session = null;
-	Transaction transaction = null;
+	/*Session session = null;
+	Transaction transaction = null;*/
 	Query query = null;
 	String queryString = "";
 
@@ -114,6 +114,7 @@ public class StudyMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Starts");
+		Session session = null;
 		GatewayInfoResponse gatewayInfoResponse = new GatewayInfoResponse();
 		GatewayInfoDto gatewayInfo = null;
 		List<GatewayWelcomeInfoDto> gatewayWelcomeInfoList = null;
@@ -189,6 +190,7 @@ public class StudyMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public StudyResponse studyList(String authorization) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Starts");
+		Session session = null;
 		StudyResponse studyResponse = new StudyResponse();
 		List<StudyDto> studiesList = null;
 		String platformType = "";
@@ -295,6 +297,7 @@ public class StudyMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Starts");
+		Session session = null;
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
 		EligibilityDto eligibilityDto = null;
 		ConsentDto consentDto = null;
@@ -569,6 +572,7 @@ public class StudyMetaDataDao {
 	 */
 	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
+		Session session = null;
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		ConsentDto consent = null;
 		StudyDto studyDto = null;
@@ -643,6 +647,7 @@ public class StudyMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public ResourcesResponse resourcesForStudy(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
+		Session session = null;
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		List<ResourcesDto> resourcesDtoList = null;
 		StudyDto studyDto = null;
@@ -716,6 +721,7 @@ public class StudyMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public StudyInfoResponse studyInfo(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
+		Session session = null;
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		List<StudyPageDto> studyPageDtoList = null;
 		StudyDto studyDto = null;
@@ -907,6 +913,7 @@ public class StudyMetaDataDao {
 	 */
 	public boolean isValidStudy(String studyId) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+		Session session = null;
 		boolean isValidStudy = false;
 		StudyDto studyDto = null;
 		try{
@@ -934,6 +941,7 @@ public class StudyMetaDataDao {
 	 */
 	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+		Session session = null;
 		boolean isValidActivity = false;
 		ActiveTaskDto activeTaskDto = null;
 		QuestionnairesDto questionnaireDto = null;
@@ -968,6 +976,7 @@ public class StudyMetaDataDao {
 	 */
 	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
+		Session session = null;
 		boolean isActivityTypeQuestionnaire = true;
 		ActiveTaskDto activeTaskDto = null;
 		try{

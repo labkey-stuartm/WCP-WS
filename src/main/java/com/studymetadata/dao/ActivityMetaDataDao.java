@@ -77,8 +77,8 @@ public class ActivityMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	Session session = null;
-	Transaction transaction = null;
+	/*Session session = null;
+	Transaction transaction = null;*/
 	Query query = null;
 	String queryString = "";
 
@@ -91,6 +91,7 @@ public class ActivityMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public ActivityResponse studyActivityList(String studyId) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Starts");
+		Session session = null;
 		ActivityResponse activityResponse = new ActivityResponse();
 		List<ActiveTaskDto> activeTaskDtoList = null;
 		List<QuestionnairesDto> questionnairesList = null;
@@ -198,6 +199,7 @@ public class ActivityMetaDataDao {
 	 */
 	public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(String studyId, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Starts");
+		Session session = null;
 		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
 		ActiveTaskActivityStructureBean activeTaskactivityStructureBean = new ActiveTaskActivityStructureBean();
 		StudyDto studyDto = null;
@@ -233,6 +235,7 @@ public class ActivityMetaDataDao {
 	 */
 	public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(String studyId, String activityId, String activityVersion) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
+		Session session = null;
 		QuestionnaireActivityMetaDataResponse activityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		QuestionnaireActivityStructureBean activityStructureBean = new QuestionnaireActivityStructureBean();
 		StudyDto studyDto = null;
@@ -1213,7 +1216,40 @@ public class ActivityMetaDataDao {
 						query = session.createQuery(" from QuestionReponseTypeDto QRTDTO where QRTDTO.questionsResponseTypeId="+questionsDto.getId()+" ORDER BY QRTDTO.responseTypeId DESC");
 						QuestionReponseTypeDto reponseType = (QuestionReponseTypeDto) query.setMaxResults(1).uniqueResult();
 						if(reponseType != null && StringUtils.isNotEmpty(reponseType.getFormulaBasedLogic()) && reponseType.getFormulaBasedLogic().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-							destinationsList = getConditionalBranchingDestinations(reponseType, destinationsList, questionBean);
+							//isValueOfX is saved
+							boolean isValueOfXSaved = false;
+							if(destinationConditionList != null && !destinationConditionList.isEmpty() && destinationConditionList.size()==2){
+								if(StringUtils.isNotEmpty(destinationConditionList.get(0).getValueOfX()) && 
+										StringUtils.isNotEmpty(destinationConditionList.get(1).getValueOfX()) && 
+										StringUtils.isNotEmpty(destinationConditionList.get(0).getOperator()) && 
+										StringUtils.isNotEmpty(destinationConditionList.get(1).getOperator())){
+									isValueOfXSaved = true;
+									for(int i=0; i<destinationConditionList.size(); i++){
+										destinationsList.get(i).setCondition(StringUtils.isEmpty(destinationConditionList.get(i).getValueOfX())?"":destinationConditionList.get(i).getValueOfX());
+										destinationsList.get(i).setOperator(StringUtils.isEmpty(destinationConditionList.get(i).getOperator())?"":destinationConditionList.get(i).getOperator());
+									}
+								}
+							}
+
+							if(!isValueOfXSaved){
+								destinationsList = getConditionalBranchingDestinations(reponseType, destinationsList, questionBean);
+								Transaction transaction = null;
+								try {
+									transaction = session.beginTransaction();
+									for(int i=0; i<destinationsList.size(); i++){
+										QuestionResponseSubTypeDto destinationDto = destinationConditionList.get(i);
+										destinationDto.setValueOfX(destinationsList.get(i).getCondition());
+										destinationDto.setOperator(destinationsList.get(i).getOperator());
+										session.save(destinationDto);
+									}
+									transaction.commit();
+								} catch (Exception e) {
+									if(transaction != null){
+										transaction.rollback();
+									}
+									LOGGER.error("ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: ERROR", e);
+								}
+							}
 						}
 					}
 
@@ -2231,7 +2267,10 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Ends");
 		return defaultTime;
 	}
-
+	
+	
+	/*********************************** phase_1B conditional branching related methods to sovleForX ***********************************/
+	
 	/**
 	 * This method is used to evaluate the formula to solve for 'X'
 	 * 
@@ -2246,7 +2285,7 @@ public class ActivityMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Starts");
 		ScriptEngineManager mgr = new ScriptEngineManager();
 		ScriptEngine engine = mgr.getEngineByName("JavaScript");
-		
+
 		String conditionFormula = "";
 		String operator = "";
 		StringTokenizer tokenizer = null;
@@ -2258,172 +2297,80 @@ public class ActivityMetaDataDao {
 		Double minValue = 0D;
 		Double maxValue = 0D;
 		Double valueOfX = 0D;
+		Map<String, Double> prerequisitesMap = new HashMap<>();
+		List<DestinationBean> updatedDestinationsList = destinationsList;
 		try{
 			//validate whether formula is empty or not before solving for 'X'
 			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
 				conditionFormula = reponseType.getConditionFormula();
 				LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Formula ----------> "+conditionFormula);
-				
-				
+
 				//get the minimum and maximum value range for response type
-				switch (questionBean.getResultType()) {
-				case StudyMetaDataConstants.QUESTION_SCALE:
-					minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
-					maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
-					maxFractionDigit = 1D;
-					valueOfX = minValue;
-					break;
-				case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
-					minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
-					maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
-					valueOfX = minValue;
-					switch (Integer.parseInt(questionBean.getFormat().get("maxFractionDigits").toString())) {
-					case 0:	maxFractionDigit = 1D;
-					break;
-					case 1:	maxFractionDigit = 0.1D;
-					break;
-					case 2:	maxFractionDigit = 0.01D;
-					break;
-					case 3:	maxFractionDigit = 0.001D;
-					break;
-					case 4:	maxFractionDigit = 0.0001D;
-					break;
-					default:
-						break;
-					}
-					break;
-				case StudyMetaDataConstants.QUESTION_NUMERIC:
-					minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
-					maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
-					valueOfX = minValue;
-					switch (questionBean.getFormat().get("style").toString()) {
-					case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:	maxFractionDigit = 1D;
-					break;
-					case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_DECIMAL:	maxFractionDigit = 0.01D;
-					break;
-					default:
-						break;
-					}
-					break;
-				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
-					maxFractionDigit = 1D;
-					minValue = 0D;
-					maxValue = (double) (24 * 60 * 60); //in minutes
-					valueOfX = minValue;
-					break;
-				case StudyMetaDataConstants.QUESTION_HEIGHT:
-					maxFractionDigit = 1D;
-					minValue = 0D;
-					maxValue = 100000D;
-					valueOfX = minValue;
-					break;
-				default:
-					break;
-				}
-				
+				prerequisitesMap = conditionalBranchingPrerequisites(questionBean);
+				minValue = prerequisitesMap.get("minValue");
+				maxValue = prerequisitesMap.get("maxValue");
+				maxFractionDigit = prerequisitesMap.get("maxFractionDigit");
+				valueOfX = minValue;
+
 				//find position of X in the equation i.e LHS or RHS
-				if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
-					operator = StudyMetaDataConstants.CBO_OPERATOR_EQUAL;
-				}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
-					operator = StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL;
-				}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-					operator = StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN;
-				}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
-					operator = StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN;
-				}
-				
+				operator = getOperatorFromConditionalFormula(conditionFormula);
+
 				//evaluate the position of X in the equation
 				if(StringUtils.isNotEmpty(operator)){
 					tokenizer = new StringTokenizer(conditionFormula, operator);
 					LHS = tokenizer.nextToken().trim();
 					RHS = tokenizer.nextToken().trim();
 				}
-				
+
 				//find minimum value of X
 				while(valueOfX <= maxValue) {
 					tempFormula = conditionFormula.replaceAll("x", valueOfX>=0?valueOfX.toString():"("+valueOfX.toString()+")");
 					flag = (boolean) engine.eval(tempFormula);
 					if(flag){
 						LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
-						
+
 						//validation for equal to condition
 						if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
-							destinationsList.get(0).setCondition(valueOfX.toString());
-							destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_EQUAL_TO);
-							
-							destinationsList.get(1).setCondition(valueOfX.toString());
-							destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
-							
-							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+							updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+									StudyMetaDataConstants.CBO_EQUAL_TO, StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
 							break;
 						}
-						
+
 						//validation for greater than condition
 						if(LHS.contains("x") && !RHS.contains("x")){
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-								destinationsList.get(0).setCondition(valueOfX.toString());
-								destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
-								
-								destinationsList.get(1).setCondition(valueOfX.toString());
-								destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_LESSER_THAN);
-								
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
 								break;
 							}
 						}else{
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
-								destinationsList.get(0).setCondition(valueOfX.toString());
-								destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
-								
-								destinationsList.get(1).setCondition(valueOfX.toString());
-								destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_LESSER_THAN);
-								
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
 								break;
 							}
 						}
 					}else{
 						LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
-						
+
 						//validation for not equal to condition
 						if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
-							destinationsList.get(0).setCondition(valueOfX.toString());
-							destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
-							
-							destinationsList.get(1).setCondition(valueOfX.toString());
-							destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_EQUAL_TO);
-							
-							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+							updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+									StudyMetaDataConstants.CBO_NOT_EQUAL_TO, StudyMetaDataConstants.CBO_EQUAL_TO);
 							break;
 						}
-						
+
 						//validation for lesser than condition
 						if(LHS.contains("x") && !RHS.contains("x")){
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
-								destinationsList.get(0).setCondition(valueOfX.toString());
-								destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_LESSER_THAN);
-								
-								destinationsList.get(1).setCondition(valueOfX.toString());
-								destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
-								
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
 								break;
 							}
 						}else{
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-								destinationsList.get(0).setCondition(valueOfX.toString());
-								destinationsList.get(0).setOperator(StudyMetaDataConstants.CBO_LESSER_THAN);
-								
-								destinationsList.get(1).setCondition(valueOfX.toString());
-								destinationsList.get(1).setOperator(StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
-								
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 1 ----------> "+destinationsList.get(0));
-								LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Destination 2 ----------> "+destinationsList.get(1));
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
 								break;
 							}
 						}
@@ -2433,11 +2380,232 @@ public class ActivityMetaDataDao {
 					nf.setMaximumFractionDigits(maxFractDigit);
 					x = Double.parseDouble(nf.format(x));*/
 				}
+
+				//format the value of X according to type
+				updatedDestinationsList = formatValueOfX(updatedDestinationsList, questionBean);
 			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getConditionalBranchingDestinations() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Ends");
+		return updatedDestinationsList;
+	}
+	
+	/**
+	 * This method is used to get the branching prerequisites
+	 * 
+	 * @author Mohan
+	 * @param questionBean
+	 * @return Map<String, Double>
+	 * @throws DAOException
+	 */
+	public Map<String, Double> conditionalBranchingPrerequisites(QuestionnaireActivityStepsBean questionBean) throws DAOException{
+		LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Starts");
+		Map<String, Double> prerequisitesMap = new HashMap<>();
+		Double maxFractionDigit = 1D;
+		Double minValue = 0D;
+		Double maxValue = 0D;
+		try{
+			//get the minimum and maximum value range for response type
+			switch (questionBean.getResultType()) {
+			case StudyMetaDataConstants.QUESTION_SCALE:
+				minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
+				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
+				maxFractionDigit = 1D;
+				break;
+			case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
+				minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
+				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
+				switch (Integer.parseInt(questionBean.getFormat().get("maxFractionDigits").toString())) {
+				case 0:	maxFractionDigit = 1D;
+				break;
+				case 1:	maxFractionDigit = 0.1D;
+				break;
+				case 2:	maxFractionDigit = 0.01D;
+				break;
+				case 3:	maxFractionDigit = 0.001D;
+				break;
+				case 4:	maxFractionDigit = 0.0001D;
+				break;
+				default:
+					break;
+				}
+				break;
+			case StudyMetaDataConstants.QUESTION_NUMERIC:
+				minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
+				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
+				switch (questionBean.getFormat().get("style").toString()) {
+				case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:	maxFractionDigit = 1D;
+				break;
+				case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_DECIMAL:	maxFractionDigit = 0.01D;
+				break;
+				default:
+					break;
+				}
+				break;
+			case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
+				maxFractionDigit = 1D;
+				minValue = 0D;
+				maxValue = (double) (24 * 60); //in minutes
+				break;
+			case StudyMetaDataConstants.QUESTION_HEIGHT:
+				maxFractionDigit = 1D;
+				minValue = 0D;
+				maxValue = 300D;
+				break;
+			default:
+				break;
+			}
+
+			prerequisitesMap.put("minValue", minValue);
+			prerequisitesMap.put("maxValue", maxValue);
+			prerequisitesMap.put("maxFractionDigit", maxFractionDigit);
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - conditionalBranchingPrerequisites() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Ends");
+		return prerequisitesMap;
+	}
+
+
+	/**
+	 * This method is used to get the operator from the conditional formula to solve for 'X'
+	 * 
+	 * @author Mohan
+	 * @param conditionFormula
+	 * @return String
+	 * @throws DAOException
+	 */
+	public String getOperatorFromConditionalFormula(String conditionFormula) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Starts");
+		String operator = "";
+		try {
+			if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_EQUAL;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN;
+			}else if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+				operator = StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN;
+			}
+		} catch (Exception e) {
+			LOGGER.error("ActivityMetaDataDao - getOperatorFromConditionalFormula() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Ends");
+		return operator;
+	}
+
+	/**
+	 * This method is used to get the conditional branching format for valueOfX, true condition and false condition
+	 * 
+	 * @author Mohan
+	 * @param destinationsList
+	 * @param valueOfX
+	 * @param trueOperator
+	 * @param falseOperator
+	 * @return List<DestinationBean>
+	 * @throws DAOException
+	 */
+	public List<DestinationBean> getConditionalBranchingFormat(List<DestinationBean> destinationsList, String valueOfX, String trueOperator, String falseOperator) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Starts");
+		try {
+			if(destinationsList != null && !destinationsList.isEmpty() && destinationsList.size() >= 2){
+				destinationsList.get(0).setCondition(valueOfX);
+				destinationsList.get(0).setOperator(trueOperator);
+
+				destinationsList.get(1).setCondition(valueOfX);
+				destinationsList.get(1).setOperator(falseOperator);
+			}
+		} catch (Exception e) {
+			LOGGER.error("ActivityMetaDataDao - getConditionalBranchingFormat() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Ends");
+		return destinationsList;
+	}
+	
+	/**
+	 * This method is used to format the valueOfX based on the responseType and responseSubType
+	 * 
+	 * @author Mohan
+	 * @param destinationsList
+	 * @param questionBean
+	 * @return List<DestinationBean>
+	 * @throws DAOException
+	 */
+	public List<DestinationBean> formatValueOfX(List<DestinationBean> destinationsList, QuestionnaireActivityStepsBean questionBean) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Starts");
+		List<DestinationBean> updatedDestinationsList = destinationsList;
+		try {
+			if(destinationsList != null && !destinationsList.isEmpty() && destinationsList.size() >= 2){
+				if(questionBean.getResultType().equals(StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE)){
+					switch (Integer.parseInt(questionBean.getFormat().get("maxFractionDigits").toString())) {
+					case 0:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.0f", questionBean);
+						break;
+					case 1:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.1f", questionBean);
+						break;
+					case 2:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.2f", questionBean);
+						break;
+					case 3:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.3f", questionBean);
+						break;
+					case 4:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.4f", questionBean);
+						break;
+					default:
+						break;
+					}
+				}else if(questionBean.getResultType().equals(StudyMetaDataConstants.QUESTION_NUMERIC)){
+					switch (questionBean.getFormat().get("style").toString()) {
+					case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.0f", questionBean);
+						break;
+					case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_DECIMAL:
+						updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.4f", questionBean);
+						break;
+					default:
+						break;
+					}
+				}else {
+					updatedDestinationsList = formatValueOfXByStringFormat(destinationsList, "%.0f", questionBean);
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error("ActivityMetaDataDao - formatValueOfX() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Ends");
+		return updatedDestinationsList;
+	}
+	
+	/**
+	 * This method is used to get the format for valueOfX
+	 * 
+	 * @author Mohan
+	 * @param destinationsList
+	 * @param format
+	 * @param questionBean
+	 * @return List<DestinationBean>
+	 * @throws DAOException
+	 */
+	public List<DestinationBean> formatValueOfXByStringFormat(List<DestinationBean> destinationsList, String stringFormat, QuestionnaireActivityStepsBean questionBean) throws DAOException {
+		LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Starts");
+		try {
+			if(destinationsList != null && !destinationsList.isEmpty() && destinationsList.size() >= 2){
+				if(questionBean.getResultType().equals(StudyMetaDataConstants.QUESTION_TIME_INTERVAL)){
+					destinationsList.get(0).setCondition(String.format(stringFormat, Double.parseDouble(destinationsList.get(0).getCondition())*60));
+					destinationsList.get(1).setCondition(String.format(stringFormat, Double.parseDouble(destinationsList.get(1).getCondition())*60));
+				}else{
+					destinationsList.get(0).setCondition(String.format(stringFormat, Double.parseDouble(destinationsList.get(0).getCondition())));
+					destinationsList.get(1).setCondition(String.format(stringFormat, Double.parseDouble(destinationsList.get(1).getCondition())));
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error("ActivityMetaDataDao - formatValueOfXByStringFormat() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Ends");
 		return destinationsList;
 	}
 }

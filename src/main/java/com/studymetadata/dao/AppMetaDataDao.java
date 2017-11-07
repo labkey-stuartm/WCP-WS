@@ -39,8 +39,8 @@ public class AppMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	Session session = null;
-	Transaction transaction = null;
+	/*Session session = null;
+	Transaction transaction = null;*/
 	Query query = null;
 	String queryString = "";
 	
@@ -72,6 +72,7 @@ public class AppMetaDataDao {
 	 */
 	public NotificationsResponse notifications(String skip, String authorization) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
+		Session session = null;
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		List<NotificationDto> notificationList = null;
 		String bundleIdType = "";
@@ -165,6 +166,7 @@ public class AppMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public AppUpdatesResponse appUpdates(String appVersion, String authCredentials) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
+		Session session = null;
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
 		List<AppVersionDto> appVersionList = null;
@@ -216,6 +218,7 @@ public class AppMetaDataDao {
 	 */
 	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Starts");
+		Session session = null;
 		StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
 		StudyUpdatesBean updates = new StudyUpdatesBean();
 		List<StudyVersionDto> studyVersionList = null;
@@ -302,6 +305,8 @@ public class AppMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId, String message) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
+		Session session = null;
+		Transaction transaction = null;
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		List<AppVersionDto> appVersionDtoList = null;
 		Boolean updateFlag = false;
@@ -358,7 +363,7 @@ public class AppMetaDataDao {
 			}
 		}catch(Exception e){
 			LOGGER.error("AppMetaDataDao - updateAppVersionDetails() :: ERROR", e);
-			if(transaction.isActive()){
+			if(transaction != null){
 				transaction.rollback();
 			}
 		}finally{
@@ -380,6 +385,7 @@ public class AppMetaDataDao {
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws DAOException{
 		//LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Starts");
+		Session session = null;
 		String message = StudyMetaDataConstants.FAILURE;
 		try{
 			session = sessionFactory.openSession();

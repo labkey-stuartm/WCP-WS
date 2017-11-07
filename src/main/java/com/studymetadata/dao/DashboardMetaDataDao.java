@@ -53,8 +53,8 @@ public class DashboardMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	Session session = null;
-	Transaction transaction = null;
+	/*Session session = null;
+	Transaction transaction = null;*/
 	Query query = null;
 	String queryString = "";
 	
@@ -67,6 +67,7 @@ public class DashboardMetaDataDao {
 	@SuppressWarnings("unchecked")
 	public StudyDashboardResponse studyDashboardInfo(String studyId) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - studyDashboardInfo() :: Starts");
+		Session session = null;
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
 		DashboardBean dashboard = new DashboardBean();
 		List<ChartsBean> chartsList = new ArrayList<>();
