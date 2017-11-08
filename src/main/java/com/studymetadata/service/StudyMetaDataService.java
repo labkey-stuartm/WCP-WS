@@ -304,7 +304,7 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activityList")
-	public Object studyActivityList(@QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
+	public Object studyActivityList(@HeaderParam("Authorization") String authorization, @QueryParam("studyId") String studyId, @Context ServletContext context, @Context HttpServletResponse response){
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		Boolean isValidFlag = false;
@@ -316,7 +316,7 @@ public class StudyMetaDataService {
 					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID).build();
 				}
 				
-				activityResponse = activityMetaDataOrchestration.studyActivityList(studyId);
+				activityResponse = activityMetaDataOrchestration.studyActivityList(studyId, authorization);
 				if(!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)){
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();

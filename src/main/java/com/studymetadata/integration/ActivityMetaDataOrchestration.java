@@ -22,14 +22,15 @@ public class ActivityMetaDataOrchestration {
 	/**
 	 * @author Mohan
 	 * @param studyId
+	 * @param authorization
 	 * @return ActivityResponse
 	 * @throws OrchestrationException
 	 */
-	public ActivityResponse studyActivityList(String studyId) throws OrchestrationException{
+	public ActivityResponse studyActivityList(String studyId, String authorization) throws OrchestrationException{
 		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		try{
-			activityResponse = activityMetaDataDao.studyActivityList(studyId);
+			activityResponse = activityMetaDataDao.studyActivityList(studyId, authorization);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataOrchestration - studyActivityList() :: ERROR", e);
 		}

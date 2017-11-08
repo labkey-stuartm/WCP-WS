@@ -85,11 +85,12 @@ public class ActivityMetaDataDao {
 	/**
 	 * @author Mohan
 	 * @param studyId
+	 * @param authorization
 	 * @return ActivityResponse
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public ActivityResponse studyActivityList(String studyId) throws DAOException{
+	public ActivityResponse studyActivityList(String studyId, String authorization) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Starts");
 		Session session = null;
 		ActivityResponse activityResponse = new ActivityResponse();
@@ -98,9 +99,10 @@ public class ActivityMetaDataDao {
 		List<ActivitiesBean> activitiesBeanList = new ArrayList<>();
 		StudyDto studyDto = null;
 		StudyVersionDto studyVersionDto = null;
+		String deviceType = "";
 		try{
+			deviceType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_OS);
 			session = sessionFactory.openSession();
-
 			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
 			studyDto = (StudyDto) query.uniqueResult();
 			if(studyDto != null){
@@ -114,30 +116,39 @@ public class ActivityMetaDataDao {
 				activeTaskDtoList = query.list();
 				if( null != activeTaskDtoList && !activeTaskDtoList.isEmpty()){
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
-						ActivitiesBean activityBean = new ActivitiesBean();
-						activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
-						activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
-						activityBean.setState((activeTaskDto.getActive()!=null&&activeTaskDto.getActive()>0)?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
-
-						activityBean.setActivityVersion((activeTaskDto.getVersion() == null || activeTaskDto.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
-						activityBean.setBranching(false);
-						activityBean.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-
-						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
-						frequencyDetails = getFrequencyRunsDetailsForActiveTasks(activeTaskDto, frequencyDetails, session);
-						frequencyDetails.setType(StringUtils.isEmpty(activeTaskDto.getFrequency())?"":activeTaskDto.getFrequency());
-						activityBean.setFrequency(frequencyDetails);
-
-						//get the time details for the activity by activityId
-						activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
-
-						//modifiedDateTime will be the endDateTime for the deleted activities
-						if(activeTaskDto.getActive()==null || activeTaskDto.getActive()==0){
-							activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+						boolean isSupporting = true;
+						/*NOTE: send Spatial Span Memory and Tower of Hanoi to only ios users, 
+						if the user logs in the android device send only Fetal Kick Counter Active Task*/
+						if(StringUtils.isNotEmpty(deviceType) &&  deviceType.equalsIgnoreCase(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID) && !activeTaskDto.getTaskTypeId().equals(1)){
+							isSupporting = false;
 						}
+						
+						if(isSupporting){
+							ActivitiesBean activityBean = new ActivitiesBean();
+							activityBean.setTitle(StringUtils.isEmpty(activeTaskDto.getDisplayName())?"":activeTaskDto.getDisplayName());
+							activityBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
+							activityBean.setState((activeTaskDto.getActive()!=null&&activeTaskDto.getActive()>0)?StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE:StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
 
-						activityBean.setActivityId(activeTaskDto.getShortTitle());
-						activitiesBeanList.add(activityBean);
+							activityBean.setActivityVersion((activeTaskDto.getVersion() == null || activeTaskDto.getVersion() < 1.0f)?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
+							activityBean.setBranching(false);
+							activityBean.setLastModified(StringUtils.isEmpty(activeTaskDto.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+
+							ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
+							frequencyDetails = getFrequencyRunsDetailsForActiveTasks(activeTaskDto, frequencyDetails, session);
+							frequencyDetails.setType(StringUtils.isEmpty(activeTaskDto.getFrequency())?"":activeTaskDto.getFrequency());
+							activityBean.setFrequency(frequencyDetails);
+
+							//get the time details for the activity by activityId
+							activityBean = getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
+
+							//modifiedDateTime will be the endDateTime for the deleted activities
+							if(activeTaskDto.getActive()==null || activeTaskDto.getActive()==0){
+								activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+							}
+
+							activityBean.setActivityId(activeTaskDto.getShortTitle());
+							activitiesBeanList.add(activityBean);
+						}
 					}
 				}
 
@@ -1767,10 +1778,10 @@ public class ActivityMetaDataDao {
 			questionFormat.put("style", (reponseType==null || StringUtils.isEmpty(reponseType.getStyle()))?StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:reponseType.getStyle());
 			questionFormat.put("unit", (reponseType==null || StringUtils.isEmpty(reponseType.getUnit()))?"":reponseType.getUnit());
 			if(questionFormat.get("style").toString().equalsIgnoreCase(StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER)){
-				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?-10000:Integer.parseInt(reponseType.getMinValue()));
+				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?0:Integer.parseInt(reponseType.getMinValue()));
 				questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?10000:Integer.parseInt(reponseType.getMaxValue()));
 			}else{
-				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?-10000d:Double.parseDouble(reponseType.getMinValue()));
+				questionFormat.put("minValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMinValue()))?0d:Double.parseDouble(reponseType.getMinValue()));
 				questionFormat.put("maxValue", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxValue()))?10000d:Double.parseDouble(reponseType.getMaxValue()));
 			}
 			questionFormat.put("placeholder", (reponseType==null || StringUtils.isEmpty(reponseType.getPlaceholder()))?"":reponseType.getPlaceholder());
@@ -2297,19 +2308,27 @@ public class ActivityMetaDataDao {
 		Double minValue = 0D;
 		Double maxValue = 0D;
 		Double valueOfX = 0D;
-		Map<String, Double> prerequisitesMap = new HashMap<>();
+		Integer digitFormat = 0;
+		Map<String, Object> prerequisitesMap = new HashMap<>();
 		List<DestinationBean> updatedDestinationsList = destinationsList;
+		String formatXValue = "";
 		try{
 			//validate whether formula is empty or not before solving for 'X'
 			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
 				conditionFormula = reponseType.getConditionFormula();
+				//check the expression contains '=', if yes replace it with '==' to evaluate the expression
+				if(!reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL) && reponseType.getConditionFormula().contains("=")){
+					conditionFormula = reponseType.getConditionFormula().replaceAll("=", StudyMetaDataConstants.CBO_OPERATOR_EQUAL);
+				}
 				LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Formula ----------> "+conditionFormula);
 
 				//get the minimum and maximum value range for response type
 				prerequisitesMap = conditionalBranchingPrerequisites(questionBean);
-				minValue = prerequisitesMap.get("minValue");
-				maxValue = prerequisitesMap.get("maxValue");
-				maxFractionDigit = prerequisitesMap.get("maxFractionDigit");
+				minValue = (Double) prerequisitesMap.get("minValue");
+				maxValue = (Double) prerequisitesMap.get("maxValue");
+				maxFractionDigit = (Double) prerequisitesMap.get("maxFractionDigit");
+				digitFormat = (Integer) prerequisitesMap.get("digitFormat");
+				formatXValue = "%."+digitFormat+"f";
 				valueOfX = minValue;
 
 				//find position of X in the equation i.e LHS or RHS
@@ -2376,9 +2395,7 @@ public class ActivityMetaDataDao {
 						}
 					}
 					valueOfX += maxFractionDigit;
-					/*NumberFormat nf = NumberFormat.getInstance();
-					nf.setMaximumFractionDigits(maxFractDigit);
-					x = Double.parseDouble(nf.format(x));*/
+					valueOfX = Double.parseDouble(String.format(formatXValue, valueOfX));
 				}
 
 				//format the value of X according to type
@@ -2396,15 +2413,16 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author Mohan
 	 * @param questionBean
-	 * @return Map<String, Double>
+	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
-	public Map<String, Double> conditionalBranchingPrerequisites(QuestionnaireActivityStepsBean questionBean) throws DAOException{
+	public Map<String, Object> conditionalBranchingPrerequisites(QuestionnaireActivityStepsBean questionBean) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Starts");
-		Map<String, Double> prerequisitesMap = new HashMap<>();
+		Map<String, Object> prerequisitesMap = new HashMap<>();
 		Double maxFractionDigit = 1D;
 		Double minValue = 0D;
 		Double maxValue = 0D;
+		Integer digitFormat = 0;
 		try{
 			//get the minimum and maximum value range for response type
 			switch (questionBean.getResultType()) {
@@ -2412,20 +2430,26 @@ public class ActivityMetaDataDao {
 				minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
 				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
 				maxFractionDigit = 1D;
+				digitFormat = 0;
 				break;
 			case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
 				minValue = Double.parseDouble(questionBean.getFormat().get("minValue").toString());
 				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
 				switch (Integer.parseInt(questionBean.getFormat().get("maxFractionDigits").toString())) {
 				case 0:	maxFractionDigit = 1D;
+				digitFormat = 0;
 				break;
 				case 1:	maxFractionDigit = 0.1D;
+				digitFormat = 1;
 				break;
 				case 2:	maxFractionDigit = 0.01D;
+				digitFormat = 2;
 				break;
 				case 3:	maxFractionDigit = 0.001D;
+				digitFormat = 3;
 				break;
 				case 4:	maxFractionDigit = 0.0001D;
+				digitFormat = 4;
 				break;
 				default:
 					break;
@@ -2436,8 +2460,10 @@ public class ActivityMetaDataDao {
 				maxValue = Double.parseDouble(questionBean.getFormat().get("maxValue").toString());
 				switch (questionBean.getFormat().get("style").toString()) {
 				case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_INTEGER:	maxFractionDigit = 1D;
+				digitFormat = 0;
 				break;
 				case StudyMetaDataConstants.QUESTION_NUMERIC_STYLE_DECIMAL:	maxFractionDigit = 0.01D;
+				digitFormat = 2;
 				break;
 				default:
 					break;
@@ -2447,11 +2473,13 @@ public class ActivityMetaDataDao {
 				maxFractionDigit = 1D;
 				minValue = 0D;
 				maxValue = (double) (24 * 60); //in minutes
+				digitFormat = 0;
 				break;
 			case StudyMetaDataConstants.QUESTION_HEIGHT:
 				maxFractionDigit = 1D;
 				minValue = 0D;
 				maxValue = 300D;
+				digitFormat = 0;
 				break;
 			default:
 				break;
@@ -2460,6 +2488,7 @@ public class ActivityMetaDataDao {
 			prerequisitesMap.put("minValue", minValue);
 			prerequisitesMap.put("maxValue", maxValue);
 			prerequisitesMap.put("maxFractionDigit", maxFractionDigit);
+			prerequisitesMap.put("digitFormat", digitFormat);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - conditionalBranchingPrerequisites() :: ERROR", e);
 		}
