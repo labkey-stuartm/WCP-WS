@@ -2317,7 +2317,9 @@ public class ActivityMetaDataDao {
 			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
 				conditionFormula = reponseType.getConditionFormula();
 				//check the expression contains '=', if yes replace it with '==' to evaluate the expression
-				if(!reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL) && reponseType.getConditionFormula().contains("=")){
+				if(!reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL) 
+						&& !reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL) 
+						&& reponseType.getConditionFormula().contains("=")){
 					conditionFormula = reponseType.getConditionFormula().replaceAll("=", StudyMetaDataConstants.CBO_OPERATOR_EQUAL);
 				}
 				LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Formula ----------> "+conditionFormula);
