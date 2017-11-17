@@ -1812,7 +1812,7 @@ public class ActivityMetaDataDao {
 			questionFormat.put("minDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMinDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMinDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 			questionFormat.put("maxDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMaxDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 			questionFormat.put("default", (reponseType==null || StringUtils.isEmpty(reponseType.getDefaultDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getDefaultDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //Date
-			questionFormat.put("dateRange", (reponseType==null || StringUtils.isEmpty(reponseType.getSelectionStyle())?"":this.getDateRangeType(reponseType.getSelectionStyle())));
+			questionFormat.put("dateRange", (reponseType==null || StringUtils.isEmpty(reponseType.getSelectionStyle())?StudyMetaDataConstants.DATE_RANGE_CUSTOM:this.getDateRangeType(reponseType.getSelectionStyle())));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
 		}
