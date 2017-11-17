@@ -259,4 +259,12 @@ public interface StudyMetaDataConstants {
 	public static final String CBO_OPERATOR_GREATER_THAN = ">";
 	public static final String CBO_OPERATOR_LESSER_THAN = "<";
 	
+	public static final String WCP_DATE_RANGE_UNTILL_CURRENT = "Until current date";
+	public static final String WCP_DATE_RANGE_AFTER_CURRENT = "After current date";
+	public static final String WCP_DATE_RANGE_CUSTOM = "Custom";
+	
+	public static final String DATE_RANGE_UNTILL_CURRENT = "untilCurrent";
+	public static final String DATE_RANGE_AFTER_CURRENT = "afterCurrent";
+	public static final String DATE_RANGE_CUSTOM = "custom";
+	
 }

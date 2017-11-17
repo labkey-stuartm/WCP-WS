@@ -1812,13 +1812,14 @@ public class ActivityMetaDataDao {
 			questionFormat.put("minDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMinDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMinDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 			questionFormat.put("maxDate", (reponseType==null || StringUtils.isEmpty(reponseType.getMaxDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getMaxDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
 			questionFormat.put("default", (reponseType==null || StringUtils.isEmpty(reponseType.getDefaultDate()))?"":StudyMetaDataUtil.getFormattedDateTimeZone(reponseType.getDefaultDate(), dateFormat, "yyyy-MM-dd'T'HH:mm:ss.SSSZ")); //Date
+			questionFormat.put("dateRange", (reponseType==null || StringUtils.isEmpty(reponseType.getSelectionStyle())?"":this.getDateRangeType(reponseType.getSelectionStyle())));
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Ends");
 		return questionFormat;
 	}
-
+	
 	/**
 	 * @author Mohan
 	 * @param questionDto
@@ -2638,5 +2639,36 @@ public class ActivityMetaDataDao {
 		}
 		LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Ends");
 		return destinationsList;
+	}
+	
+	/**
+	 * This method is used to get the date range from the selection style
+	 * 
+	 * @author Mohan
+	 * @param dateRange
+	 * @return String
+	 */
+	public String getDateRangeType(String dateRange) {
+		LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Starts");
+		String dateRangeType = "";
+		try{
+			switch (dateRange) {
+			case StudyMetaDataConstants.WCP_DATE_RANGE_UNTILL_CURRENT:
+				dateRangeType = StudyMetaDataConstants.DATE_RANGE_UNTILL_CURRENT;
+				break;
+			case StudyMetaDataConstants.WCP_DATE_RANGE_AFTER_CURRENT:
+				dateRangeType = StudyMetaDataConstants.DATE_RANGE_AFTER_CURRENT;
+				break;
+			case StudyMetaDataConstants.WCP_DATE_RANGE_CUSTOM:
+				dateRangeType = StudyMetaDataConstants.DATE_RANGE_CUSTOM;
+				break;
+			default:
+				break;
+			}
+		}catch(Exception e){
+			LOGGER.error("ActivityMetaDataDao - getDateRangeType() :: ERROR", e);
+		}
+		LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Ends");
+		return dateRangeType;
 	}
 }
