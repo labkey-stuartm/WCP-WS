@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true ORDER BY RDTO.sequenceNo DESC"),
+	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true ORDER BY RDTO.sequenceNo"),
 })
 public class ResourcesDto implements Serializable{
 	
