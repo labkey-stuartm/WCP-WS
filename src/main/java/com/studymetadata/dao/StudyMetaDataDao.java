@@ -14,8 +14,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ComprehensionTestResponseDto;
@@ -150,7 +148,7 @@ public class StudyMetaDataDao {
 			//get resources details
 			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if(StringUtils.isNotEmpty(platformType)){
-				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) and RDTO.status=true and RDTO.action=true ORDER BY RDTO.id DESC");
+				query = session.createQuery(" from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id from StudyDto SDTO where SDTO.platform like '%"+platformType+"%' and SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.live=1) and RDTO.status=true and RDTO.action=true ORDER BY RDTO.sequenceNo DESC");
 				resourcesList = query.list();
 				if( null != resourcesList && !resourcesList.isEmpty()){
 					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
