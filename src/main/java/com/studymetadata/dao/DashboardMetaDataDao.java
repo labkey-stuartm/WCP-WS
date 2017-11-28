@@ -11,11 +11,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
-import com.studymetadata.bean.ActivitiesBean;
-import com.studymetadata.bean.ActivityFrequencyBean;
-import com.studymetadata.bean.ActivityFrequencyScheduleBean;
 import com.studymetadata.bean.ChartDataSourceBean;
 import com.studymetadata.bean.ChartsBean;
 import com.studymetadata.bean.DashboardActivityBean;
@@ -28,6 +24,7 @@ import com.studymetadata.dto.ActiveTaskCustomFrequenciesDto;
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ActiveTaskFormulaDto;
 import com.studymetadata.dto.ActiveTaskFrequencyDto;
+import com.studymetadata.dto.ActiveTaskMasterAttributeDto;
 import com.studymetadata.dto.FormDto;
 import com.studymetadata.dto.FormMappingDto;
 import com.studymetadata.dto.QuestionnairesCustomFrequenciesDto;
@@ -171,20 +168,52 @@ public class DashboardMetaDataDao {
 					query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true and ATAVDTO.activeTaskId in ("+StringUtils.join(activeTaskIdsList, ',')+")");
 					activeTaskValuesList = query.list();
 					if(activeTaskValuesList != null && !activeTaskValuesList.isEmpty()){
+						// Srikanth -----------------------------------------------------------
+						int taskTypeId = 0;
+						Map<Integer, Integer> activeTaskMasterAttrIdsMap = new HashMap<>();
+						Map<Integer, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
+						String activeTaskMasterAttrIds = "";
+						for(ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList){
+							activeTaskMasterAttrIdsMap.put(activeTaskAttrDto.getActiveTaskMasterAttrId(), activeTaskAttrDto.getActiveTaskMasterAttrId());
+						}
+						for(Integer activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()){
+							if("".equals(activeTaskMasterAttrIds)){
+								activeTaskMasterAttrIds = activeTaskMasterAttrId.toString();
+							} else {
+								activeTaskMasterAttrIds += "," + activeTaskMasterAttrId.toString();
+							}
+						}
+						if(!"".equals(activeTaskMasterAttrIds)){
+							query = session.createQuery("from ActiveTaskMasterAttributeDto where masterId IN (" + activeTaskMasterAttrIds + ")");
+							List<ActiveTaskMasterAttributeDto> activeTaskMasterAttributeList = query.list();
+							if(null != activeTaskMasterAttributeList && !activeTaskMasterAttributeList.isEmpty()){
+								for(ActiveTaskMasterAttributeDto atmt : activeTaskMasterAttributeList){
+									activeTaskMasterAttrIdNameMap.put(atmt.getMasterId(), atmt.getDisplayName());
+								}
+							}
+						}
+						//-----------------------------------------------------------
+						
 						for(ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList){
 							ActiveTaskDto activeTaskDto = null;
+							taskTypeId = 0;
 							activeTaskDto = (ActiveTaskDto) activityMap.get(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK+"-"+activeTaskAttrDto.getActiveTaskId());
 							if(activeTaskDto != null){
+								if(null != activeTaskDto.getTaskTypeId() && 3 == activeTaskDto.getTaskTypeId().intValue()){
+									taskTypeId = 3;
+								}
 								activeTaskAttrDto.setActivityType(StudyMetaDataConstants.DASHBOARD_ACTIVE_TASK);
  								activeTaskAttrDto.setActivityStepKey(StringUtils.isEmpty(activeTaskDto.getShortTitle())?"":activeTaskDto.getShortTitle());
 								activeTaskAttrDto.setActivityVersion(activeTaskDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 								activeTaskAttrDto.setActivityId(activeTaskDto.getShortTitle());
 								if(activeTaskAttrDto.isAddToLineChart()){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, chartsList, activeTaskDto.getShortTitle());
+									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
+											chartsList, activeTaskDto.getShortTitle(), taskTypeId, activeTaskMasterAttrIdNameMap);
 								}
 								
 								if(activeTaskAttrDto.isUseForStatistic()){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, statisticsList,  formulaDtoList, statisticImageList);
+									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
+											statisticsList,  formulaDtoList, statisticImageList, taskTypeId, activeTaskMasterAttrIdNameMap);
 								}
 							}
 						}
@@ -206,11 +235,13 @@ public class DashboardMetaDataDao {
 								questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 								questionDto.setActivityId(questionnaireDto.getShortTitle());
 								if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList, questionnaireSteps.getStepShortTitle());
+									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+											questionDto, chartsList, questionnaireSteps.getStepShortTitle(), 0, null);
 								}
 								
 								if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList, formulaDtoList, statisticImageList);
+									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+											questionDto, statisticsList, formulaDtoList, statisticImageList, 0, null);
 								}
 							}
 						}
@@ -249,11 +280,13 @@ public class DashboardMetaDataDao {
 													questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 													questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 													if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, chartsList, questionDto.getShortTitle());
+														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+																questionDto, chartsList, questionDto.getShortTitle(), 0, null);
 													}
 													
 													if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, questionDto, statisticsList, formulaDtoList, statisticImageList);
+														statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+																questionDto, statisticsList, formulaDtoList, statisticImageList, 0, null);
 													}
 												}
 											}
@@ -293,7 +326,9 @@ public class DashboardMetaDataDao {
 	 * @return List<ChartsBean>
 	 * @throws DAOException
 	 */
-	public List<ChartsBean> getChartDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<ChartsBean> chartsList, String chartTitle) throws DAOException{
+	@SuppressWarnings("rawtypes")
+	public List<ChartsBean> getChartDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, 
+			List<ChartsBean> chartsList, String chartTitle, int taskTypeId, Map activeTaskMasterAttrIdNameMap) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Starts");
 		ChartsBean chart = new ChartsBean();
 		ChartDataSourceBean dataSource = new ChartDataSourceBean();
@@ -308,7 +343,13 @@ public class DashboardMetaDataDao {
 				chart.setConfiguration(singleBarChartDetails());
 				
 				dataSource.setType(activeTask.getActivityType());
-				dataSource.setKey(activeTask.getActivityStepKey());
+				
+				// Edited by Srikanth on 11/24/2017
+				if(3 == taskTypeId && null != activeTaskMasterAttrIdNameMap && null != activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())){
+					dataSource.setKey(String.valueOf(activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())).replaceAll(" ", ""));
+				} else {
+					dataSource.setKey(activeTask.getActivityStepKey());
+				}
 				
 				activity.setActivityId(activeTask.getActivityId());
 				activity.setVersion(activeTask.getActivityVersion());
@@ -360,7 +401,10 @@ public class DashboardMetaDataDao {
 	 * @return List<ChartsBean>
 	 * @throws DAOException
 	 */
-	public List<StatisticsBean> getStatisticsDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, QuestionsDto question, List<StatisticsBean> statisticsList, List<ActiveTaskFormulaDto> formulaDtoList, List<StatisticImageListDto> statisticImageList) throws DAOException{
+	@SuppressWarnings("rawtypes")
+	public List<StatisticsBean> getStatisticsDetails(String activityType, ActiveTaskAttrtibutesValuesDto activeTask, 
+			QuestionsDto question, List<StatisticsBean> statisticsList, List<ActiveTaskFormulaDto> formulaDtoList, 
+			List<StatisticImageListDto> statisticImageList, int taskTypeId, Map activeTaskMasterAttrIdNameMap) throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Starts");
 		StatisticsBean statistics = new StatisticsBean();
 		StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
@@ -376,7 +420,15 @@ public class DashboardMetaDataDao {
 				activity.setActivityId(activeTask.getActivityId());
 				activity.setVersion(activeTask.getActivityVersion());
 				dataSource.setActivity(activity);
-				dataSource.setKey(activeTask.getActivityStepKey());
+				
+				// dataSource.setKey(activeTask.getActivityStepKey());
+				// Edited by Srikanth on 11/24/2017
+				if(3 == taskTypeId && null != activeTaskMasterAttrIdNameMap && null != activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())){
+					dataSource.setKey(String.valueOf(activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())).replaceAll(" ", ""));
+				} else {
+					dataSource.setKey(activeTask.getActivityStepKey());
+				}
+				
 				dataSource.setType(activeTask.getActivityType());
 				statistics.setDataSource(dataSource);
 			}else{
@@ -579,6 +631,7 @@ public class DashboardMetaDataDao {
 	 * @return QuestionnairesDto
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public QuestionnairesDto getTimeDetailsByActivityIdForQuestionnaire(QuestionnairesDto questionaire, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
 		String startDateTime = "";

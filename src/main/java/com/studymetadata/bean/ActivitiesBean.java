@@ -10,10 +10,18 @@ public class ActivitiesBean {
 	private Boolean branching = false;
 	private String lastModified = "";
 	private String state = "";
+	private String taskSubType = "";
+	
 	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 	
 	public String getActivityId() {
 		return activityId;
+	}
+	public String getTaskSubType() {
+		return taskSubType;
+	}
+	public void setTaskSubType(String taskSubType) {
+		this.taskSubType = taskSubType;
 	}
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
