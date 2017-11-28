@@ -56,6 +56,9 @@ public class QuestionResponseSubTypeDto implements Serializable{
 	
 	@Column(name="operator")
 	private String operator;
+	
+	@Column(name="description")
+	private String description;
 
 	public Integer getResponseSubTypeValueId() {
 		return responseSubTypeValueId;
@@ -159,6 +162,14 @@ public class QuestionResponseSubTypeDto implements Serializable{
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

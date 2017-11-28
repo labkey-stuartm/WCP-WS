@@ -1774,7 +1774,7 @@ public class ActivityMetaDataDao {
 					LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
 					textChoiceMap.put("text", StringUtils.isEmpty(subType.getText())?"":subType.getText());
 					textChoiceMap.put("value", StringUtils.isEmpty(subType.getValue())?"":subType.getValue());
-					textChoiceMap.put("detail", StringUtils.isEmpty(subType.getDetail())?"":subType.getDetail());
+					textChoiceMap.put("detail", StringUtils.isEmpty(subType.getDescription())?"":subType.getDescription());
 					textChoiceMap.put("exclusive", (subType.getExclusive() == null || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					textChoiceMapList.add(textChoiceMap);
 				}
@@ -2389,10 +2389,22 @@ public class ActivityMetaDataDao {
 										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
 								break;
 							}
+							
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
+								break;
+							}
 						}else{
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
 										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
+								break;
+							}
+							
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
 								break;
 							}
 						}
@@ -2413,10 +2425,21 @@ public class ActivityMetaDataDao {
 										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
 								break;
 							}
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
+								break;
+							}
 						}else{
 							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
 										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
+								break;
+							}
+							
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
 								break;
 							}
 						}
