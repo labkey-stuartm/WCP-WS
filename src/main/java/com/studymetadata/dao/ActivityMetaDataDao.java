@@ -2,11 +2,9 @@ package com.studymetadata.dao;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,12 +12,10 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -147,6 +143,17 @@ public class ActivityMetaDataDao {
 							}
 
 							activityBean.setActivityId(activeTaskDto.getShortTitle());
+							
+							// Added by Srikanth on 11/24/2017
+							if(null != activeTaskDto.getTaskTypeId()){
+								if(1 == activeTaskDto.getTaskTypeId().intValue()){
+									activityBean.setTaskSubType("fetalKickCounter");
+								} else if(2 == activeTaskDto.getTaskTypeId().intValue()){
+									activityBean.setTaskSubType("towerOfHanoi");
+								} else if(3 == activeTaskDto.getTaskTypeId().intValue()){
+									activityBean.setTaskSubType("spatialSpanMemory");
+								}
+							}
 							activitiesBeanList.add(activityBean);
 						}
 					}
@@ -299,7 +306,7 @@ public class ActivityMetaDataDao {
 				List<Integer> taskMasterAttrIdList = new ArrayList<>();
 				List<ActiveTaskAttrtibutesValuesDto> activeTaskAttrtibuteValuesList;
 				List<ActiveTaskMasterAttributeDto> activeTaskMaterList = null;
-				List<ActiveTaskListDto> activeTaskList = null;
+				// List<ActiveTaskListDto> activeTaskList = null;
 
 				activeTaskActivityStructureBean.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
 
@@ -1162,6 +1169,7 @@ public class ActivityMetaDataDao {
 	 * @return
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public SortedMap<Integer, QuestionnaireActivityStepsBean> getQuestionDetailsForQuestionnaire(List<QuestionsDto> questionsDtoList, Map<String, Integer> sequenceNoMap, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Session session, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList, List<QuestionnairesStepsDto> questionaireStepsList, QuestionnairesDto questionnaireDto) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
 		List<QuestionResponseSubTypeDto> destinationConditionList = null;
@@ -1304,7 +1312,9 @@ public class ActivityMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public SortedMap<Integer, QuestionnaireActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, Session session, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList, QuestionnairesDto questionnaireDto) throws DAOException{
+	public SortedMap<Integer, QuestionnaireActivityStepsBean> getFormDetailsForQuestionnaire(List<FormMappingDto> formsList, Map<String, Integer> sequenceNoMap, 
+			Session session, SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap, Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap, 
+			List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList, QuestionnairesDto questionnaireDto) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
 		try{
 			if( formsList != null && !formsList.isEmpty()){
@@ -1364,6 +1374,15 @@ public class ActivityMetaDataDao {
 							formQuestionBean.setRepeatableText(""); //NA
 							formQuestionBean.setText(StringUtils.isEmpty(formQuestionDto.getDescription())?"":formQuestionDto.getDescription());
 							formQuestionBean.setHealthDataKey("");
+							
+							// Addded by Srikanth on 11/27/2017
+							try {
+								if(StringUtils.isNotEmpty(formQuestionDto.getAllowHealthKit()) && StudyMetaDataConstants.YES.equalsIgnoreCase(formQuestionDto.getAllowHealthKit()) && StringUtils.isNotEmpty(formQuestionDto.getHealthkitDatatype())){
+									formQuestionBean.setHealthDataKey(formQuestionDto.getHealthkitDatatype().trim());
+								}
+							} catch (Exception e) {
+								LOGGER.error("ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: ERROR", e);
+							}
 
 							formStepsMap.put(formQuestionDto.getId(), formQuestionBean);
 						}
@@ -1640,6 +1659,7 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> formatQuestionTextScaleDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -1674,6 +1694,7 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> formatQuestionValuePickerDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -1706,6 +1727,7 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> formatQuestionImageChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -1738,6 +1760,7 @@ public class ActivityMetaDataDao {
 	 * @return Map<String, Object>
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> formatQuestionTextChoiceDetails(QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
 		Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -1926,6 +1949,7 @@ public class ActivityMetaDataDao {
 	 * @return ActivitiesBean
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public ActivitiesBean getTimeDetailsByActivityIdForQuestionnaire(QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session) throws DAOException{
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
 		String startDateTime = "";
