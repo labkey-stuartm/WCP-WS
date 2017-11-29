@@ -1679,7 +1679,7 @@ public class ActivityMetaDataDao {
 				}
 			}
 			questionFormat.put("textChoices", textChoicesList);
-			questionFormat.put("default", (reponseType==null || StringUtils.isEmpty(reponseType.getDefaultValue()))?1:Integer.parseInt(reponseType.getDefaultValue()));
+			questionFormat.put("default", (reponseType==null || reponseType.getStep() == null)?1:reponseType.getStep());
 			questionFormat.put("vertical", (reponseType==null || reponseType.getVertical()==null || !reponseType.getVertical())?false:true);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
