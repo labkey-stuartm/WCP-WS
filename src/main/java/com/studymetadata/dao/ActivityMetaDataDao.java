@@ -1458,6 +1458,8 @@ public class ActivityMetaDataDao {
 				if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
 					String[] durationArray = attributeValues.getAttributeVal().split(":");
 					fetalKickCounterFormat.setDuration((Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+				}else{
+					attributeValues.setAttributeVal(StudyMetaDataConstants.FETAL_MAX_DURATION);
 				}
 			}else{
 				fetalKickCounterFormat.setKickCount(StringUtils.isEmpty(attributeValues.getAttributeVal())?StudyMetaDataConstants.MAX_KICK_COUNT:Integer.parseInt(attributeValues.getAttributeVal()));

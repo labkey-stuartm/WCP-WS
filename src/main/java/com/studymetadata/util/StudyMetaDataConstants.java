@@ -267,4 +267,9 @@ public interface StudyMetaDataConstants {
 	public static final String DATE_RANGE_AFTER_CURRENT = "afterCurrent";
 	public static final String DATE_RANGE_CUSTOM = "custom";
 	
+	public static final String CHART_DATA_SOURCE_SCORE = "score";
+	public static final String CHART_DATA_SOURCE_NO_OF_GAMES = "numberOfGames";
+	public static final String CHART_DATA_SOURCE_NO_OF_FAILURES = "numberOfFailures";
+	
+	public static final String FETAL_MAX_DURATION = "86400"; //24:00 HH:mm
 }

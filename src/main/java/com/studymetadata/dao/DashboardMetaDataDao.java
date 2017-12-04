@@ -188,7 +188,7 @@ public class DashboardMetaDataDao {
 							List<ActiveTaskMasterAttributeDto> activeTaskMasterAttributeList = query.list();
 							if(null != activeTaskMasterAttributeList && !activeTaskMasterAttributeList.isEmpty()){
 								for(ActiveTaskMasterAttributeDto atmt : activeTaskMasterAttributeList){
-									activeTaskMasterAttrIdNameMap.put(atmt.getMasterId(), atmt.getDisplayName());
+									activeTaskMasterAttrIdNameMap.put(atmt.getMasterId(), this.getChartDataSourceNameByMasterId(atmt.getMasterId(), atmt.getDisplayName()));
 								}
 							}
 						}
@@ -910,6 +910,34 @@ public class DashboardMetaDataDao {
 		}
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Ends");
 		return configuration;
+	}
+	
+	/**
+	 * 
+	 * @author Mohan
+	 * @param masterId
+	 * @return {@link String}
+	 * @throws DAOException
+	 */
+	public String getChartDataSourceNameByMasterId(Integer masterId, String displayName) throws DAOException {
+		LOGGER.info("INFO: DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: Starts");
+		String dataSourceName = "";
+		try{
+			switch (masterId) {
+			case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
+				break;
+			case 15:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
+				break;
+			case 16:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
+				break;
+			default:	dataSourceName = displayName;
+				break;
+			}
+		}catch(Exception e){
+			LOGGER.error("DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: ERROR", e);
+		}
+		LOGGER.info("INFO: DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: Ends");
+		return dataSourceName;
 	}
 	/*-----------------------------Manipulate chart data methods Phase 1B ends----------------------------------*/
 }
