@@ -1456,8 +1456,12 @@ public class ActivityMetaDataDao {
 		try{
 			if(masterAttributeValue.getOrderByTaskType().equals(1)){
 				if(StringUtils.isNotEmpty(attributeValues.getAttributeVal())){
-					String[] durationArray = attributeValues.getAttributeVal().split(":");
-					fetalKickCounterFormat.setDuration((Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+					if(attributeValues.getAttributeVal().equals(StudyMetaDataConstants.FETAL_MAX_DURATION_WCP)){
+						attributeValues.setAttributeVal(StudyMetaDataConstants.FETAL_MAX_DURATION);
+					}else{
+						String[] durationArray = attributeValues.getAttributeVal().split(":");
+						fetalKickCounterFormat.setDuration((Integer.parseInt(durationArray[0])*3600)+(Integer.parseInt(durationArray[1])*60));
+					}
 				}else{
 					attributeValues.setAttributeVal(StudyMetaDataConstants.FETAL_MAX_DURATION);
 				}

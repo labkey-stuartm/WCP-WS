@@ -924,12 +924,12 @@ public class DashboardMetaDataDao {
 		String dataSourceName = "";
 		try{
 			switch (masterId) {
-			case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
+			/*case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
 				break;
 			case 15:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
 				break;
 			case 16:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
-				break;
+				break;*/
 			default:	dataSourceName = displayName;
 				break;
 			}
