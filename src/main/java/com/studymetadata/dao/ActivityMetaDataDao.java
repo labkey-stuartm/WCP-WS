@@ -2343,6 +2343,7 @@ public class ActivityMetaDataDao {
 		Map<String, Object> prerequisitesMap = new HashMap<>();
 		List<DestinationBean> updatedDestinationsList = destinationsList;
 		String formatXValue = "";
+		boolean skipLoop = false;
 		try{
 			//validate whether formula is empty or not before solving for 'X'
 			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
@@ -2378,78 +2379,165 @@ public class ActivityMetaDataDao {
 				while(valueOfX <= maxValue) {
 					tempFormula = conditionFormula.replaceAll("x", valueOfX>=0?valueOfX.toString():"("+valueOfX.toString()+")");
 					flag = (boolean) engine.eval(tempFormula);
-					if(flag){
-						LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
-
-						//validation for equal to condition
-						if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
-							updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-									StudyMetaDataConstants.CBO_EQUAL_TO, StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
-							break;
-						}
-
-						//validation for greater than condition
-						if(LHS.contains("x") && !RHS.contains("x")){
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
-								break;
-							}
-							
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+					
+					if(LHS.contains("x")){
+						switch (operator) {
+						case StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN:
+							if(flag){
+								skipLoop = true;
+								
+								valueOfX -= maxFractionDigit;
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
 										StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
-								break;
+								
 							}
-						}else{
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN:
+							if(!flag){
+								skipLoop = true;
+								
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
-								break;
+										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
 							}
-							
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_EQUAL:
+							if(flag){
+								skipLoop = true;
+								
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
-								break;
+										StudyMetaDataConstants.CBO_EQUAL_TO, StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
 							}
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL:
+							if(!flag){
+								skipLoop = true;
+								
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_NOT_EQUAL_TO, StudyMetaDataConstants.CBO_EQUAL_TO);
+							}
+							break;
+						default:
+							break;
 						}
 					}else{
-						LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
-
-						//validation for not equal to condition
-						if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
-							updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-									StudyMetaDataConstants.CBO_NOT_EQUAL_TO, StudyMetaDataConstants.CBO_EQUAL_TO);
+						switch (operator) {
+						case StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN:
+							if(!flag){
+								
+								skipLoop = true;
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
+							}
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN:
+							if(flag){
+								skipLoop = true;
+								
+								valueOfX -= maxFractionDigit;
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
+							}
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_EQUAL:
+							if(flag){
+								skipLoop = true;
+								
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_EQUAL_TO, StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
+							}
+							break;
+						case StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL:
+							if(!flag){
+								skipLoop = true;
+								
+								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+										StudyMetaDataConstants.CBO_NOT_EQUAL_TO, StudyMetaDataConstants.CBO_EQUAL_TO);
+							}
+							break;
+						default:
 							break;
 						}
+					}
+					
+					if(skipLoop){
+						break;
+						/*if(!flag){
+							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
 
-						//validation for lesser than condition
-						if(LHS.contains("x") && !RHS.contains("x")){
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+							//validation for not equal to condition
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)){
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
-								break;
-							}
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
-								break;
-							}
-						}else{
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
-								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
+										StudyMetaDataConstants.CBO_EQUAL_TO, StudyMetaDataConstants.CBO_NOT_EQUAL_TO);
 								break;
 							}
 							
-							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+							//validation for greater than condition
+							if(LHS.contains("x") && !RHS.contains("x")){
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+									valueOfX -= maxFractionDigit;
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
+									break;
+								}
+								
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
+									break;
+								}
+							}else{
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+									valueOfX -= maxFractionDigit;
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_LESSER_THAN);
+									break;
+								}
+								
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
+									break;
+								}
+							}
+						}else{
+							LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Condition Formula  ----------> "+tempFormula+" ----------> "+valueOfX);
+
+							//validation for equal to condition
+							if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)){
 								updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
-										StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
+										StudyMetaDataConstants.CBO_NOT_EQUAL_TO, StudyMetaDataConstants.CBO_EQUAL_TO);
 								break;
 							}
-						}
+
+							//validation for lesser than condition
+							if(LHS.contains("x") && !RHS.contains("x")){
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
+									break;
+								}
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+									valueOfX -= maxFractionDigit;
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO, StudyMetaDataConstants.CBO_GREATER_THAN);
+									break;
+								}
+							}else{
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN)){
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_LESSER_THAN, StudyMetaDataConstants.CBO_GREATER_THAN_OR_EQUAL_TO);
+									break;
+								}
+								
+								if(conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_LESSER_THAN)){
+									updatedDestinationsList = getConditionalBranchingFormat(destinationsList, valueOfX.toString(), 
+											StudyMetaDataConstants.CBO_GREATER_THAN, StudyMetaDataConstants.CBO_LESSER_THAN_OR_EQUAL_TO);
+									break;
+								}
+							}
+						}*/
 					}
+					
 					valueOfX += maxFractionDigit;
 					valueOfX = Double.parseDouble(String.format(formatXValue, valueOfX));
 				}
@@ -2598,7 +2686,7 @@ public class ActivityMetaDataDao {
 			if(destinationsList != null && !destinationsList.isEmpty() && destinationsList.size() >= 2){
 				destinationsList.get(0).setCondition(valueOfX);
 				destinationsList.get(0).setOperator(trueOperator);
-
+				
 				destinationsList.get(1).setCondition(valueOfX);
 				destinationsList.get(1).setOperator(falseOperator);
 			}
