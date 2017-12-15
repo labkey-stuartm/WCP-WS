@@ -70,6 +70,7 @@ public class AppMetaDataDao {
 	 * @return NotificationsResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public NotificationsResponse notifications(String skip, String authorization) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
 		Session session = null;
@@ -163,14 +164,11 @@ public class AppMetaDataDao {
 	 * @return AppUpdatesResponse
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unchecked")
 	public AppUpdatesResponse appUpdates(String appVersion, String authCredentials) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
 		Session session = null;
 		AppUpdatesResponse appUpdates = new AppUpdatesResponse();
 		AppVersionDto appVersionDto = null;
-		List<AppVersionDto> appVersionList = null;
-		boolean versionExistsFlag = false;
 		String os = "";
 		String bundleId = "";
 		try{
@@ -216,6 +214,7 @@ public class AppMetaDataDao {
 	 * @return StudyUpdatesResponse
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Starts");
 		Session session = null;
@@ -393,7 +392,7 @@ public class AppMetaDataDao {
 			query.executeUpdate();
 			message = StudyMetaDataConstants.SUCCESS;
 		}catch(Exception e){
-			//LOGGER.error("AppMetaDataDao - interceptorDataBaseQuery() :: ERROR", e);
+			LOGGER.error("ERROR :: ", e);
 		}finally{
 			if(session != null){
 				session.close();

@@ -1,9 +1,7 @@
 package com.studymetadata.bean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ActiveTaskActivityStepsBean {
 	private String type = ""; //instruction (OR) question (OR) form (OR) task

@@ -2380,7 +2380,7 @@ public class ActivityMetaDataDao {
 					tempFormula = conditionFormula.replaceAll("x", valueOfX>=0?valueOfX.toString():"("+valueOfX.toString()+")");
 					flag = (boolean) engine.eval(tempFormula);
 					
-					if(LHS.contains("x")){
+					if(LHS.contains("x") && !RHS.contains("x")){
 						switch (operator) {
 						case StudyMetaDataConstants.CBO_OPERATOR_GREATER_THAN:
 							if(flag){

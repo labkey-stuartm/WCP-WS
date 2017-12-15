@@ -1,11 +1,6 @@
 package com.studymetadata.util;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +15,6 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
@@ -184,139 +178,6 @@ public class StudyMetaDataUtil {
 		logger.info("StudyMetaDataUtil: getFormattedDate1() - Ends ");
 		return finalDate;
 	}
-
-	public static String getDateDiffernce(String date1,String date2,boolean liveStreamCreated){
-		logger.info("StudyMetaDataUtil: getDateDiffernce() - Starts ");
-		//HH converts hour in 24 hours format (0-23), day calculation
-		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-		Date d1 = null;
-		Date d2 = null;
-		String statusFlag = "0";
-		try {
-			d1 = format.parse(date1);
-			d2 = format.parse(date2);
-
-			//in milliseconds
-			long diff =0;
-			if(d1.after(d2)){
-				System.out.println("Date1 is after Date2");
-				diff = d1.getTime() - d2.getTime();
-
-				long diffSeconds = diff / 1000 % 60;
-				long diffMinutes = diff / (60 * 1000) % 60;
-				long diffHours = diff / (60 * 60 * 1000) % 24;
-				long diffDays = diff / (24 * 60 * 60 * 1000);
-
-				if(diffDays == 0){
-					if(diffHours ==0){
-						if(liveStreamCreated == false){
-							if(diffMinutes <=30 && diffMinutes>=3){
-								statusFlag = "3";//no
-							}else 
-								if(diffMinutes <=2 && diffMinutes>=0){
-									statusFlag = "1";//yes
-								}
-						}else{
-							if(diffMinutes <=2 && diffMinutes>=0){
-								statusFlag = "1";//yes
-							}
-						}
-
-					}
-
-				}
-			}
-			// before() will return true if and only if date1 is before date2
-			if(d1.before(d2)){
-				System.out.println("Date1 is before Date2");
-				diff = d2.getTime() - d1.getTime();
-
-				long diffSeconds = diff / 1000 % 60;
-				long diffMinutes = diff / (60 * 1000) % 60;
-				long diffHours = diff / (60 * 60 * 1000) % 24;
-				long diffDays = diff / (24 * 60 * 60 * 1000);
-
-				if(diffDays == 0){
-					if(diffHours ==0){
-						if(diffMinutes <=30 && diffMinutes>=0){
-							statusFlag = "2";// yes
-						}
-					}
-
-				}
-			}
-
-			//equals() returns true if both the dates are equal
-			if(d1.equals(d2)){
-				System.out.println("Date1 is equal Date2");
-
-				diff = d1.getTime() - d2.getTime();
-				long diffSeconds = diff / 1000 % 60;
-				long diffMinutes = diff / (60 * 1000) % 60;
-				long diffHours = diff / (60 * 60 * 1000) % 24;
-				long diffDays = diff / (24 * 60 * 60 * 1000);
-
-				if(diffDays == 0){
-					if(diffHours ==0){
-						if(diffMinutes <= 2 && diffMinutes>=0){
-							statusFlag = "1";
-						}else{
-
-
-						}
-					}
-
-				}
-			}
-		} catch (Exception e) {
-			logger.error("StudyMetaDataUtil - getDateDiffernce() - ERROR " , e);
-		}
-		logger.info("StudyMetaDataUtil: getDateDiffernce() - Ends ");
-		return statusFlag;
-	}
-
-	public static String getScheduler(String date1,String date2){
-		logger.info("StudyMetaDataUtil: getScheduler() - Starts ");
-		//HH converts hour in 24 hours format (0-23), day calculation
-		SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-		Date d1 = null;
-		Date d2 = null;
-		String statusFlag = "NO";
-		try {
-			d1 = format.parse(date1);
-			d2 = format.parse(date2);
-
-			//in milliseconds
-			long diff =0;
-			if(d1.after(d2)){
-				/**/
-			}
-			// before() will return true if and only if date1 is before date2
-			if(d1.before(d2)){
-				System.out.println("Date1 is before Date2");
-				diff = d2.getTime() - d1.getTime();
-
-				long diffSeconds = diff / 1000 % 60;
-				long diffMinutes = diff / (60 * 1000) % 60;
-				long diffHours = diff / (60 * 60 * 1000) % 24;
-				long diffDays = diff / (24 * 60 * 60 * 1000);
-
-				if(diffDays == 0){
-					if(diffHours ==0){
-						if(diffMinutes <=30 && diffMinutes>=0){
-
-						}
-					}
-
-				}
-			}
-		} catch (Exception e) {
-			logger.error("StudyMetaDataUtil - getScheduler() - ERROR " , e);
-		}
-		logger.info("StudyMetaDataUtil: getScheduler() - Ends ");
-		return statusFlag;
-	}
-
 
 	public static String getTimeDiffInDaysHoursMins(Date dateOne, Date dateTwo) {
 		logger.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
@@ -510,28 +371,6 @@ public class StudyMetaDataUtil {
 		return newdateStr ;
 	}
 
-	public static String convertStringBase64ToImage(String imageInString, String uploadImagePath) throws Exception {
-		logger.info("StudyMetaDataUtil.convertStringBase64ToImage() :: Starts");
-		String filename = "";
-		String destFile = "";
-		try{
-			destFile = uploadImagePath;
-			filename = new Date().getTime()+".png";
-			destFile = destFile+filename;
-			byte[] imageInByte;
-			sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-			imageInByte = decoder.decodeBuffer(imageInString);
-			ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
-			BufferedImage image = ImageIO.read(bis);
-			bis.close();
-			ImageIO.write(image, "png", new File(destFile));
-		}catch (Exception e) {
-			logger.error("StudyMetaDataUtil.convertStringBase64ToImage() :: ERROR " + e);
-		}
-		logger.info("StudyMetaDataUtil.convertStringBase64ToImage() :: Ends");
-		return filename;
-	}
-
 	public static Long getDateToSeconds(String getCurrentDate) {
 		logger.info("StudyMetaDataUtil: getDateToSeconds() - Starts ");
 		Long getInSeconds = null;
@@ -670,7 +509,7 @@ public class StudyMetaDataUtil {
 							if(StringUtils.isNotEmpty(appBundleId) && StringUtils.isNotEmpty(appTokenId)){
 								final StringTokenizer authTokenizer = new StringTokenizer(appTokenId, ".");
 								final String platformType = authTokenizer.nextToken();
-								final String key = authTokenizer.nextToken();
+								/*final String key = authTokenizer.nextToken();*/
 								if(platformType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
 									switch (type) {
 										case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
