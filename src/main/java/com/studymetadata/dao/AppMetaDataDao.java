@@ -128,7 +128,7 @@ public class AppMetaDataDao {
 							notifyBean.setStudyId(StringUtils.isEmpty(notificationDto.getCustomStudyId())?"":notificationDto.getCustomStudyId());
 							scheduledDate = notificationDto.isAnchorDate()?StudyMetaDataUtil.getCurrentDate():notificationDto.getScheduleDate();
 							scheduledTime = StringUtils.isEmpty(notificationDto.getScheduleTime())?StudyMetaDataConstants.DEFAULT_MIN_TIME:notificationDto.getScheduleTime();
-							notifyBean.setDate(StudyMetaDataUtil.getFormattedDateTimeZone(scheduledDate+" "+scheduledTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+							notifyBean.setDate(StudyMetaDataUtil.getFormattedDateTimeZone(scheduledDate+" "+scheduledTime, StudyMetaDataConstants.SDF_DATE_TIME_PATTERN, StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 							
 							notificationIdsList.add(notificationDto.getNotificationId());
 							notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);

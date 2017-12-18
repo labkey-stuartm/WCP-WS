@@ -150,7 +150,7 @@ public class StudyMetaDataUtil {
 		String getToday = "";
 		try {
 			Date today = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 			getToday = formatter.format(today.getTime());
 		} catch (Exception e) {
@@ -305,7 +305,7 @@ public class StudyMetaDataUtil {
 		logger.info("StudyMetaDataUtil: addMinutes() - Starts ");
 		String newdateStr = "";
 		try {
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			Date dt = date.parse(dtStr);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dt);
@@ -461,7 +461,7 @@ public class StudyMetaDataUtil {
 	public static String getCurrentDateTimeInUTC() {
 		logger.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Starts ");
 		String dateNow = null;
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		final SimpleDateFormat sdf = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 		String timeZone = "UTC";
 		try {
 			String strDate = new Date() + "";
@@ -652,7 +652,7 @@ public class StudyMetaDataUtil {
 		logger.info("StudyMetaDataUtil: addSeconds() - Starts ");
 		String newdateStr = "";
 		try {
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			Date dt = date.parse(dtStr);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dt);

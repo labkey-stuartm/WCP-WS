@@ -29,6 +29,11 @@ public interface StudyMetaDataConstants {
 	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	SimpleDateFormat SDF_DATE_TIME_TIMEZONE_MILLISECONDS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	
+	
+	public static final String SDF_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	
+	
 	public static final String PASS_SALT = "BTCSoft";
 	
 	//Study related constants
