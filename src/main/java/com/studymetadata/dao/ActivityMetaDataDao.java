@@ -1466,7 +1466,7 @@ public class ActivityMetaDataDao {
 					attributeValues.setAttributeVal(StudyMetaDataConstants.FETAL_MAX_DURATION);
 				}
 			}else{
-				fetalKickCounterFormat.setKickCount(StringUtils.isEmpty(attributeValues.getAttributeVal())?StudyMetaDataConstants.MAX_KICK_COUNT:Integer.parseInt(attributeValues.getAttributeVal()));
+				fetalKickCounterFormat.setKickCount((StringUtils.isEmpty(attributeValues.getAttributeVal()) || "0".equals(attributeValues.getAttributeVal()))?StudyMetaDataConstants.MAX_KICK_COUNT:Integer.parseInt(attributeValues.getAttributeVal()));
 			}
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - fetalKickCounterDetails() :: ERROR", e);
