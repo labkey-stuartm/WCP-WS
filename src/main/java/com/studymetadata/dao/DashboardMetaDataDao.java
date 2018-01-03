@@ -41,6 +41,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 public class DashboardMetaDataDao {
+	
 	private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataDao.class);
 
 	@SuppressWarnings("unchecked")
@@ -50,15 +51,14 @@ public class DashboardMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	/*Session session = null;
-	Transaction transaction = null;*/
 	Query query = null;
-	String queryString = "";
 	
 	/**
+	 * Fetch dashBoard info for a study
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return StudyDashboardResponse
+	 * @return {@link StudyDashboardResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -85,17 +85,22 @@ public class DashboardMetaDataDao {
 		StudyVersionDto studyVersionDto= null;
 		try{
 			session = sessionFactory.openSession();
-			query =  session.getNamedQuery("getLiveStudyIdByCustomStudyId").setString("customStudyId", studyId);
-			studyDto = (StudyDto) query.uniqueResult();
+			studyDto = (StudyDto) session.getNamedQuery("getLiveStudyIdByCustomStudyId")
+					.setString("customStudyId", studyId)
+					.uniqueResult();
 			if(studyDto != null){
-				query =  session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion").setString("customStudyId", studyDto.getCustomStudyId()).setFloat("studyVersion", studyDto.getVersion());
-				query.setMaxResults(1);
-				studyVersionDto = (StudyVersionDto) query.uniqueResult();
+				studyVersionDto = (StudyVersionDto) session.getNamedQuery("getLiveVersionDetailsByCustomStudyIdAndVersion")
+						.setString("customStudyId", studyDto.getCustomStudyId())
+						.setFloat("studyVersion", studyDto.getVersion())
+						.setMaxResults(1)
+						.uniqueResult();
 				
-				//Active Task details
-				//query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
-				query = session.getNamedQuery("getActiveTaskDetailsByCustomStudyId").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1).setInteger("active", 0);
-				activeTaskList = query.list();
+				//fetch active task details list by customStudyId, isLive and active
+				activeTaskList = session.getNamedQuery("getActiveTaskDetailsByCustomStudyId")
+						.setString("customStudyId", studyVersionDto.getCustomStudyId())
+						.setInteger("live", 1)
+						.setInteger("active", 0)
+						.list();
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
 					for(ActiveTaskDto activeTask : activeTaskList){
 						boolean addToDashboardFlag = false;
@@ -103,7 +108,8 @@ public class DashboardMetaDataDao {
 						if(activeTask.getActive()!=null && activeTask.getActive()==1){
 							addToDashboardFlag = true;
 						}else{
-							if(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getModifiedDate()).after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeStart()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getModifiedDate())
+									.after(StudyMetaDataConstants.SDF_DATE.parse(activeTask.getActiveTaskLifetimeStart()))){
 								addToDashboardFlag = true;
 							}
 						}
@@ -115,10 +121,12 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
-				//Questionnaire details
-				//query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyIdAndIsLive").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1);
-				query = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyId").setString("customStudyId", studyVersionDto.getCustomStudyId()).setInteger("live", 1).setBoolean("active", false);
-				questionnaireList = query.list();
+				//Fetch questionnaire details list by customStudyId, isLive and active
+				questionnaireList = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyId")
+						.setString("customStudyId", studyVersionDto.getCustomStudyId())
+						.setInteger("live", 1)
+						.setBoolean("active", false)
+						.list();
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
 					for(QuestionnairesDto questionnaireDto :questionnaireList){
 						boolean addToDashboardFlag = false;
@@ -126,7 +134,8 @@ public class DashboardMetaDataDao {
 						if(questionnaireDto.getActive()){
 							addToDashboardFlag = true;
 						}else{
-							if(StudyMetaDataConstants.SDF_DATE.parse(questionnaireDto.getModifiedDate()).after(StudyMetaDataConstants.SDF_DATE.parse(questionnaireDto.getStudyLifetimeStart()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(questionnaireDto.getModifiedDate())
+									.after(StudyMetaDataConstants.SDF_DATE.parse(questionnaireDto.getStudyLifetimeStart()))){
 								addToDashboardFlag = true;
 							}
 						}
@@ -138,16 +147,20 @@ public class DashboardMetaDataDao {
 					}
 					
 					if(questionnaireIdsList != null && !questionnaireIdsList.isEmpty()){
-						query = session.createQuery("from QuestionnairesStepsDto QSDTO where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+") and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"') and QSDTO.status=true ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo");
-						questionnaireStepsList = query.list();
+						
+						questionnaireStepsList = session.createQuery("from QuestionnairesStepsDto QSDTO"
+								+ " where QSDTO.questionnairesId in ("+StringUtils.join(questionnaireIdsList, ',')+")"
+								+ " and QSDTO.stepType in ('"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION+"','"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM+"')"
+								+ " and QSDTO.status=true"
+								+ " ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo")
+								.list();
 						if(questionnaireStepsList != null && !questionnaireStepsList.isEmpty()){
 							for(QuestionnairesStepsDto questionnaireSteps : questionnaireStepsList){
-								//questionsList
+								
 								if(questionnaireSteps.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)){
 									questionIdsList.add(questionnaireSteps.getInstructionFormId());
 								}
 								
-								//formList
 								if(questionnaireSteps.getStepType().equalsIgnoreCase(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)){
 									formIdsList.add(questionnaireSteps.getInstructionFormId());
 								}
@@ -157,42 +170,43 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
-				query = session.createQuery(" from ActiveTaskFormulaDto ATCDTO");
-				formulaDtoList = query.list();
+				formulaDtoList = session.createQuery("from ActiveTaskFormulaDto ATCDTO")
+						.list();
 				
-				query = session.createQuery(" from StatisticImageListDto STDTO");
-				statisticImageList = query.list();
+				statisticImageList = session.createQuery(" from StatisticImageListDto STDTO")
+						.list();
 				
-				//get statistics and chart details for Active Task
+				//active task statistics and chart details
 				if(activeTaskIdsList != null && !activeTaskIdsList.isEmpty()){
-					query = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true and ATAVDTO.activeTaskId in ("+StringUtils.join(activeTaskIdsList, ',')+")");
-					activeTaskValuesList = query.list();
+					activeTaskValuesList = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO"
+							+ " where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true"
+							+ " and ATAVDTO.activeTaskId in ("+StringUtils.join(activeTaskIdsList, ',')+")")
+							.list();
 					if(activeTaskValuesList != null && !activeTaskValuesList.isEmpty()){
-						// Srikanth -----------------------------------------------------------
 						int taskTypeId = 0;
 						Map<Integer, Integer> activeTaskMasterAttrIdsMap = new HashMap<>();
 						Map<Integer, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
-						String activeTaskMasterAttrIds = "";
+						List<Integer> activeTaskMasterAttrIdList = new ArrayList<>();
+						
 						for(ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList){
 							activeTaskMasterAttrIdsMap.put(activeTaskAttrDto.getActiveTaskMasterAttrId(), activeTaskAttrDto.getActiveTaskMasterAttrId());
 						}
+						
 						for(Integer activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()){
-							if("".equals(activeTaskMasterAttrIds)){
-								activeTaskMasterAttrIds = activeTaskMasterAttrId.toString();
-							} else {
-								activeTaskMasterAttrIds += "," + activeTaskMasterAttrId.toString();
-							}
+							activeTaskMasterAttrIdList.add(activeTaskMasterAttrId);
 						}
-						if(!"".equals(activeTaskMasterAttrIds)){
-							query = session.createQuery("from ActiveTaskMasterAttributeDto where masterId IN (" + activeTaskMasterAttrIds + ")");
-							List<ActiveTaskMasterAttributeDto> activeTaskMasterAttributeList = query.list();
+						
+						if(!activeTaskMasterAttrIdList.isEmpty()){
+							List<ActiveTaskMasterAttributeDto> activeTaskMasterAttributeList = session.createQuery("from ActiveTaskMasterAttributeDto ATMADTO"
+									+ " where ATMADTO.masterId IN (:activeTaskMasterAttrIdList)")
+									.setParameterList("activeTaskMasterAttrIdList", activeTaskMasterAttrIdList)
+									.list();
 							if(null != activeTaskMasterAttributeList && !activeTaskMasterAttributeList.isEmpty()){
 								for(ActiveTaskMasterAttributeDto atmt : activeTaskMasterAttributeList){
-									activeTaskMasterAttrIdNameMap.put(atmt.getMasterId(), this.getChartDataSourceNameByMasterId(atmt.getMasterId(), atmt.getDisplayName()));
+									activeTaskMasterAttrIdNameMap.put(atmt.getMasterId(), atmt.getDisplayName());
 								}
 							}
 						}
-						//-----------------------------------------------------------
 						
 						for(ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList){
 							ActiveTaskDto activeTaskDto = null;
@@ -220,11 +234,13 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
-				//get statistics and chart details for Questionnaire
+				//questionnaire statistics and chart details
 				if(questionIdsList != null && !questionIdsList.isEmpty()){
 					List<QuestionsDto> questionsList;
-					query = session.createQuery(" from QuestionsDto QDTO where QDTO.id in ("+StringUtils.join(questionIdsList, ",")+") and QDTO.status=true and QDTO.addLineChart='"+StudyMetaDataConstants.YES+"' or QDTO.useStasticData='"+StudyMetaDataConstants.YES+"' ");
-					questionsList = query.list();
+					questionsList = session.createQuery(" from QuestionsDto QDTO"
+							+ " where QDTO.id in ("+StringUtils.join(questionIdsList, ",")+") and QDTO.status=true"
+							+ " and QDTO.addLineChart='"+StudyMetaDataConstants.YES+"' or QDTO.useStasticData='"+StudyMetaDataConstants.YES+"' ")
+							.list();
 					for(QuestionsDto questionDto : questionsList){
 						QuestionnairesStepsDto questionnaireSteps = (QuestionnairesStepsDto) activityMap.get(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionDto.getId()+"-"+StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
 						if(questionnaireSteps != null){
@@ -250,14 +266,16 @@ public class DashboardMetaDataDao {
 				
 				if(formIdsList != null && !formIdsList.isEmpty()){
 					List<FormDto> formDtoList = null;
-					query = session.createQuery("from FormDto FDTO where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+")");
-					formDtoList = query.list();
+					formDtoList = session.createQuery("from FormDto FDTO"
+							+ " where FDTO.formId in ("+StringUtils.join(formIdsList, ',')+")")
+							.list();
 					if(formDtoList != null && !formDtoList.isEmpty()){
 						for(FormDto form : formDtoList){
 							List<Integer> formQuestionIdsList = new ArrayList<>();
 							List<FormMappingDto> formMappingDtoList;
-							query = session.createQuery("from FormMappingDto FMDTO where FMDTO.formId="+form.getFormId()+" order by FMDTO.sequenceNo");
-							formMappingDtoList = query.list();
+							formMappingDtoList = session.createQuery("from FormMappingDto FMDTO"
+									+ " where FMDTO.formId="+form.getFormId()+" order by FMDTO.sequenceNo")
+									.list();
 							if(formMappingDtoList != null && !formMappingDtoList.isEmpty()){
 								for(FormMappingDto formMappingDto : formMappingDtoList){
 									formQuestionIdsList.add(formMappingDto.getQuestionId());
@@ -266,8 +284,10 @@ public class DashboardMetaDataDao {
 							
 							if(!formQuestionIdsList.isEmpty()){
 								List<QuestionsDto> formQuestionDtoList = null;
-								query = session.createQuery("from QuestionsDto FQDTO where FQDTO.id in ("+StringUtils.join(formQuestionIdsList, ',')+") and FQDTO.status=true and FQDTO.addLineChart='"+StudyMetaDataConstants.YES+"' or FQDTO.useStasticData='"+StudyMetaDataConstants.YES+"' ");
-								formQuestionDtoList = query.list();
+								formQuestionDtoList = session.createQuery("from QuestionsDto FQDTO"
+										+ " where FQDTO.id in ("+StringUtils.join(formQuestionIdsList, ',')+") and FQDTO.status=true"
+										+ " and FQDTO.addLineChart='"+StudyMetaDataConstants.YES+"' or FQDTO.useStasticData='"+StudyMetaDataConstants.YES+"' ")
+										.list();
 								if(formQuestionDtoList != null && !formQuestionDtoList.isEmpty()){
 									for(QuestionsDto questionDto : formQuestionDtoList){
 										if(formQuestionIdsList.contains(questionDto.getId())){
@@ -297,6 +317,7 @@ public class DashboardMetaDataDao {
 						}
 					}
 				}
+				
 				dashboard.setCharts(chartsList);
 				dashboard.setStatistics(statisticsList);
 				studyDashboardResponse.setDashboard(dashboard);
@@ -338,13 +359,13 @@ public class DashboardMetaDataDao {
 				chart.setTitle(chartTitle);
 				chart.setDisplayName(StringUtils.isEmpty(activeTask.getTitleChat())?"":activeTask.getTitleChat());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
-				chart.setScrollable((StringUtils.isNotEmpty(activeTask.getRollbackChat())&&activeTask.getRollbackChat().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
+				chart.setScrollable((StringUtils.isNotEmpty(activeTask.getRollbackChat())
+						&& activeTask.getRollbackChat().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
 				
-				chart.setConfiguration(singleBarChartDetails());
+				chart.setConfiguration(this.singleBarChartDetails());
 				
 				dataSource.setType(activeTask.getActivityType());
 				
-				// Edited by Srikanth on 11/24/2017
 				if(3 == taskTypeId && null != activeTaskMasterAttrIdNameMap && null != activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())){
 					dataSource.setKey(String.valueOf(activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())).replaceAll(" ", ""));
 				} else {
@@ -364,8 +385,9 @@ public class DashboardMetaDataDao {
 				chart.setTitle(chartTitle);
 				chart.setDisplayName(StringUtils.isEmpty(question.getChartTitle())?"":question.getChartTitle());
 				chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
-				chart.setScrollable((StringUtils.isNotEmpty(question.getAllowRollbackChart())&&question.getAllowRollbackChart().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
-				chart.setConfiguration(singleBarChartDetails());
+				chart.setScrollable((StringUtils.isNotEmpty(question.getAllowRollbackChart())
+						&& question.getAllowRollbackChart().equalsIgnoreCase(StudyMetaDataConstants.YES))?true:false);
+				chart.setConfiguration(this.singleBarChartDetails());
 				
 				dataSource.setType(question.getActivityType());
 				dataSource.setKey(question.getActivityStepKey());
@@ -380,6 +402,7 @@ public class DashboardMetaDataDao {
 				
 				chart.setDataSource(dataSource);
 			}
+			
 			chartsList.add(chart);
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - getChartDetails() :: ERROR", e);
@@ -421,8 +444,6 @@ public class DashboardMetaDataDao {
 				activity.setVersion(activeTask.getActivityVersion());
 				dataSource.setActivity(activity);
 				
-				// dataSource.setKey(activeTask.getActivityStepKey());
-				// Edited by Srikanth on 11/24/2017
 				if(3 == taskTypeId && null != activeTaskMasterAttrIdNameMap && null != activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())){
 					dataSource.setKey(String.valueOf(activeTaskMasterAttrIdNameMap.get(activeTask.getActiveTaskMasterAttrId())).replaceAll(" ", ""));
 				} else {
@@ -446,6 +467,7 @@ public class DashboardMetaDataDao {
 				
 				statistics.setDataSource(dataSource);
 			}
+			
 			statisticsList.add(statistics);
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - getStatisticsDetails() :: ERROR", e);
@@ -465,26 +487,26 @@ public class DashboardMetaDataDao {
 		String type = timeRange;
 		try{
 			switch (timeRange) {
-			case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_WEEK:
-				type = StudyMetaDataConstants.CHART_DAY_OF_WEEK;
-				break;
-			case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_MONTH:
-				type = StudyMetaDataConstants.CHART_DAYS_OF_MONTH;
-				break;
-			case StudyMetaDataConstants.WEEKS_OF_THE_CURRENT_MONTH:
-				type = StudyMetaDataConstants.CHART_WEEK_OF_MONTH;
-				break;
-			case StudyMetaDataConstants.MONTHS_OF_THE_CURRENT_YEAR:
-				type = StudyMetaDataConstants.CHART_MONTHS_OF_YEAR;
-				break;
-			case StudyMetaDataConstants.RUN_BASED:
-				type = StudyMetaDataConstants.CHART_RUNS;
-				break;
-			case StudyMetaDataConstants.MULTIPLE_TIMES_A_DAY:
-				type = StudyMetaDataConstants.CHART_HOURS_A_DAY;
-				break;
-			default:
-				break;
+				case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_WEEK:
+					type = StudyMetaDataConstants.CHART_DAY_OF_WEEK;
+					break;
+				case StudyMetaDataConstants.DAYS_OF_THE_CURRENT_MONTH:
+					type = StudyMetaDataConstants.CHART_DAYS_OF_MONTH;
+					break;
+				case StudyMetaDataConstants.WEEKS_OF_THE_CURRENT_MONTH:
+					type = StudyMetaDataConstants.CHART_WEEK_OF_MONTH;
+					break;
+				case StudyMetaDataConstants.MONTHS_OF_THE_CURRENT_YEAR:
+					type = StudyMetaDataConstants.CHART_MONTHS_OF_YEAR;
+					break;
+				case StudyMetaDataConstants.RUN_BASED:
+					type = StudyMetaDataConstants.CHART_RUNS;
+					break;
+				case StudyMetaDataConstants.MULTIPLE_TIMES_A_DAY:
+					type = StudyMetaDataConstants.CHART_HOURS_A_DAY;
+					break;
+				default:
+					break;
 			}
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - getTimeRangeType() :: ERROR", e);
@@ -563,54 +585,66 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Starts");
 		String startDateTime = "";
 		String endDateTime = "";
-		String time = "00:00:00";
+		String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
 		try{
 			startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+time;
 			endDateTime = StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())?"":activeTaskDto.getActiveTaskLifetimeEnd()+" "+time;
+			
 			if(StringUtils.isNotEmpty(activeTaskDto.getFrequency())){
-				if((activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
-					ActiveTaskFrequencyDto activeTaskFrequency;
-					query = session.createQuery("from ActiveTaskFrequencyDto ATFDTO where ATFDTO.activeTaskId="+activeTaskDto.getId());
-					activeTaskFrequency = (ActiveTaskFrequencyDto) query.uniqueResult();
-					if(activeTaskFrequency != null){
-						if(StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())){
-							startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+activeTaskFrequency.getFrequencyTime();
-							if(!activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME) && !activeTaskFrequency.isStudyLifeTime()){
-								endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+activeTaskFrequency.getFrequencyTime();
-							}
+				if((activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) 
+						|| (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) 
+						|| (activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
+					
+					ActiveTaskFrequencyDto activeTaskFrequency = (ActiveTaskFrequencyDto) session.createQuery("from ActiveTaskFrequencyDto ATFDTO"
+							+ " where ATFDTO.activeTaskId="+activeTaskDto.getId())
+							.uniqueResult();
+					if(activeTaskFrequency != null && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())){
+						startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+activeTaskFrequency.getFrequencyTime();
+						if(!activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME) && !activeTaskFrequency.isStudyLifeTime()){
+							endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+activeTaskFrequency.getFrequencyTime();
 						}
 					}
+					
 					activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
 					activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
 				}else if(activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)){
-					List<ActiveTaskFrequencyDto> activeTaskFrequencyList = null;
-					query = session.createQuery("from ActiveTaskFrequencyDto ATFDTO where ATFDTO.activeTaskId="+activeTaskDto.getId()+" ORDER BY ATFDTO.frequencyTime");
-					activeTaskFrequencyList = query.list();
+					
+					List<ActiveTaskFrequencyDto> activeTaskFrequencyList = session.createQuery("from ActiveTaskFrequencyDto ATFDTO"
+							+ " where ATFDTO.activeTaskId="+activeTaskDto.getId()
+							+ " ORDER BY ATFDTO.frequencyTime")
+							.list();
 					if(activeTaskFrequencyList != null && !activeTaskFrequencyList.isEmpty()){
 						startDateTime = activeTaskDto.getActiveTaskLifetimeStart()+" "+activeTaskFrequencyList.get(0).getFrequencyTime();
-						endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+"23:59:59";
+						endDateTime = activeTaskDto.getActiveTaskLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 					}
+					
 					activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
 					activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
 				}else if(activeTaskDto.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)){
-					List<ActiveTaskCustomFrequenciesDto> activeTaskCustomFrequencyList = null;
-					query = session.createQuery("from ActiveTaskCustomFrequenciesDto ATCFDTO where ATCFDTO.activeTaskId="+activeTaskDto.getId()+" ORDER BY ATCFDTO.frequencyTime");
-					activeTaskCustomFrequencyList = query.list();
+					
+					List<ActiveTaskCustomFrequenciesDto> activeTaskCustomFrequencyList = session.createQuery("from ActiveTaskCustomFrequenciesDto ATCFDTO"
+							+ " where ATCFDTO.activeTaskId="+activeTaskDto.getId()
+							+ " ORDER BY ATCFDTO.frequencyTime")
+							.list();
 					if(activeTaskCustomFrequencyList != null && !activeTaskCustomFrequencyList.isEmpty()){
 						String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
 						String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
 						for(ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList){
-							if(StudyMetaDataConstants.SDF_DATE.parse(startDate).after(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyStartDate()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(startDate)
+									.after(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyStartDate()))){
 								startDate = customFrequency.getFrequencyStartDate();
 							}
 
-							if(StudyMetaDataConstants.SDF_DATE.parse(endDate).before(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyEndDate()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(endDate)
+									.before(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyEndDate()))){
 								endDate = customFrequency.getFrequencyEndDate();
 							}
 						}
+						
 						startDateTime = startDate+" "+activeTaskCustomFrequencyList.get(0).getFrequencyTime();
 						endDateTime = endDate+" "+activeTaskCustomFrequencyList.get(activeTaskCustomFrequencyList.size()-1).getFrequencyTime();
 					}
+					
 					activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
 					activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
 				}
@@ -636,54 +670,64 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
 		String startDateTime = "";
 		String endDateTime = "";
-		String time = "00:00:00";
+		String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
 		try{
 			startDateTime = questionaire.getStudyLifetimeStart()+" "+time;
 			endDateTime = StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())?"":questionaire.getStudyLifetimeEnd()+" "+time;
+			
 			if(StringUtils.isNotEmpty(questionaire.getFrequency())){
-				if((questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) || (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
-					QuestionnairesFrequenciesDto questionnairesFrequency;
-					query = session.createQuery("from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId());
-					questionnairesFrequency = (QuestionnairesFrequenciesDto) query.uniqueResult();
-					if(questionnairesFrequency != null){
-						if(StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())){
-							startDateTime = questionaire.getStudyLifetimeStart()+" "+questionnairesFrequency.getFrequencyTime();
-							if(!questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME) && !questionnairesFrequency.getIsStudyLifeTime()){
-								endDateTime = questionaire.getStudyLifetimeEnd()+" "+questionnairesFrequency.getFrequencyTime();
-							}
+				if((questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) 
+						|| (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) 
+						|| (questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))){
+					
+					QuestionnairesFrequenciesDto questionnairesFrequency = (QuestionnairesFrequenciesDto) session.createQuery("from QuestionnairesFrequenciesDto QFDTO"
+							+ " where QFDTO.questionnairesId="+questionaire.getId())
+							.uniqueResult();
+					if(questionnairesFrequency != null && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())){
+						startDateTime = questionaire.getStudyLifetimeStart()+" "+questionnairesFrequency.getFrequencyTime();
+						if(!questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME) && !questionnairesFrequency.getIsStudyLifeTime()){
+							endDateTime = questionaire.getStudyLifetimeEnd()+" "+questionnairesFrequency.getFrequencyTime();
 						}
 					}
+					
 					questionaire.setStudyLifetimeStart(startDateTime);
 					questionaire.setStudyLifetimeEnd(endDateTime);
 				}else if(questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)){
-					List<QuestionnairesFrequenciesDto> questionnairesFrequencyList = null;
-					query = session.createQuery("from QuestionnairesFrequenciesDto QFDTO where QFDTO.questionnairesId="+questionaire.getId()+" ORDER BY QFDTO.frequencyTime");
-					questionnairesFrequencyList = query.list();
+					
+					List<QuestionnairesFrequenciesDto> questionnairesFrequencyList = session.createQuery("from QuestionnairesFrequenciesDto QFDTO"
+							+ " where QFDTO.questionnairesId="+questionaire.getId()+" ORDER BY QFDTO.frequencyTime")
+							.list();
 					if(questionnairesFrequencyList != null && !questionnairesFrequencyList.isEmpty()){
 						startDateTime = questionaire.getStudyLifetimeStart()+" "+questionnairesFrequencyList.get(0).getFrequencyTime();
-						endDateTime = questionaire.getStudyLifetimeEnd()+" "+"23:59:59";
+						endDateTime = questionaire.getStudyLifetimeEnd()+" "+StudyMetaDataConstants.DEFAULT_MAX_TIME;
 					}
+					
 					questionaire.setStudyLifetimeStart(startDateTime);
 					questionaire.setStudyLifetimeEnd(endDateTime);
 				}else if(questionaire.getFrequency().equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)){
-					List<QuestionnairesCustomFrequenciesDto> questionnaireCustomFrequencyList = null;
-					query = session.createQuery("from QuestionnairesCustomFrequenciesDto QCFDTO where QCFDTO.questionnairesId="+questionaire.getId()+" ORDER BY QCFDTO.frequencyTime");
-					questionnaireCustomFrequencyList = query.list();
+					
+					List<QuestionnairesCustomFrequenciesDto> questionnaireCustomFrequencyList = session.createQuery("from QuestionnairesCustomFrequenciesDto QCFDTO"
+							+ " where QCFDTO.questionnairesId="+questionaire.getId()+" ORDER BY QCFDTO.frequencyTime")
+							.list();
 					if(questionnaireCustomFrequencyList != null && !questionnaireCustomFrequencyList.isEmpty()){
 						String startDate = questionnaireCustomFrequencyList.get(0).getFrequencyStartDate();
 						String endDate = questionnaireCustomFrequencyList.get(0).getFrequencyEndDate();
 						for(QuestionnairesCustomFrequenciesDto customFrequency : questionnaireCustomFrequencyList){
-							if(StudyMetaDataConstants.SDF_DATE.parse(startDate).after(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyStartDate()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(startDate)
+									.after(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyStartDate()))){
 								startDate = customFrequency.getFrequencyStartDate();
 							}
 
-							if(StudyMetaDataConstants.SDF_DATE.parse(endDate).before(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyEndDate()))){
+							if(StudyMetaDataConstants.SDF_DATE.parse(endDate)
+									.before(StudyMetaDataConstants.SDF_DATE.parse(customFrequency.getFrequencyEndDate()))){
 								endDate = customFrequency.getFrequencyEndDate();
 							}
 						}
+						
 						startDateTime = startDate+" "+questionnaireCustomFrequencyList.get(0).getFrequencyTime();
 						endDateTime = endDate+" "+questionnaireCustomFrequencyList.get(questionnaireCustomFrequencyList.size()-1).getFrequencyTime();
 					}
+					
 					questionaire.setStudyLifetimeStart(startDateTime);
 					questionaire.setStudyLifetimeEnd(endDateTime);
 				}
@@ -695,7 +739,6 @@ public class DashboardMetaDataDao {
 		return questionaire;
 	}
 	
-	/*-----------------------------Manipulate chart data methods Phase 1B starts----------------------------------*/
 	/**
 	 * This method is used to fetch the chart configuration details for single line chart
 	 * 
@@ -711,11 +754,11 @@ public class DashboardMetaDataDao {
 			configuration.put("subType", "single");
 			configuration.put("gridlines", false);
 			configuration.put("animated", false);
-			configuration.put("scaling", 0); //x-axis divisions
+			configuration.put("scaling", 0);
 
 			Map<String, Object> axisColor = new LinkedHashMap<>();
-			axisColor.put("x-axis", "#fff"); //hexcolor
-			axisColor.put("y-axis", "#000"); //hexcolor
+			axisColor.put("x-axis", "#fff");
+			axisColor.put("y-axis", "#000");
 			configuration.put("axisColor", axisColor);
 
 			configuration.put("max", 0.0d);
@@ -725,7 +768,7 @@ public class DashboardMetaDataDao {
 			configuration.put("titles", titles);
 			configuration.put("defaultText", "");
 
-			//single setting only
+			//single setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
 			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
@@ -756,11 +799,11 @@ public class DashboardMetaDataDao {
 			configuration.put("subType", "multiple");
 			configuration.put("gridlines", false);
 			configuration.put("animated", false);
-			configuration.put("scaling", 0); //x-axis divisions
+			configuration.put("scaling", 0);
 
 			Map<String, Object> axisColor = new LinkedHashMap<>();
-			axisColor.put("x-axis", "#fff"); //hexcolor
-			axisColor.put("y-axis", "#000"); //hexcolor
+			axisColor.put("x-axis", "#fff");
+			axisColor.put("y-axis", "#000");
 			configuration.put("axisColor", axisColor);
 
 			configuration.put("max", 0.0d);
@@ -770,7 +813,7 @@ public class DashboardMetaDataDao {
 			configuration.put("titles", titles);
 			configuration.put("defaultText", "");
 
-			// more than one setting
+			//mutiple setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
 			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
@@ -799,16 +842,16 @@ public class DashboardMetaDataDao {
 		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "unique-responses");
-			configuration.put("numberOfSegments", 0); // =0, calculated at run time <number of unique responses>
+			configuration.put("numberOfSegments", 0);
 
 			List<Double> values = new ArrayList<>();
-			configuration.put("values", values); //calculated <count of each unique response / total number of responses>
+			configuration.put("values", values);
 
 			List<String> colors = new ArrayList<>();
-			configuration.put("colors", colors); //<default colors>
+			configuration.put("colors", colors);
 
 			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles); //<unique response>
+			configuration.put("titles", titles);
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - uniquePieChartDetails() :: ERROR", e);
 		}
@@ -829,16 +872,16 @@ public class DashboardMetaDataDao {
 		Map<String, Object> configuration = new LinkedHashMap<>();
 		try{
 			configuration.put("subType", "range-responses");
-			configuration.put("numberOfSegments", 5); //Number of ranges
+			configuration.put("numberOfSegments", 5);
 
 			List<Double> values = new ArrayList<>();
-			configuration.put("values", values); //calculated <count of responses in each range / total number of responses>
+			configuration.put("values", values);
 
 			List<String> colors = new ArrayList<>();
 			configuration.put("colors", colors);
 
 			List<String> titles = new ArrayList<>();
-			configuration.put("titles", titles); //<unique response>
+			configuration.put("titles", titles);
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - rangePieChartDetails() :: ERROR", e);
 		}
@@ -863,7 +906,7 @@ public class DashboardMetaDataDao {
 			List<String> titles = new ArrayList<>();
 			configuration.put("titles", titles);
 
-			//single setting only
+			//single setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
 			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
@@ -896,7 +939,7 @@ public class DashboardMetaDataDao {
 			List<String> titles = new ArrayList<>();
 			configuration.put("titles", titles);
 
-			//more than one setting
+			//multiple setting
 			List<Map<String, Object>> settingsList = new ArrayList<>();
 			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("numberOfPoints", 1);
@@ -913,6 +956,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
+	 * Get the dataSourceName by masterId
 	 * 
 	 * @author Mohan
 	 * @param masterId
@@ -924,14 +968,14 @@ public class DashboardMetaDataDao {
 		String dataSourceName = "";
 		try{
 			switch (masterId) {
-			/*case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
-				break;
-			case 15:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
-				break;
-			case 16:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
-				break;*/
-			default:	dataSourceName = displayName;
-				break;
+				case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
+					break;
+				case 15:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
+					break;
+				case 16:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
+					break;
+				default:	dataSourceName = displayName;
+					break;
 			}
 		}catch(Exception e){
 			LOGGER.error("DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: ERROR", e);
@@ -939,5 +983,4 @@ public class DashboardMetaDataDao {
 		LOGGER.info("INFO: DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: Ends");
 		return dataSourceName;
 	}
-	/*-----------------------------Manipulate chart data methods Phase 1B ends----------------------------------*/
 }

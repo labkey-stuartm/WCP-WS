@@ -30,6 +30,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 public class AppMetaDataDao {
+	
 	private static final Logger LOGGER = Logger.getLogger(AppMetaDataDao.class);
 
 	@SuppressWarnings("unchecked")
@@ -39,10 +40,7 @@ public class AppMetaDataDao {
 	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	/*Session session = null;
-	Transaction transaction = null;*/
 	Query query = null;
-	String queryString = "";
 	
 	/**
 	 * @author Mohan
@@ -90,18 +88,33 @@ public class AppMetaDataDao {
 			if(StringUtils.isNotEmpty(bundleIdType) && StringUtils.isNotEmpty(deviceType)){
 				platformType = deviceType.substring(0, 1).toUpperCase();
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.bundleId='"+bundleIdType+"' and AVDTO.osType='"+deviceType+"' ORDER BY AVDTO.avId DESC");
-				query.setMaxResults(1);
-				appVersion = (AppVersionDto) query.uniqueResult();
+				appVersion = (AppVersionDto) session.createQuery("from AppVersionDto AVDTO"
+						+ " where AVDTO.bundleId='"+bundleIdType+"' and AVDTO.osType='"+deviceType+"'"
+						+ " ORDER BY AVDTO.avId DESC")
+						.setMaxResults(1)
+						.uniqueResult();
 				if(appVersion != null){
 					if(StringUtils.isNotEmpty(appVersion.getCustomStudyId())){
-						notificationStudyTypeQuery = " and NDTO.customStudyId in (select SDTO.customStudyId from StudyDto SDTO where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_SD+"' and SDTO.platform like '%"+platformType+"%' and SDTO.customStudyId='"+appVersion.getCustomStudyId()+"') and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
+						notificationStudyTypeQuery = " and NDTO.customStudyId in (select SDTO.customStudyId"
+								+ " from StudyDto SDTO"
+								+ " where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_SD+"' and SDTO.platform like '%"+platformType+"%'"
+								+ " and SDTO.customStudyId='"+appVersion.getCustomStudyId()+"')"
+								+ " and NDTO.notificationType='"+StudyMetaDataConstants.NOTIFICATION_TYPE_ST+"'";
 					}
-					//query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ORDER BY NDTO.notificationId DESC");
-					query = session.createQuery("from NotificationDto NDTO where NDTO.notificationSubType in ('"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"','"+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT+"') "+notificationStudyTypeQuery+" and NDTO.notificationSent=true or NDTO.anchorDate=true ORDER BY NDTO.notificationId DESC");
-					query.setFirstResult(Integer.parseInt(skip));
-					query.setMaxResults(20);
-					notificationList = query.list();
+					
+					notificationList = session.createQuery("from NotificationDto NDTO"
+							+ " where NDTO.notificationSubType in ('"
+							+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL+"','"
+							+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY+"','"
+							+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_ACTIVITY+"','"
+							+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE+"','"
+							+StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT+"') "
+							+notificationStudyTypeQuery
+							+" and NDTO.notificationSent=true or NDTO.anchorDate=true"
+							+ " ORDER BY NDTO.notificationId DESC")
+							.setFirstResult(Integer.parseInt(skip))
+							.setMaxResults(20)
+							.list();
 					if(notificationList != null && !notificationList.isEmpty()){
 						Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>(); 
 						List<Integer> notificationIdsList = new ArrayList<>();
@@ -134,16 +147,14 @@ public class AppMetaDataDao {
 							notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
 						}
 						
-						//reorder the list i.e. latest should come first 
 						Collections.sort(notificationIdsList, Collections.reverseOrder());
-						
-						//get the notification bean based on the id
 						for(Integer notificationId : notificationIdsList){
 							notifyList.add(notificationTreeMap.get(notificationId));
 						}
 					}
 				}
 			}
+			
 			notificationsResponse.setNotifications(notifyList);
 			notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
@@ -176,8 +187,11 @@ public class AppMetaDataDao {
 			bundleId = StudyMetaDataUtil.getBundleIdFromAuthorization(authCredentials);
 			if(StringUtils.isNotEmpty(os)){
 				session = sessionFactory.openSession();
-				query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
-				appVersionDto = (AppVersionDto) query.setMaxResults(1).uniqueResult();
+				appVersionDto = (AppVersionDto) session.createQuery("from AppVersionDto AVDTO"
+						+ " where AVDTO.osType='"+os+"' and AVDTO.bundleId='"+bundleId+"'"
+						+ " ORDER BY AVDTO.appVersion DESC")
+						.setMaxResults(1)
+						.uniqueResult();
 				if(appVersionDto != null){
 					if(Float.compare(Float.parseFloat(appVersion), appVersionDto.getAppVersion().floatValue())<0){
 						appUpdates.setForceUpdate(appVersionDto.getForceUpdate().intValue()==0?false:true);
@@ -228,28 +242,38 @@ public class AppMetaDataDao {
 		StudyDto studyActivityStatus = null;
 		try{
 			session = sessionFactory.openSession();
-			query = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion").setString("customStudyId", studyId).setFloat("studyVersion", Float.valueOf(studyVersion));
-			studyVersionList = query.list();
+			studyVersionList = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion")
+					.setString("customStudyId", studyId)
+					.setFloat("studyVersion", Float.valueOf(studyVersion))
+					.list();
 			if(studyVersionList != null && !studyVersionList.isEmpty()){
 				currentVersion = studyVersionList.get(0);
 				latestVersion = studyVersionList.get(studyVersionList.size()-1);
 				updates.setConsent(latestVersion.getConsentVersion().floatValue() > currentVersion.getConsentVersion().floatValue()?true:false);
+				
 				//check whether activityUpdated or not
-				query = session.getNamedQuery("getActivityUpdatedOrNotByStudyIdAndVersion").setString("customStudyId", studyId).setFloat("version", latestVersion.getStudyVersion());
-				studyActivityStatus = (StudyDto) query.uniqueResult();
-				if(studyActivityStatus!=null){
-					if(studyActivityStatus.getHasActivetaskDraft()!=null&&studyActivityStatus.getHasQuestionnaireDraft()!=null){
-						if(studyActivityStatus.getHasActivetaskDraft().intValue()==0&&studyActivityStatus.getHasQuestionnaireDraft().intValue()==0){
-							updates.setActivities(false);
-						}else{
-							updates.setActivities(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
-						}
+				studyActivityStatus = (StudyDto) session.getNamedQuery("getActivityUpdatedOrNotByStudyIdAndVersion")
+						.setString("customStudyId", studyId)
+						.setFloat("version", latestVersion.getStudyVersion())
+						.uniqueResult();
+				if(studyActivityStatus!=null 
+						&& studyActivityStatus.getHasActivetaskDraft()!=null
+						&& studyActivityStatus.getHasQuestionnaireDraft()!=null){
+					if(studyActivityStatus.getHasActivetaskDraft().intValue()==0 
+							&& studyActivityStatus.getHasQuestionnaireDraft().intValue()==0){
+						updates.setActivities(false);
+					}else{
+						updates.setActivities(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
 					}
 				}
 				updates.setResources(latestVersion.getStudyVersion().floatValue() > currentVersion.getStudyVersion().floatValue()?true:false);
+				
 				//check whether resources are available for the latest version or not
-				query = session.createQuery("from ResourcesDto RDTO where RDTO.studyId in (select SDTO.id from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' and ROUND(SDTO.version, 1)="+latestVersion.getStudyVersion()+")");
-				resourcesList = query.list();
+				resourcesList = session.createQuery("from ResourcesDto RDTO"
+						+ " where RDTO.studyId in (select SDTO.id"
+						+ " from StudyDto SDTO"
+						+ " where SDTO.customStudyId='"+studyId+"' and ROUND(SDTO.version, 1)="+latestVersion.getStudyVersion()+")")
+						.list();
 				if(resourcesList==null||resourcesList.isEmpty()){
 					updates.setResources(false);
 				}
@@ -258,18 +282,24 @@ public class AppMetaDataDao {
 			}
 			
 			//get the status of the latest study
-			query = session.createQuery("from StudyDto SDTO where SDTO.customStudyId='"+studyId+"' ORDER BY SDTO.id DESC");
-			query.setMaxResults(1);
-			studyDto = (StudyDto) query.uniqueResult();
-			if(studyDto!=null){
+			studyDto = (StudyDto) session.createQuery("from StudyDto SDTO"
+					+ " where SDTO.customStudyId='"+studyId+"'"
+							+ " ORDER BY SDTO.id DESC")
+							.setMaxResults(1)
+							.uniqueResult();
+			if(studyDto != null){
 				switch (studyDto.getStatus()) {
-					case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: updates.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
+					case StudyMetaDataConstants.STUDY_STATUS_ACTIVE: 
+						updates.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
 						break;
-					case StudyMetaDataConstants.STUDY_STATUS_PAUSED: updates.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
+					case StudyMetaDataConstants.STUDY_STATUS_PAUSED: 
+						updates.setStatus(StudyMetaDataConstants.STUDY_PAUSED);
 						break;
-					case StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH: updates.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
+					case StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH: 
+						updates.setStatus(StudyMetaDataConstants.STUDY_UPCOMING);
 						break;
-					case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: updates.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
+					case StudyMetaDataConstants.STUDY_STATUS_DEACTIVATED: 
+						updates.setStatus(StudyMetaDataConstants.STUDY_CLOSED);
 						break;
 					default:
 						break;
@@ -280,6 +310,7 @@ public class AppMetaDataDao {
 					studyUpdates.setCurrentVersion(studyDto.getVersion().toString());
 				}
 			}
+			
 			studyUpdates.setUpdates(updates);
 			studyUpdates.setMessage(StudyMetaDataConstants.SUCCESS);
 		}catch(Exception e){
@@ -312,8 +343,10 @@ public class AppMetaDataDao {
 		AppVersionDto appVersionDto = new AppVersionDto();
 		try{
 			session = sessionFactory.openSession();
-			query = session.createQuery("from AppVersionDto AVDTO where AVDTO.osType='"+osType+"' and AVDTO.bundleId='"+bundleId+"' ORDER BY AVDTO.appVersion DESC");
-			appVersionDtoList = query.list();
+			appVersionDtoList = session.createQuery("from AppVersionDto AVDTO"
+					+ " where AVDTO.osType='"+osType+"' and AVDTO.bundleId='"+bundleId+"'"
+					+ " ORDER BY AVDTO.appVersion DESC")
+					.list();
 			if(appVersionDtoList != null && !appVersionDtoList.isEmpty()){
 				if(Float.compare(Float.parseFloat(appVersion), appVersionDtoList.get(0).getAppVersion().floatValue()) == 0){
 					if(Integer.parseInt(forceUpdate) == appVersionDtoList.get(0).getForceUpdate().intValue()){
@@ -383,7 +416,6 @@ public class AppMetaDataDao {
 	 * @throws DAOException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws DAOException{
-		//LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Starts");
 		Session session = null;
 		String message = StudyMetaDataConstants.FAILURE;
 		try{
@@ -392,13 +424,12 @@ public class AppMetaDataDao {
 			query.executeUpdate();
 			message = StudyMetaDataConstants.SUCCESS;
 		}catch(Exception e){
-			LOGGER.error("ERROR :: ", e);
+			LOGGER.warn(e);
 		}finally{
 			if(session != null){
 				session.close();
 			}
 		}
-		//LOGGER.info("INFO: AppMetaDataDao - interceptorDataBaseQuery() :: Ends");
 		return message;
 	}
 }
