@@ -1,7 +1,16 @@
 package com.studymetadata.bean;
 
+import com.studymetadata.util.StudyMetaDataConstants;
+
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:16:10 PM
+ *
+ */
 public class TermsPolicyResponse {
-	private String message = "FAILURE";
+	
+	private String message = StudyMetaDataConstants.FAILURE;
 	private String terms = "";
 	private String privacy = "";
 	

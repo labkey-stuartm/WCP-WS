@@ -35,7 +35,6 @@
 		<!-- Disable the second-level cache -->
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
 
-		<!-- Start: Mapping the DTO -->
 		<mapping class="com.studymetadata.dto.BrandingDto"/>
 		<mapping class="com.studymetadata.dto.ChartsDto"/>
 		<mapping class="com.studymetadata.dto.ComprehensionTestQuestionDto"/>
@@ -78,17 +77,12 @@
 		<mapping class="com.studymetadata.dto.ActiveTaskSelectOptionsDto"/>
 		<mapping class="com.studymetadata.dto.ConsentMasterInfoDto"/>
 		<mapping class="com.studymetadata.dto.QuestionResponsetypeMasterInfoDto"/>
-		<mapping class="com.studymetadata.dto.UserDto"/>
-		<mapping class="com.studymetadata.dto.UserPermissions"/>
 		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto"/>
 		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto"/>
 		<mapping class="com.studymetadata.dto.StatisticImageListDto"/>
 		<mapping class="com.studymetadata.dto.StudyVersionDto"/>
 		<mapping class="com.studymetadata.dto.AppVersionDto"/>
-		
-		<!-- phase_1B pojo classes -->
 		<mapping class="com.studymetadata.dto.HealthKitDataKeyDto"/>
 		<mapping class="com.studymetadata.dto.QuestionConditionBranchDto"/>
-		<!-- End: Mapping the DTO -->
 	</session-factory>
 </hibernate-configuration>

@@ -13,14 +13,26 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:25:30 PM
+ *
+ */
 @Entity
 @Table(name="active_task_master_attribute")
 @NamedQueries(value = { 
-		@NamedQuery(name = "getActiveTaskMasterListFromIds", query = "from ActiveTaskMasterAttributeDto ATMADTO where ATMADTO.masterId IN (:taskMasterAttrIdList)"),
+		
+		@NamedQuery(name = "getActiveTaskMasterListFromIds", query = "from ActiveTaskMasterAttributeDto ATMADTO"
+				+ " where ATMADTO.masterId IN (:taskMasterAttrIdList)"),
 })
 public class ActiveTaskMasterAttributeDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3945410061495684065L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

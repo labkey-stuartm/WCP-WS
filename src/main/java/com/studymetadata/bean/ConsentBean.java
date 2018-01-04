@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:09:43 PM
+ *
+ */
 public class ConsentBean {
+	
 	private String type = "";
 	private String title = "";
 	private String text = "";

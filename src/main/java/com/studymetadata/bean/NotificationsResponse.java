@@ -5,7 +5,14 @@ import java.util.List;
 
 import com.studymetadata.util.StudyMetaDataConstants;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:12:19 PM
+ *
+ */
 public class NotificationsResponse {
+	
 	private String message = StudyMetaDataConstants.FAILURE;
 	private List<NotificationsBean> notifications = new ArrayList<>();
 	

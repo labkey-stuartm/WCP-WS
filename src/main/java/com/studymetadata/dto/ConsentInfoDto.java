@@ -15,18 +15,27 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:27:08 PM
  *
  */
 @Entity
 @Table(name="consent_info")
 @NamedQueries({
-	/*@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),*/
-	@NamedQuery(name="consentInfoDtoByStudyId", query=" from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
-	@NamedQuery(name="consentInfoDetailsByCustomStudyIdAndVersion", query=" from ConsentInfoDto CIDTO where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version ORDER BY CIDTO.sequenceNo"),
+	
+	@NamedQuery(name="consentInfoDtoByStudyId", query="from ConsentInfoDto CIDTO"
+			+ " where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
+			
+	@NamedQuery(name="consentInfoDetailsByCustomStudyIdAndVersion", query="from ConsentInfoDto CIDTO"
+			+ " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version"
+			+ " ORDER BY CIDTO.sequenceNo"),
 })
 public class ConsentInfoDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7398906510250618397L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

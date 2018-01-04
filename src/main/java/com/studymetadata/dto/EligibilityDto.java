@@ -15,16 +15,23 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:27:36 PM
  *
  */
 @Entity
 @Table(name = "eligibility")
 @NamedQueries({
-	@NamedQuery(name="eligibilityDtoByStudyId", query=" from EligibilityDto EDTO where EDTO.studyId =:studyId "),
+	
+	@NamedQuery(name="eligibilityDtoByStudyId", query="from EligibilityDto EDTO"
+			+ " where EDTO.studyId =:studyId "),
 })
 public class EligibilityDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4520158278072115802L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,13 @@
 package com.studymetadata.bean.appendix;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:21:12 PM
+ *
+ */
 public class FrequencyBean {
+	
 	private String frequency="";
 	private String startDate="";
 	private String endDate="";

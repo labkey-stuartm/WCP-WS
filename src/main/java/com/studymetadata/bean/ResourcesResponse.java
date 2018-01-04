@@ -3,8 +3,17 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.studymetadata.util.StudyMetaDataConstants;
+
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:13:51 PM
+ *
+ */
 public class ResourcesResponse {
-	private String message = "FAILURE";
+	
+	private String message = StudyMetaDataConstants.FAILURE;
 	private List<ResourcesBean> resources = new ArrayList<>();
 	
 	public String getMessage() {

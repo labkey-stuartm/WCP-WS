@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:09 PM
  *
  */
 @Entity
 @Table(name="line_chart_datasource")
 public class LineChartDatasourceDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5758103951133634472L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

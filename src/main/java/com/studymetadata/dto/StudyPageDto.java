@@ -15,16 +15,23 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:31:44 PM
  *
  */
 @Entity
 @Table(name = "study_page")
 @NamedQueries({
-	@NamedQuery(name="studyPageDetailsByStudyId", query="from StudyPageDto SPDTO where SPDTO.studyId =:studyId"),
+	
+	@NamedQuery(name="studyPageDetailsByStudyId", query="from StudyPageDto SPDTO"
+			+ " where SPDTO.studyId =:studyId"),
 })
 public class StudyPageDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1910738533774432289L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

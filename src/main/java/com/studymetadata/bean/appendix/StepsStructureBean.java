@@ -8,21 +8,23 @@ import java.util.Map;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:22:18 PM
  *
  */
 public class StepsStructureBean {
-	private String type="";
-	private String resultType="";
-	private String key="";
-	private String title="";
-	private String text="";
-	private String image="";
-	private boolean skippable=false;
+	
+	private String type = "";
+	private String resultType = "";
+	private String key = "";
+	private String title = "";
+	private String text = "";
+	private String image = "";
+	private boolean skippable = false;
 	private Map<String, Object> destinations = new HashMap<>();
-	private String groupName="";
-	private String phi="";
-	private boolean repeatable=false;
-	private String repeatableText="";
+	private String groupName = "";
+	private String phi = "";
+	private boolean repeatable = false;
+	private String repeatableText = "";
 	private List<String> randomizationSets = new ArrayList<>();
 	private List<ResourceContextStructureBean> resourceContext = new ArrayList<>();
 	private List<StepsStructureBean> steps = new ArrayList<>();

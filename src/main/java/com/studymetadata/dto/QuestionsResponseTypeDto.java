@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:30:47 PM
  *
  */
 @Entity
 @Table(name="questions_response_type")
 public class QuestionsResponseTypeDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7963662243467298886L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

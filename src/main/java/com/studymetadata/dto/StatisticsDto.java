@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:31:23 PM
  *
  */
 @Entity
 @Table(name="statistics")
 public class StatisticsDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4452743894242933509L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

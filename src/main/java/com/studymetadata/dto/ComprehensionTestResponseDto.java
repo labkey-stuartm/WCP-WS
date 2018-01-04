@@ -15,16 +15,23 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:26:34 PM
  *
  */
 @Entity
 @Table(name="comprehension_test_response")
 @NamedQueries({
-	@NamedQuery(name="comprehensionQuestionResponseByCTID", query=" from ComprehensionTestResponseDto CTRDTO where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"),
+	
+	@NamedQuery(name="comprehensionQuestionResponseByCTID", query=" from ComprehensionTestResponseDto CTRDTO"
+			+ " where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"),
 })
 public class ComprehensionTestResponseDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8004751419746704475L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

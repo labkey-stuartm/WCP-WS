@@ -3,7 +3,14 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:35 PM
+ *
+ */
 public class DashboardBean {
+	
 	private List<StatisticsBean> statistics = new ArrayList<>();
 	private List<ChartsBean> charts = new ArrayList<>();
 	

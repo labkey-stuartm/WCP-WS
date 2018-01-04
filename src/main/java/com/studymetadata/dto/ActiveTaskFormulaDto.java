@@ -9,11 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:25:06 PM
+ *
+ */
 @Entity
 @Table(name="activetask_formula")
 public class ActiveTaskFormulaDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7509273488651910859L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -3,9 +3,11 @@ package com.studymetadata.bean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:14:01 PM
  *
  */
 public class ReviewBean {
+	
 	private String reasonForConsent = "";
 	private String reviewHTML = "";
 	

@@ -15,18 +15,30 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:53 PM
  *
  */
 @Entity
 @Table(name="questionnaires")
 @NamedQueries({
-	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO where QDTO.studyId =:studyId"),
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active) ORDER BY QDTO.createdDate DESC")
+	
+	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO"
+			+ " where QDTO.studyId =:studyId"),
+			
+	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO"
+			+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
+			
+	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO"
+			+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active)"
+			+ " ORDER BY QDTO.createdDate DESC")
 })
 public class QuestionnairesDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9053445608384935386L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

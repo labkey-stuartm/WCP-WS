@@ -3,9 +3,11 @@ package com.studymetadata.bean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:14:17 PM
  *
  */
 public class SharingBean {
+	
 	private String title = "";
 	private String text = "";
 	private String shortDesc = "";

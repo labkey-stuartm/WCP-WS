@@ -29,6 +29,12 @@ import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:23:35 PM
+ *
+ */
 public class AppMetaDataDao {
 	
 	private static final Logger LOGGER = Logger.getLogger(AppMetaDataDao.class);
@@ -43,9 +49,10 @@ public class AppMetaDataDao {
 	Query query = null;
 	
 	/**
+	 * Get terms and policy for the app
+	 * 
 	 * @author Mohan
-	 * @param studyId
-	 * @return TermsPolicyResponse
+	 * @return {@link TermsPolicyResponse}
 	 * @throws DAOException
 	 */
 	public TermsPolicyResponse termsPolicy() throws DAOException{
@@ -63,9 +70,12 @@ public class AppMetaDataDao {
 	}
 
 	/**
+	 * Fetch available notifications
+	 * 
 	 * @author Mohan
 	 * @param skip
-	 * @return NotificationsResponse
+	 * @param authorization
+	 * @return {@link NotificationsResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -169,10 +179,12 @@ public class AppMetaDataDao {
 	}
 	
 	/**
+	 * Check for app updates
+	 * 
 	 * @author Mohan
 	 * @param appVersion
-	 * @param os
-	 * @return AppUpdatesResponse
+	 * @param authCredentials
+	 * @return {@link AppUpdatesResponse}
 	 * @throws DAOException
 	 */
 	public AppUpdatesResponse appUpdates(String appVersion, String authCredentials) throws DAOException{
@@ -222,10 +234,12 @@ public class AppMetaDataDao {
 	}
 	
 	/**
+	 * Check for study updates
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param studyVersion
-	 * @return StudyUpdatesResponse
+	 * @return {@link StudyUpdatesResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -325,15 +339,25 @@ public class AppMetaDataDao {
 	}
 	
 	/**
+	 * Update app version
+	 * 
 	 * @author Mohan
 	 * @param forceUpdate
 	 * @param osType
 	 * @param appVersion
-	 * @return String
+	 * @param bundleId
+	 * @param customStudyId
+	 * @param message
+	 * @return {@link String}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId, String message) throws DAOException{
+	public String updateAppVersionDetails(String forceUpdate, 
+			String osType, 
+			String appVersion, 
+			String bundleId, 
+			String customStudyId, 
+			String message) throws DAOException{
 		LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
 		Session session = null;
 		Transaction transaction = null;
@@ -409,10 +433,11 @@ public class AppMetaDataDao {
 	
 	
 	/**
-	 * This method is used to update the database from the input query
+	 * Execute the input query
 	 * 
 	 * @author Mohan
-	 * @return String
+	 * @param dbQuery
+	 * @return {@link String}
 	 * @throws DAOException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws DAOException{

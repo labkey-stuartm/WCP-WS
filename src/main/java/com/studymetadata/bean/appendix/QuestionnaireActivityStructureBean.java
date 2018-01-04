@@ -9,9 +9,11 @@ import com.studymetadata.bean.QuestionnaireActivityStepsBean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:21:30 PM
  *
  */
 public class QuestionnaireActivityStructureBean {
+	
 	private String type = "";
 	private ActivityMetadataBean metadata = new ActivityMetadataBean();
 	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();

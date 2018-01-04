@@ -15,16 +15,24 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:31:01 PM
  *
  */
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true ORDER BY RDTO.sequenceNo"),
+	
+	@NamedQuery(name="getResourcesListByStudyId", query="from ResourcesDto RDTO"
+			+ " where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"
+			+ " ORDER BY RDTO.sequenceNo"),
 })
 public class ResourcesDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5367238661369825902L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

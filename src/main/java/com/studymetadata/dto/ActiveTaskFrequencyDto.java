@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:25:15 PM
  *
  */
 @Entity
 @Table(name="active_task_frequencies")
 public class ActiveTaskFrequencyDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8904004416297359680L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

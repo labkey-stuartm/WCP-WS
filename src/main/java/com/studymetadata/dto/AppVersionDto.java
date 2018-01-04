@@ -9,12 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:25:53 PM
+ *
+ */
 @Entity
 @Table(name="app_versions")
 public class AppVersionDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2555323540993364916L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="av_id")

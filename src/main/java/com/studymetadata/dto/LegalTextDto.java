@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:02 PM
  *
  */
 @Entity
 @Table(name="legal_text")
 public class LegalTextDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6256475646468023254L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -12,11 +12,21 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:28:43 PM
+ *
+ */
 @Entity
 @Table(name="health_kit_keys_info")
 @NamedQueries({
+	
 	@NamedQuery(name = "getHealthKitDataList",query = "from HealthKitDataKeyDto HKDKDTO"),
-	@NamedQuery(name = "getHealthKitDisplayNameByKeyText",query = "select HKDKDTO.displayName from HealthKitDataKeyDto HKDKDTO where HKDKDTO.key=:key"),
+	
+	@NamedQuery(name = "getHealthKitDisplayNameByKeyText",query = "select HKDKDTO.displayName"
+			+ " from HealthKitDataKeyDto HKDKDTO"
+			+ " where HKDKDTO.key=:key"),
 })
 public class HealthKitDataKeyDto implements Serializable{
 

@@ -3,15 +3,20 @@ package com.studymetadata.bean;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:13:43 PM
+ *
+ */
 public class ResourcesBean {
-	/*/gatewayInfo*/
+	
 	private String title = "";
-	private String type = ""; //html/pdf
+	private String type = "";
 	private String resourcesId = "";
-	private String content = ""; //text/pdf link
+	private String content = "";
 	private String audience = "";
 	private String notificationText = "";
-	//private ResourceConfigurationBean availability = new ResourceConfigurationBean();
 	private Map<String, Object> availability = new LinkedHashMap<>();
 	
 	public String getTitle() {

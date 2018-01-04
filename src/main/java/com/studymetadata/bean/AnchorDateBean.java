@@ -3,10 +3,12 @@ package com.studymetadata.bean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:05:37 PM
  *
  */
 public class AnchorDateBean {
-	private String type = ""; //enrollment-date/date-question
+	
+	private String type = "";
 	private QuestionInfoBean questionInfo = new QuestionInfoBean();
 	
 	public String getType() {

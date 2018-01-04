@@ -3,9 +3,11 @@ package com.studymetadata.bean.appendix;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:21:18 PM
  *
  */
 public class InfoStructureBean {
+	
 	private String studyId="";
 	private String qId="";
 	private String name="";

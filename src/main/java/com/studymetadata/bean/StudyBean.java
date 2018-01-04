@@ -1,7 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:15:05 PM
+ *
+ */
 public class StudyBean {
-	/*/studyList*/
+
 	private String studyId = "";
 	private String studyVersion = "";
 	private String title = "";

@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:25:44 PM
  *
  */
 @Entity
 @Table(name="active_task_steps")
 public class ActiveTaskStepsDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8677367389857232011L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

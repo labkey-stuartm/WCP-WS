@@ -15,13 +15,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
+ * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:40 PM
  *
  */
 @Entity
 @Table(name="question_condtion_branching")
 @NamedQueries({
-	@NamedQuery(name="getQuestionConditionBranchList", query="from QuestionConditionBranchDto QCBDTO where QCBDTO.questionId =:questionId ORDER BY QCBDTO.sequenceNo"),
+	
+	@NamedQuery(name="getQuestionConditionBranchList", query="from QuestionConditionBranchDto QCBDTO"
+			+ " where QCBDTO.questionId =:questionId"
+			+ " ORDER BY QCBDTO.sequenceNo"),
 })
 public class QuestionConditionBranchDto implements Serializable{
 

@@ -1,10 +1,17 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:11:38 PM
+ *
+ */
 public class GatewayInfoResourceBean {
+	
 	private String resourcesId = "";
 	private String title = "";
-	private String type = ""; //html/pdf
-	private String content = ""; //text/pdf link
+	private String type = "";
+	private String content = "";
 	
 	public String getTitle() {
 		return title;

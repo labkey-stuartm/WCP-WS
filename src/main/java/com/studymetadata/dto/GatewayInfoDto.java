@@ -15,6 +15,7 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:28:22 PM
  *
  */
 @Entity
@@ -24,7 +25,11 @@ import org.hibernate.annotations.NamedQuery;
 })
 public class GatewayInfoDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1150671454003333803L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

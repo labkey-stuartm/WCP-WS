@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:26 PM
+ *
+ */
 public class DashboardActivityBean {
+	
 	private String activityId = "";
 	private String version = "";
 	

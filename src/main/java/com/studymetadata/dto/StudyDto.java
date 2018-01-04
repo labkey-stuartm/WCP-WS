@@ -16,21 +16,36 @@ import org.hibernate.annotations.Type;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:31:31 PM
  *
  */
 @Entity
 @Table(name = "studies")
 @NamedQueries({
-	//@NamedQuery(name="gatewayStudiesListByPlatform", query="from StudyDto SDTO where SDTO.type =:type and SDTO.platform like CONCAT('%',:platform,'%')"),
-	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO where SDTO.id =:id"),
-	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id from StudyDto SDTO where SDTO.customStudyId =:customStudyId"),
-	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
-	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
-	@NamedQuery(name="getActivityUpdatedOrNotByStudyIdAndVersion", query="from StudyDto SDTO where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
+	
+	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO"
+			+ " where SDTO.id =:id"),
+			
+	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id"
+			+ " from StudyDto SDTO"
+			+ " where SDTO.customStudyId =:customStudyId"),
+			
+	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO"
+			+ " where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
+			
+	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO"
+			+ " where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
+			
+	@NamedQuery(name="getActivityUpdatedOrNotByStudyIdAndVersion", query="from StudyDto SDTO"
+			+ " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
 })
 public class StudyDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5843091568457462789L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

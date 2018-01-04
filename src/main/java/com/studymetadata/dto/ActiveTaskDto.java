@@ -15,17 +15,27 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:24:53 PM
  *
  */
 @Entity
 @Table(name="active_task")
 @NamedQueries({
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active) ORDER BY ATDTO.createdDate DESC")
+	
+	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO"
+			+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
+			
+	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO"
+			+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active)"
+			+ " ORDER BY ATDTO.createdDate DESC")
 })
 public class ActiveTaskDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4577109970844567694L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;

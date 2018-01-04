@@ -12,14 +12,19 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:18 PM
  *
  */
 @Entity
 @Table(name="line_chart")
 public class LineChartDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8093637693491035141L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")

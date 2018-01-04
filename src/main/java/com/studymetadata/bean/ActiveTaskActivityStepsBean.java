@@ -3,16 +3,20 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:04:31 PM
+ *
+ */
 public class ActiveTaskActivityStepsBean {
-	private String type = ""; //instruction (OR) question (OR) form (OR) task
+	
+	private String type = "";
 	private String resultType = "";
 	private String key = "";
 	private String text = "";
 	private String[] options = new String[0];
-	//private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
-	
 	private Object format = new Object();
-	
 	private String title = "";
 	private Boolean skippable = false;
 	private String groupName = "";
@@ -20,7 +24,7 @@ public class ActiveTaskActivityStepsBean {
 	private String repeatableText = "";
 	private List<DestinationBean> destinations = new ArrayList<>();
 	private String healthDataKey = "";
-	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>(); //Question
+	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 	
 	public String getType() {
 		return type;
@@ -52,12 +56,6 @@ public class ActiveTaskActivityStepsBean {
 	public void setOptions(String[] options) {
 		this.options = options;
 	}
-	/*public Map<String, Object> getFormat() {
-		return format;
-	}
-	public void setFormat(Map<String, Object> format) {
-		this.format = format;
-	}*/
 	
 	public String getTitle() {
 		return title;

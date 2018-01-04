@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:14:37 PM
+ *
+ */
 public class StatisticsBean {
+	
 	private String title = "";
 	private String displayName = "";
 	private String statType = "";

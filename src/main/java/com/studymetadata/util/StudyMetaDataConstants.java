@@ -2,7 +2,14 @@ package com.studymetadata.util;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:39:39 PM
+ *
+ */
 public interface StudyMetaDataConstants {
+	
 	public static final String SUCCESS = "SUCCESS";
 	public static final String FAILURE = "FAILURE";
 	public static final String INACTIVE = "INACTIVE";
@@ -12,7 +19,6 @@ public interface StudyMetaDataConstants {
 	public final String ACCOUNT_DEACTIVATE_ERROR_MSG = "Your account has been deactivated.";
 	public final String INVALID_INPUT_ERROR_MSG = "Invalid input.";
 	public final String LOGIN_FAILURE = "Please check your login credentials.";
-	/*public final String INVALID_STUDY_ID = "StuydId does not exists. Please check";*/
 	public final String INVALID_STUDY_ID = "Sorry, something went wrong. Please try again.";
 	public final String INVALID_ACTIVITY_ID = "ActivityId does not exists. Please check";
 	
@@ -36,28 +42,23 @@ public interface StudyMetaDataConstants {
 	
 	public static final String PASS_SALT = "BTCSoft";
 	
-	//Study related constants
 	public static final String STUDY_TYPE_GT = "GT";
 	public static final String STUDY_TYPE_SD = "SD";
 	public static final String STUDY_PLATFORM_TYPE_IOS = "I";
 	public static final String STUDY_PLATFORM_TYPE_ANDROID = "A";
 	
-	//Study Status
 	public static final String STUDY_STATUS_PRE_LAUNCH = "Pre-launch";
 	public static final String STUDY_STATUS_PRE_PUBLISH = "Pre-launch(Published)";
 	public static final String STUDY_STATUS_ACTIVE = "Active";
 	public static final String STUDY_STATUS_PUBLISH = "Published";
 	public static final String STUDY_STATUS_PAUSED = "Paused";
 	public static final String STUDY_STATUS_DEACTIVATED = "Deactivated";
-	
 
-	//Mobile app status
 	public static final String STUDY_ACTIVE = "Active";
 	public static final String STUDY_PAUSED = "Paused";
 	public static final String STUDY_UPCOMING = "Upcoming";
 	public static final String STUDY_CLOSED = "Closed";
 	
-	 //Study Category type
 	public static final String STUDY_REF_CATEGORIES = "Categories";
 	public static final String STUDY_REF_SPONSERS = "Research Sponsors";
 	
@@ -65,12 +66,10 @@ public interface StudyMetaDataConstants {
 	public static final String NO = "No";
 	public static final String ALL = "All";
 	
-	//Status messages
 	public static final String INVALID_AUTHORIZATION = "Invalid Authorization key";
 	public static final String INVALID_INPUT = "Invalid inputs";
 	public static final String NO_RECORD = "No records found";
 	
-	//type constants
 	public static final String TYPE_VIDEO = "video";
 	public static final String TYPE_TEXT = "text";
 	public static final String TYPE_HTML = "html";
@@ -92,11 +91,9 @@ public interface StudyMetaDataConstants {
 	public static final String TYPE_UTF8 = "UTF-8";
 	public static final String SDF_DAY = "EEEE";
 	
-	//Consent related constants
 	public static final String CONSENT_TYPE_RESEARCHKIT = "ResearchKit/ResearchStack";
 	public static final String CONSENT_TYPE_CUSTOM = "Custom";
 	
-	//questionaire frequency schedule
 	public static final String QUESTIONAIRE_STEP_TYPE_INSTRUCTION = "Instruction";
 	public static final String QUESTIONAIRE_STEP_TYPE_QUESTION = "Question";
 	public static final String QUESTIONAIRE_STEP_TYPE_FORM = "Form";
@@ -108,30 +105,24 @@ public interface StudyMetaDataConstants {
 	public static final String FREQUENCY_TYPE_MONTHLY = "Monthly";
 	public static final String FREQUENCY_TYPE_MANUALLY_SCHEDULE = "Manually Schedule";
 	
-	//Activity related constants
 	public static final String ACTIVITY_TYPE_ACTIVE_TASK = "AT";
 	public static final String ACTIVITY_TYPE_QUESTIONAIRE = "QR";
 	
-	//study resource related
 	public static final String RESOURCE_AUDIENCE_TYPE_ALL = "All";
 	public static final String RESOURCE_AUDIENCE_TYPE_LIMITED = "Limited";
 	
-	//Study Sequence status related
 	public static final String STUDY_SEQUENCE_Y = "Y";
 	public static final String STUDY_SEQUENCE_N = "N";
 	
-	//study platform type
 	public static final String STUDY_PLATFORM_IOS = "ios";
 	public static final String STUDY_PLATFORM_ANDROID = "android";
 	public static final String STUDY_PLATFORM_BOTH = "both";
 	public static final String STUDY_PLATFORM_ALL = "all";
 	
-	//study withdraw config
 	public static final String STUDY_WITHDRAW_CONFIG_DELETE_DATA = "delete_data";
 	public static final String STUDY_WITHDRAW_CONFIG_ASK_USER = "ask_user";
 	public static final String STUDY_WITHDRAW_CONFIG_NO_ACTION = "no_action";
 	
-	//active task type
 	public static final String ACTIVITY_AT_FETAL_KICK_COUNTER = "fetalKickCounter";
 	public static final String ACTIVITY_AT_SPATIAL_SPAN_MEMORY = "spatialSpanMemory";
 	public static final String ACTIVITY_AT_TOWER_OF_HANOI = "towerOfHanoi";
@@ -139,7 +130,6 @@ public interface StudyMetaDataConstants {
 	public static final String ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE = "configure_type";
 	public static final String ACTIVE_TASK_ATTRIBUTE_TYPE_RESULT = "result_type";
 	
-	//questionaire question format
 	public static final String QUESTION_SCALE = "scale";
 	public static final String QUESTION_CONTINUOUS_SCALE = "continuousScale";
 	public static final String QUESTION_TEXT_SCALE = "textScale";
@@ -162,12 +152,9 @@ public interface StudyMetaDataConstants {
 	public static final String QUESTION_NUMERIC_STYLE_INTEGER = "Integer";
 	public static final String QUESTION_NUMERIC_STYLE_DECIMAL = "Decimal";
 	
-	//question response type constants
-	public static final String 	QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
+	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE = "Date";
 	public static final String QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATETIME = "Date-Time";
 	
-	//Charts and Statistics
-	//task time range options
 	public static final String DAYS_OF_THE_CURRENT_WEEK = "Days of the current week";
 	public static final String DAYS_OF_THE_CURRENT_MONTH = "Days of the current month";
 	public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
@@ -189,7 +176,6 @@ public interface StudyMetaDataConstants {
 	public static final String DASHBOARD_STATISTICS = "statistics";
 	public static final String DASHBOARD_CHARTS = "charts";
 	
-	//notification
 	public static final String NOTIFICATION_TYPE_GT = "GT";
 	public static final String NOTIFICATION_TYPE_ST = "ST";
 	
@@ -246,7 +232,6 @@ public interface StudyMetaDataConstants {
 	public static final String SSM_NO_OF_GAMES = "Number_of_Games_spatial";
 	public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
 	
-	/********** phase_1B conditional branching logic constants **********/
 	public static final Integer MAX_KICK_COUNT = 99;
 	
 	public static final String CB_RESPONSE_TYPE_IDS = "1,2,8,13,14";
@@ -276,6 +261,6 @@ public interface StudyMetaDataConstants {
 	public static final String CHART_DATA_SOURCE_NO_OF_GAMES = "numberOfGames";
 	public static final String CHART_DATA_SOURCE_NO_OF_FAILURES = "numberOfFailures";
 	
-	public static final String FETAL_MAX_DURATION = "86400"; //24:00 HH:mm
+	public static final String FETAL_MAX_DURATION = "86400"; //24:00 HH:mm in seconds
 	public static final String FETAL_MAX_DURATION_WCP = "23:59";
 }

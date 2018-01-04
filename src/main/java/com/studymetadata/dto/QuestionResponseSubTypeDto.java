@@ -10,11 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:30:19 PM
+ *
+ */
 @Entity
 @Table(name="response_sub_type_value")
 public class QuestionResponseSubTypeDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7906353217574963756L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

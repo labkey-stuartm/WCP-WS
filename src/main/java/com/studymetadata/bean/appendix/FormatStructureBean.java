@@ -6,9 +6,11 @@ import java.util.List;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:20:59 PM
  *
  */
 public class FormatStructureBean {
+	
 	List<String> textChoices = new ArrayList<>();
 	private String unit="";
 	private int minValue=0;

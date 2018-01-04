@@ -9,12 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:31:17 PM
+ *
+ */
 @Entity
 @Table(name="statistic_master_images")
 public class StatisticMasterImagesDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2694988134032652377L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="statistic_image_id")

@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:05:20 PM
+ *
+ */
 public class ActivityMetadataBean {
+	
 	private String studyId="";
 	private String activityId="";
 	private String name="";

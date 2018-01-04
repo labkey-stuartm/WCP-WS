@@ -15,7 +15,14 @@ import com.studymetadata.bean.ResourcesResponse;
 import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:37:11 PM
+ *
+ */
 public class StudyMetaDataOrchestration {
+	
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
@@ -24,9 +31,11 @@ public class StudyMetaDataOrchestration {
 	StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 
 	/**
+	 * Check Authorization for the provided authorization identifier
+	 * 
 	 * @author Mohan
 	 * @param authorization
-	 * @return hasValidAuthorization
+	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
 	public boolean isValidAuthorizationId(String authorization) throws OrchestrationException{
@@ -42,8 +51,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get Gateway info and Gateway resources data
+	 * 
 	 * @author Mohan
-	 * @return GatewayInfoResponse
+	 * @param authorization
+	 * @return {@link GatewayInfoResponse}
 	 * @throws OrchestrationException
 	 */
 	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws OrchestrationException{
@@ -59,8 +71,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get all the configured studies from the WCP
+	 * 
 	 * @author Mohan
-	 * @return StudyResponse
+	 * @param authorization
+	 * @return {@link StudyResponse}
 	 * @throws OrchestrationException
 	 */
 	public StudyResponse studyList(String authorization) throws OrchestrationException{
@@ -76,9 +91,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get eligibility and consent info for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return EligibilityConsentResponse
+	 * @return {@link EligibilityConsentResponse}
 	 * @throws OrchestrationException
 	 */
 	public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws OrchestrationException{
@@ -94,16 +111,21 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get consent document by passing the consent version or
+	 * the activity identifier and activity version for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param consentVersion
 	 * @param activityId
 	 * @param activityVersion
-	 * @return ConsentDocumentResponse
+	 * @return {@link ConsentDocumentResponse}
 	 * @throws OrchestrationException
 	 */
-	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws OrchestrationException{
+	public ConsentDocumentResponse consentDocument(String studyId, 
+			String consentVersion, 
+			String activityId, 
+			String activityVersion) throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		try{
@@ -116,9 +138,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get resources metadata for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return ResourcesResponse
+	 * @return {@link ResourcesResponse}
 	 * @throws OrchestrationException
 	 */
 	public ResourcesResponse resourcesForStudy(String studyId) throws OrchestrationException{
@@ -134,9 +158,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get study metadata for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return StudyResponse
+	 * @return {@link StudyInfoResponse}
 	 * @throws OrchestrationException
 	 */
 	public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException{
@@ -152,17 +178,17 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
-	 * This method is used to test the sample mail
+	 * Check mail service
 	 * 
 	 * @author Mohan
-	 * @return boolean
+	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
 	public boolean sampleMail() throws OrchestrationException{
 		LOGGER.info("INFO: StudyMetaDataOrchestration - sampleMail() :: Starts");
 		boolean flag = false;
 		try{
-			flag = Mail.sendemail("mohant@boston-technology.com","Test Mail", "Hello!");
+			flag = Mail.sendemail("apps@boston-technology.com","Test Mail", "It works!");
 		}catch(Exception e){
 			LOGGER.error("StudyMetaDataOrchestration - sampleMail() :: ERROR", e);
 		}
@@ -171,11 +197,11 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
-	 * This method is used to validate the studyId exists or not
+	 * Check study for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return boolean
+	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
 	public boolean isValidStudy(String studyId) throws OrchestrationException{
@@ -191,11 +217,13 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
-	 * This method is used to validate the activity exists or not
+	 * Check activity for the provided study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param activityId
-	 * @return boolean
+	 * @param studyId
+	 * @param activityVersion
+	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
 	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws OrchestrationException{
@@ -211,9 +239,13 @@ public class StudyMetaDataOrchestration {
 	}
 	
 	/**
+	 * Check whether activity is questionnaire for the provided study and activity identifier
+	 * 
 	 * @author Mohan
 	 * @param activityId
-	 * @return boolean
+	 * @param studyId
+	 * @param activityVersion
+	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
 	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws OrchestrationException{

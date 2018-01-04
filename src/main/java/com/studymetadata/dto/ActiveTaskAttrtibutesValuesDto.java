@@ -12,11 +12,20 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:24:23 PM
+ *
+ */
 @Entity
 @Table(name="active_task_attrtibutes_values")
 public class ActiveTaskAttrtibutesValuesDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6725947033876179386L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

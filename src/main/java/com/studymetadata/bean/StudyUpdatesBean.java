@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:15:34 PM
+ *
+ */
 public class StudyUpdatesBean {
+	
 	private Boolean consent = false;
 	private Boolean activities = false;
 	private Boolean resources = false;

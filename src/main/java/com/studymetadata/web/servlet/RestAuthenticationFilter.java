@@ -17,17 +17,24 @@ import org.apache.log4j.Logger;
 import com.studymetadata.exception.ErrorCodes;
 import com.studymetadata.util.StudyMetaDataConstants;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:51:20 PM
+ *
+ */
 public class RestAuthenticationFilter implements Filter {
 
-	public static final Logger logger = Logger.getLogger(RestAuthenticationFilter.class);
+	public static final Logger LOGGER = Logger.getLogger(RestAuthenticationFilter.class);
 	public static final String AUTHENTICATION_HEADER = "Authorization";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filter) throws IOException, ServletException {
-		logger.info("INFO: RestAuthenticationFilter - doFilter() - Starts");
+		LOGGER.info("INFO: RestAuthenticationFilter - doFilter() - Starts");
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
+			
 			if(StringUtils.isNotEmpty(authCredentials)){
 				AuthenticationService authenticationService = new AuthenticationService();
 				boolean authenticationStatus = authenticationService.authenticate(authCredentials);
@@ -42,20 +49,20 @@ public class RestAuthenticationFilter implements Filter {
 						httpServletResponse.setHeader("StatusMessage", StudyMetaDataConstants.INVALID_AUTHORIZATION);
 					}
 				}
+			}else if(StudyMetaDataConstants.INTERCEPTOR_URL_PING.equalsIgnoreCase(httpServletRequest.getPathInfo()) 
+					|| StudyMetaDataConstants.INTERCEPTOR_URL_MAIL.equalsIgnoreCase(httpServletRequest.getPathInfo()) 
+					|| StudyMetaDataConstants.INTERCEPTOR_URL_APP_VERSION.equalsIgnoreCase(httpServletRequest.getPathInfo()) 
+					|| StudyMetaDataConstants.INTERCEPTOR_URL_DB_QUERY.equalsIgnoreCase(httpServletRequest.getPathInfo())){
+				filter.doFilter(request, response);
 			}else{
-				//interceptor test url's
-				if(StudyMetaDataConstants.INTERCEPTOR_URL_PING.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_MAIL.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_APP_VERSION.equalsIgnoreCase(httpServletRequest.getPathInfo()) || StudyMetaDataConstants.INTERCEPTOR_URL_DB_QUERY.equalsIgnoreCase(httpServletRequest.getPathInfo())){
-					filter.doFilter(request, response);
-				}else{
-					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-					httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					httpServletResponse.setHeader("status", ErrorCodes.STATUS_102);
-					httpServletResponse.setHeader("title", ErrorCodes.INVALID_INPUT);
-					httpServletResponse.setHeader("StatusMessage", StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG);
-				}
+				HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+				httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				httpServletResponse.setHeader("status", ErrorCodes.STATUS_102);
+				httpServletResponse.setHeader("title", ErrorCodes.INVALID_INPUT);
+				httpServletResponse.setHeader("StatusMessage", StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG);
 			}
 		}
-		logger.info("INFO: RestAuthenticationFilter - doFilter() - Ends");
+		LOGGER.info("INFO: RestAuthenticationFilter - doFilter() - Ends");
 	}
 
 	@Override

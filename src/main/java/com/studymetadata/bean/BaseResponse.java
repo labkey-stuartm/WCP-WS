@@ -1,9 +1,16 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:07:41 PM
+ *
+ */
 public class BaseResponse {
-	private String errorMessage;
-	private String errorCode;
-	private String resultType;	
+	
+	private String errorMessage = "";
+	private String errorCode = "";
+	private String resultType = "";	
 	
 
 	public String getErrorMessage() {

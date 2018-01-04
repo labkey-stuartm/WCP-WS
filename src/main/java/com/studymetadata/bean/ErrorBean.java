@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:11:15 PM
+ *
+ */
 public class ErrorBean {
+	
 	private String status = "";
 	private String title = "";
 	private String detail = "";

@@ -1,8 +1,14 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:16:23 PM
+ *
+ */
 public class WithdrawalConfigBean{
 	
-	private String type = ""; //delete_data/ask_user/no_action
+	private String type = "";
 	private String message = "";
 	
 	public String getType() {

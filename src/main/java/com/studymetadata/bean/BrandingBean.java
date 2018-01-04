@@ -1,10 +1,17 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:07:49 PM
+ *
+ */
 public class BrandingBean {
+	
 	private String titleFont = "";
-	private String bgColor = ""; //hex code
-	private String tintColor = ""; //hex code
-	private String logo = ""; //image link
+	private String bgColor = "";
+	private String tintColor = "";
+	private String logo = "";
 	
 	public String getTitleFont() {
 		return titleFont;

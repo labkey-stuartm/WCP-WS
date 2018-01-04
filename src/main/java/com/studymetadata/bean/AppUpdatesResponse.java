@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:07:33 PM
+ *
+ */
 public class AppUpdatesResponse {
+	
 	private String message = "";
 	private Boolean forceUpdate = false;
 	private String currentVersion = "";

@@ -3,9 +3,21 @@ package com.studymetadata.exception;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:33:38 PM
+ *
+ */
 public abstract class CommonException extends Exception {
+	
 	private String errorCode;
 
+	/**
+	 * 
+	 * @param pErrorCode
+	 * @param arg1
+	 */
 	public CommonException(String pErrorCode, Throwable arg1) {
 		super(pErrorCode, arg1);
 		errorCode = pErrorCode;

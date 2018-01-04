@@ -15,16 +15,23 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:28:53 PM
  *
  */
 @Entity
 @Table(name="instructions")
 @NamedQueries(value = { 
-	@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
+	
+		@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO"
+				+ " where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
 })
 public class InstructionsDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8485388252282207892L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

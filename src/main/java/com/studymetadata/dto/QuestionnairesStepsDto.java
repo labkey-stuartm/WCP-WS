@@ -13,13 +13,18 @@ import javax.persistence.Transient;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:30:05 PM
  *
  */
 @Entity
 @Table(name="questionnaires_steps")
 public class QuestionnairesStepsDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6626878023643784669L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

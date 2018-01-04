@@ -9,12 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:30:24 PM
+ *
+ */
 @Entity
 @Table(name="question_responsetype_master_info")
 public class QuestionResponsetypeMasterInfoDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 721954555522068688L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")

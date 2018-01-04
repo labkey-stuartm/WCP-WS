@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:04:55 PM
+ *
+ */
 public class ActivitiesBean {
+	
 	private String activityId = "";
 	private String activityVersion = "";
 	private String title = "";
@@ -11,7 +18,6 @@ public class ActivitiesBean {
 	private String lastModified = "";
 	private String state = "";
 	private String taskSubType = "";
-	
 	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 	
 	public String getActivityId() {

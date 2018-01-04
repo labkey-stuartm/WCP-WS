@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:12:13 PM
+ *
+ */
 public class NotificationsBean {
+	
 	private String notificationId = "";
 	private String type = "";
 	private String subtype = "";

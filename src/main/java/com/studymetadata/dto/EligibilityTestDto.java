@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:27:50 PM
  *
  */
 @Entity
 @Table(name = "eligibility_test")
 public class EligibilityTestDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6692773747185719256L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

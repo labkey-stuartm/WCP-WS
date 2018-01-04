@@ -3,11 +3,13 @@ package com.studymetadata.bean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:09:56 PM
  *
  */
 public class ConsentDocumentBean {
+	
 	private String version = "";
-	private String type = ""; //text/html
+	private String type = "";
 	private String content = "";
 	
 	public String getVersion() {

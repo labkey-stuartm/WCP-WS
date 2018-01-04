@@ -13,13 +13,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:26:11 PM
  *
  */
 @Entity
 @Table(name="charts")
 public class ChartsDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2394186946423804987L;
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

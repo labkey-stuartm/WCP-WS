@@ -40,6 +40,12 @@ import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:23:41 PM
+ *
+ */
 public class DashboardMetaDataDao {
 	
 	private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataDao.class);
@@ -54,7 +60,7 @@ public class DashboardMetaDataDao {
 	Query query = null;
 	
 	/**
-	 * Fetch dashBoard info for a study
+	 * Get dashboard metadata for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -104,7 +110,7 @@ public class DashboardMetaDataDao {
 				if( activeTaskList != null && !activeTaskList.isEmpty()){
 					for(ActiveTaskDto activeTask : activeTaskList){
 						boolean addToDashboardFlag = false;
-						activeTask = getTimeDetailsByActivityIdForActiveTask(activeTask, session);
+						activeTask = this.getTimeDetailsByActivityIdForActiveTask(activeTask, session);
 						if(activeTask.getActive()!=null && activeTask.getActive()==1){
 							addToDashboardFlag = true;
 						}else{
@@ -130,7 +136,7 @@ public class DashboardMetaDataDao {
 				if(questionnaireList != null && !questionnaireList.isEmpty()){
 					for(QuestionnairesDto questionnaireDto :questionnaireList){
 						boolean addToDashboardFlag = false;
-						questionnaireDto = getTimeDetailsByActivityIdForQuestionnaire(questionnaireDto, session);
+						questionnaireDto = this.getTimeDetailsByActivityIdForQuestionnaire(questionnaireDto, session);
 						if(questionnaireDto.getActive()){
 							addToDashboardFlag = true;
 						}else{
@@ -221,12 +227,12 @@ public class DashboardMetaDataDao {
 								activeTaskAttrDto.setActivityVersion(activeTaskDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:activeTaskDto.getVersion().toString());
 								activeTaskAttrDto.setActivityId(activeTaskDto.getShortTitle());
 								if(activeTaskAttrDto.isAddToLineChart()){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
+									chartsList = this.getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
 											chartsList, activeTaskDto.getShortTitle(), taskTypeId, activeTaskMasterAttrIdNameMap);
 								}
 								
 								if(activeTaskAttrDto.isUseForStatistic()){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
+									statisticsList = this.getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK, activeTaskAttrDto, null, 
 											statisticsList,  formulaDtoList, statisticImageList, taskTypeId, activeTaskMasterAttrIdNameMap);
 								}
 							}
@@ -251,12 +257,12 @@ public class DashboardMetaDataDao {
 								questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 								questionDto.setActivityId(questionnaireDto.getShortTitle());
 								if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+									chartsList = this.getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
 											questionDto, chartsList, questionnaireSteps.getStepShortTitle(), 0, null);
 								}
 								
 								if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-									statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+									statisticsList = this.getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
 											questionDto, statisticsList, formulaDtoList, statisticImageList, 0, null);
 								}
 							}
@@ -300,12 +306,12 @@ public class DashboardMetaDataDao {
 													questionDto.setActivityVersion(questionnaireDto.getVersion()==null?StudyMetaDataConstants.STUDY_DEFAULT_VERSION:questionnaireDto.getVersion().toString());
 													questionDto.setActivityId(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE+"-"+questionnaireDto.getId());
 													if(questionDto.getAddLineChart().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														chartsList = getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+														chartsList = this.getChartDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
 																questionDto, chartsList, questionDto.getShortTitle(), 0, null);
 													}
 													
 													if(questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)){
-														statisticsList = getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
+														statisticsList = this.getStatisticsDetails(StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE, null, 
 																questionDto, statisticsList, formulaDtoList, statisticImageList, 0, null);
 													}
 												}
@@ -335,16 +341,17 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to get the chart details based on the activity type
+	 * Get the Chart Format Details based on the Activity Type
 	 * 
 	 * @author Mohan
 	 * @param activityType
 	 * @param activeTask
-	 * @param questionnaire
-	 * @param activityMap
-	 * @param questionnaireMap
+	 * @param question
 	 * @param chartsList
-	 * @return List<ChartsBean>
+	 * @param chartTitle
+	 * @param taskTypeId
+	 * @param activeTaskMasterAttrIdNameMap
+	 * @return {@link List<ChartsBean>}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("rawtypes")
@@ -376,7 +383,7 @@ public class DashboardMetaDataDao {
 				activity.setVersion(activeTask.getActivityVersion());
 				dataSource.setActivity(activity);
 				
-				dataSource.setTimeRangeType(StringUtils.isEmpty(activeTask.getTimeRangeChart())?"":getTimeRangeType(activeTask.getTimeRangeChart()));
+				dataSource.setTimeRangeType(StringUtils.isEmpty(activeTask.getTimeRangeChart())?"":this.getTimeRangeType(activeTask.getTimeRangeChart()));
 				dataSource.setStartTime("");
 				dataSource.setEndTime("");
 				
@@ -396,7 +403,7 @@ public class DashboardMetaDataDao {
 				activity.setVersion(question.getActivityVersion());
 				dataSource.setActivity(activity);
 				
-				dataSource.setTimeRangeType(StringUtils.isEmpty(question.getLineChartTimeRange())?"":getTimeRangeType(question.getLineChartTimeRange()));
+				dataSource.setTimeRangeType(StringUtils.isEmpty(question.getLineChartTimeRange())?"":this.getTimeRangeType(question.getLineChartTimeRange()));
 				dataSource.setStartTime("");
 				dataSource.setEndTime("");
 				
@@ -412,16 +419,18 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to get the statistics details based on the activity type
+	 * Get the Statistics Format Details based on the Activity Type
 	 * 
 	 * @author Mohan
 	 * @param activityType
 	 * @param activeTask
-	 * @param questionnaire
-	 * @param activityMap
-	 * @param questionnaireMap
-	 * @param chartsList
-	 * @return List<ChartsBean>
+	 * @param question
+	 * @param statisticsList
+	 * @param formulaDtoList
+	 * @param statisticImageList
+	 * @param taskTypeId
+	 * @param activeTaskMasterAttrIdNameMap
+	 * @return
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("rawtypes")
@@ -436,9 +445,9 @@ public class DashboardMetaDataDao {
 			if(activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)){
 				statistics.setTitle(StringUtils.isEmpty(activeTask.getIdentifierNameStat())?"":activeTask.getIdentifierNameStat());
 				statistics.setDisplayName(StringUtils.isEmpty(activeTask.getDisplayNameStat())?"":activeTask.getDisplayNameStat());
-				statistics.setStatType(StringUtils.isEmpty(activeTask.getUploadTypeStat())?"":getStatisticsType(Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
+				statistics.setStatType(StringUtils.isEmpty(activeTask.getUploadTypeStat())?"":this.getStatisticsType(Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
 				statistics.setUnit(StringUtils.isEmpty(activeTask.getDisplayUnitStat())?"":activeTask.getDisplayUnitStat());
-				statistics.setCalculation(StringUtils.isEmpty(activeTask.getFormulaAppliedStat())?"":getFormulaType(Integer.parseInt(activeTask.getFormulaAppliedStat()), formulaDtoList));
+				statistics.setCalculation(StringUtils.isEmpty(activeTask.getFormulaAppliedStat())?"":this.getFormulaType(Integer.parseInt(activeTask.getFormulaAppliedStat()), formulaDtoList));
 				
 				activity.setActivityId(activeTask.getActivityId());
 				activity.setVersion(activeTask.getActivityVersion());
@@ -455,9 +464,9 @@ public class DashboardMetaDataDao {
 			}else{
 				statistics.setTitle(StringUtils.isEmpty(question.getStatShortName())?"":question.getStatShortName());
 				statistics.setDisplayName(StringUtils.isEmpty(question.getStatDisplayName())?"":question.getStatDisplayName());
-				statistics.setStatType(question.getStatType()==null?"":getStatisticsType(question.getStatType(), statisticImageList));
+				statistics.setStatType(question.getStatType()==null?"":this.getStatisticsType(question.getStatType(), statisticImageList));
 				statistics.setUnit(StringUtils.isEmpty(question.getStatDisplayUnits())?"":question.getStatDisplayUnits());
-				statistics.setCalculation(question.getStatFormula()==null?"":getFormulaType(question.getStatFormula(), formulaDtoList));
+				statistics.setCalculation(question.getStatFormula()==null?"":this.getFormulaType(question.getStatFormula(), formulaDtoList));
 				
 				dataSource.setType(question.getActivityType());
 				dataSource.setKey(question.getActivityStepKey());
@@ -477,9 +486,11 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
+	 * Get the Time Range Type for Chart
+	 * 
 	 * @author Mohan
 	 * @param timeRange
-	 * @return String
+	 * @return {@link String}
 	 * @throws DAOException
 	 */
 	public String getTimeRangeType(String timeRange) throws DAOException{
@@ -516,12 +527,12 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to get the statistics value by statId
+	 * Get the Statistics Image Name based on the imageId
 	 * 
 	 * @author Mohan
 	 * @param statisticTypeId
 	 * @param statisticImageList
-	 * @return String
+	 * @return {@link String}
 	 * @throws DAOException
 	 */
 	public String getStatisticsType(Integer statisticTypeId,List<StatisticImageListDto> statisticImageList) throws DAOException{
@@ -544,12 +555,12 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to get the fomula value by formulaId
+	 * Get the Fomula Type based on the formulaId
 	 * 
 	 * @author Mohan
 	 * @param formulaTypeId
 	 * @param formulaDtoList
-	 * @return String
+	 * @return {@link String}
 	 * @throws DAOException
 	 */
 	public String getFormulaType(Integer formulaTypeId,List<ActiveTaskFormulaDto> formulaDtoList) throws DAOException{
@@ -572,12 +583,12 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to get the start and end date time of active task
+	 * Get the Start and End Date Time for the Active Task
 	 * 
 	 * @author Mohan
 	 * @param activeTaskDto
 	 * @param session
-	 * @return ActiveTaskDto
+	 * @return {@link ActiveTaskDto}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -657,12 +668,12 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to get the start and end date time of questionnaire
+	 * Get the Start and End Date Time for the Questionnaire
 	 * 
 	 * @author Mohan
 	 * @param questionaire
 	 * @param session
-	 * @return QuestionnairesDto
+	 * @return {@link QuestionnairesDto}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -740,12 +751,11 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * This method is used to fetch the chart configuration details for single line chart
+	 * Chart configuration details for single line chart
 	 * 
 	 * @author Mohan
-	 * @return Map<String, Object>
-	 * @throws Exception
-	 * 
+	 * @return {@link Map<String, Object>}
+	 * @throws DAOException
 	 */
 	public Map<String, Object> singleLineChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - singleLineChartDetails() :: Starts");
@@ -785,12 +795,11 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to fetch the chart configuration details for multiple line chart
+	 * Chart configuration details for multiple line chart
 	 * 
 	 * @author Mohan
-	 * @return Map<String, Object>
-	 * @throws Exception
-	 * 
+	 * @return {@link Map<String, Object>}
+	 * @throws DAOException
 	 */
 	public Map<String, Object> multipleLineChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleLineChartDetails() :: Starts");
@@ -830,12 +839,11 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to fetch the chart configuration details for unique pie chart
+	 * Chart configuration details for unique pie chart
 	 * 
 	 * @author Mohan
-	 * @return Object
+	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
-	 * 
 	 */
 	public Map<String, Object> uniquePieChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - uniquePieChartDetails() :: Starts");
@@ -860,12 +868,11 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to fetch the chart configuration details for range pie chart
+	 * Chart configuration details for range pie chart
 	 * 
 	 * @author Mohan
-	 * @return Object
+	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
-	 * 
 	 */
 	public Map<String, Object> rangePieChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - rangePieChartDetails() :: Starts");
@@ -890,12 +897,11 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to fetch the chart configuration details for single bar chart
+	 * Chart configuration details for single bar chart
 	 * 
 	 * @author Mohan
-	 * @return Object
+	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
-	 * 
 	 */
 	public Map<String, Object> singleBarChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - singleBarChartDetails() :: Starts");
@@ -923,12 +929,11 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * This method is used to fetch the chart configuration details for multiple bar chart
+	 * Chart configuration details for multiple bar chart
 	 * 
 	 * @author Mohan
-	 * @return Object
+	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
-	 * 
 	 */
 	public Map<String, Object> multipleBarChartDetails() throws DAOException{
 		LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Starts");
@@ -956,7 +961,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the dataSourceName by masterId
+	 * Get the Data Source Name
 	 * 
 	 * @author Mohan
 	 * @param masterId

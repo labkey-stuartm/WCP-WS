@@ -1,10 +1,17 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:08:12 PM
+ *
+ */
 public class ChartDataSourceBean {
+	
 	private String type = "";
 	private String key = "";
 	private DashboardActivityBean activity = new DashboardActivityBean();
-	private String timeRangeType = ""; // days_of_week (or) days_of_month (or) weeks_of_month (or) months_of_year (or) runs
+	private String timeRangeType = "";
 	private String startTime = "";
 	private String endTime = "";
 	

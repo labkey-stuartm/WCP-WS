@@ -2,7 +2,14 @@ package com.studymetadata.bean;
 
 import com.studymetadata.util.StudyMetaDataConstants;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:04:23 PM
+ *
+ */
 public class ActiveTaskActivityMetaDataResponse {
+	
 	private String message = StudyMetaDataConstants.FAILURE;
 	private ActiveTaskActivityStructureBean activity = new ActiveTaskActivityStructureBean();
 	

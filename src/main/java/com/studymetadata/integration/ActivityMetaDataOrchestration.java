@@ -10,6 +10,12 @@ import com.studymetadata.dao.ActivityMetaDataDao;
 import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:36:39 PM
+ *
+ */
 public class ActivityMetaDataOrchestration {
 
 	private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataOrchestration.class);
@@ -20,10 +26,12 @@ public class ActivityMetaDataOrchestration {
 	ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
 	
 	/**
+	 * Get all the activities for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param authorization
-	 * @return ActivityResponse
+	 * @return {@link ActivityResponse}
 	 * @throws OrchestrationException
 	 */
 	public ActivityResponse studyActivityList(String studyId, String authorization) throws OrchestrationException{
@@ -39,11 +47,13 @@ public class ActivityMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get the active task metadata for the provided activity version, study and activity identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param activityId
 	 * @param activityVersion
-	 * @return ActiveTaskActivityMetaDataResponse
+	 * @return {@link ActiveTaskActivityMetaDataResponse}
 	 * @throws OrchestrationException
 	 */
 	public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
@@ -59,14 +69,18 @@ public class ActivityMetaDataOrchestration {
 	}
 	
 	/**
+	 * Get the questionnaire metadata for the provided activity version, study and activity identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param activityId
 	 * @param activityVersion
-	 * @return QuestionnaireActivityMetaDataResponse
+	 * @return {@link QuestionnaireActivityMetaDataResponse}
 	 * @throws OrchestrationException
 	 */
-	public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(String studyId, String activityId, String activityVersion) throws OrchestrationException{
+	public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(String studyId, 
+			String activityId, 
+			String activityVersion) throws OrchestrationException{
 		LOGGER.info("INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Starts");
 		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		try{

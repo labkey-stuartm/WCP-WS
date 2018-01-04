@@ -62,6 +62,12 @@ import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.WithdrawalConfigBean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:23:46 PM
+ *
+ */
 public class StudyMetaDataDao {
 
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
@@ -77,9 +83,11 @@ public class StudyMetaDataDao {
 	String queryString = "";
 
 	/**
+	 * Check Authorization for the provided authorization identifier
+	 * 
 	 * @author Mohan
 	 * @param authorization
-	 * @return hasValidAuthorization
+	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
 	public boolean isValidAuthorizationId(String authorization) throws DAOException{
@@ -103,8 +111,11 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get Gateway info and Gateway resources data
+	 * 
 	 * @author Mohan
-	 * @return GatewayInfoResponse
+	 * @param authorization
+	 * @return {@link GatewayInfoResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -188,8 +199,11 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get all the configured studies from the WCP
+	 * 
 	 * @author Mohan
-	 * @return StudyResponse
+	 * @param authorization
+	 * @return {@link StudyResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -299,6 +313,8 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get eligibility and consent info for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @return EligibilityConsentResponse
@@ -589,16 +605,21 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get consent document by passing the consent version or
+	 * the activity id and activity version for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param consentVersion
 	 * @param activityId
 	 * @param activityVersion
-	 * @return ConsentDocumentResponse
+	 * @return {@link ConsentDocumentResponse}
 	 * @throws DAOException
 	 */
-	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId, String activityVersion) throws DAOException{
+	public ConsentDocumentResponse consentDocument(String studyId, 
+			String consentVersion, 
+			String activityId, 
+			String activityVersion) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
 		Session session = null;
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
@@ -677,9 +698,11 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get resources metadata for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return ResourcesResponse
+	 * @return {@link ResourcesResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -756,9 +779,11 @@ public class StudyMetaDataDao {
 	}
 
 	/**
+	 * Get study metadata for the provided study identifier
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return StudyResponse
+	 * @return {@link StudyInfoResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -986,9 +1011,11 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
+	 * Check the StudyId is valid or not
+	 * 
 	 * @author Mohan
 	 * @param studyId
-	 * @return boolean
+	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
 	public boolean isValidStudy(String studyId) throws DAOException{
@@ -1016,9 +1043,13 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
+	 * Check the ActivityId is valid or not i.e. Active Task, Questionnaire
+	 * 
 	 * @author Mohan
 	 * @param activityId
-	 * @return boolean
+	 * @param studyId
+	 * @param activityVersion
+	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
 	public boolean isValidActivity(String activityId, String studyId, String activityVersion) throws DAOException{
@@ -1058,9 +1089,13 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
+	 * Get the Activity Type based on the ActivityId, StudyId & ActivityVersion
+	 * 
 	 * @author Mohan
 	 * @param activityId
-	 * @return boolean
+	 * @param studyId
+	 * @param activityVersion
+	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
 	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion) throws DAOException{
@@ -1091,9 +1126,12 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
+	 * Get the Consent Document Display Title
+	 * 
 	 * @author Mohan
 	 * @param displaytitle
-	 * @return consentTitle
+	 * @return {@link String}
+	 * @throws DAOException
 	 */
 	public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException{
 		LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");

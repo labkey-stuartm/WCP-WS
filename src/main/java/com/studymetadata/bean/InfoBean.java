@@ -1,8 +1,15 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:12:05 PM
+ *
+ */
 public class InfoBean {
-	private String type = ""; //text/video
-	private String image = ""; //link
+	
+	private String type = "";
+	private String image = "";
 	private String title = "";
 	private String text = "";
 	private String videoLink = "";

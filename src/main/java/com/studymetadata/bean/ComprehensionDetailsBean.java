@@ -3,7 +3,14 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:09:33 PM
+ *
+ */
 public class ComprehensionDetailsBean {
+	
 	private Integer passScore = 0;
 	private List<QuestionnaireActivityStepsBean> questions = new ArrayList<>();
 	private List<CorrectAnswersBean> correctAnswers = new ArrayList<>();

@@ -3,9 +3,11 @@ package com.studymetadata.bean.appendix;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:22:09 PM
  *
  */
 public class ResourceContextStructureBean {
+	
 	private String dueDate="";
 
 	public String getDueDate() {

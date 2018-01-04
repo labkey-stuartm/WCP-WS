@@ -6,9 +6,11 @@ import java.util.List;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:05:06 PM
  *
  */
 public class ActivityFrequencyBean {
+	
 	private String type = "";
 	private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
 	

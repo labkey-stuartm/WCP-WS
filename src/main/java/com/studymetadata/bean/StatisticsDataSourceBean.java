@@ -1,6 +1,13 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:14:44 PM
+ *
+ */
 public class StatisticsDataSourceBean {
+	
 	private String type = "";
 	private String key = "";
 	private DashboardActivityBean activity = new DashboardActivityBean();

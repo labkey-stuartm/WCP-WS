@@ -3,7 +3,14 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:09:50 PM
+ *
+ */
 public class ConsentDetailsBean {
+	
 	private String version = "";
 	private List<ConsentBean> visualScreens = new ArrayList<>();
 	private ComprehensionDetailsBean comprehension = new ComprehensionDetailsBean();

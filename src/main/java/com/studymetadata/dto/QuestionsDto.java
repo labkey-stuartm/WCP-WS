@@ -18,16 +18,23 @@ import com.studymetadata.util.StudyMetaDataConstants;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:30:29 PM
  *
  */
 @Entity
 @Table(name="questions")
 @NamedQueries(value = { 
-	@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO where QDTO.status=true and QDTO.id IN (:questionIdList)"),
+	
+		@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO"
+				+ " where QDTO.status=true and QDTO.id IN (:questionIdList)"),
 })
 public class QuestionsDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3036839955038582674L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -115,7 +122,6 @@ public class QuestionsDto implements Serializable{
 	@Transient
 	private String activityStepKey;
 	
-	/*phase_1B attributes*/
 	@Column(name="allow_healthkit")
 	private String allowHealthKit=StudyMetaDataConstants.NO;
 	

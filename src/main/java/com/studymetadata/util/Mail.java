@@ -14,14 +14,31 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:38:32 PM
+ *
+ */
 public class Mail  {
-	private static Logger logger = Logger.getLogger(Mail.class.getName());
+	
+	private static final Logger LOGGER = Logger.getLogger(Mail.class.getName());
 	
 	@SuppressWarnings("unchecked")
 	static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
 	
+	/**
+	 * Send email for the provided recipient, subject and content
+	 * 
+	 * @author Mohan
+	 * @param email
+	 * @param subject
+	 * @param messageBody
+	 * @return {@link Boolean}
+	 * @throws Exception
+	 */
 	public static boolean sendemail(String email, String subject, String messageBody) throws Exception{
-		logger.debug("sendemail()====start");
+		LOGGER.debug("sendemail()====start");
 		boolean sentMail = false;
 		try {
 			Properties props = new Properties();
@@ -30,7 +47,6 @@ public class Mail  {
 			props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
 			
 			if(propMap.get("fda.env") != null && propMap.get("fda.env").equalsIgnoreCase("local")){
-				//local mail config
 				props.put("mail.smtp.auth", "true");
 				props.put("mail.smtp.starttls.enable", "true");
 				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -42,7 +58,6 @@ public class Mail  {
 							}
 				});
 			}else{
-				//labkey mail config
 				props.put("mail.smtp.auth", "false");
 				session = Session.getInstance(props);
 			}
@@ -55,12 +70,12 @@ public class Mail  {
 			Transport.send(message);
 			sentMail = true;
 		} catch (MessagingException e) {
-			logger.error("ERROR:  sendemail() - "+e+" : ");
+			LOGGER.error("ERROR:  sendemail() - "+e+" : ");
 			sentMail = false;
 		} catch (Exception e) {
-			logger.error("ERROR:  sendemail() - "+e+" : ");
+			LOGGER.error("ERROR:  sendemail() - "+e+" : ");
 		}
-		logger.info("Mail.sendemail() :: Ends");
+		LOGGER.info("Mail.sendemail() :: Ends");
 		return sentMail;
 	}
 }

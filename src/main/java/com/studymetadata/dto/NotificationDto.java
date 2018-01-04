@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:29:34 PM
  *
  */
 @Entity
 @Table(name="notification")
 public class NotificationDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3191684940344338282L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

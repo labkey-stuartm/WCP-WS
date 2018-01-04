@@ -1,5 +1,11 @@
 package com.studymetadata.exception;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:36:01 PM
+ *
+ */
 public interface ErrorCodes {
 
 	String DAO_FACTORY_INIT_EXP = "DAO100";

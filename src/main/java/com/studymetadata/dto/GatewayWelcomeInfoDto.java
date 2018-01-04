@@ -15,16 +15,22 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:28:36 PM
  *
  */
 @Entity
 @Table(name="gateway_welcome_info")
 @NamedQueries({
-	@NamedQuery(name="getGatewayWelcomeInfoList", query=" from GatewayWelcomeInfoDto GWWID "),
+	
+	@NamedQuery(name="getGatewayWelcomeInfoList", query="from GatewayWelcomeInfoDto GWWID "),
 })
 public class GatewayWelcomeInfoDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5468183451984469709L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

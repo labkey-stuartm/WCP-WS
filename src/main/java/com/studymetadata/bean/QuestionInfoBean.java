@@ -3,12 +3,14 @@ package com.studymetadata.bean;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:12:25 PM
  *
  */
 public class QuestionInfoBean {
+	
 	private String activityId = "";
 	private String activityVersion = "";
-	private String key = ""; //question key
+	private String key = "";
 	
 	public String getActivityId() {
 		return activityId;

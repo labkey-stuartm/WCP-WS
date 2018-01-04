@@ -1,5 +1,11 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:40 PM
+ *
+ */
 public class DestinationBean {
 	
 	private String condition = "";

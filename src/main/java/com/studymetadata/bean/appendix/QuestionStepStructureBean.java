@@ -6,9 +6,11 @@ import java.util.Map;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:21:54 PM
  *
  */
 public class QuestionStepStructureBean {
+	
 	private String title="";
 	private String key="";
 	private String type="";
@@ -17,8 +19,8 @@ public class QuestionStepStructureBean {
 	private boolean skippable=false;
 	private String groupName="";
 	private String phi="";
-	private Map<String, Object> destinations = new HashMap<>(); //Dictionary; nil if branching is false
-	private FormatStructureBean format= new FormatStructureBean(); //Dictionary; specific to each question type, nil in case of no formatting or	validation required
+	private Map<String, Object> destinations = new HashMap<>();
+	private FormatStructureBean format= new FormatStructureBean();
 	
 	public String getTitle() {
 		return title;

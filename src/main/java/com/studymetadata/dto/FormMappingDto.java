@@ -12,13 +12,18 @@ import javax.persistence.Table;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:28:12 PM
  *
  */
 @Entity
 @Table(name="form_mapping")
 public class FormMappingDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4348587952657053397L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

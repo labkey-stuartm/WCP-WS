@@ -15,8 +15,15 @@ import com.studymetadata.util.Mail;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:36:47 PM
+ *
+ */
 public class AppMetaDataOrchestration {
-private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.class);
+	
+	private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.class);
 	
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -24,9 +31,10 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	AppMetaDataDao appMetaDataDao = new AppMetaDataDao();
 	
 	/**
+	 * Get terms and policy for the app
+	 * 
 	 * @author Mohan
-	 * @param studyId
-	 * @return TermsPolicyResponse
+	 * @return {@link TermsPolicyResponse}
 	 * @throws OrchestrationException
 	 */
 	public TermsPolicyResponse termsPolicy() throws OrchestrationException{
@@ -42,9 +50,12 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	}
 	
 	/**
+	 * Fetch available notifications
+	 * 
 	 * @author Mohan
 	 * @param skip
-	 * @return NotificationsResponse
+	 * @param authorization
+	 * @return {@link NotificationsResponse}
 	 * @throws OrchestrationException
 	 */
 	public NotificationsResponse notifications(String skip, String authorization) throws OrchestrationException{
@@ -60,10 +71,12 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	}
 	
 	/**
+	 * Notify admin's about the feedback
+	 * 
 	 * @author Mohan
 	 * @param subject
 	 * @param body
-	 * @return AppResponse
+	 * @return {@link AppResponse}
 	 * @throws OrchestrationException
 	 */
 	public AppResponse feedback(String subject, String body) throws OrchestrationException{
@@ -95,12 +108,14 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	
 	
 	/**
+	 * Notify admin's about the user contact information
+	 * 
 	 * @author Mohan
 	 * @param subject
 	 * @param body
 	 * @param firstName
 	 * @param email
-	 * @return AppResponse
+	 * @return {@link AppResponse}
 	 * @throws OrchestrationException
 	 */
 	public AppResponse contactUsDetails(String subject, String body, String firstName, String email) throws OrchestrationException{
@@ -110,23 +125,24 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 		try{
 			String contactUsSubject = "My Studies App HelpDesk: '"+subject+"'";
 			String contactUsContent = "<div>"
-									 +"<div><span>Hi</span></div><br>"
-									 +"<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk. Below are the contact form details:</span></div>"
-									 +"<div>"
-									 +"<div>___________________________________________</div>"
-									 +"<div style='padding-top:20px;'>First Name: "+firstName+"</div>"
-									 +"<div style='padding-top:10px;'>Email: <a href='mailto:"+email+"'>"+email+"</a></div>"
-									 +"<div style='padding-top:10px;'>Subject: "+subject+"</div>"
-									 +"<div style='padding-top:10px;padding-bottom:10px'>Message: "+body+"</div>"
-									 +"</div>"
-									 +"<div>___________________________________________</div><br>"
-									 +"<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
-									 +"<div>"
-									 +"<span>Thanks,</span><br><span>"+propMap.get("fda.smd.email.title")+"</span><br>"
-									 +"<span>---------------------------------------------------------</span><br>"
-									 +"<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
-									 +"</div>"
-									 +"</div>";
+									 + "<div><span>Hi</span></div><br>"
+									 + "<div style='padding-bottom:10px;'><span>A user of the FDA My Studies mobile app has reached out to the Helpdesk."
+									 + " Below are the contact form details:</span></div>"
+									 + "<div>"
+									 + "<div>___________________________________________</div>"
+									 + "<div style='padding-top:20px;'>First Name: "+firstName+"</div>"
+									 + "<div style='padding-top:10px;'>Email: <a href='mailto:"+email+"'>"+email+"</a></div>"
+									 + "<div style='padding-top:10px;'>Subject: "+subject+"</div>"
+									 + "<div style='padding-top:10px;padding-bottom:10px'>Message: "+body+"</div>"
+									 + "</div>"
+									 + "<div>___________________________________________</div><br>"
+									 + "<div style='padding-top:10px;'><span>Please respond to the app user at the email he/she has provided.</span></div><br>"
+									 + "<div>"
+									 + "<span>Thanks,</span><br><span>"+propMap.get("fda.smd.email.title")+"</span><br>"
+									 + "<span>---------------------------------------------------------</span><br>"
+									 + "<span style='font-size:9px;'>PS - This is an auto-generated email. Please do not reply.</span>"
+									 + "</div>"
+									 + "</div>";
 			flag = Mail.sendemail(propMap.get("fda.smd.contactus"), contactUsSubject, contactUsContent);
 			
 			if(flag){
@@ -140,10 +156,12 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	}
 	
 	/**
+	 * Check for app updates
+	 * 
 	 * @author Mohan
 	 * @param appVersion
-	 * @param os
-	 * @return AppUpdatesResponse
+	 * @param app
+	 * @return {@link AppUpdatesResponse}
 	 * @throws OrchestrationException
 	 */
 	public AppUpdatesResponse appUpdates(String appVersion, String app) throws OrchestrationException{
@@ -159,10 +177,12 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	}
 	
 	/**
+	 * Check for study updates
+	 * 
 	 * @author Mohan
 	 * @param studyId
 	 * @param studyVersion
-	 * @return StudyUpdatesResponse
+	 * @return {@link StudyUpdatesResponse}
 	 * @throws OrchestrationException
 	 */
 	public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion) throws OrchestrationException{
@@ -178,14 +198,24 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	}
 	
 	/**
+	 * Update app version
+	 * 
 	 * @author Mohan
 	 * @param forceUpdate
 	 * @param osType
 	 * @param appVersion
-	 * @return String
+	 * @param bundleId
+	 * @param customStudyId
+	 * @param message
+	 * @return {@link String}
 	 * @throws OrchestrationException
 	 */
-	public String updateAppVersionDetails(String forceUpdate, String osType, String appVersion, String bundleId, String customStudyId, String message) throws OrchestrationException{
+	public String updateAppVersionDetails(String forceUpdate, 
+			String osType, 
+			String appVersion, 
+			String bundleId, 
+			String customStudyId, 
+			String message) throws OrchestrationException{
 		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try{
@@ -199,20 +229,22 @@ private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.c
 	
 	
 	/**
+	 * Update input Query
+	 * 
 	 * @author Mohan
 	 * @param dbQuery
-	 * @return String
+	 * @return {@link String}
 	 * @throws OrchestrationException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws OrchestrationException{
-		//LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
+		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
 		String message = "OOPS! Something went wrong.";
 		try{
 			message = appMetaDataDao.interceptorDataBaseQuery(dbQuery);
 		}catch(Exception e){
-			//LOGGER.error("AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR", e);
+			LOGGER.error("AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR", e);
 		}
-		//LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
+		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
 		return message;
 	}
 }

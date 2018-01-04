@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:52 PM
+ *
+ */
 public class EligibilityBean {
-	/*/eligibilityConsent*/
+	
 	private String type = "";
 	private String tokenTitle = "";
-	private List<QuestionnaireActivityStepsBean> test = new ArrayList<>(); //<refer Appendix 3 for question structures>
+	private List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
 	private List<HashMap<String,Object>> correctAnswers = new ArrayList<>();
 	
 	public String getType() {

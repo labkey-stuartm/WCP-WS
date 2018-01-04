@@ -2,7 +2,14 @@ package com.studymetadata.bean;
 
 import com.studymetadata.util.StudyMetaDataConstants;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:07:24 PM
+ *
+ */
 public class AppResponse {
+	
 	String message = StudyMetaDataConstants.FAILURE;
 
 	public String getMessage() {

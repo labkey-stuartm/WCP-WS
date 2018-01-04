@@ -9,11 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:27:16 PM
+ *
+ */
 @Entity
 @Table(name="consent_master_info")
 public class ConsentMasterInfoDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2129559400846294042L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

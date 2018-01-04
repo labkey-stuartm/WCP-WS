@@ -3,7 +3,14 @@ package com.studymetadata.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:04:40 PM
+ *
+ */
 public class ActiveTaskActivityStructureBean {
+	
 	private String type = "";
 	private ActivityMetadataBean metadata = new ActivityMetadataBean();
 	private List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();

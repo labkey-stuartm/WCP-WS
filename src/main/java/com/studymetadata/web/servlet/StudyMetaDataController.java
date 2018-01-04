@@ -13,7 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:54:12 PM
+ *
+ */
 public class StudyMetaDataController extends HttpServlet {
+	
 	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataController.class);
 	private static final long serialVersionUID = 1L;
 	private String port = "";

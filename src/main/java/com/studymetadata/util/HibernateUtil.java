@@ -7,28 +7,37 @@ import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:37:36 PM
+ *
+ */
 public class HibernateUtil {
-	
+
 	private static Logger logger = Logger.getLogger(HibernateUtil.class);
-	
-	//private static Object obj = new Object();
+
 	private static SessionFactory sessionFactory = null;
 
+	/**
+	 * 
+	 */
 	private HibernateUtil() {
 		super();
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public static SessionFactory getSessionFactory() {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
-			/*synchronized (obj) {*/
-				//get the DB Config details from external property file
-				if(sessionFactory==null){
-					Properties properties = new Properties();
-					properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
-					sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
-				}
-			/*}*/
+			if(sessionFactory==null){
+				Properties properties = new Properties();
+				properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
+				sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
+			}
 		} catch (Exception e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
 		}
@@ -36,6 +45,10 @@ public class HibernateUtil {
 		return sessionFactory;
 	}
 
+	/**
+	 * 
+	 * @param sessionFactory
+	 */
 	public static void setSessionFactory(SessionFactory sessionFactory) {
 		HibernateUtil.sessionFactory = sessionFactory;
 	}

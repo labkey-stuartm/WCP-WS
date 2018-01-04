@@ -6,12 +6,14 @@ import java.util.List;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:21:39 PM
  *
  */
 public class QuestionnaireConfigurationStructureBean {
-	private boolean branching=false;
-	private boolean randomization=false;
-	private List<FrequencyBean> frequency= new ArrayList<>();
+	
+	private boolean branching = false;
+	private boolean randomization = false;
+	private List<FrequencyBean> frequency = new ArrayList<>();
 	
 	public boolean isBranching() {
 		return branching;

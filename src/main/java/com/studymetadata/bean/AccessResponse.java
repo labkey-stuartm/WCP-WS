@@ -1,6 +1,11 @@
 package com.studymetadata.bean;
 
-
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:03:53 PM
+ *
+ */
 public class AccessResponse extends SuccessResponse {
 	
 	private int userId = 0;
@@ -8,7 +13,6 @@ public class AccessResponse extends SuccessResponse {
 	private String middleName = "";
 	private String lastName = "";
 	private String userName = "";
-	
 	private String accessCode = "";
 	private String email = "";	
 	private String phone = "";

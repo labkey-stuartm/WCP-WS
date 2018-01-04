@@ -15,17 +15,24 @@ import org.hibernate.annotations.NamedQuery;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:26:26 PM
  *
  */
 @Entity
 @Table(name = "comprehension_test_question")
 @NamedQueries({
-	/*@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),*/
-	@NamedQuery(name="comprehensionQuestionByStudyId", query=" from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId and CTDTO.status=true and CTDTO.active=true order by CTDTO.sequenceNo"),
+	
+	@NamedQuery(name="comprehensionQuestionByStudyId", query=" from ComprehensionTestQuestionDto CTDTO"
+			+ " where CTDTO.studyId =:studyId and CTDTO.status=true and CTDTO.active=true"
+			+ " ORDER BY CTDTO.sequenceNo"),
 })
 public class ComprehensionTestQuestionDto implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6056127394260427728L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -5,8 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:12:46 PM
+ *
+ */
 public class QuestionnaireActivityStepsBean {
-	private String type = ""; //instruction (OR) question (OR) form (OR) task
+	
+	private String type = "";
 	private String resultType = "";
 	private String key = "";
 	private String title = "";
@@ -17,9 +24,8 @@ public class QuestionnaireActivityStepsBean {
 	private String repeatableText = "";
 	private List<DestinationBean> destinations = new ArrayList<>();
 	private String healthDataKey = "";
-	private Map<String, Object> format = new HashMap<>(); //QuestionFormat (OR) ActiveTaskFormat
-	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>(); //Question
-	
+	private Map<String, Object> format = new HashMap<>();
+	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 	private String[] options = new String[0];
 	
 	public String getType() {

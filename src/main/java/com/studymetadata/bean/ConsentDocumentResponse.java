@@ -5,9 +5,11 @@ import com.studymetadata.util.StudyMetaDataConstants;
 /**
  * 
  * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:08 PM
  *
  */
 public class ConsentDocumentResponse {
+	
 	private String message = StudyMetaDataConstants.FAILURE;
 	private ConsentDocumentBean consent = new ConsentDocumentBean();
 	

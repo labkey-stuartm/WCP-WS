@@ -1,10 +1,16 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:10:20 PM
+ *
+ */
 public class CorrectAnswersBean{
 
 	private String key = "";
 	private String[] answer = {};
-	private String evaluation = ""; //	ANY/ALL
+	private String evaluation = "";
 	
 	public String getKey() {
 		return key;

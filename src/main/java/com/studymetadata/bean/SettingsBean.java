@@ -1,9 +1,15 @@
 package com.studymetadata.bean;
 
+/**
+ * 
+ * @author Mohan
+ * @createdOn Jan 4, 2018 3:14:11 PM
+ *
+ */
 public class SettingsBean{
 	
 	private boolean enrolling = false;
-	private String platform = ""; //ios/android/both
+	private String platform = "";
 	private boolean rejoin = false;
 	
 	public boolean isEnrolling() {
