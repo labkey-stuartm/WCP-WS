@@ -83,7 +83,7 @@ public class ActivityMetaDataDao {
 	Query query = null;
 
 	/**
-	 * Get all the activities in the provided study identifier
+	 * Get all the activities for the provided study identifier and authorization credentials
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -125,7 +125,7 @@ public class ActivityMetaDataDao {
 					for(ActiveTaskDto activeTaskDto : activeTaskDtoList){
 						boolean isSupporting = true;
 						
-						//Allow Spatial Span Memory and Tower of Hanoi tasks only for iOS platform
+						//Allow spatial span memory and tower of hanoi active tasks only for iOS platform
 						if(deviceType.equalsIgnoreCase(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID) 
 								&& !activeTaskDto.getTaskTypeId().equals(1)){
 							isSupporting = false;
@@ -148,7 +148,7 @@ public class ActivityMetaDataDao {
 
 							activityBean = this.getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean, session);
 
-							//For deleted task Modified Date Time will be the End Date Time of that task
+							//For deleted task modified date time will be the end date time of active task
 							if(activeTaskDto.getActive() == null || activeTaskDto.getActive().equals(0)){
 								activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(activeTaskDto.getModifiedDate(), StudyMetaDataConstants.SDF_DATE_TIME_PATTERN, StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 							}
@@ -193,7 +193,7 @@ public class ActivityMetaDataDao {
 						activityBean.setLastModified(StringUtils.isEmpty(questionaire.getModifiedDate())?"":StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), StudyMetaDataConstants.SDF_DATE_TIME_PATTERN, StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 						activityBean = this.getTimeDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
 
-						//For deleted activity Modified Date Time will be the End Date Time of that activity
+						//For deleted task modified date time will be the end date time of questionnaire
 						if(!questionaire.getActive()){
 							activityBean.setEndTime(StudyMetaDataUtil.getFormattedDateTimeZone(questionaire.getModifiedDate(), StudyMetaDataConstants.SDF_DATE_TIME_PATTERN, StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 						}
@@ -218,7 +218,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the activity metadata for provided study and activity identifier
+	 * Get the activity metadata for the provided activity version, study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -257,7 +257,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the questionnaire metadata for provided study and activity identifier
+	 * Get the questionnaire metadata for the provided activity version, study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -296,7 +296,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get Activity Meta Data information for Active Task
+	 * Get active task metadata for the provided study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -437,7 +437,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get Questionnaire Meta Data information for Questionnaire
+	 * Get questionnaire metadata for the provided study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -593,8 +593,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the frequency details for ActiveTasks based on the frequncy type selected 
-	 * i.e One Time, Within a Day, Daily, Weekly, Monthly, Manually Schedule
+	 * Get the active task frequency details for the provided frequency type
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -628,7 +627,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task Frequency details for One Time
+	 * Get the active task frequency details for one time frequency
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -654,7 +653,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task Frequency details for Daily
+	 * Get the active task frequency details for daily frequency
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -703,7 +702,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task Frequency details for Weekly
+	 * Get the active task frequency details for weekly frequency
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -778,7 +777,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task Frequency details for Monthly
+	 * Get the active task frequency details for monthly frequency
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -838,7 +837,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task Frequency details for Manually Schedule
+	 * Get the active task frequency details for manually schedule frequency
 	 * 
 	 * @author Mohan
 	 * @param activeTask
@@ -874,8 +873,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 *  Get the frequency details for Questionaires based on the frequncy type selected
-	 *  i.e One Time, Within a Day, Daily, Weekly, Monthly, Manually Schedule
+	 *  Get the questionnaire frequency details for the provided frequency type
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -910,7 +908,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Questionnaire Frequency details for One Time
+	 * Get the questionnaire frequency details for one time frequency
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -936,7 +934,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Questionnaire Frequency details for Daily
+	 * Get the questionnaire frequency details for daily frequency
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -986,7 +984,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Questionnaire Frequency details for Weekly
+	 * Get the questionnaire frequency details for weekly frequency
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -1061,7 +1059,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Questionnaire Frequency details for Monthly
+	 * Get the questionnaire frequency details for monthly frequency
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -1120,7 +1118,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Questionnaire Frequency details for Manually Schedule
+	 * Get the questionnaire frequency details for manually schedule frequency
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -1155,7 +1153,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Activivty Steps details based on the sequence order no in quationaire steps
+	 * Get the questionnaire step details for the provided type
 	 * 
 	 * @author Mohan
 	 * @param type
@@ -1214,7 +1212,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Instrucation Meta Data details
+	 * Get instruction metadata
 	 * 
 	 * @author Mohan
 	 * @param instructionsDtoList
@@ -1263,7 +1261,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Question Meta Data details
+	 * Get question metadata
 	 * 
 	 * @author Mohan
 	 * @param questionsDtoList
@@ -1310,13 +1308,14 @@ public class ActivityMetaDataDao {
 					questionBean.setText(StringUtils.isEmpty(questionsDto.getDescription())?"":questionsDto.getDescription());
 					questionBean.setKey(StringUtils.isEmpty(questionStepDetails.getStepShortTitle())?"":questionStepDetails.getStepShortTitle());
 					questionBean.setTitle(StringUtils.isEmpty(questionsDto.getQuestion())?"":questionsDto.getQuestion());
-					questionBean.setSkippable((StringUtils.isEmpty(questionStepDetails.getSkiappable()) || questionStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true); //NA
+					questionBean.setSkippable((StringUtils.isEmpty(questionStepDetails.getSkiappable()) || questionStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO))?false:true);
 					questionBean.setGroupName("");
 					questionBean.setRepeatable(false);
-					questionBean.setRepeatableText(questionStepDetails.getRepeatableText() == null?"":questionStepDetails.getRepeatableText()); //NA
+					questionBean.setRepeatableText(questionStepDetails.getRepeatableText() == null?"":questionStepDetails.getRepeatableText());
 
 					List<DestinationBean> destinationsList = new ArrayList<>();
-					//choice based branching allowed only for textchoice, textscale, imagechoice, boolean not for valuepicker
+					
+					//Choice based branching allowed only for textchoice, textscale, imagechoice, boolean response types
 					if(!questionsDto.getResponseType().equals(4)){
 						destinationConditionList = session.createQuery("from QuestionResponseSubTypeDto QRSTDTO"
 								+ " where QRSTDTO.responseTypeId="+questionsDto.getId())
@@ -1414,7 +1413,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Form Meta Data details
+	 * Get form metadata
 	 * 
 	 * @author Mohan
 	 * @param formsList
@@ -1521,7 +1520,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Fetal Kick Counter details
+	 * Get the fetal kick counter metadata
 	 * 
 	 * @author Mohan
 	 * @param attributeValues
@@ -1557,7 +1556,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Spatial SpanMemory Details
+	 * Get the spatial span memory metadata
 	 * 
 	 * @author Mohan
 	 * @param attributeValues
@@ -1603,7 +1602,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Active Task options available
+	 * Get the active task options
 	 * 
 	 * @author Mohan
 	 * @return {@link String[]}
@@ -1628,7 +1627,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Question format details based on question result type
+	 * Get the question metadata for the provided question result type
 	 * 
 	 * @author Mohan
 	 * @param questionDto
@@ -1704,7 +1703,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Scale Question details
+	 * Get the scale response type metadata from the provided question response type details
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -1732,7 +1731,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Continuous Scale Question details
+	 * Get the continuous scale response type metadata from the provided question response type details
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -1760,7 +1759,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Text Scale Question details
+	 * Get the text scale response type metadata from the provided question and response type details
 	 * 
 	 * @author Mohan
 	 * @param questionDto
@@ -1800,7 +1799,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Value Picker Question details
+	 * Get the value picker response type metadata from the provided question details
 	 * 
 	 * @author Mohan
 	 * @param questionDto
@@ -1837,7 +1836,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Image Choice Question details
+	 * Get the image choice response type metadata from the provided question details
 	 * 
 	 * @author Mohan
 	 * @param questionDto
@@ -1874,7 +1873,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Text Choice Question details
+	 * Get the text choice response type metadata from the provided question and response type details
 	 * 
 	 * @author Mohan
 	 * @param questionDto
@@ -1913,7 +1912,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Numeric Question details
+	 * Get the numeric response type metadata from the provided question response type details
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -1942,7 +1941,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Date Question details
+	 * Get the date response type metadata from the provided question response type details
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -1972,7 +1971,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Get the Text Question details
+	 * Get the text response type metadata from the provided question response type details
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -1996,7 +1995,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get Activity Start & End Date Time based on the Active Task Frequency type
+	 * Get the active task start and end date time for the provided frequency type
 	 * 
 	 * @author Mohan
 	 * @param activeTaskDto
@@ -2082,7 +2081,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get Activity Start & End Date Time based on the Questionnaire Frequency type 
+	 * Get the questionnaire start and end date time for the provided frequency type
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -2168,7 +2167,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Destination Step Id
+	 * Get the destination step identifier
 	 * 
 	 * @author Mohan
 	 * @param questionaireStepsList
@@ -2196,7 +2195,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Destination Step Id for Response Sub Type
+	 * Get the destination step identifier for the provided response sub type
 	 * 
 	 * @author Mohan
 	 * @param destinationBean
@@ -2224,7 +2223,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the base64 code for the input image file
+	 * Get the base64 string for the provided image
 	 * 
 	 * @author Mohan
 	 * @param imagePath
@@ -2238,12 +2237,13 @@ public class ActivityMetaDataDao {
 		try{
 			URL url = new URL(imagePath);
 			if("https".equalsIgnoreCase(url.getProtocol())){
-				HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+				HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 				InputStream ins = con.getInputStream();
 				imageBytes = IOUtils.toByteArray(ins);
 			}else{
 				imageBytes = IOUtils.toByteArray(new URL(imagePath));
 			}
+			
 			base64Image = Base64.getEncoder().encodeToString(imageBytes);
 		}catch(Exception e){
 			LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
@@ -2253,7 +2253,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Step Count for Scale Question
+	 * Get the step count for the scale response type
 	 * 
 	 * @author Mohan
 	 * @param step
@@ -2270,7 +2270,7 @@ public class ActivityMetaDataDao {
 		try{
 			Integer diff = maxValue - minValue;
 			while(maxStepCount > 0){
-				if((diff%maxStepCount) == 0){
+				if((diff % maxStepCount) == 0){
 					stepCountList.add(maxStepCount);
 				}
 				maxStepCount--;
@@ -2288,7 +2288,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Step Size for Scale Question
+	 * Get the step size for the scale response type
 	 * 
 	 * @author Mohan
 	 * @param step
@@ -2310,7 +2310,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Default Value for Scale Question
+	 * Get the default value for the scale response type
 	 * 
 	 * @author Mohan
 	 * @param step
@@ -2334,7 +2334,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Maximum Fraction Digits for Continuous Scale Question
+	 * Get the maximum fraction digits for the continuous scale response type
 	 * 
 	 * @author Mohan
 	 * @param maxValue
@@ -2385,7 +2385,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Default Value for Continuous Scale Question
+	 * Get the default value for continuous scale response type
 	 * 
 	 * @author Mohan
 	 * @param maxValue
@@ -2409,7 +2409,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Step Count for TimeInterval Question
+	 * Get the step count for the time interval response type
 	 * 
 	 * @author Mohan
 	 * @param stepValue
@@ -2438,7 +2438,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the seconds from the Time in (HH:MM) format
+	 * Get the seconds for the provided time
 	 * 
 	 * @author Mohan
 	 * @param time
@@ -2460,7 +2460,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Get Conditional Branching Destinations by solving for x
+	 * Get the conditional branching destinations by solving for x
 	 * 
 	 * @author Mohan
 	 * @param reponseType
@@ -2495,14 +2495,15 @@ public class ActivityMetaDataDao {
 		try{
 			if(StringUtils.isNotEmpty(reponseType.getConditionFormula())){
 				conditionFormula = reponseType.getConditionFormula();
-				//check the expression contains '=', if yes replace it with '==' to evaluate the expression
+				
+				//Check the expression contains '=', if yes replace it with '==' to evaluate the expression
 				if(!reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL) 
 						&& !reponseType.getConditionFormula().contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL) 
 						&& reponseType.getConditionFormula().contains("=")){
 					conditionFormula = reponseType.getConditionFormula().replaceAll("=", StudyMetaDataConstants.CBO_OPERATOR_EQUAL);
 				}
 
-				//get the minimum and maximum value range for response type
+				//Get the minimum and maximum value range for response type
 				prerequisitesMap = this.conditionalBranchingPrerequisites(questionBean);
 				minValue = (Double) prerequisitesMap.get("minValue");
 				maxValue = (Double) prerequisitesMap.get("maxValue");
@@ -2511,17 +2512,17 @@ public class ActivityMetaDataDao {
 				formatXValue = "%."+digitFormat+"f";
 				valueOfX = minValue;
 
-				//find position of X in the equation i.e LHS or RHS
+				//Find position of X in the equation i.e LHS or RHS
 				operator = this.getOperatorFromConditionalFormula(conditionFormula);
 
-				//evaluate the position of X in the equation
+				//Evaluate the position of X in the equation
 				if(StringUtils.isNotEmpty(operator)){
 					tokenizer = new StringTokenizer(conditionFormula, operator);
 					LHS = tokenizer.nextToken().trim();
 					RHS = tokenizer.nextToken().trim();
 				}
 
-				//find minimum value of X
+				//Find minimum value of X
 				while(valueOfX <= maxValue) {
 					tempFormula = conditionFormula.replaceAll("x", valueOfX >= 0 ? valueOfX.toString() : "("+valueOfX.toString()+")");
 					flag = (boolean) engine.eval(tempFormula);
@@ -2613,7 +2614,7 @@ public class ActivityMetaDataDao {
 					valueOfX = Double.parseDouble(String.format(formatXValue, valueOfX));
 				}
 
-				//format the value of X according to type
+				//Format the value of X by type
 				updatedDestinationsList = this.formatValueOfX(updatedDestinationsList, questionBean);
 			}
 		}catch(Exception e){
@@ -2624,7 +2625,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Get Conditional Branching Prerequisites based on Question type
+	 * Get conditional branching prerequisites by response type
 	 * 
 	 * @author Mohan
 	 * @param questionBean
@@ -2695,7 +2696,7 @@ public class ActivityMetaDataDao {
 				case StudyMetaDataConstants.QUESTION_TIME_INTERVAL:
 					maxFractionDigit = 1D;
 					minValue = 0D;
-					maxValue = (double) (24 * 60); //in minutes
+					maxValue = (double) (24 * 60);
 					digitFormat = 0;
 					break;
 				case StudyMetaDataConstants.QUESTION_HEIGHT:
@@ -2721,7 +2722,7 @@ public class ActivityMetaDataDao {
 
 
 	/**
-	 * Get the Operator from the Conditional Formula
+	 * Get the operator from the conditional formula
 	 * 
 	 * @author Mohan
 	 * @param conditionFormula
@@ -2749,7 +2750,7 @@ public class ActivityMetaDataDao {
 	}
 
 	/**
-	 * Get the Conditional Branching Format
+	 * Get the conditional branching format
 	 * 
 	 * @author Mohan
 	 * @param destinationsList
@@ -2780,7 +2781,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Format the solved value of x based on the response type and sub type
+	 * Format the X value by response type and response sub type
 	 * 
 	 * @author Mohan
 	 * @param destinationsList
@@ -2839,7 +2840,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Format the value of x based on the input format
+	 * Format the X value by input format
 	 * 
 	 * @author Mohan
 	 * @param destinationsList
@@ -2870,7 +2871,7 @@ public class ActivityMetaDataDao {
 	}
 	
 	/**
-	 * Get the Date Range Type
+	 * Get the date range type for date response type
 	 * 
 	 * @author Mohan
 	 * @param dateRange

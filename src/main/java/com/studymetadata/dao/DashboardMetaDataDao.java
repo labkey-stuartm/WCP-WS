@@ -101,7 +101,6 @@ public class DashboardMetaDataDao {
 						.setMaxResults(1)
 						.uniqueResult();
 				
-				//fetch active task details list by customStudyId, isLive and active
 				activeTaskList = session.getNamedQuery("getActiveTaskDetailsByCustomStudyId")
 						.setString("customStudyId", studyVersionDto.getCustomStudyId())
 						.setInteger("live", 1)
@@ -127,7 +126,6 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
-				//Fetch questionnaire details list by customStudyId, isLive and active
 				questionnaireList = session.getNamedQuery("getQuestionnaireDetailsByCustomStudyId")
 						.setString("customStudyId", studyVersionDto.getCustomStudyId())
 						.setInteger("live", 1)
@@ -182,7 +180,6 @@ public class DashboardMetaDataDao {
 				statisticImageList = session.createQuery(" from StatisticImageListDto STDTO")
 						.list();
 				
-				//active task statistics and chart details
 				if(activeTaskIdsList != null && !activeTaskIdsList.isEmpty()){
 					activeTaskValuesList = session.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO"
 							+ " where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true"
@@ -240,7 +237,6 @@ public class DashboardMetaDataDao {
 					}
 				}
 				
-				//questionnaire statistics and chart details
 				if(questionIdsList != null && !questionIdsList.isEmpty()){
 					List<QuestionsDto> questionsList;
 					questionsList = session.createQuery(" from QuestionsDto QDTO"
@@ -341,7 +337,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Chart Format Details based on the Activity Type
+	 * Get the chart metadata for the provided activity type
 	 * 
 	 * @author Mohan
 	 * @param activityType
@@ -419,7 +415,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Statistics Format Details based on the Activity Type
+	 * Get the statistics metadata for the provided activity type
 	 * 
 	 * @author Mohan
 	 * @param activityType
@@ -430,7 +426,7 @@ public class DashboardMetaDataDao {
 	 * @param statisticImageList
 	 * @param taskTypeId
 	 * @param activeTaskMasterAttrIdNameMap
-	 * @return
+	 * @return {@link List<StatisticsBean>}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("rawtypes")
@@ -486,7 +482,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Time Range Type for Chart
+	 * Get chart time range type for the provided range
 	 * 
 	 * @author Mohan
 	 * @param timeRange
@@ -527,7 +523,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Statistics Image Name based on the imageId
+	 * Get statistics image name for the provided statistics image identifier
 	 * 
 	 * @author Mohan
 	 * @param statisticTypeId
@@ -555,7 +551,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Fomula Type based on the formulaId
+	 * Get the formula type for the provided formula type identifier 
 	 * 
 	 * @author Mohan
 	 * @param formulaTypeId
@@ -583,7 +579,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Get the Start and End Date Time for the Active Task
+	 * Get start and end date time of active task for the provided activity identifier
 	 * 
 	 * @author Mohan
 	 * @param activeTaskDto
@@ -668,7 +664,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Start and End Date Time for the Questionnaire
+	 * Get start and end date time of questionnaire for the provided activity identifier
 	 * 
 	 * @author Mohan
 	 * @param questionaire
@@ -751,7 +747,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Chart configuration details for single line chart
+	 * Get single line chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -795,7 +791,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Chart configuration details for multiple line chart
+	 * Get multiple line chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -839,7 +835,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Chart configuration details for unique pie chart
+	 * Get unique pie chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -868,7 +864,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Chart configuration details for range pie chart
+	 * Get range pie chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -897,7 +893,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Chart configuration details for single bar chart
+	 * Get single bar chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -929,7 +925,7 @@ public class DashboardMetaDataDao {
 	}
 
 	/**
-	 * Chart configuration details for multiple bar chart
+	 * Get multiple bar chart configuration details
 	 * 
 	 * @author Mohan
 	 * @return {@link Map<String, Object>}
@@ -961,7 +957,7 @@ public class DashboardMetaDataDao {
 	}
 	
 	/**
-	 * Get the Data Source Name
+	 * Get chart data source name for the provided master identifier and display name
 	 * 
 	 * @author Mohan
 	 * @param masterId
@@ -973,13 +969,17 @@ public class DashboardMetaDataDao {
 		String dataSourceName = "";
 		try{
 			switch (masterId) {
-				case 14:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
+				case 14:	
+					dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_SCORE;
 					break;
-				case 15:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
+				case 15:	
+					dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_GAMES;
 					break;
-				case 16:	dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
+				case 16:	
+					dataSourceName = StudyMetaDataConstants.CHART_DATA_SOURCE_NO_OF_FAILURES;
 					break;
-				default:	dataSourceName = displayName;
+				default:	
+					dataSourceName = displayName;
 					break;
 			}
 		}catch(Exception e){

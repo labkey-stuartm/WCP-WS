@@ -234,7 +234,7 @@ public class AppMetaDataDao {
 	}
 	
 	/**
-	 * Check for study updates
+	 * Check for study updates for the provided study identifier and study version
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -433,7 +433,7 @@ public class AppMetaDataDao {
 	
 	
 	/**
-	 * Execute the input query
+	 * Execute the provided query
 	 * 
 	 * @author Mohan
 	 * @param dbQuery

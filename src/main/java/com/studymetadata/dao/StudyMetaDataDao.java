@@ -155,7 +155,8 @@ public class StudyMetaDataDao {
 				}
 			}
 
-			//get resources details
+			/*Get the platform from the provided authorization credentials
+			and fetch based on the platform*/
 			platformType = StudyMetaDataUtil.platformType(authorization, StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if(StringUtils.isNotEmpty(platformType)){
 				resourcesList = session.createQuery("from ResourcesDto RDTO"
@@ -218,7 +219,7 @@ public class StudyMetaDataDao {
 			if(StringUtils.isNotEmpty(platformType)){
 				session = sessionFactory.openSession();
 
-				//fetch all Gateway studies based on the platform supported (iOS/android)
+				//Get all configured studies from the WCP by platform supported
 				studiesList = session.createQuery("from StudyDto SDTO"
 						+ " where SDTO.type='"+StudyMetaDataConstants.STUDY_TYPE_GT+"' and SDTO.platform like '%"+platformType+"%'"
 						+ " and (SDTO.status = '"+StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH+"' OR SDTO.live=1)")
@@ -313,7 +314,7 @@ public class StudyMetaDataDao {
 	}
 
 	/**
-	 * Get eligibility and consent info for the provided study identifier
+	 * Get eligibility, consent and comprehension info for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -397,7 +398,6 @@ public class StudyMetaDataDao {
 									questionStep.setHealthDataKey("");
 									test.add(questionStep);
 									
-									//yes option
 									if(eligibilityTest.getResponseYesOption()){
 										HashMap<String,Object> correctAnsHashMap = new HashMap<>();
 										correctAnsHashMap.put("key", eligibilityTest.getShortTitle());
@@ -405,7 +405,6 @@ public class StudyMetaDataDao {
 										correctAnswers.add(correctAnsHashMap);
 									}
 									
-									//no option
 									if(eligibilityTest.getResponseNoOption()){
 										HashMap<String,Object> correctAnsHashMap = new HashMap<>();
 										correctAnsHashMap.put("key", eligibilityTest.getShortTitle());
@@ -494,7 +493,6 @@ public class StudyMetaDataDao {
 						}
 					}
 
-					//Check whether Comprehension List module is done or not
 					if(studySequenceDto.getComprehensionTest().equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y) 
 							&& (consentDto!=null 
 							&& consentDto.getNeedComprehensionTest()!=null 
@@ -574,7 +572,6 @@ public class StudyMetaDataDao {
 						}
 					}
 
-					//Review
 					if( consentDto != null){
 						ReviewBean reviewBean = new ReviewBean();
 						if(consentDto.getConsentDocType().equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)){
@@ -671,7 +668,6 @@ public class StudyMetaDataDao {
 								.uniqueResult();
 					}
 
-					//check the consentBo is empty or not
 					if( consent != null){
 						ConsentDocumentBean consentDocumentBean = new ConsentDocumentBean();
 						consentDocumentBean.setType("text/html");
@@ -1011,7 +1007,7 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
-	 * Check the StudyId is valid or not
+	 * Check study for the provided study identifier
 	 * 
 	 * @author Mohan
 	 * @param studyId
@@ -1043,7 +1039,7 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
-	 * Check the ActivityId is valid or not i.e. Active Task, Questionnaire
+	 * Check activity for the provided activity version, study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param activityId
@@ -1089,7 +1085,7 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
-	 * Get the Activity Type based on the ActivityId, StudyId & ActivityVersion
+	 * Check whether activity is questionnaire for the provided study and activity identifier
 	 * 
 	 * @author Mohan
 	 * @param activityId
@@ -1126,7 +1122,7 @@ public class StudyMetaDataDao {
 	}
 	
 	/**
-	 * Get the Consent Document Display Title
+	 * Get the consent document display title
 	 * 
 	 * @author Mohan
 	 * @param displaytitle
