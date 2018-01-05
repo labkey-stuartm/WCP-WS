@@ -3,6 +3,8 @@ package com.studymetadata.bean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides consent status and consent document details
+ * {@link ConsentDocumentBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:10:08 PM

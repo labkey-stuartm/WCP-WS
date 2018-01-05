@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides consent {@link ConsentDto} master information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:27:16 PM

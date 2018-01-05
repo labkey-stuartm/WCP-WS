@@ -63,6 +63,7 @@ import com.studymetadata.bean.StudyResponse;
 import com.studymetadata.bean.WithdrawalConfigBean;
 
 /**
+ * Provides study metadata business logic and model objects details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:23:46 PM

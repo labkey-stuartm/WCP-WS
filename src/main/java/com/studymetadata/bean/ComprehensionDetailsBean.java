@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides information about pass score, comprehension questions
+ * {@link QuestionnaireActivityStepsBean} and correct answers details
+ * {@link CorrectAnswersBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:09:33 PM

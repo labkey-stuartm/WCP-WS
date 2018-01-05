@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 /**
+ * Provides hibernate configuration details to get session factory.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:37:36 PM

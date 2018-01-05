@@ -6,6 +6,8 @@ import java.util.List;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides gateway details {@link InfoBean} and resources
+ * {@link GatewayInfoResourceBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:11:52 PM

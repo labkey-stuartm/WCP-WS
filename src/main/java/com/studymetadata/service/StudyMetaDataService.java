@@ -43,6 +43,8 @@ import com.studymetadata.bean.StudyUpdatesResponse;
 import com.studymetadata.bean.TermsPolicyResponse;
 
 /**
+ * Web Configuration Portal (WCP) service provides access to Gateway, Study and
+ * Activities metadata and configurations.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:37:26 PM

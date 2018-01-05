@@ -7,6 +7,9 @@ import com.studymetadata.bean.ActivityMetadataBean;
 import com.studymetadata.bean.QuestionnaireActivityStepsBean;
 
 /**
+ * Provides questionnaire activity metadata information
+ * {@link ActivityMetadataBean} and activity steps details
+ * {@link QuestionnaireActivityStepsBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:21:30 PM

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides activity frequency information {@link ActivityFrequencyScheduleBean}
+ * and frequency type
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:05:06 PM

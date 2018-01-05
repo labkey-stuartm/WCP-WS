@@ -13,6 +13,14 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides questionnaire details for study.
+ * <ol>
+ * <li>Frequency type of activity
+ * <li>Study identifier
+ * <li>Activity identifier
+ * <li>Lifetime of questionnaire
+ * <li>Version details
+ * <ol>
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:29:53 PM

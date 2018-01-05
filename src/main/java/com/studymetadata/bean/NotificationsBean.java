@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides study notification details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:12:13 PM

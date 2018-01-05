@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides eligibility details for study {@link StudyDto}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:27:36 PM

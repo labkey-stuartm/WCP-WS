@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides activity statistics details and data source details
+ * {@link StatisticsDataSourceBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:14:37 PM

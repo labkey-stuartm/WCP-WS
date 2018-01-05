@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides activity charts {@link ChartsBean} and statistics
+ * {@link StatisticsBean} information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:10:35 PM

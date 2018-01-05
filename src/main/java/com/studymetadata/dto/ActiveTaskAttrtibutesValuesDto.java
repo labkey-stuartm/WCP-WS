@@ -13,6 +13,9 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 
 /**
+ * Provides active task attribute details. i.e. chart and statistics
+ * configuration settings, task attribute values, task datasource details and
+ * formula details to plot charts.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:24:23 PM

@@ -1,6 +1,7 @@
 package com.studymetadata.bean.appendix;
 
 /**
+ * Provides resource context details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:22:09 PM

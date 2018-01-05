@@ -40,6 +40,7 @@ import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides dashboard metadata business logic and model objects details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:23:41 PM

@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides error details in response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:07:41 PM

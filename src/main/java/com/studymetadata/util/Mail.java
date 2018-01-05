@@ -14,6 +14,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
 /**
+ * Provides mail configuration details to send mail.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:38:32 PM

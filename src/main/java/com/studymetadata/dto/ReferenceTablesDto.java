@@ -10,6 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides study category information for the below categories:
+ * <ol>
+ * <li>Categories
+ * <li>Data Partner
+ * <li>Research Sponsors
+ * <ol>
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:30:54 PM

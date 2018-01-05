@@ -10,6 +10,8 @@ import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
+ * Dashboard metadata service that communicates with dashboard metadata
+ * {@link DashboardMetaDataDao} repository.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:37:02 PM

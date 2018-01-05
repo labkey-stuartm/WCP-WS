@@ -3,6 +3,7 @@ package com.studymetadata.bean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides application privacy, terms of use details in response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:16:10 PM

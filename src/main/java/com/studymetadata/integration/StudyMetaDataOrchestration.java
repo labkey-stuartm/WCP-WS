@@ -16,6 +16,8 @@ import com.studymetadata.bean.StudyInfoResponse;
 import com.studymetadata.bean.StudyResponse;
 
 /**
+ * Study metadata service that communicates with study metadata
+ * {@link StudyMetaDataDao} repository.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:37:11 PM

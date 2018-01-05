@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides anchor date related information i.e. type of anchor date and
+ * question details {@link QuestionInfoBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:05:37 PM

@@ -3,6 +3,8 @@ package com.studymetadata.bean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides study updates information {@link StudyUpdatesBean} and live study
+ * version.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:15:40 PM

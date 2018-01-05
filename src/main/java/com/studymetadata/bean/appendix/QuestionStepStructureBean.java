@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Provides question step metadata and format {@link FormatStructureBean}
+ * details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:21:54 PM

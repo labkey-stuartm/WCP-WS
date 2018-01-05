@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides app updates details in response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:07:33 PM

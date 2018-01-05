@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides active task {@link ActiveTaskDto} frequency configuration details
+ * for manually schedule type of frequency.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:24:41 PM

@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides study {@link StudyDto} branding details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:26:01 PM

@@ -64,6 +64,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
+ * Provides activity metadata business logic and model objects details. 
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:23:22 PM

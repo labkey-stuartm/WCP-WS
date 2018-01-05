@@ -3,6 +3,8 @@ package com.studymetadata.bean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides active task metadata details in response. i.e. status and metadata
+ * information of activity {@link ActiveTaskActivityStructureBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:04:23 PM

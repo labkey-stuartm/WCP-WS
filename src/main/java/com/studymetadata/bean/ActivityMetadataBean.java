@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides activity metadata information like activity identifier, name of
+ * activity, version of activity etc
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:05:20 PM

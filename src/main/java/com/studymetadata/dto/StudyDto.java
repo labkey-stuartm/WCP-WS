@@ -14,6 +14,7 @@ import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
 /**
+ * Provides metadata information about study.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:31:31 PM

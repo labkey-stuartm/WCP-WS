@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides questionnaire response sub type information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:30:19 PM

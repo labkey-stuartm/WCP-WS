@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides statistics datasource and activity {@link DashboardActivityBean}
+ * details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:14:44 PM

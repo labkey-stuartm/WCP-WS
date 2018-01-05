@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides notification details for the standalone and gateway studies.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:29:34 PM

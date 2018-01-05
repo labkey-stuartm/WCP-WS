@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Extends {@link SuccessResponse} class to provide details about user in
+ * response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:03:53 PM

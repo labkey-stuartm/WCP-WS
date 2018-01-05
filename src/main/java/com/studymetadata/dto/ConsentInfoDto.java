@@ -13,6 +13,15 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides study {@link StudyDto} consent {@link ConsentDto} metadata
+ * information mention below:
+ * <ol>
+ * <li>Type
+ * <li>Summary
+ * <li>Elaborated text
+ * <li>Visual step
+ * <li>Study identifier
+ * <ol>
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:27:08 PM

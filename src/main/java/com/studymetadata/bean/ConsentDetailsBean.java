@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides brief description about the consent like version of consent,
+ * comprehension test details {@link ComprehensionDetailsBean}, sharing details
+ * {@link SharingBean} and consent review details {@link ReviewBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:09:50 PM

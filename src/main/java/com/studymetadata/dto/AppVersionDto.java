@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides app versions detais.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:25:53 PM

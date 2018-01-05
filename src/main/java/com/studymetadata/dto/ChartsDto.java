@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides activities chart configuration details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:26:11 PM

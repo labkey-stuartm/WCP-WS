@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides form questionnaire step {@link QuestionnairesStepsDto} details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:28:05 PM

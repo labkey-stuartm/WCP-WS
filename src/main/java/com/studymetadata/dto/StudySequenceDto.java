@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides information about status of the sub tasks for study {@link StudyDto}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:31:52 PM

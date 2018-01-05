@@ -6,6 +6,8 @@ import java.util.List;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides study notification details {@link NotificationsBean} in the
+ * response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:12:19 PM

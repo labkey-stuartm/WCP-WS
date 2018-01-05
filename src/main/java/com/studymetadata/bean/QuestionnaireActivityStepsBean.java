@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Provides questionnaire activity steps details i.e. destinations
+ * {@link DestinationBean}, activity steps information
+ * {@link QuestionnaireActivityStepsBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:12:46 PM

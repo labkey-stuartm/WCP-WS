@@ -13,6 +13,14 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides active task {@link ActiveTaskDto} information for study.
+ * <ol>
+ * <li>Frequency type of activity
+ * <li>Study identifier
+ * <li>Activity identifier
+ * <li>Lifetime of active task
+ * <li>Version details
+ * <ol>
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:24:53 PM

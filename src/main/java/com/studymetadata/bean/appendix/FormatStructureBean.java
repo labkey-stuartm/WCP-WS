@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides question format structure details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:20:59 PM

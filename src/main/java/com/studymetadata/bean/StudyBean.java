@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides study metadata information and study settings details
+ * {@link SettingsBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:15:05 PM

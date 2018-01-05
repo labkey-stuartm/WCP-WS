@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides gateway resource information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:11:38 PM

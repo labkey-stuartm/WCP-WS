@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides questionnaire configuration information and frequency details
+ * {@link FrequencyBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:21:39 PM

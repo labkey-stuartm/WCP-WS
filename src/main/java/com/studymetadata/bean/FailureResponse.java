@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides failure {@link ErrorBean} details in response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:11:21 PM

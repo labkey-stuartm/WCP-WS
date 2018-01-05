@@ -13,6 +13,11 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides version details for below:
+ * <ol>
+ * <li>Study {@link StudyDto}
+ * <li>Activity {@link ActiveTaskDto}, {@link QuestionnairesDto}
+ * <li>Consent {@link ConsentDto}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:31:58 PM

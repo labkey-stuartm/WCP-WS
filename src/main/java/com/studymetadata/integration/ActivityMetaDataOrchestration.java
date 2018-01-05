@@ -11,6 +11,8 @@ import com.studymetadata.exception.OrchestrationException;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
+ * Activity metadata service that communicates with activity metadata
+ * {@link ActivityMetaDataDao} repository.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:36:39 PM

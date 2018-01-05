@@ -6,6 +6,9 @@ import java.util.List;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides study metadata information in response. i.e. study details
+ * {@link InfoBean}, anchor date details {@link AnchorDateBean} and withdrawal
+ * configuration details {@link WithdrawalConfigBean}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:15:18 PM

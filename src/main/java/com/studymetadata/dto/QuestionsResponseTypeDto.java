@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides question response types information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:30:47 PM

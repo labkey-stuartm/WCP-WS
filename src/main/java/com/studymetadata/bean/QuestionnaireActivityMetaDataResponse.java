@@ -4,6 +4,8 @@ import com.studymetadata.bean.appendix.QuestionnaireActivityStructureBean;
 import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
+ * Provides questionnaire activity metadata details
+ * {@link QuestionnaireActivityStructureBean} in response.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:12:39 PM

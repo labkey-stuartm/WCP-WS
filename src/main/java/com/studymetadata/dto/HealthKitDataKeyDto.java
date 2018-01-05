@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides health kit keys information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:28:43 PM

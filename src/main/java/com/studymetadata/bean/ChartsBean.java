@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Provides chart details i.e. configuration information, chart datasource
+ * information {@link ChartDataSourceBean} etc
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:09:22 PM

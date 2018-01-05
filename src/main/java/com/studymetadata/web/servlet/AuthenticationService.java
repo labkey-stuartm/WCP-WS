@@ -10,6 +10,8 @@ import com.studymetadata.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 
 /**
+ * Provides authentication to check requesting user is authorized to access
+ * data.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:49:26 PM

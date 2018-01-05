@@ -31,6 +31,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
+ * Provides app metadata business logic and model objects details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:23:35 PM

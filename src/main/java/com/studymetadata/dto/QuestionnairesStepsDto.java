@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
+ * Provides questionnaire steps details for study {@link StudyDto}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:30:05 PM

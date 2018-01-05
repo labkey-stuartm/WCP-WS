@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Provides eligibility metadata details i.e. type of eligibility, title,
+ * eligibility questions {@link QuestionnaireActivityStepsBean}, correct
+ * answers.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:10:52 PM

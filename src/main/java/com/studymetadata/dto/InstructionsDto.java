@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides instruction step details for study {@link StudyDto}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:28:53 PM

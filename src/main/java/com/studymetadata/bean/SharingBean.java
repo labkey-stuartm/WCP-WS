@@ -1,6 +1,7 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides consent document sharing details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:14:17 PM

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides eligibility {@link EligibilityDto} test details for study
+ * {@link StudyDto}.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:27:50 PM

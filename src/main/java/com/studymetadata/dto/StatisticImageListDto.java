@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides statistics image details for the identifier.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:31:11 PM

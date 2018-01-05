@@ -1,6 +1,7 @@
 package com.studymetadata.bean.appendix;
 
 /**
+ * Provides activity frequency details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:21:12 PM

@@ -1,6 +1,7 @@
 package com.studymetadata.bean.appendix;
 
 /**
+ * Provides question metadata information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:21:18 PM

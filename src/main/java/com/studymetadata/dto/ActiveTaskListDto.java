@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides all available active tasks information. 
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:25:22 PM

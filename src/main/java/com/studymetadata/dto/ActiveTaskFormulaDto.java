@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides active task formula details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:25:06 PM

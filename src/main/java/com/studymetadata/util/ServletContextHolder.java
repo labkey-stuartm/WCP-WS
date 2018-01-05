@@ -5,6 +5,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
+ * Implements {@link ServletContextListener} interface to provide
+ * {@link ServletContext} configuration for context initialization and to
+ * destroy.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:39:03 PM

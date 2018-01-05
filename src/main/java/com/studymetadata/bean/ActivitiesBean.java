@@ -1,6 +1,9 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides activity details like activity identifier, activity version,
+ * activity title, activity type, frequency details
+ * {@link ActivityFrequencyBean}, start and end time of activity etc
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:04:55 PM

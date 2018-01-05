@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides questionnaire {@link QuestionnairesDto} frequency details for
+ * manually scheduled frequency type.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:29:46 PM

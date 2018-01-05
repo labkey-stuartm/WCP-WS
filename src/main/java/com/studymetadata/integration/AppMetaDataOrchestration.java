@@ -16,6 +16,8 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
+ * App metadata service that communicates with app metadata
+ * {@link AppMetaDataDao} repository.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:36:47 PM

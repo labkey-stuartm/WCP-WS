@@ -13,6 +13,7 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides study {@link StudyDto} consent overview information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:26:43 PM

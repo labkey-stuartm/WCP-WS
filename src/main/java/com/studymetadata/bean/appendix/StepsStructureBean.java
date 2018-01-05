@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Provides steps metadata information.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:22:18 PM

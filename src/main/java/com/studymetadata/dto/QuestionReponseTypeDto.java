@@ -10,6 +10,26 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides questionnaire {@link QuestionnairesDto} response type information.
+ * <p>
+ * Response types {@link QuestionResponsetypeMasterInfoDto} mentioned below:
+ * <ol>
+ * <li>Scale
+ * <li>Continuous Scale
+ * <li>Text Scale
+ * <li>Value Picker
+ * <li>Image Choice
+ * <li>Text Choice
+ * <li>Boolean
+ * <li>Numeric
+ * <li>Time of the day
+ * <li>Date
+ * <li>Text
+ * <li>Email
+ * <li>Time interval
+ * <li>Height
+ * <li>Location
+ * <ol>
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:30:10 PM

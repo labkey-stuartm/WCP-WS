@@ -1,6 +1,8 @@
 package com.studymetadata.bean;
 
 /**
+ * Provides comprehension details for the questionnaire type of activity
+ * {@link QuestionnaireActivityStepsBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:09:28 PM

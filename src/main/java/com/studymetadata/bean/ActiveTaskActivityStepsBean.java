@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides active task steps information. For example, activity type, format
+ * details, title of activity, destinations metadata {@link DestinationBean} and
+ * steps details {@link QuestionnaireActivityStepsBean}
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:04:31 PM

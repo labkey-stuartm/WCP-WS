@@ -3,6 +3,7 @@ package com.studymetadata.util;
 import java.text.SimpleDateFormat;
 
 /**
+ * Provides constants.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:39:39 PM
