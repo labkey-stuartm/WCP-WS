@@ -9,17 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:26:11 PM
  *
  */
 @Entity
-@Table(name="charts")
-public class ChartsDto implements Serializable{
-	
+@Table(name = "charts")
+public class ChartsDto implements Serializable {
 
 	/**
 	 * 
@@ -27,29 +25,29 @@ public class ChartsDto implements Serializable{
 	private static final long serialVersionUID = 2394186946423804987L;
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="reference_id")
+
+	@Column(name = "reference_id")
 	private Integer referenceId;
-	
-	@Column(name="chart_title")
+
+	@Column(name = "chart_title")
 	private String chartTitle;
-	
-	@Column(name="sequence_no")
+
+	@Column(name = "sequence_no")
 	private Integer sequenceNo;
-	
-	@Column(name="chart_type")
+
+	@Column(name = "chart_type")
 	private String chartType;
-	
-	@Column(name="time_range")
+
+	@Column(name = "time_range")
 	private String timeRange;
-	
-	@Column(name="allow_previous_next")
+
+	@Column(name = "allow_previous_next")
 	private Integer allowPreviousNext;
 
 	public Integer getId() {
@@ -115,6 +113,5 @@ public class ChartsDto implements Serializable{
 	public void setAllowPreviousNext(Integer allowPreviousNext) {
 		this.allowPreviousNext = allowPreviousNext;
 	}
-	
-	
+
 }

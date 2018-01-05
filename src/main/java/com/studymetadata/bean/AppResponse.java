@@ -4,12 +4,12 @@ import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:07:24 PM
  *
  */
 public class AppResponse {
-	
+
 	String message = StudyMetaDataConstants.FAILURE;
 
 	public String getMessage() {
@@ -19,5 +19,5 @@ public class AppResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 }

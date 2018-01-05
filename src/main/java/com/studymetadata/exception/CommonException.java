@@ -5,12 +5,12 @@ import java.io.PrintWriter;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:33:38 PM
  *
  */
 public abstract class CommonException extends Exception {
-	
+
 	private String errorCode;
 
 	/**

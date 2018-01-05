@@ -4,12 +4,12 @@
 package com.studymetadata.bean;
 
 /**
- * @author Mohan
+ * @author BTC
  * @createdOn Nov 3, 2017 12:23:53 PM
  *
  */
 public class TowerOfHanoiFormatBean {
-	
+
 	private Integer numberOfDisks = 0;
 
 	public Integer getNumberOfDisks() {
@@ -19,5 +19,5 @@ public class TowerOfHanoiFormatBean {
 	public void setNumberOfDisks(Integer numberOfDisks) {
 		this.numberOfDisks = numberOfDisks;
 	}
-	
+
 }

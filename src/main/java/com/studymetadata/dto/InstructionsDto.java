@@ -14,19 +14,17 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:28:53 PM
  *
  */
 @Entity
-@Table(name="instructions")
-@NamedQueries(value = { 
-	
-		@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO"
-				+ " where IDTO.status=true and IDTO.id IN (:instructionIdList)"),
-})
-public class InstructionsDto implements Serializable{
-	
+@Table(name = "instructions")
+@NamedQueries(value = {
+
+@NamedQuery(name = "getInstructionsListFromIds", query = "from InstructionsDto IDTO"
+		+ " where IDTO.status=true and IDTO.id IN (:instructionIdList)"), })
+public class InstructionsDto implements Serializable {
 
 	/**
 	 * 
@@ -35,34 +33,34 @@ public class InstructionsDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="instruction_title",length=250)
+
+	@Column(name = "instruction_title", length = 250)
 	private String instructionTitle;
-	
-	@Column(name="instruction_text",length=2500)
+
+	@Column(name = "instruction_text", length = 2500)
 	private String instructionText;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
 
 	public Integer getId() {
@@ -144,5 +142,5 @@ public class InstructionsDto implements Serializable{
 	public void setStatus(Boolean status) {
 		this.status = status;
 	}
-	
+
 }

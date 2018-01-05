@@ -14,50 +14,48 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:31:58 PM
  *
  */
 @Entity
-@Table(name="study_version")
-@NamedQueries({ 
-	
-	@NamedQuery(name = "getStudyVersionDetailsByCustomStudyId", query = "from StudyVersionDto SVDTO"
-			+ " where SVDTO.customStudyId =:customStudyId"
-			+ " ORDER BY SVDTO.versionId DESC"),
-			
-	@NamedQuery(name = "getStudyVersionsByCustomStudyId", query = "from StudyVersionDto SVDTO"
-			+ " where SVDTO.customStudyId =:customStudyId"),
-			
-	@NamedQuery(name = "getLiveVersionDetailsByCustomStudyIdAndVersion", query = "from StudyVersionDto SVDTO"
-			+ " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)=:studyVersion"
-			+ " ORDER BY SVDTO.versionId DESC"),
-			
-	@NamedQuery(name = "getStudyUpdatesDetailsByCurrentVersion", query = "from StudyVersionDto SVDTO"
-			+ " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)>=:studyVersion"),
-})
-public class StudyVersionDto implements Serializable{
+@Table(name = "study_version")
+@NamedQueries({
 
-	
+		@NamedQuery(name = "getStudyVersionDetailsByCustomStudyId", query = "from StudyVersionDto SVDTO"
+				+ " where SVDTO.customStudyId =:customStudyId"
+				+ " ORDER BY SVDTO.versionId DESC"),
+
+		@NamedQuery(name = "getStudyVersionsByCustomStudyId", query = "from StudyVersionDto SVDTO"
+				+ " where SVDTO.customStudyId =:customStudyId"),
+
+		@NamedQuery(name = "getLiveVersionDetailsByCustomStudyIdAndVersion", query = "from StudyVersionDto SVDTO"
+				+ " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)=:studyVersion"
+				+ " ORDER BY SVDTO.versionId DESC"),
+
+		@NamedQuery(name = "getStudyUpdatesDetailsByCurrentVersion", query = "from StudyVersionDto SVDTO"
+				+ " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)>=:studyVersion"), })
+public class StudyVersionDto implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4330801191289201775L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="version_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "version_id")
 	private Integer versionId;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "study_version")
 	private Float studyVersion = 0f;
-	
+
 	@Column(name = "activity_version")
 	private Float activityVersion = 0f;
-	
+
 	@Column(name = "consent_version")
 	private Float consentVersion = 0f;
 

@@ -11,15 +11,14 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:31:17 PM
  *
  */
 @Entity
-@Table(name="statistic_master_images")
-public class StatisticMasterImagesDto implements Serializable{
+@Table(name = "statistic_master_images")
+public class StatisticMasterImagesDto implements Serializable {
 
-	
 	/**
 	 * 
 	 */
@@ -27,9 +26,9 @@ public class StatisticMasterImagesDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="statistic_image_id")
+	@Column(name = "statistic_image_id")
 	private Integer statisticImageId;
-	
+
 	@Column(name = "value")
 	private String value;
 
@@ -48,5 +47,5 @@ public class StatisticMasterImagesDto implements Serializable{
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 }

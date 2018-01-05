@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:29:25 PM
  *
  */
 @Entity
-@Table(name="line_chart_x_axis")
-public class LineChartXAxisDto implements Serializable{
-	
+@Table(name = "line_chart_x_axis")
+public class LineChartXAxisDto implements Serializable {
 
 	/**
 	 * 
@@ -26,14 +25,14 @@ public class LineChartXAxisDto implements Serializable{
 	private static final long serialVersionUID = 1502788661705421580L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
-	@Column(name="line_chart_id")
+
+	@Column(name = "line_chart_id")
 	private Integer lineChartId;
 
 	public Integer getId() {
@@ -59,5 +58,5 @@ public class LineChartXAxisDto implements Serializable{
 	public void setLineChartId(Integer lineChartId) {
 		this.lineChartId = lineChartId;
 	}
-	
+
 }

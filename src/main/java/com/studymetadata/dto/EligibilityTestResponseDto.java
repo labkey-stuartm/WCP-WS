@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:27:56 PM
  *
  */
 @Entity
 @Table(name = "eligibility_test_response")
-public class EligibilityTestResponseDto implements Serializable{
-	
+public class EligibilityTestResponseDto implements Serializable {
 
 	/**
 	 * 
@@ -27,24 +26,24 @@ public class EligibilityTestResponseDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="response_id")
+	@Column(name = "response_id")
 	private Integer responseId;
-	
+
 	@Column(name = "eligibility_test_id")
 	private Integer eligibilityTestId;
-	
+
 	@Column(name = "response_option")
 	private String responseOption;
-	
+
 	@Column(name = "pass_fail")
 	private String passFail;
-	
+
 	@Column(name = "destination_question")
 	private Integer destinationQuestion;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -52,7 +51,7 @@ public class EligibilityTestResponseDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 	public Integer getResponseId() {
 		return responseId;
 	}
@@ -92,5 +91,5 @@ public class EligibilityTestResponseDto implements Serializable{
 	public void setDestinationQuestion(Integer destinationQuestion) {
 		this.destinationQuestion = destinationQuestion;
 	}
-	
+
 }

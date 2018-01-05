@@ -2,7 +2,7 @@ package com.studymetadata.exception;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:36:01 PM
  *
  */
@@ -29,7 +29,8 @@ public interface ErrorCodes {
 	String NO_DATA = "NODATA";
 	String STATUS_100 = "100"; // OK
 	String STATUS_101 = "101"; // Invalid Authentication (authKey is not valid).
-	String STATUS_102 = "102"; // Invalid Inputs (If any of the input parameter is missing).
+	String STATUS_102 = "102"; // Invalid Inputs (If any of the input parameter
+								// is missing).
 	String STATUS_103 = "103"; // No Data available.
 	String STATUS_104 = "104"; // Unknown Error
 	String STATUS_105 = "105"; // If there is no data to update.

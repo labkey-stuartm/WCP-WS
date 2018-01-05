@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:30:47 PM
  *
  */
 @Entity
-@Table(name="questions_response_type")
-public class QuestionsResponseTypeDto implements Serializable{
-	
+@Table(name = "questions_response_type")
+public class QuestionsResponseTypeDto implements Serializable {
 
 	/**
 	 * 
@@ -26,22 +25,22 @@ public class QuestionsResponseTypeDto implements Serializable{
 	private static final long serialVersionUID = -7963662243467298886L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="question_id")
+
+	@Column(name = "question_id")
 	private Integer questionId;
-	
-	@Column(name="parameter_name")
+
+	@Column(name = "parameter_name")
 	private String parameterName;
-	
-	@Column(name="parameter_value")
+
+	@Column(name = "parameter_value")
 	private String parameterValue;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -49,7 +48,7 @@ public class QuestionsResponseTypeDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -81,6 +80,5 @@ public class QuestionsResponseTypeDto implements Serializable{
 	public void setParameterValue(String parameterValue) {
 		this.parameterValue = parameterValue;
 	}
-	
-	
+
 }

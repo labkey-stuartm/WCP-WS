@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:25:44 PM
  *
  */
 @Entity
-@Table(name="active_task_steps")
-public class ActiveTaskStepsDto implements Serializable{
-	
+@Table(name = "active_task_steps")
+public class ActiveTaskStepsDto implements Serializable {
 
 	/**
 	 * 
@@ -26,24 +25,24 @@ public class ActiveTaskStepsDto implements Serializable{
 	private static final long serialVersionUID = 8677367389857232011L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="step_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "step_id")
 	private Integer stepId;
-	
-	@Column(name="active_task_id")
+
+	@Column(name = "active_task_id")
 	private Integer activeTaskId;
-	
-	@Column(name="active_task_stepscol")
+
+	@Column(name = "active_task_stepscol")
 	private String activeTaskStepscol;
-	
-	@Column(name="sd_live_form_id")
+
+	@Column(name = "sd_live_form_id")
 	private String sdLiveFormId;
-	
-	@Column(name="sequence_no")
+
+	@Column(name = "sequence_no")
 	private Integer sequenceNo;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
+	private Integer studyVersion = 1;
 
 	public Integer getActiveTaskId() {
 		return activeTaskId;
@@ -92,5 +91,5 @@ public class ActiveTaskStepsDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }

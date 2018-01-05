@@ -2,7 +2,7 @@ package com.studymetadata.exception;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:33:54 PM
  *
  */

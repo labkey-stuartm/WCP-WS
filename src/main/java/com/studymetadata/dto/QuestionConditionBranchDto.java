@@ -16,46 +16,45 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:29:40 PM
  *
  */
 @Entity
-@Table(name="question_condtion_branching")
+@Table(name = "question_condtion_branching")
 @NamedQueries({
-	
-	@NamedQuery(name="getQuestionConditionBranchList", query="from QuestionConditionBranchDto QCBDTO"
-			+ " where QCBDTO.questionId =:questionId"
-			+ " ORDER BY QCBDTO.sequenceNo"),
-})
-public class QuestionConditionBranchDto implements Serializable{
+
+@NamedQuery(name = "getQuestionConditionBranchList", query = "from QuestionConditionBranchDto QCBDTO"
+		+ " where QCBDTO.questionId =:questionId"
+		+ " ORDER BY QCBDTO.sequenceNo"), })
+public class QuestionConditionBranchDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2517716372949869931L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="condition_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "condition_id")
 	private Integer conditionId;
-	
-	@Column(name="question_id")
+
+	@Column(name = "question_id")
 	private Integer questionId;
-	
-	@Column(name="input_type")
+
+	@Column(name = "input_type")
 	private String inputType;
-	
-	@Column(name="input_type_value")
+
+	@Column(name = "input_type_value")
 	private String inputTypeValue;
-	
-	@Column(name="sequence_no")
+
+	@Column(name = "sequence_no")
 	private Integer sequenceNo;
-	
-	@Column(name="parent_sequence_no")
+
+	@Column(name = "parent_sequence_no")
 	private Integer parentSequenceNo;
-	
-	@Column(name="active")
+
+	@Column(name = "active")
 	private Boolean active;
 
 	public Integer getConditionId() {

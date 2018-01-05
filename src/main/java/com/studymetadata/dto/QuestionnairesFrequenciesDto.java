@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:30:00 PM
  *
  */
 @Entity
-@Table(name="questionnaires_frequencies")
-public class QuestionnairesFrequenciesDto implements Serializable{
-	
+@Table(name = "questionnaires_frequencies")
+public class QuestionnairesFrequenciesDto implements Serializable {
 
 	/**
 	 * 
@@ -26,29 +25,28 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	private static final long serialVersionUID = 5584696841111331744L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="questionnaires_id")
+
+	@Column(name = "questionnaires_id")
 	private Integer questionnairesId;
-	
-	@Column(name="frequency_date")
+
+	@Column(name = "frequency_date")
 	private String frequencyDate;
-	
-	@Column(name="frequency_time")
+
+	@Column(name = "frequency_time")
 	private String frequencyTime;
-	
-	@Column(name="is_launch_study")
+
+	@Column(name = "is_launch_study")
 	private Boolean isLaunchStudy = false;
-	
-	@Column(name="is_study_life_time")
-	private Boolean isStudyLifeTime=false;
-	
+
+	@Column(name = "is_study_life_time")
+	private Boolean isStudyLifeTime = false;
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -104,5 +102,5 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }

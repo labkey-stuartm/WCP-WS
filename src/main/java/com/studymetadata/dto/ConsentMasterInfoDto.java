@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:27:16 PM
  *
  */
 @Entity
-@Table(name="consent_master_info")
-public class ConsentMasterInfoDto implements Serializable{
-
+@Table(name = "consent_master_info")
+public class ConsentMasterInfoDto implements Serializable {
 
 	/**
 	 * 
@@ -27,21 +26,21 @@ public class ConsentMasterInfoDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	private String type;
-	
-	@Column(name="code")
+
+	@Column(name = "code")
 	private String code;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -81,5 +80,5 @@ public class ConsentMasterInfoDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }

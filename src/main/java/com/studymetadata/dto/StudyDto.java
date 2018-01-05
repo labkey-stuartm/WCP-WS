@@ -15,32 +15,30 @@ import org.hibernate.annotations.Type;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:31:31 PM
  *
  */
 @Entity
 @Table(name = "studies")
 @NamedQueries({
-	
-	@NamedQuery(name="studyDetailsByStudyId", query="from StudyDto SDTO"
-			+ " where SDTO.id =:id"),
-			
-	@NamedQuery(name="getStudyIdByCustomStudyId", query="select SDTO.id"
-			+ " from StudyDto SDTO"
-			+ " where SDTO.customStudyId =:customStudyId"),
-			
-	@NamedQuery(name="getLiveStudyIdByCustomStudyId", query="from StudyDto SDTO"
-			+ " where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
-			
-	@NamedQuery(name="getPublishedStudyByCustomId", query="from StudyDto SDTO"
-			+ " where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
-			
-	@NamedQuery(name="getActivityUpdatedOrNotByStudyIdAndVersion", query="from StudyDto SDTO"
-			+ " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
-})
-public class StudyDto implements Serializable{
-	
+
+		@NamedQuery(name = "studyDetailsByStudyId", query = "from StudyDto SDTO"
+				+ " where SDTO.id =:id"),
+
+		@NamedQuery(name = "getStudyIdByCustomStudyId", query = "select SDTO.id"
+				+ " from StudyDto SDTO"
+				+ " where SDTO.customStudyId =:customStudyId"),
+
+		@NamedQuery(name = "getLiveStudyIdByCustomStudyId", query = "from StudyDto SDTO"
+				+ " where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
+
+		@NamedQuery(name = "getPublishedStudyByCustomId", query = "from StudyDto SDTO"
+				+ " where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
+
+		@NamedQuery(name = "getActivityUpdatedOrNotByStudyIdAndVersion", query = "from StudyDto SDTO"
+				+ " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"), })
+public class StudyDto implements Serializable {
 
 	/**
 	 * 
@@ -49,115 +47,115 @@ public class StudyDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "full_name")
 	private String fullName;
-	
+
 	@Column(name = "type")
 	private String type;
-	
+
 	@Column(name = "platform")
 	private String platform;
-	
+
 	@Column(name = "category")
 	private String category;
-	
+
 	@Column(name = "research_sponsor")
 	private String researchSponsor;
-	
+
 	@Column(name = "data_partner")
 	private String dataPartner;
-	
+
 	@Column(name = "tentative_duration")
 	private Integer tentativeDuration;
-	
+
 	@Column(name = "tentative_duration_weekmonth")
 	private String tentativeDurationWeekmonth;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "enrolling_participants")
 	private String enrollingParticipants;
-	
+
 	@Column(name = "retain_participant")
 	private String retainParticipant;
-	
+
 	@Column(name = "allow_rejoin")
 	private String allowRejoin;
-	
+
 	@Column(name = "allow_rejoin_text")
 	private String allowRejoinText;
-	
+
 	@Column(name = "irb_review")
 	private String irbReview;
-	
+
 	@Column(name = "inbox_email_address")
 	private String inboxEmailAddress;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "status")
 	private String status;
-	
+
 	@Column(name = "sequence_number")
 	private Integer sequenceNumber;
-	
+
 	@Column(name = "thumbnail_image")
 	private String thumbnailImage;
-	
-	@Column(name="media_link")
+
+	@Column(name = "media_link")
 	private String mediaLink;
-	
-	@Column(name="study_website")
+
+	@Column(name = "study_website")
 	private String studyWebsite;
-	
-	@Column(name="study_tagline")
+
+	@Column(name = "study_tagline")
 	private String studyTagline;
-	
-	@Column(name="version")
-	private Float version=0f;
-	
-	@Column(name="study_lunched_date")
+
+	@Column(name = "version")
+	private Float version = 0f;
+
+	@Column(name = "study_lunched_date")
 	private String studylunchDate;
-	
+
 	@Column(name = "study_pre_active_flag")
-	@Type(type="yes_no")
+	@Type(type = "yes_no")
 	private boolean studyPreActiveFlag = false;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
+
 	@Column(name = "has_study_draft")
 	private Integer hasStudyDraft = 0;
-	
+
 	@Column(name = "has_activity_draft")
 	private Integer hasActivityDraft = 0;
-	
+
 	@Column(name = "has_consent_draft")
 	private Integer hasConsentDraft = 0;
-	
+
 	@Column(name = "has_questionnaire_draft")
 	private Integer hasQuestionnaireDraft = 0;
-	
+
 	@Column(name = "has_activitetask_draft")
 	private Integer hasActivetaskDraft = 0;
 
@@ -456,5 +454,5 @@ public class StudyDto implements Serializable{
 	public void setHasActivetaskDraft(Integer hasActivetaskDraft) {
 		this.hasActivetaskDraft = hasActivetaskDraft;
 	}
-	
+
 }

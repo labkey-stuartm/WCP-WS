@@ -9,46 +9,57 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:25:53 PM
  *
  */
 @Entity
-@Table(name="app_versions")
-public class AppVersionDto implements Serializable{
+@Table(name = "app_versions")
+@NamedQueries({
 
-	
+		@NamedQuery(name = "AppVersionDto.findByBundleIdOsType", query = "FROM AppVersionDto AVDTO"
+				+ " WHERE AVDTO.bundleId= :bundleId AND AVDTO.osType= :osType"
+				+ " ORDER BY AVDTO.avId DESC"),
+
+		@NamedQuery(name = "AppVersionDto.findByBundleIdOsTypeAppVersion", query = "FROM AppVersionDto AVDTO"
+				+ " WHERE AVDTO.bundleId= :bundleId AND AVDTO.osType= :osType"
+				+ " ORDER BY AVDTO.appVersion DESC"), })
+public class AppVersionDto implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2555323540993364916L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="av_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "av_id")
 	private Integer avId;
-	
-	@Column(name="force_update")
-	private Integer forceUpdate=1;
-	
-	@Column(name="os_type")
-	private String osType; //ios (or) android
-	
-	@Column(name="app_version")
-	private Float appVersion=1f;
-	
-	@Column(name="created_on")
+
+	@Column(name = "force_update")
+	private Integer forceUpdate = 1;
+
+	@Column(name = "os_type")
+	private String osType;
+
+	@Column(name = "app_version")
+	private Float appVersion = 1f;
+
+	@Column(name = "created_on")
 	private String createdOn;
-	
-	@Column(name="bundle_id")
+
+	@Column(name = "bundle_id")
 	private String bundleId;
-	
-	@Column(name="custom_study_id")
+
+	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
-	@Column(name="message")
+
+	@Column(name = "message")
 	private String message;
 
 	public Integer getAvId() {
@@ -114,5 +125,5 @@ public class AppVersionDto implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 }

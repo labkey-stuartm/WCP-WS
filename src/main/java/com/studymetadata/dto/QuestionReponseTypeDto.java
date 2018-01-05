@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:30:10 PM
  *
  */
 @Entity
-@Table(name="response_type_value")
+@Table(name = "response_type_value")
 public class QuestionReponseTypeDto implements Serializable {
-
 
 	/**
 	 * 
@@ -26,110 +25,110 @@ public class QuestionReponseTypeDto implements Serializable {
 	private static final long serialVersionUID = -5612905113940249120L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="response_type_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "response_type_id")
 	private Integer responseTypeId;
-	
-	@Column(name="questions_response_type_id")
+
+	@Column(name = "questions_response_type_id")
 	private Integer questionsResponseTypeId;
-	
-	@Column(name="max_value")
+
+	@Column(name = "max_value")
 	private String maxValue;
-	
-	@Column(name="min_value")
+
+	@Column(name = "min_value")
 	private String minValue;
-	
-	@Column(name="default_value")
+
+	@Column(name = "default_value")
 	private String defaultValue;
-	
-	@Column(name="step")
+
+	@Column(name = "step")
 	private Integer step;
-	
-	@Column(name="vertical")
+
+	@Column(name = "vertical")
 	private Boolean vertical;
-	
-	@Column(name="max_desc")
+
+	@Column(name = "max_desc")
 	private String maxDescription;
-	
-	@Column(name="min_desc")
+
+	@Column(name = "min_desc")
 	private String minDescription;
-	
-	@Column(name="min_image")
+
+	@Column(name = "min_image")
 	private String minImage;
-	
-	@Column(name="max_image")
+
+	@Column(name = "max_image")
 	private String maxImage;
-	
-	@Column(name="max_fraction_digits")
+
+	@Column(name = "max_fraction_digits")
 	private Integer maxFractionDigits;
-	
-	@Column(name="text_choices")
+
+	@Column(name = "text_choices")
 	private String textChoices;
-	
-	@Column(name="selection_style")
+
+	@Column(name = "selection_style")
 	private String selectionStyle;
-	
-	@Column(name="image_size")
+
+	@Column(name = "image_size")
 	private String imageSize;
-	
-	@Column(name="style")
+
+	@Column(name = "style")
 	private String style;
-	
-	@Column(name="unit")
+
+	@Column(name = "unit")
 	private String unit;
-	
-	@Column(name="placeholder")
+
+	@Column(name = "placeholder")
 	private String placeholder;
-	
-	@Column(name="min_date")
+
+	@Column(name = "min_date")
 	private String minDate;
-	
-	@Column(name="max_date")
+
+	@Column(name = "max_date")
 	private String maxDate;
-	
-	@Column(name="default_date")
+
+	@Column(name = "default_date")
 	private String defaultDate;
-	
-	@Column(name="max_length")
+
+	@Column(name = "max_length")
 	private Integer maxLength;
-	
-	@Column(name="validation_regex")
+
+	@Column(name = "validation_regex")
 	private String validationRegex;
-	
-	@Column(name="invalid_message")
+
+	@Column(name = "invalid_message")
 	private String invalidMessage;
-	
-	@Column(name="multiple_lines")
+
+	@Column(name = "multiple_lines")
 	private Boolean multipleLines;
-	
-	@Column(name="measurement_system")
+
+	@Column(name = "measurement_system")
 	private String measurementSystem;
-	
-	@Column(name="use_current_location")
+
+	@Column(name = "use_current_location")
 	private Boolean useCurrentLocation;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
-	
-	@Column(name="defalut_time")
+
+	@Column(name = "defalut_time")
 	private String defalutTime;
-	
-	@Column(name="validation_characters")
+
+	@Column(name = "validation_characters")
 	private String validationCharacters;
-	
-	@Column(name="validation_condition")
+
+	@Column(name = "validation_condition")
 	private String validationCondition;
-	
-	@Column(name="validation_except_text")
+
+	@Column(name = "validation_except_text")
 	private String validationExceptText;
-	
-	@Column(name="formula_based_logic")
+
+	@Column(name = "formula_based_logic")
 	private String formulaBasedLogic;
-	
-	@Column(name="condition_formula")
+
+	@Column(name = "condition_formula")
 	private String conditionFormula;
 
 	public Integer getResponseTypeId() {
@@ -411,5 +410,5 @@ public class QuestionReponseTypeDto implements Serializable {
 	public void setConditionFormula(String conditionFormula) {
 		this.conditionFormula = conditionFormula;
 	}
-	
+
 }

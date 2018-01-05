@@ -14,19 +14,17 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:31:52 PM
  *
  */
 @Entity
-@Table(name="study_sequence")
+@Table(name = "study_sequence")
 @NamedQueries({
-	
-	@NamedQuery(name="getStudySequenceDetailsByStudyId", query="from StudySequenceDto SSDTO"
-			+ " where SSDTO.studyId =:studyId "),
-})
-public class StudySequenceDto implements Serializable{
-	
+
+@NamedQuery(name = "getStudySequenceDetailsByStudyId", query = "from StudySequenceDto SSDTO"
+		+ " where SSDTO.studyId =:studyId "), })
+public class StudySequenceDto implements Serializable {
 
 	/**
 	 * 
@@ -34,64 +32,64 @@ public class StudySequenceDto implements Serializable{
 	private static final long serialVersionUID = 6095431690838787358L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="study_sequence_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "study_sequence_id")
 	private Integer studySequenceId;
-	
-	@Column(name="actions")
+
+	@Column(name = "actions")
 	private String actions;
-	
-	@Column(name="basic_info")
+
+	@Column(name = "basic_info")
 	private String basicInfo;
-	
-	@Column(name="check_list")
+
+	@Column(name = "check_list")
 	private String checkList;
-	
-	@Column(name="comprehension_test")
+
+	@Column(name = "comprehension_test")
 	private String comprehensionTest;
-	
-	@Column(name="consent_edu_info")
+
+	@Column(name = "consent_edu_info")
 	private String consentEduInfo;
-	
-	@Column(name="e_consent")
+
+	@Column(name = "e_consent")
 	private String eConsent;
-	
-	@Column(name="eligibility")
+
+	@Column(name = "eligibility")
 	private String eligibility;
-	
-	@Column(name="miscellaneous_branding")
+
+	@Column(name = "miscellaneous_branding")
 	private String miscellaneousBranding;
-	
-	@Column(name="miscellaneous_notification")
+
+	@Column(name = "miscellaneous_notification")
 	private String miscellaneousNotification;
-	
-	@Column(name="miscellaneous_resources")
+
+	@Column(name = "miscellaneous_resources")
 	private String miscellaneousResources;
-	
-	@Column(name="over_view")
+
+	@Column(name = "over_view")
 	private String overView;
-	
-	@Column(name="setting_admins")
+
+	@Column(name = "setting_admins")
 	private String settingAdmins;
-	
-	@Column(name="study_dashboard_chart")
+
+	@Column(name = "study_dashboard_chart")
 	private String studyDashboardChart;
-	
-	@Column(name="study_dashboard_stats")
+
+	@Column(name = "study_dashboard_stats")
 	private String studyDashboardStats;
-	
-	@Column(name="study_exc_active_task")
+
+	@Column(name = "study_exc_active_task")
 	private String studyExcActiveTask;
-	
-	@Column(name="study_exc_questionnaries")
+
+	@Column(name = "study_exc_questionnaries")
 	private String studyExcQuestionnaries;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -99,7 +97,7 @@ public class StudySequenceDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 	public Integer getStudySequenceId() {
 		return studySequenceId;
 	}
@@ -243,5 +241,5 @@ public class StudySequenceDto implements Serializable{
 	public void setStudyId(Integer studyId) {
 		this.studyId = studyId;
 	}
-	
+
 }

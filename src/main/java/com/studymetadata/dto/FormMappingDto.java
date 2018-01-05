@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:28:12 PM
  *
  */
 @Entity
-@Table(name="form_mapping")
-public class FormMappingDto implements Serializable{
-	
+@Table(name = "form_mapping")
+public class FormMappingDto implements Serializable {
 
 	/**
 	 * 
@@ -27,21 +26,21 @@ public class FormMappingDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="form_id")
+
+	@Column(name = "form_id")
 	private Integer formId;
-	
-	@Column(name="question_id")
+
+	@Column(name = "question_id")
 	private Integer questionId;
-	
-	@Column(name="sequence_no")
+
+	@Column(name = "sequence_no")
 	private Integer sequenceNo;
 
-	@Column(name="active")
-	private Boolean active=true;
-	
+	@Column(name = "active")
+	private Boolean active = true;
+
 	public Integer getId() {
 		return id;
 	}
@@ -81,5 +80,5 @@ public class FormMappingDto implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
 }

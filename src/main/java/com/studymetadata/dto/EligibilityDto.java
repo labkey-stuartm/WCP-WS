@@ -14,19 +14,17 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:27:36 PM
  *
  */
 @Entity
 @Table(name = "eligibility")
 @NamedQueries({
-	
-	@NamedQuery(name="eligibilityDtoByStudyId", query="from EligibilityDto EDTO"
-			+ " where EDTO.studyId =:studyId "),
-})
-public class EligibilityDto implements Serializable{
-	
+
+@NamedQuery(name = "eligibilityDtoByStudyId", query = "from EligibilityDto EDTO"
+		+ " where EDTO.studyId =:studyId "), })
+public class EligibilityDto implements Serializable {
 
 	/**
 	 * 
@@ -35,24 +33,24 @@ public class EligibilityDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
-	
+
 	@Column(name = "eligibility_mechanism")
 	private Integer eligibilityMechanism;
-	
+
 	@Column(name = "instructional_text")
 	private String instructionalText;
-	
+
 	@Column(name = "failure_outcome_text")
 	private String failureOutcomeText;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -100,6 +98,5 @@ public class EligibilityDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
-	
+
 }

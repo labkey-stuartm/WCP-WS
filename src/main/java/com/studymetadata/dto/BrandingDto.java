@@ -14,19 +14,17 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:26:01 PM
  *
  */
 @Entity
-@Table(name="branding")
+@Table(name = "branding")
 @NamedQueries({
-	
-	@NamedQuery(name="brandingDetailsByStudyId", query="from BrandingDto BDTO"
-			+ " where BDTO.studyId =:studyId"),
-})
-public class BrandingDto implements Serializable{
-	
+
+@NamedQuery(name = "brandingDetailsByStudyId", query = "from BrandingDto BDTO"
+		+ " where BDTO.studyId =:studyId"), })
+public class BrandingDto implements Serializable {
 
 	/**
 	 * 
@@ -34,23 +32,23 @@ public class BrandingDto implements Serializable{
 	private static final long serialVersionUID = -3782834655524137288L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="background")
+
+	@Column(name = "background")
 	private String background;
-	
-	@Column(name="font")
+
+	@Column(name = "font")
 	private String font;
-	
-	@Column(name="tint")
+
+	@Column(name = "tint")
 	private String tint;
-	
-	@Column(name="logo_image_path")
+
+	@Column(name = "logo_image_path")
 	private String logoImagePath;
 
 	public Integer getId() {

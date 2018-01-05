@@ -14,26 +14,24 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:29:53 PM
  *
  */
 @Entity
-@Table(name="questionnaires")
+@Table(name = "questionnaires")
 @NamedQueries({
-	
-	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO"
-			+ " where QDTO.studyId =:studyId"),
-			
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO"
-			+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
-			
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO"
-			+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active)"
-			+ " ORDER BY QDTO.createdDate DESC")
-})
-public class QuestionnairesDto implements Serializable{
-	
+
+		@NamedQuery(name = "questionnairesListByStudyId", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.studyId =:studyId"),
+
+		@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
+
+		@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active)"
+				+ " ORDER BY QDTO.createdDate DESC") })
+public class QuestionnairesDto implements Serializable {
 
 	/**
 	 * 
@@ -41,64 +39,64 @@ public class QuestionnairesDto implements Serializable{
 	private static final long serialVersionUID = 9053445608384935386L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="frequency")
+
+	@Column(name = "frequency")
 	private String frequency;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
-	@Column(name="study_lifetime_start")
+
+	@Column(name = "study_lifetime_start")
 	private String studyLifetimeStart;
-	
-	@Column(name="study_lifetime_end")
+
+	@Column(name = "study_lifetime_end")
 	private String studyLifetimeEnd;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private Integer createdBy;
-	
-	@Column(name="created_date")
+
+	@Column(name = "created_date")
 	private String createdDate;
-	
-	@Column(name="modified_by")
+
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
-	@Column(name="modified_date")
+
+	@Column(name = "modified_date")
 	private String modifiedDate;
-	
-	@Column(name="day_of_the_week")
+
+	@Column(name = "day_of_the_week")
 	private String dayOfTheWeek;
-	
-	@Column(name="repeat_questionnaire")
+
+	@Column(name = "repeat_questionnaire")
 	private Integer repeatQuestionnaire;
-	
-	@Column(name="short_title")
+
+	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="branching")
-	private Boolean branching=false;
-	
+
+	@Column(name = "branching")
+	private Boolean branching = false;
+
 	@Column(name = "active")
 	private Boolean active;
-	
+
 	@Column(name = "status")
 	private Boolean status;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -250,5 +248,5 @@ public class QuestionnairesDto implements Serializable{
 	public void setLive(Integer live) {
 		this.live = live;
 	}
-	
+
 }

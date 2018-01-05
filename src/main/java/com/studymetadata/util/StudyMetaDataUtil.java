@@ -26,32 +26,34 @@ import com.sun.jersey.core.util.Base64;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:47:44 PM
  *
  */
 public class StudyMetaDataUtil {
-	
-	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataUtil.class.getName());
+
+	private static final Logger LOGGER = Logger
+			.getLogger(StudyMetaDataUtil.class.getName());
 
 	@SuppressWarnings("rawtypes")
-	protected static final  HashMap configMap = StudyMetaDataUtil.getAppProperties();
+	protected static final HashMap configMap = StudyMetaDataUtil
+			.getAppProperties();
 
 	@SuppressWarnings("rawtypes")
-	protected static final HashMap authConfigMap = StudyMetaDataUtil.getAuthorizationProperties();
-		
+	protected static final HashMap authConfigMap = StudyMetaDataUtil
+			.getAuthorizationProperties();
+
 	@SuppressWarnings("unchecked")
 	private static final HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
-
 
 	/**
 	 * Get properties defined in messageResource and application property files
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return HashMap
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static HashMap getAppProperties(){
+	public static HashMap getAppProperties() {
 		LOGGER.info("INFO: StudyMetaDataUtil - getAppProperties() :: starts");
 		HashMap hm = new HashMap<String, String>();
 		Enumeration<String> keys = null;
@@ -66,7 +68,8 @@ public class StudyMetaDataUtil {
 			}
 			ServletContext context = ServletContextHolder.getServletContext();
 			Properties prop = new Properties();
-			prop.load(new FileInputStream(context.getInitParameter("property_file_location_path")));
+			prop.load(new FileInputStream(context
+					.getInitParameter("property_file_location_path")));
 			objectKeys = prop.keys();
 			while (objectKeys.hasMoreElements()) {
 				String key = (String) objectKeys.nextElement();
@@ -74,8 +77,8 @@ public class StudyMetaDataUtil {
 				hm.put(key, value);
 			}
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getAppProperties() - ERROR " , e);
-		} 
+			LOGGER.error("StudyMetaDataUtil - getAppProperties() - ERROR ", e);
+		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getAppProperties() :: ends");
 		return hm;
 	}
@@ -83,13 +86,14 @@ public class StudyMetaDataUtil {
 	/**
 	 * Set failure response for the provided status, title and detail
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param status
 	 * @param title
 	 * @param detail
 	 * @return {@link FailureResponse}
 	 */
-	public static FailureResponse getFailureResponse(String status, String title, String detail){
+	public static FailureResponse getFailureResponse(String status,
+			String title, String detail) {
 		LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Starts");
 		FailureResponse failureResponse = new FailureResponse();
 		try {
@@ -98,29 +102,31 @@ public class StudyMetaDataUtil {
 			failureResponse.getErrors().setTitle(title);
 			failureResponse.getErrors().setDetail(detail);
 		} catch (Exception e) {
-			LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ",e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Ends");
 		return failureResponse;
 	}
 
 	/**
-	 * Update response details for the provided status, title, detail and response
+	 * Update response details for the provided status, title, detail and
+	 * response
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param status
 	 * @param title
 	 * @param detail
 	 * @param response
 	 */
-	public static void getFailureResponse(String status, String title, String detail, HttpServletResponse response){
+	public static void getFailureResponse(String status, String title,
+			String detail, HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Starts");
 		try {
-			response.setHeader("status", status); 
+			response.setHeader("status", status);
 			response.setHeader("title", title);
 			response.setHeader("StatusMessage", detail);
 		} catch (Exception e) {
-			LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ",e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Ends");
 	}
@@ -128,7 +134,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get number of days for the provided month and year
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param month
 	 * @param year
 	 * @return {@link Integer}
@@ -139,10 +145,11 @@ public class StudyMetaDataUtil {
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(Calendar.YEAR, year);
-			calendar.set(Calendar.MONTH, month-1);
+			calendar.set(Calendar.MONTH, month - 1);
 			numDays = calendar.getActualMaximum(Calendar.DATE);
 		} catch (Exception e) {
-			LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysForMonthYear() " + e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysForMonthYear() "
+					+ e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysForMonthYear() :: Ends");
 		return numDays;
@@ -151,20 +158,24 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get number of days between the provided start and end date's
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param startDate
 	 * @param endDate
 	 * @return {@link Integer}
 	 */
 	public static int noOfDaysBetweenTwoDates(String startDate, String endDate) {
 		LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysBetweenTwoDates() :: Starts");
-		int daysdiff=0;
+		int daysdiff = 0;
 		try {
-			long diff = StudyMetaDataConstants.SDF_DATE.parse(endDate).getTime() - StudyMetaDataConstants.SDF_DATE.parse(startDate).getTime();
-			long diffDays = diff / (24 * 60 * 60 * 1000)+1;
+			long diff = StudyMetaDataConstants.SDF_DATE.parse(endDate)
+					.getTime()
+					- StudyMetaDataConstants.SDF_DATE.parse(startDate)
+							.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
 			daysdiff = (int) diffDays;
 		} catch (Exception e) {
-			LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysBetweenTwoDates() " + e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysBetweenTwoDates() "
+					+ e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysBetweenTwoDates() :: Ends");
 		return daysdiff;
@@ -173,7 +184,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get server current date
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return {@link String}
 	 */
 	public static String getCurrentDate() {
@@ -194,7 +205,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get server current date time
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return {@link String}
 	 */
 	public static String getCurrentDateTime() {
@@ -202,11 +213,12 @@ public class StudyMetaDataUtil {
 		String getToday = "";
 		try {
 			Date today = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 			getToday = formatter.format(today.getTime());
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getCurrentDateTime() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - getCurrentDateTime() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getCurrentDateTime() - Ends ");
 		return getToday;
@@ -215,25 +227,29 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get formatted date for the provided date, input and output format
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param inputDate
 	 * @param inputFormat
 	 * @param outputFormat
 	 * @return {@link String}
 	 */
-	public static String getFormattedDate1(String inputDate, String inputFormat, String outputFormat) {
+	public static String getFormattedDate1(String inputDate,
+			String inputFormat, String outputFormat) {
 		LOGGER.info("StudyMetaDataUtil: getFormattedDate1() - Starts ");
 		String finalDate = "";
-		java.sql.Date formattedDate = null; 
-		if (inputDate != null && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)){
+		java.sql.Date formattedDate = null;
+		if (inputDate != null && !"".equals(inputDate)
+				&& !"null".equalsIgnoreCase(inputDate)) {
 			try {
 				SimpleDateFormat formatter = new SimpleDateFormat(inputFormat);
-				formattedDate = new java.sql.Date(formatter.parse(inputDate).getTime());
+				formattedDate = new java.sql.Date(formatter.parse(inputDate)
+						.getTime());
 
 				formatter = new SimpleDateFormat(outputFormat);
 				finalDate = formatter.format(formattedDate);
-			} catch (Exception e){
-				LOGGER.error("StudyMetaDataUtil: getFormattedDate1() - ERROR",e);
+			} catch (Exception e) {
+				LOGGER.error("StudyMetaDataUtil: getFormattedDate1() - ERROR",
+						e);
 			}
 		}
 		LOGGER.info("StudyMetaDataUtil: getFormattedDate1() - Ends ");
@@ -241,9 +257,9 @@ public class StudyMetaDataUtil {
 	}
 
 	/**
-	 * Get time difference in days hours minutes between two dates 
+	 * Get time difference in days hours minutes between two dates
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dateOne
 	 * @param dateTwo
 	 * @return {@link String}
@@ -253,10 +269,19 @@ public class StudyMetaDataUtil {
 		String diff = "";
 		try {
 			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-			diff = String.format("%d Day(s) %d hour(s) %d min(s)", TimeUnit.MILLISECONDS.toDays(timeDiff), TimeUnit.MILLISECONDS.toHours(timeDiff) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeDiff)), 
-					TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));
+			diff = String.format(
+					"%d Day(s) %d hour(s) %d min(s)",
+					TimeUnit.MILLISECONDS.toDays(timeDiff),
+					TimeUnit.MILLISECONDS.toHours(timeDiff)
+							- TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS
+									.toDays(timeDiff)),
+					TimeUnit.MILLISECONDS.toMinutes(timeDiff)
+							- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS
+									.toHours(timeDiff)));
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR " , e);
+			LOGGER.error(
+					"StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR ",
+					e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
 		return diff;
@@ -265,21 +290,25 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get time difference in days hours minutes between two dates
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dateOne1
 	 * @param dateTwo2
 	 * @return {@link String}
 	 */
-	public static String getTimeDiffInDaysHoursMins(String dateOne1, String dateTwo2) {
+	public static String getTimeDiffInDaysHoursMins(String dateOne1,
+			String dateTwo2) {
 		LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
 		String diff = "";
-		try{
+		try {
 			Date dateOne = StudyMetaDataConstants.SDF_DATE_TIME.parse(dateOne1);
 			Date dateTwo = StudyMetaDataConstants.SDF_DATE_TIME.parse(dateTwo2);
 			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-			diff = String.format("%d",TimeUnit.MILLISECONDS.toMinutes(timeDiff));
-		}catch(ParseException e){
-			LOGGER.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR " , e);
+			diff = String.format("%d",
+					TimeUnit.MILLISECONDS.toMinutes(timeDiff));
+		} catch (ParseException e) {
+			LOGGER.error(
+					"StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR ",
+					e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
 		return diff;
@@ -288,39 +317,47 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get encoded base64 string for the provided text
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param plainText
 	 * @return {@link String}
 	 */
 	public static String getEncodedStringByBase64(String plainText) {
 		LOGGER.info("StudyMetaDataUtil: getEncodedStringByBase64() - Starts ");
-		if(StringUtils.isEmpty(plainText)){return "";}
+		if (StringUtils.isEmpty(plainText)) {
+			return "";
+		}
 		try {
-			byte[]   bytesEncoded = Base64.encode(plainText.getBytes());
+			byte[] bytesEncoded = Base64.encode(plainText.getBytes());
 			return new String(bytesEncoded);
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getEncodedStringByBase64() - ERROR " , e);
+			LOGGER.error(
+					"StudyMetaDataUtil - getEncodedStringByBase64() - ERROR ",
+					e);
 
 		}
 		LOGGER.info("StudyMetaDataUtil: getEncodedStringByBase64() - Ends ");
 		return "";
 	}
-	
+
 	/**
 	 * Get decoded base64 string for the provided text
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param encodedText
 	 * @return
 	 */
 	public static String getDecodedStringByBase64(String encodedText) {
 		LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
-		if(StringUtils.isEmpty(encodedText)){return "";}
+		if (StringUtils.isEmpty(encodedText)) {
+			return "";
+		}
 		try {
-			byte[] valueDecoded= Base64.decode(encodedText );
-			return  new String(valueDecoded);
+			byte[] valueDecoded = Base64.decode(encodedText);
+			return new String(valueDecoded);
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getDecodedStringByBase64() - ERROR " , e);
+			LOGGER.error(
+					"StudyMetaDataUtil - getDecodedStringByBase64() - ERROR ",
+					e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Ends ");
 		return "";
@@ -330,7 +367,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get encrypted string for the provided input
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @return {@link String}
 	 */
@@ -338,10 +375,11 @@ public class StudyMetaDataUtil {
 		LOGGER.info("INFO: getEncryptedString :: Starts");
 		StringBuilder sb = new StringBuilder();
 		String encryptValue = "";
-		if(StringUtils.isNotEmpty(input)){
+		if (StringUtils.isNotEmpty(input)) {
 			encryptValue = input + StudyMetaDataConstants.PASS_SALT;
 			try {
-				MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+				MessageDigest messageDigest = MessageDigest
+						.getInstance("SHA-512");
 				messageDigest.update(encryptValue.getBytes("UTF-8"));
 				byte[] digestBytes = messageDigest.digest();
 				String hex = null;
@@ -351,38 +389,39 @@ public class StudyMetaDataUtil {
 						sb.append("0");
 					sb.append(hex);
 				}
-			}
-			catch (Exception e) {
-				LOGGER.error("ERROR: getEncryptedString ",e);
+			} catch (Exception e) {
+				LOGGER.error("ERROR: getEncryptedString ", e);
 			}
 		}
 		LOGGER.info("INFO: getEncryptedString :: Ends");
 		return sb.toString();
 	}
 
-
 	/**
 	 * Get formatted date for the provided date, input and output format
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param inputDate
 	 * @param inputFormat
 	 * @param outputFormat
 	 * @return {@link String}
 	 */
-	public static String getFormattedDate(String inputDate, String inputFormat, String outputFormat) {
+	public static String getFormattedDate(String inputDate, String inputFormat,
+			String outputFormat) {
 		LOGGER.info("StudyMetaDataUtil: getFormattedDate() - Starts ");
 		String finalDate = "";
-		java.sql.Date formattedDate = null; 
-		if (inputDate != null && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)){
+		java.sql.Date formattedDate = null;
+		if (inputDate != null && !"".equals(inputDate)
+				&& !"null".equalsIgnoreCase(inputDate)) {
 			try {
 				SimpleDateFormat formatter = new SimpleDateFormat(inputFormat);
-				formattedDate = new java.sql.Date(formatter.parse(inputDate).getTime());
+				formattedDate = new java.sql.Date(formatter.parse(inputDate)
+						.getTime());
 
 				formatter = new SimpleDateFormat(outputFormat);
 				finalDate = formatter.format(formattedDate);
-			} catch (Exception e){
-				LOGGER.error("ERROR: getFormattedDate ",e);
+			} catch (Exception e) {
+				LOGGER.error("ERROR: getFormattedDate ", e);
 			}
 		}
 		LOGGER.info("StudyMetaDataUtil: getFormattedDate() - Ends ");
@@ -390,9 +429,9 @@ public class StudyMetaDataUtil {
 	}
 
 	/**
-	 * Get new date time for the provided date time and minutes 
+	 * Get new date time for the provided date time and minutes
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dtStr
 	 * @param minutes
 	 * @return {@link String}
@@ -401,7 +440,8 @@ public class StudyMetaDataUtil {
 		LOGGER.info("StudyMetaDataUtil: addMinutes() - Starts ");
 		String newdateStr = "";
 		try {
-			SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
+			SimpleDateFormat date = new SimpleDateFormat(
+					StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			Date dt = date.parse(dtStr);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dt);
@@ -409,16 +449,16 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = date.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addMinutes() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addMinutes() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addMinutes() - Ends ");
-		return newdateStr; 
+		return newdateStr;
 	}
 
 	/**
 	 * Get new date time for the provided date time and days
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dtStr
 	 * @param days
 	 * @return {@link String}
@@ -434,16 +474,16 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = StudyMetaDataConstants.SDF_DATE_TIME.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addDays() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addDays() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addDays() - Ends ");
-		return newdateStr; 
+		return newdateStr;
 	}
 
 	/**
 	 * Get new date time for the provided date time and months
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dtStr
 	 * @param months
 	 * @return String
@@ -457,9 +497,9 @@ public class StudyMetaDataUtil {
 			cal.setTime(dt);
 			cal.add(Calendar.MONTH, months);
 			Date newDate = cal.getTime();
-			newdateStr =StudyMetaDataConstants.SDF_DATE.format(newDate);
+			newdateStr = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addMonth() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addMonth() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addMonth() - Ends ");
 		return newdateStr;
@@ -469,7 +509,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get new date time for the provided date time and years
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dtStr
 	 * @param years
 	 * @return {@link String}
@@ -485,16 +525,16 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			newdateStr = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addYear() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addYear() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addYear() - Ends ");
-		return newdateStr ;
+		return newdateStr;
 	}
 
 	/**
 	 * Get seconds for the provided date
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param getCurrentDate
 	 * @return {@link Long}
 	 */
@@ -503,19 +543,18 @@ public class StudyMetaDataUtil {
 		Long getInSeconds = null;
 		try {
 			Date dt = StudyMetaDataConstants.SDF_DATE.parse(getCurrentDate);
-			getInSeconds=dt.getTime();
+			getInSeconds = dt.getTime();
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - getDateToSeconds() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - getDateToSeconds() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getDateToSeconds() - Ends ");
 		return getInSeconds;
 	}
 
-
 	/**
 	 * Get date time for the provided seconds and timezone
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param value
 	 * @return String
 	 */
@@ -523,7 +562,7 @@ public class StudyMetaDataUtil {
 		LOGGER.info("StudyMetaDataUtil: getSecondsToDate() - Starts ");
 		String dateText;
 		long getLongValue = Long.parseLong(value);
-		Date date=new Date(getLongValue);
+		Date date = new Date(getLongValue);
 		SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yyyy");// yyyy-MM-dd
 		df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 		dateText = df2.format(date);
@@ -534,7 +573,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get date time for the provided date and timezone
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param value
 	 * @return String
 	 */
@@ -551,23 +590,25 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get current date time for UTC timezone
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return {@link String}
 	 */
 	public static String getCurrentDateTimeInUTC() {
 		LOGGER.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Starts ");
 		String dateNow = null;
-		final SimpleDateFormat sdf = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
+		final SimpleDateFormat sdf = new SimpleDateFormat(
+				StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 		String timeZone = "UTC";
 		try {
 			String strDate = new Date() + "";
-			if(strDate.indexOf("IST") != -1){
+			if (strDate.indexOf("IST") != -1) {
 				timeZone = "IST";
 			}
 			sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
 			dateNow = sdf.format(new Date());
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil: getCurrentDateTimeInUTC(): ERROR " + e);
+			LOGGER.error("StudyMetaDataUtil: getCurrentDateTimeInUTC(): ERROR "
+					+ e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Ends ");
 		return dateNow;
@@ -576,7 +617,7 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get the platform type for the provided credentials and type
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param authCredentials
 	 * @param type
 	 * @return {@link String}
@@ -585,64 +626,73 @@ public class StudyMetaDataUtil {
 		LOGGER.info("INFO: StudyMetaDataUtil - platformType() - Starts");
 		String bundleIdAndAppToken = null;
 		String platform = "";
-		try{
-			if(StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")){
-				final String encodedUserPassword = authCredentials.replaceFirst("Basic"+ " ", "");
+		try {
+			if (StringUtils.isNotEmpty(authCredentials)
+					&& authCredentials.contains("Basic")) {
+				final String encodedUserPassword = authCredentials
+						.replaceFirst("Basic" + " ", "");
 				byte[] decodedBytes = Base64.decode(encodedUserPassword);
 				bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
-				
-				if(bundleIdAndAppToken.contains(":")){
-					final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
+
+				if (bundleIdAndAppToken.contains(":")) {
+					final StringTokenizer tokenizer = new StringTokenizer(
+							bundleIdAndAppToken, ":");
 					final String bundleId = tokenizer.nextToken();
 					final String appToken = tokenizer.nextToken();
-					
-					if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
+
+					if (authPropMap.containsKey(bundleId)
+							&& authPropMap.containsKey(appToken)) {
 						String appBundleId = "";
 						String appTokenId = "";
-						for(Map.Entry<String, String> map : authPropMap.entrySet()){
-							if(map.getKey().equals(appToken)){
+						for (Map.Entry<String, String> map : authPropMap
+								.entrySet()) {
+							if (map.getKey().equals(appToken)) {
 								appTokenId = map.getValue();
 							}
-							
-							if(map.getKey().equals(bundleId)){
+
+							if (map.getKey().equals(bundleId)) {
 								appBundleId = map.getValue();
 							}
 						}
-						
-						if(StringUtils.isNotEmpty(appBundleId) && StringUtils.isNotEmpty(appTokenId)){
-							final StringTokenizer authTokenizer = new StringTokenizer(appTokenId, ".");
-							final String platformType = authTokenizer.nextToken();
-							
-							if(platformType.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)){
+
+						if (StringUtils.isNotEmpty(appBundleId)
+								&& StringUtils.isNotEmpty(appTokenId)) {
+							final StringTokenizer authTokenizer = new StringTokenizer(
+									appTokenId, ".");
+							final String platformType = authTokenizer
+									.nextToken();
+
+							if (platformType
+									.equals(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)) {
 								switch (type) {
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: 
-										platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
-										break;
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: 
-										platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
-										break;
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: 
-										platform = bundleId;
-										break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM:
+									platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_ANDROID;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS:
+									platform = StudyMetaDataConstants.STUDY_PLATFORM_ANDROID;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID:
+									platform = bundleId;
+									break;
 								}
-							}else{
+							} else {
 								switch (type) {
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM: 
-										platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
-										break;
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS: 
-										platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
-										break;
-									case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID: 
-										platform = bundleId;
-										break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM:
+									platform = StudyMetaDataConstants.STUDY_PLATFORM_TYPE_IOS;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_OS:
+									platform = StudyMetaDataConstants.STUDY_PLATFORM_IOS;
+									break;
+								case StudyMetaDataConstants.STUDY_AUTH_TYPE_BUNDLE_ID:
+									platform = bundleId;
+									break;
 								}
 							}
 						}
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataUtil - platformType() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - platformType() - Ends");
@@ -652,11 +702,11 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get properties defined in authorizationResource property file
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return HashMap
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static HashMap getAuthorizationProperties(){
+	public static HashMap getAuthorizationProperties() {
 		LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
 		HashMap hashMap = new HashMap<String, String>();
 		ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
@@ -673,22 +723,23 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get the day for the provided date
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @return String
 	 */
-	public static String getDayByDate(String input){
+	public static String getDayByDate(String input) {
 		LOGGER.info("StudyMetaDataUtil: getDayByDate() - Starts ");
 		String actualDay = "";
 		try {
-			if(StringUtils.isNotEmpty(input)){
-				SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (StringUtils.isNotEmpty(input)) {
+				SimpleDateFormat newDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
 				Date MyDate = newDateFormat.parse(input);
 				newDateFormat.applyPattern(StudyMetaDataConstants.SDF_DAY);
 				actualDay = newDateFormat.format(MyDate);
 			}
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataUtil - getDayByDate() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - getDayByDate() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getDayByDate() - Ends ");
 		return actualDay;
@@ -697,12 +748,12 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get the new date by adding days for the provided date and days
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @param days
 	 * @return String
 	 */
-	public static String addDaysToDate(String input, int days){
+	public static String addDaysToDate(String input, int days) {
 		LOGGER.info("StudyMetaDataUtil: addDaysToDate() - Starts ");
 		String output = "";
 		try {
@@ -713,7 +764,7 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addDaysToDate() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addDaysToDate() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addDaysToDate() - Ends ");
 		return output;
@@ -722,12 +773,12 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get the new date by adding weeks for the provided date and weeks
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @param weeks
 	 * @return {@link String}
 	 */
-	public static String addWeeksToDate(String input, int weeks){
+	public static String addWeeksToDate(String input, int weeks) {
 		LOGGER.info("StudyMetaDataUtil: addWeeksToDate() - Starts ");
 		String output = "";
 		try {
@@ -738,7 +789,7 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addWeeksToDate() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addWeeksToDate() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addWeeksToDate() - Ends ");
 		return output;
@@ -747,12 +798,12 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get the new date by adding months for the provided date and months
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @param months
 	 * @return String
 	 */
-	public static String addMonthsToDate(String input, int months){
+	public static String addMonthsToDate(String input, int months) {
 		LOGGER.info("StudyMetaDataUtil: addMonthsToDate() - Starts ");
 		String output = "";
 		try {
@@ -763,7 +814,7 @@ public class StudyMetaDataUtil {
 			Date newDate = cal.getTime();
 			output = StudyMetaDataConstants.SDF_DATE.format(newDate);
 		} catch (ParseException e) {
-			LOGGER.error("StudyMetaDataUtil - addMonthsToDate() - ERROR " , e);
+			LOGGER.error("StudyMetaDataUtil - addMonthsToDate() - ERROR ", e);
 		}
 		LOGGER.info("StudyMetaDataUtil: addMonthsToDate() - Ends ");
 		return output;
@@ -772,33 +823,36 @@ public class StudyMetaDataUtil {
 	/**
 	 * Get formatted date for the provided date time, input and output format
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param input
 	 * @param inputFormat
 	 * @param outputFormat
 	 * @return {@link String}
 	 */
-	public static String getFormattedDateTimeZone(String input, String inputFormat, String outputFormat){
+	public static String getFormattedDateTimeZone(String input,
+			String inputFormat, String outputFormat) {
 		LOGGER.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Starts ");
 		String output = "";
-		try{
-			if(StringUtils.isNotEmpty(input)){
+		try {
+			if (StringUtils.isNotEmpty(input)) {
 				SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
 				Date inputDate = inputSDF.parse(input);
 				SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat);
 				output = outputSDF.format(inputDate);
 			}
-		}catch(Exception e){
-			LOGGER.error("AuthenticationService - getFormattedDateTimeZone() :: ERROR", e);
+		} catch (Exception e) {
+			LOGGER.error(
+					"AuthenticationService - getFormattedDateTimeZone() :: ERROR",
+					e);
 		}
 		LOGGER.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Ends ");
 		return output;
 	}
-	
+
 	/**
 	 * Get the new date by adding seconds for the provided date time and seconds
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param dtStr
 	 * @param seconds
 	 * @return {@link String}
@@ -807,7 +861,8 @@ public class StudyMetaDataUtil {
 		LOGGER.info("StudyMetaDataUtil: addSeconds() - Starts ");
 		String newdateStr = "";
 		try {
-			SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
+			SimpleDateFormat date = new SimpleDateFormat(
+					StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
 			Date dt = date.parse(dtStr);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dt);
@@ -820,26 +875,27 @@ public class StudyMetaDataUtil {
 		LOGGER.info("StudyMetaDataUtil: addSeconds() - Ends ");
 		return newdateStr;
 	}
-	
+
 	/**
 	 * Append milliseconds for the image path
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @return {@link String}
 	 */
 	public static String getMilliSecondsForImagePath() {
 		LOGGER.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Starts ");
 		String milliSeconds;
 		Calendar cal = Calendar.getInstance();
-		milliSeconds = "?v="+cal.getTimeInMillis();
+		milliSeconds = "?v=" + cal.getTimeInMillis();
 		LOGGER.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
 		return milliSeconds;
 	}
-	
+
 	/**
-	 * Get the platform bundle identifier for the provided authorization credentials
+	 * Get the platform bundle identifier for the provided authorization
+	 * credentials
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param authCredentials
 	 * @return {@link String}
 	 */
@@ -847,41 +903,47 @@ public class StudyMetaDataUtil {
 		LOGGER.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Starts");
 		String bundleIdAndAppToken = null;
 		String appBundleId = "";
-		try{
-			if(StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")){
-				final String encodedUserPassword = authCredentials.replaceFirst("Basic"+ " ", "");
+		try {
+			if (StringUtils.isNotEmpty(authCredentials)
+					&& authCredentials.contains("Basic")) {
+				final String encodedUserPassword = authCredentials
+						.replaceFirst("Basic" + " ", "");
 				byte[] decodedBytes = Base64.decode(encodedUserPassword);
 				bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
-				if(bundleIdAndAppToken.contains(":")){
-					final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
+				if (bundleIdAndAppToken.contains(":")) {
+					final StringTokenizer tokenizer = new StringTokenizer(
+							bundleIdAndAppToken, ":");
 					final String bundleId = tokenizer.nextToken();
 					final String appToken = tokenizer.nextToken();
-					if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
+					if (authPropMap.containsKey(bundleId)
+							&& authPropMap.containsKey(appToken)) {
 						appBundleId = bundleId;
 					}
 				}
 			}
-		}catch(Exception e){
-			LOGGER.error("StudyMetaDataUtil - getBundleIdFromAuthorization() :: ERROR", e);
+		} catch (Exception e) {
+			LOGGER.error(
+					"StudyMetaDataUtil - getBundleIdFromAuthorization() :: ERROR",
+					e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Ends");
 		return appBundleId;
 	}
-	
+
 	/**
 	 * Replace all single quotes with escape character for the provided text
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param activityId
 	 * @return {@link String}
 	 */
-	public static String replaceSingleQuotes(String activityId){
+	public static String replaceSingleQuotes(String activityId) {
 		LOGGER.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Starts");
 		String newActivityId = activityId;
-		if(activityId.indexOf("'") > -1){
+		if (activityId.indexOf("'") > -1) {
 			newActivityId = activityId.replaceAll("'", "''");
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Ends");
 		return newActivityId;
-	} 
+	}
 }

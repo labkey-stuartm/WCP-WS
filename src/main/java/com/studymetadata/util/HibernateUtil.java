@@ -9,7 +9,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:37:36 PM
  *
  */
@@ -33,10 +33,14 @@ public class HibernateUtil {
 	public static SessionFactory getSessionFactory() {
 		logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
 		try {
-			if(sessionFactory==null){
+			if (sessionFactory == null) {
 				Properties properties = new Properties();
-				properties.load(new FileInputStream(ServletContextHolder.getServletContext().getInitParameter("property_file_location_path")));
-				sessionFactory = new AnnotationConfiguration().addProperties(properties).configure("hibernate.cfg.xml").buildSessionFactory();
+				properties.load(new FileInputStream(ServletContextHolder
+						.getServletContext().getInitParameter(
+								"property_file_location_path")));
+				sessionFactory = new AnnotationConfiguration()
+						.addProperties(properties)
+						.configure("hibernate.cfg.xml").buildSessionFactory();
 			}
 		} catch (Exception e) {
 			logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);

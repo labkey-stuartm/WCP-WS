@@ -14,22 +14,20 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:26:43 PM
  *
  */
 @Entity
-@Table(name="consent")
+@Table(name = "consent")
 @NamedQueries({
-	
-	@NamedQuery(name="consentDtoByStudyId", query="from ConsentDto CDTO"
-			+ " where CDTO.studyId =:studyId"),
-			
-	@NamedQuery(name="consentDetailsByCustomStudyIdAndVersion", query=" from ConsentDto CDTO"
-			+ " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"),
-})
-public class ConsentDto implements Serializable{
-	
+
+		@NamedQuery(name = "consentDtoByStudyId", query = "from ConsentDto CDTO"
+				+ " where CDTO.studyId =:studyId"),
+
+		@NamedQuery(name = "consentDetailsByCustomStudyIdAndVersion", query = " from ConsentDto CDTO"
+				+ " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"), })
+public class ConsentDto implements Serializable {
 
 	/**
 	 * 
@@ -38,88 +36,87 @@ public class ConsentDto implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
-	
+
 	@Column(name = "comprehension_test_minimum_score")
 	private Integer comprehensionTestMinimumScore;
-	
+
 	@Column(name = "share_data_permissions")
 	private String shareDataPermissions;
-	
+
 	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "tagline_description")
 	private String taglineDescription;
-	
+
 	@Column(name = "short_description")
 	private String shortDescription;
-	
+
 	@Column(name = "long_description")
 	private String longDescription;
-	
-	
+
 	@Column(name = "learn_more_text")
 	private String learnMoreText;
-	
+
 	@Column(name = "consent_doc_type")
 	private String consentDocType;
-	
+
 	@Column(name = "consent_doc_content")
 	private String consentDocContent;
-	
+
 	@Column(name = "allow_without_permission")
 	private String allowWithoutPermission;
-	
+
 	@Column(name = "html_consent")
 	private String htmlConsent;
-	
+
 	@Column(name = "e_consent_firstname")
 	private String eConsentFirstName;
-	
+
 	@Column(name = "e_consent_lastname")
 	private String eConsentLastName;
-	
+
 	@Column(name = "e_consent_agree")
 	private String eConsentAgree;
-	
+
 	@Column(name = "e_consent_signature")
 	private String eConsentSignature;
-	
+
 	@Column(name = "e_consent_datetime")
 	private String eConsentDatetime;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
+
 	@Column(name = "need_comprehension_test")
 	private String needComprehensionTest;
-	
+
 	@Column(name = "aggrement_of_consent")
 	private String aggrementOfConsent;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -336,5 +333,5 @@ public class ConsentDto implements Serializable{
 	public void setAggrementOfConsent(String aggrementOfConsent) {
 		this.aggrementOfConsent = aggrementOfConsent;
 	}
-	
+
 }

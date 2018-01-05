@@ -11,34 +11,39 @@ import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:37:02 PM
  *
  */
 public class DashboardMetaDataOrchestration {
-	
-	private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataOrchestration.class);
-	
+
+	private static final Logger LOGGER = Logger
+			.getLogger(DashboardMetaDataOrchestration.class);
+
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
-	
+
 	DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
-	
+
 	/**
 	 * Get dashboard metadata for the provided study identifier
 	 * 
-	 * @author Mohan
+	 * @author BTC
 	 * @param studyId
 	 * @return {@link StudyDashboardResponse}
 	 * @throws OrchestrationException
 	 */
-	public StudyDashboardResponse studyDashboardInfo(String studyId) throws OrchestrationException{
+	public StudyDashboardResponse studyDashboardInfo(String studyId)
+			throws OrchestrationException {
 		LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
-		try{
-			studyDashboardResponse = dashboardMetaDataDao.studyDashboardInfo(studyId);
-		}catch(Exception e){
-			LOGGER.error("DashboardMetaDataOrchestration - studyDashboardInfo() :: ERROR", e);
+		try {
+			studyDashboardResponse = dashboardMetaDataDao
+					.studyDashboardInfo(studyId);
+		} catch (Exception e) {
+			LOGGER.error(
+					"DashboardMetaDataOrchestration - studyDashboardInfo() :: ERROR",
+					e);
 		}
 		LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Ends");
 		return studyDashboardResponse;

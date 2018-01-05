@@ -24,8 +24,8 @@
 			<param-value>true</param-value>
 		</init-param>
 		<init-param>
-    		<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
-    		<param-value>true</param-value>
+			<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+			<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -41,15 +41,10 @@
 		<load-on-startup>1</load-on-startup> </servlet> -->
 	<!-- Added for Quartz scheduler : Ends -->
 
-	<!-- <security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Permitted Actions</web-resource-name>
-			<url-pattern>/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-	</security-constraint> -->
-	
+	<!-- <security-constraint> <web-resource-collection> <web-resource-name>Permitted 
+		Actions</web-resource-name> <url-pattern>/*</url-pattern> <http-method>GET</http-method> 
+		<http-method>POST</http-method> </web-resource-collection> </security-constraint> -->
+
 	<!-- Force SSL for entire site -->
 	<security-constraint>
 		<web-resource-collection>
@@ -61,7 +56,7 @@
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
@@ -89,8 +84,8 @@
 		<param-name>defaultHtmlEscape</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
-	<!-- RESTful Services HTTP basic Authentication filter-->
+
+	<!-- RESTful Services HTTP basic Authentication filter -->
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.studymetadata.web.servlet.RestAuthenticationFilter</filter-class>

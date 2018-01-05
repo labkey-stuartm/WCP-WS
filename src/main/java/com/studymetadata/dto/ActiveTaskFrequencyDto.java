@@ -11,14 +11,13 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
  * @createdOn Jan 4, 2018 3:25:15 PM
  *
  */
 @Entity
-@Table(name="active_task_frequencies")
-public class ActiveTaskFrequencyDto implements Serializable{
-	
+@Table(name = "active_task_frequencies")
+public class ActiveTaskFrequencyDto implements Serializable {
 
 	/**
 	 * 
@@ -26,28 +25,28 @@ public class ActiveTaskFrequencyDto implements Serializable{
 	private static final long serialVersionUID = -8904004416297359680L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="active_task_id")
+
+	@Column(name = "active_task_id")
 	private Integer activeTaskId;
-	
-	@Column(name="frequency_date")
+
+	@Column(name = "frequency_date")
 	private String frequencyDate;
-	
-	@Column(name="frequency_time")
+
+	@Column(name = "frequency_time")
 	private String frequencyTime;
-	
-	@Column(name="is_launch_study")
+
+	@Column(name = "is_launch_study")
 	private boolean isLaunchStudy;
-	
-	@Column(name="is_study_life_time")
+
+	@Column(name = "is_study_life_time")
 	private boolean isStudyLifeTime;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -103,5 +102,5 @@ public class ActiveTaskFrequencyDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }
