@@ -13,8 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:54:12 PM
+ *
+ */
 public class StudyMetaDataController extends HttpServlet {
-	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataController.class);
+
+	private static final Logger LOGGER = Logger
+			.getLogger(StudyMetaDataController.class);
 	private static final long serialVersionUID = 1L;
 	private String port = "";
 	private String forwardURL = "";
@@ -26,41 +34,54 @@ public class StudyMetaDataController extends HttpServlet {
 		LOGGER.info("INFO: StudyMetaDataController - init() :: Ends");
 	}
 
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		LOGGER.info("INFO: StudyMetaDataController - doGet() :: Starts");
 		doPost(req, resp);
 		LOGGER.info("INFO: StudyMetaDataController - doGet() :: Ends");
 	}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		LOGGER.info("INFO: StudyMetaDataController - doPost() :: Starts");
 		String jsonp_callback = null;
 		String localForwardURL = forwardURL;
 		URL URL = new URL(localForwardURL);
-		HttpURLConnection urlConnection = (HttpURLConnection) URL.openConnection();
-		BufferedInputStream buffer = new BufferedInputStream(urlConnection.getInputStream());
+		HttpURLConnection urlConnection = (HttpURLConnection) URL
+				.openConnection();
+		BufferedInputStream buffer = new BufferedInputStream(
+				urlConnection.getInputStream());
 		StringBuilder builder = new StringBuilder();
 		int byteRead;
 		try {
-			jsonp_callback = (String) req.getSession().getServletContext().getAttribute("jsonp.callback");
+			jsonp_callback = (String) req.getSession().getServletContext()
+					.getAttribute("jsonp.callback");
 		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataController - doPost() :: ERROR ==> jsonp_callback key is missing... ", e);
+			LOGGER.error(
+					"StudyMetaDataController - doPost() :: ERROR ==> jsonp_callback key is missing... ",
+					e);
 		}
-		
+
 		try {
-			localForwardURL += ":"+new Integer(port).toString() + req.getContextPath() + req.getPathInfo() + "?" + req.getQueryString();
+			localForwardURL += ":" + new Integer(port).toString()
+					+ req.getContextPath() + req.getPathInfo() + "?"
+					+ req.getQueryString();
 		} catch (NumberFormatException e) {
-			localForwardURL += req.getContextPath() + req.getPathInfo() + "?" + req.getQueryString();
+			localForwardURL += req.getContextPath() + req.getPathInfo() + "?"
+					+ req.getQueryString();
 		}
-		
-		while ((byteRead = buffer.read()) != -1){
+
+		while ((byteRead = buffer.read()) != -1) {
 			builder.append((char) byteRead);
 		}
 		buffer.close();
-		LOGGER.info("INFO: StudyMetaDataController - doPost() :: HttpURLConnection.response = "+builder);
+		LOGGER.info("INFO: StudyMetaDataController - doPost() :: HttpURLConnection.response = "
+				+ builder);
 		if (req.getParameter(jsonp_callback) != null) {
 			if (req.getPathInfo().indexOf("/json") != -1) {
-				resp.getWriter().write( req.getParameter(jsonp_callback) + "(" + builder.toString() + ")");
+				resp.getWriter().write(
+						req.getParameter(jsonp_callback) + "("
+								+ builder.toString() + ")");
 			} else {
 				resp.getWriter().write(builder.toString());
 			}

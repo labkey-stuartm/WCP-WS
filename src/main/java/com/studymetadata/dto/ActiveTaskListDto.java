@@ -9,21 +9,30 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:25:22 PM
+ *
+ */
 @Entity
-@Table(name="active_task_list")
-public class ActiveTaskListDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "active_task_list")
+public class ActiveTaskListDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4743834604812647713L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="active_task_list_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "active_task_list_id")
 	private Integer activeTaskListId;
-	
-	@Column(name="task_name")
+
+	@Column(name = "task_name")
 	private String taskName;
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	private String type;
 
 	public Integer getActiveTaskListId() {
@@ -49,5 +58,5 @@ public class ActiveTaskListDto implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 }

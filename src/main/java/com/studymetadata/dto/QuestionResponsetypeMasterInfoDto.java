@@ -9,47 +9,56 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:30:24 PM
+ *
+ */
 @Entity
-@Table(name="question_responsetype_master_info")
-public class QuestionResponsetypeMasterInfoDto implements Serializable{
+@Table(name = "question_responsetype_master_info")
+public class QuestionResponsetypeMasterInfoDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 721954555522068688L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="anchor_date")
-	private Boolean anchorDate=false;
-	
-	@Column(name="choice_based_branching")
-	private Boolean choiceBasedBranching=false;
-	
-	@Column(name="dashboard_allowed")
-	private Boolean dashboardAllowed=false;
-	
-	@Column(name="data_type")
+
+	@Column(name = "anchor_date")
+	private Boolean anchorDate = false;
+
+	@Column(name = "choice_based_branching")
+	private Boolean choiceBasedBranching = false;
+
+	@Column(name = "dashboard_allowed")
+	private Boolean dashboardAllowed = false;
+
+	@Column(name = "data_type")
 	private String dataType;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="formula_based_logic")
-	private Boolean formulaBasedLogic=false;
-	
-	@Column(name="healthkit_alternative")
-	private Boolean healthkitAlternative=false;
-	
-	@Column(name="response_type")
+
+	@Column(name = "formula_based_logic")
+	private Boolean formulaBasedLogic = false;
+
+	@Column(name = "healthkit_alternative")
+	private Boolean healthkitAlternative = false;
+
+	@Column(name = "response_type")
 	private String responseType;
-	
-	@Column(name="response_type_code")
+
+	@Column(name = "response_type_code")
 	private String responseTypeCode;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -57,7 +66,7 @@ public class QuestionResponsetypeMasterInfoDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -137,5 +146,5 @@ public class QuestionResponsetypeMasterInfoDto implements Serializable{
 	public void setResponseTypeCode(String responseTypeCode) {
 		this.responseTypeCode = responseTypeCode;
 	}
-	
+
 }

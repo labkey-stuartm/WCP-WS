@@ -12,71 +12,75 @@ import javax.persistence.Transient;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:30:05 PM
  *
  */
 @Entity
-@Table(name="questionnaires_steps")
-public class QuestionnairesStepsDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "questionnaires_steps")
+public class QuestionnairesStepsDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6626878023643784669L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="step_id")
+	@Column(name = "step_id")
 	private Integer stepId;
-	
-	@Column(name="questionnaires_id")
+
+	@Column(name = "questionnaires_id")
 	private Integer questionnairesId;
-	
-	@Column(name="instruction_form_id")
+
+	@Column(name = "instruction_form_id")
 	private Integer instructionFormId;
-	
-	@Column(name="step_type")
+
+	@Column(name = "step_type")
 	private String stepType;
-	
-	@Column(name="sequence_no")
+
+	@Column(name = "sequence_no")
 	private Integer sequenceNo;
-	
-	@Column(name="step_short_title")
+
+	@Column(name = "step_short_title")
 	private String stepShortTitle;
-	
-	@Column(name="skiappable")
+
+	@Column(name = "skiappable")
 	private String skiappable;
-	
-	@Column(name="destination_step")
+
+	@Column(name = "destination_step")
 	private Integer destinationStep;
-	
-	@Column(name="repeatable")
-	private String repeatable="No";
-	
-	@Column(name="repeatable_text")
+
+	@Column(name = "repeatable")
+	private String repeatable = "No";
+
+	@Column(name = "repeatable_text")
 	private String repeatableText;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
 
 	@Transient
 	private String destinationStepType;
-	
+
 	public Integer getStepId() {
 		return stepId;
 	}
@@ -220,5 +224,5 @@ public class QuestionnairesStepsDto implements Serializable{
 	public void setDestinationStepType(String destinationStepType) {
 		this.destinationStepType = destinationStepType;
 	}
-	
+
 }

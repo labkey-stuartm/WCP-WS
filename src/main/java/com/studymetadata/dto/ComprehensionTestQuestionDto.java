@@ -14,57 +14,62 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:26:26 PM
  *
  */
 @Entity
 @Table(name = "comprehension_test_question")
 @NamedQueries({
-	/*@NamedQuery(name="comprehensionQuestionByConsentId", query="from ComprehensionTestQuestionDto CTDTO where CTDTO.consentId =:consentId"),*/
-	@NamedQuery(name="comprehensionQuestionByStudyId", query=" from ComprehensionTestQuestionDto CTDTO where CTDTO.studyId =:studyId and CTDTO.status=true and CTDTO.active=true order by CTDTO.sequenceNo"),
-})
-public class ComprehensionTestQuestionDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "comprehensionQuestionByStudyId", query = " from ComprehensionTestQuestionDto CTDTO"
+		+ " where CTDTO.studyId =:studyId and CTDTO.status=true and CTDTO.active=true"
+		+ " ORDER BY CTDTO.sequenceNo"), })
+public class ComprehensionTestQuestionDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6056127394260427728L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "question_text")
 	private String questionText;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
-	
+
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
-	
+
 	@Column(name = "structure_of_correct_ans")
-	private Boolean structureOfCorrectAns=false;
-	
+	private Boolean structureOfCorrectAns = false;
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "modified_on")
 	private Integer modifiedOn;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="status")
-	private Boolean status=false;
-	
-	@Column(name="active")
-	private Boolean active=false;
-	
+	private Integer studyVersion = 1;
+
+	@Column(name = "status")
+	private Boolean status = false;
+
+	@Column(name = "active")
+	private Boolean active = false;
+
 	public Integer getId() {
 		return id;
 	}
@@ -80,7 +85,7 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-	
+
 	public Integer getStudyId() {
 		return studyId;
 	}
@@ -88,7 +93,7 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setStudyId(Integer studyId) {
 		this.studyId = studyId;
 	}
-	
+
 	public Integer getSequenceNo() {
 		return sequenceNo;
 	}
@@ -160,5 +165,5 @@ public class ComprehensionTestQuestionDto implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
 }

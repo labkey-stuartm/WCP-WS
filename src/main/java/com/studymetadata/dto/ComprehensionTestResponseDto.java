@@ -14,35 +14,40 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:26:34 PM
  *
  */
 @Entity
-@Table(name="comprehension_test_response")
+@Table(name = "comprehension_test_response")
 @NamedQueries({
-	@NamedQuery(name="comprehensionQuestionResponseByCTID", query=" from ComprehensionTestResponseDto CTRDTO where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"),
-})
-public class ComprehensionTestResponseDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "comprehensionQuestionResponseByCTID", query = " from ComprehensionTestResponseDto CTRDTO"
+		+ " where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"), })
+public class ComprehensionTestResponseDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8004751419746704475L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name="comprehension_test_question_id")
+	@Column(name = "comprehension_test_question_id")
 	private Integer comprehensionTestQuestionId;
 
-	@Column(name="response_option")
+	@Column(name = "response_option")
 	private String responseOption;
 
-	@Column(name="correct_answer")
-	private Boolean correctAnswer=false;
-	
+	@Column(name = "correct_answer")
+	private Boolean correctAnswer = false;
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -55,7 +60,8 @@ public class ComprehensionTestResponseDto implements Serializable{
 		return comprehensionTestQuestionId;
 	}
 
-	public void setComprehensionTestQuestionId(Integer comprehensionTestQuestionId) {
+	public void setComprehensionTestQuestionId(
+			Integer comprehensionTestQuestionId) {
 		this.comprehensionTestQuestionId = comprehensionTestQuestionId;
 	}
 
@@ -83,5 +89,4 @@ public class ComprehensionTestResponseDto implements Serializable{
 		this.studyVersion = studyVersion;
 	}
 
-	
 }

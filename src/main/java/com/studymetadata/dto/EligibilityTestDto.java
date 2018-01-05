@@ -11,18 +11,22 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:27:50 PM
  *
  */
 @Entity
 @Table(name = "eligibility_test")
-public class EligibilityTestDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+public class EligibilityTestDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6692773747185719256L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
 
 	@Column(name = "eligibility_id")
@@ -40,23 +44,23 @@ public class EligibilityTestDto implements Serializable{
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
 
-	@Column(name="status")
-	private Boolean status=false;
+	@Column(name = "status")
+	private Boolean status = false;
 
-	@Column(name="eligibility_test")
+	@Column(name = "eligibility_test")
 	private Integer eligibilityTest;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
-	private Boolean active=false;
-	
-	@Column(name="response_yes_option")
-	private Boolean responseYesOption=false;
-	
-	@Column(name="response_no_option")
-	private Boolean responseNoOption=false;
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
+	private Boolean active = false;
+
+	@Column(name = "response_yes_option")
+	private Boolean responseYesOption = false;
+
+	@Column(name = "response_no_option")
+	private Boolean responseNoOption = false;
 
 	public Integer getId() {
 		return id;
@@ -153,5 +157,5 @@ public class EligibilityTestDto implements Serializable{
 	public void setResponseNoOption(Boolean responseNoOption) {
 		this.responseNoOption = responseNoOption;
 	}
-	
+
 }

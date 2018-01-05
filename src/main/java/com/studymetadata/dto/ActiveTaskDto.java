@@ -14,88 +14,97 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:24:53 PM
  *
  */
 @Entity
-@Table(name="active_task")
+@Table(name = "active_task")
 @NamedQueries({
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active) ORDER BY ATDTO.createdDate DESC")
-})
-public class ActiveTaskDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+		@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO"
+				+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
+
+		@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO"
+				+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active)"
+				+ " ORDER BY ATDTO.createdDate DESC") })
+public class ActiveTaskDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4577109970844567694L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name="active_task_lifetime_end")
+	@Column(name = "active_task_lifetime_end")
 	private String activeTaskLifetimeEnd;
 
-	@Column(name="active_task_lifetime_start")
+	@Column(name = "active_task_lifetime_start")
 	private String activeTaskLifetimeStart;
 
-	@Column(name="frequency")
+	@Column(name = "frequency")
 	private String frequency;
-	
-	@Column(name="duration")
+
+	@Column(name = "duration")
 	private String duration;
 
-	@Column(name="study_id")
+	@Column(name = "study_id")
 	private Integer studyId;
 
-	@Column(name="task_title")
+	@Column(name = "task_title")
 	private String taskTitle;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private Integer createdBy;
-	
-	@Column(name="created_date")
+
+	@Column(name = "created_date")
 	private String createdDate;
-	
-	@Column(name="modified_by")
+
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
-	@Column(name="modified_date")
+
+	@Column(name = "modified_date")
 	private String modifiedDate;
-	
-	@Column(name="repeat_active_task")
+
+	@Column(name = "repeat_active_task")
 	private Integer repeatActiveTask;
-	
-	@Column(name="day_of_the_week")
+
+	@Column(name = "day_of_the_week")
 	private String dayOfTheWeek;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	@Column(name = "task_type_id")
 	private Integer taskTypeId;
-	
-	@Column(name="display_name")
+
+	@Column(name = "display_name")
 	private String displayName;
-	
-	@Column(name="short_title")
+
+	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="instruction")
+
+	@Column(name = "instruction")
 	private String instruction;
-	
+
 	@Column(name = "action", length = 1)
 	private boolean action = false;
-	
+
 	@Column(name = "version")
-	private Float version=0f;
-	
-	@Column(name="custom_study_id")
+	private Float version = 0f;
+
+	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
-	@Column(name="is_live")
+
+	@Column(name = "is_live")
 	private Integer live = 0;
 
-	@Column(name="active")
-	private Integer active=0;
-	
+	@Column(name = "active")
+	private Integer active = 0;
+
 	public Integer getId() {
 		return id;
 	}
@@ -279,5 +288,5 @@ public class ActiveTaskDto implements Serializable{
 	public void setActive(Integer active) {
 		this.active = active;
 	}
-	
+
 }

@@ -12,31 +12,40 @@ import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:28:43 PM
+ *
+ */
 @Entity
-@Table(name="health_kit_keys_info")
+@Table(name = "health_kit_keys_info")
 @NamedQueries({
-	@NamedQuery(name = "getHealthKitDataList",query = "from HealthKitDataKeyDto HKDKDTO"),
-	@NamedQuery(name = "getHealthKitDisplayNameByKeyText",query = "select HKDKDTO.displayName from HealthKitDataKeyDto HKDKDTO where HKDKDTO.key=:key"),
-})
-public class HealthKitDataKeyDto implements Serializable{
+
+		@NamedQuery(name = "getHealthKitDataList", query = "from HealthKitDataKeyDto HKDKDTO"),
+
+		@NamedQuery(name = "getHealthKitDisplayNameByKeyText", query = "select HKDKDTO.displayName"
+				+ " from HealthKitDataKeyDto HKDKDTO"
+				+ " where HKDKDTO.key=:key"), })
+public class HealthKitDataKeyDto implements Serializable {
 
 	private static final long serialVersionUID = 8578293542156754826L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name="key_text")
+	@Column(name = "key_text")
 	private String key;
 
-	@Column(name="category")
+	@Column(name = "category")
 	private String category;
 
-	@Column(name="display_name")
+	@Column(name = "display_name")
 	private String displayName;
 
-	@Column(name="result_type")
+	@Column(name = "result_type")
 	private String resultType;
 
 	public Integer getId() {

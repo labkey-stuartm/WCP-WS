@@ -13,54 +13,75 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:38:32 PM
+ *
+ */
+public class Mail {
 
-public class Mail  {
-	private static Logger logger = Logger.getLogger(Mail.class.getName());
-	
+	private static final Logger LOGGER = Logger.getLogger(Mail.class.getName());
+
 	@SuppressWarnings("unchecked")
 	static HashMap<String, String> propMap = StudyMetaDataUtil.configMap;
-	
-	public static boolean sendemail(String email, String subject, String messageBody) throws Exception{
-		logger.debug("sendemail()====start");
+
+	/**
+	 * Send email for the provided recipient, subject and content
+	 * 
+	 * @author BTC
+	 * @param email
+	 * @param subject
+	 * @param messageBody
+	 * @return {@link Boolean}
+	 * @throws Exception
+	 */
+	public static boolean sendemail(String email, String subject,
+			String messageBody) throws Exception {
+		LOGGER.debug("sendemail()====start");
 		boolean sentMail = false;
 		try {
 			Properties props = new Properties();
 			Session session;
 			props.put("mail.smtp.host", propMap.get("smtp.hostname"));
 			props.put("mail.smtp.port", propMap.get("smtp.portvalue"));
-			
-			if(propMap.get("fda.env") != null && propMap.get("fda.env").equalsIgnoreCase("local")){
-				//local mail config
+
+			if (propMap.get("fda.env") != null
+					&& propMap.get("fda.env").equalsIgnoreCase("local")) {
 				props.put("mail.smtp.auth", "true");
 				props.put("mail.smtp.starttls.enable", "true");
-				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.socketFactory.class",
+						"javax.net.ssl.SSLSocketFactory");
 				session = Session.getInstance(props,
 						new javax.mail.Authenticator() {
 							@Override
 							protected PasswordAuthentication getPasswordAuthentication() {
-								return new PasswordAuthentication(propMap.get("from.email.address"), propMap.get("from.email.password"));
+								return new PasswordAuthentication(propMap
+										.get("from.email.address"), propMap
+										.get("from.email.password"));
 							}
-				});
-			}else{
-				//labkey mail config
+						});
+			} else {
 				props.put("mail.smtp.auth", "false");
 				session = Session.getInstance(props);
 			}
-			
+
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(propMap.get("from.email.address")));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setFrom(new InternetAddress(propMap
+					.get("from.email.address")));
+			message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(email));
 			message.setSubject(subject);
 			message.setContent(messageBody, "text/html");
 			Transport.send(message);
 			sentMail = true;
 		} catch (MessagingException e) {
-			logger.error("ERROR:  sendemail() - "+e+" : ");
+			LOGGER.error("ERROR:  sendemail() - " + e + " : ");
 			sentMail = false;
 		} catch (Exception e) {
-			logger.error("ERROR:  sendemail() - "+e+" : ");
+			LOGGER.error("ERROR:  sendemail() - " + e + " : ");
 		}
-		logger.info("Mail.sendemail() :: Ends");
+		LOGGER.info("Mail.sendemail() :: Ends");
 		return sentMail;
 	}
 }

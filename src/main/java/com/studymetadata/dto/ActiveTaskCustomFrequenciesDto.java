@@ -11,35 +11,39 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:24:41 PM
  *
  */
 @Entity
-@Table(name="active_task_custom_frequencies")
-public class ActiveTaskCustomFrequenciesDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "active_task_custom_frequencies")
+public class ActiveTaskCustomFrequenciesDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2349155974706024005L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="frequency_start_date")
+
+	@Column(name = "frequency_start_date")
 	private String frequencyStartDate;
-	
-	@Column(name="frequency_end_date")
+
+	@Column(name = "frequency_end_date")
 	private String frequencyEndDate;
-	
-	@Column(name="frequency_time")
+
+	@Column(name = "frequency_time")
 	private String frequencyTime;
-	
-	@Column(name="active_task_id")
+
+	@Column(name = "active_task_id")
 	private Integer activeTaskId;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -87,5 +91,5 @@ public class ActiveTaskCustomFrequenciesDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }

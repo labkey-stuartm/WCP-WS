@@ -11,36 +11,40 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:29:18 PM
  *
  */
 @Entity
-@Table(name="line_chart")
-public class LineChartDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
+@Table(name = "line_chart")
+public class LineChartDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8093637693491035141L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="line_chartcol")
+
+	@Column(name = "line_chartcol")
 	private String lineChartcol;
-	
-	@Column(name="no_data_text")
+
+	@Column(name = "no_data_text")
 	private String noDataText;
-	
-	@Column(name="show_ver_hor_line")
+
+	@Column(name = "show_ver_hor_line")
 	private Integer showVerHorLine;
-	
-	@Column(name="x_axis_color")
+
+	@Column(name = "x_axis_color")
 	private String xAxisColor;
-	
-	@Column(name="y_axis_color")
+
+	@Column(name = "y_axis_color")
 	private String yAxisColor;
-	
-	@Column(name="animation_needed")
+
+	@Column(name = "animation_needed")
 	private Integer animationNeeded;
 
 	public Integer getId() {
@@ -98,5 +102,5 @@ public class LineChartDto implements Serializable{
 	public void setAnimationNeeded(Integer animationNeeded) {
 		this.animationNeeded = animationNeeded;
 	}
-	
+
 }

@@ -11,42 +11,46 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:29:02 PM
  *
  */
 @Entity
-@Table(name="legal_text")
-public class LegalTextDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "legal_text")
+public class LegalTextDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6256475646468023254L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="mobile_app_terms")
+
+	@Column(name = "mobile_app_terms")
 	private String mobileAppTerms;
-	
-	@Column(name="mobile_app_terms_modified_datetime")
+
+	@Column(name = "mobile_app_terms_modified_datetime")
 	private String mobileAppTermsModifiedDatetime;
-	
-	@Column(name="mobile_app_privacy_policy")
+
+	@Column(name = "mobile_app_privacy_policy")
 	private String mobileAppPrivacyPolicy;
-	
-	@Column(name="mobile_app_privacy_policy_modified_datetime")
+
+	@Column(name = "mobile_app_privacy_policy_modified_datetime")
 	private String mobileAppPrivacyPolicyModifiedDatetime;
-	
-	@Column(name="web_app_terms")
+
+	@Column(name = "web_app_terms")
 	private String webAppTerms;
-	
-	@Column(name="web_app_terms_modified_datetime")
+
+	@Column(name = "web_app_terms_modified_datetime")
 	private String webAppTermsModifiedDatetime;
-	
-	@Column(name="web_app_privacy_policy")
+
+	@Column(name = "web_app_privacy_policy")
 	private String webAppPrivacyPolicy;
-	
-	@Column(name="web_app_privacy_policy_modified_datetime")
+
+	@Column(name = "web_app_privacy_policy_modified_datetime")
 	private String webAppPrivacyPolicyModifiedDatetime;
 
 	public Integer getId() {
@@ -103,7 +107,8 @@ public class LegalTextDto implements Serializable{
 		return webAppTermsModifiedDatetime;
 	}
 
-	public void setWebAppTermsModifiedDatetime(String webAppTermsModifiedDatetime) {
+	public void setWebAppTermsModifiedDatetime(
+			String webAppTermsModifiedDatetime) {
 		this.webAppTermsModifiedDatetime = webAppTermsModifiedDatetime;
 	}
 
@@ -123,6 +128,5 @@ public class LegalTextDto implements Serializable{
 			String webAppPrivacyPolicyModifiedDatetime) {
 		this.webAppPrivacyPolicyModifiedDatetime = webAppPrivacyPolicyModifiedDatetime;
 	}
-	
-	
+
 }

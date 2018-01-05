@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.studyMetaData</groupId>
 	<artifactId>StudyMetaData</artifactId>
@@ -70,29 +71,22 @@
 			<artifactId>json</artifactId>
 			<version>20090211</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>jsr311-api</artifactId>
-			<version>0.8</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>javax.ws.rs</groupId> <artifactId>jsr311-api</artifactId> 
+			<version>0.8</version> </dependency> -->
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0.2</version>
-			<scope>provided</scope>
-		</dependency> -->
-		
+		<!-- <dependency> <groupId>javax.persistence</groupId> <artifactId>persistence-api</artifactId> 
+			<version>1.0.2</version> <scope>provided</scope> </dependency> -->
+
 		<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
 		<dependency>
-		    <groupId>org.eclipse.persistence</groupId>
-		    <artifactId>javax.persistence</artifactId>
-		    <version>2.1.0</version>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+			<version>2.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -116,16 +110,16 @@
 			<version>1.18.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.sun.jersey</groupId>
-		    <artifactId>jersey-client</artifactId>
-		    <version>1.18.1</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.18.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.sun.jersey</groupId>
-		    <artifactId>jersey-fastinfoset</artifactId>
-		    <version>1.18.1</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-fastinfoset</artifactId>
+			<version>1.18.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -238,9 +232,9 @@
 			<version>2.2.1</version>
 		</dependency>
 		<dependency>
-    		<groupId>commons-io</groupId>
-    		<artifactId>commons-io</artifactId>
-    		<version>2.5</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
 		</dependency>
 	</dependencies>
 
@@ -251,7 +245,7 @@
 				<version>2.1.1</version>
 				<configuration>
 					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
-					 <packagingExcludes>META-INF/context.xml</packagingExcludes>
+					<packagingExcludes>META-INF/context.xml</packagingExcludes>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>

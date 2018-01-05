@@ -11,48 +11,52 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:31:23 PM
  *
  */
 @Entity
-@Table(name="statistics")
-public class StatisticsDto implements Serializable{
+@Table(name = "statistics")
+public class StatisticsDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4452743894242933509L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="short_title")
+
+	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="display_name")
+
+	@Column(name = "display_name")
 	private String displayName;
-	
-	@Column(name="stat_type")
+
+	@Column(name = "stat_type")
 	private String statType;
-	
-	@Column(name="display_unit")
+
+	@Column(name = "display_unit")
 	private String displayUnit;
-	
-	@Column(name="formula")
+
+	@Column(name = "formula")
 	private String formula;
-	
-	@Column(name="data_source")
+
+	@Column(name = "data_source")
 	private Integer data_source;
-	
-	@Column(name="time_range")
+
+	@Column(name = "time_range")
 	private String timeRange;
-	
-	@Column(name="custom")
+
+	@Column(name = "custom")
 	private Integer custom;
-	
-	@Column(name="custom_start")
+
+	@Column(name = "custom_start")
 	private String customStart;
-	
-	@Column(name="custom_end")
+
+	@Column(name = "custom_end")
 	private String customEnd;
 
 	public Integer getId() {
@@ -142,5 +146,5 @@ public class StatisticsDto implements Serializable{
 	public void setCustomEnd(String customEnd) {
 		this.customEnd = customEnd;
 	}
-	
+
 }

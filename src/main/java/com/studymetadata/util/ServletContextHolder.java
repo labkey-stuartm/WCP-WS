@@ -1,12 +1,17 @@
 package com.studymetadata.util;
 
-//import java.util.TimeZone;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:39:03 PM
+ *
+ */
 public class ServletContextHolder implements ServletContextListener {
+
 	private static ServletContext servletContext;
 
 	@Override
@@ -27,5 +32,5 @@ public class ServletContextHolder implements ServletContextListener {
 	public static void setServletContext(ServletContext servletContext) {
 		ServletContextHolder.servletContext = servletContext;
 	}
-	
+
 }

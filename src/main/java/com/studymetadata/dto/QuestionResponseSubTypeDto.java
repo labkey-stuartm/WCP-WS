@@ -9,47 +9,64 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:30:19 PM
+ *
+ */
 @Entity
-@Table(name="response_sub_type_value")
-public class QuestionResponseSubTypeDto implements Serializable{
+@Table(name = "response_sub_type_value")
+public class QuestionResponseSubTypeDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7906353217574963756L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="response_sub_type_value_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "response_sub_type_value_id")
 	private Integer responseSubTypeValueId;
-	
-	@Column(name="response_type_id")
+
+	@Column(name = "response_type_id")
 	private Integer responseTypeId;
-	
-	@Column(name="text")
+
+	@Column(name = "text")
 	private String text;
-	
-	@Column(name="value")
+
+	@Column(name = "value")
 	private String value;
-	
-	@Column(name="detail")
+
+	@Column(name = "detail")
 	private String detail;
-	
-	@Column(name="exclusive")
+
+	@Column(name = "exclusive")
 	private String exclusive;
-	
-	@Column(name="image")
+
+	@Column(name = "image")
 	private String image;
-	
-	@Column(name="selected_image")
+
+	@Column(name = "selected_image")
 	private String selectedImage;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="destination_step_id")
+	private Integer studyVersion = 1;
+
+	@Column(name = "destination_step_id")
 	private Integer destinationStepId;
-	
-	@Column(name="active")
+
+	@Column(name = "active")
 	private Boolean active;
+
+	@Column(name = "value_of_x")
+	private String valueOfX;
+
+	@Column(name = "operator")
+	private String operator;
+
+	@Column(name = "description")
+	private String description;
 
 	public Integer getResponseSubTypeValueId() {
 		return responseSubTypeValueId;
@@ -138,6 +155,29 @@ public class QuestionResponseSubTypeDto implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-}
 
+	public String getValueOfX() {
+		return valueOfX;
+	}
+
+	public void setValueOfX(String valueOfX) {
+		this.valueOfX = valueOfX;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+}

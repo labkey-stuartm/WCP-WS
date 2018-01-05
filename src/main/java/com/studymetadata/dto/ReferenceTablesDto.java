@@ -11,26 +11,30 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:30:54 PM
  *
  */
 @Entity
 @Table(name = "reference_tables")
-public class ReferenceTablesDto implements Serializable{
+public class ReferenceTablesDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7979150175337442310L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "str_value")
 	private String value;
-	
+
 	@Column(name = "category")
 	private String category;
-	
+
 	@Column(name = "type")
 	private String type;
 
@@ -65,5 +69,5 @@ public class ReferenceTablesDto implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 }

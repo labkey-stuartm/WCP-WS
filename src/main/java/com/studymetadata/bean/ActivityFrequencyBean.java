@@ -5,24 +5,29 @@ import java.util.List;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:05:06 PM
  *
  */
 public class ActivityFrequencyBean {
+
 	private String type = "";
 	private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
-	
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public List<ActivityFrequencyScheduleBean> getRuns() {
 		return runs;
 	}
+
 	public void setRuns(List<ActivityFrequencyScheduleBean> runs) {
 		this.runs = runs;
 	}
-	
+
 }

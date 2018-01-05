@@ -14,30 +14,32 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:28:22 PM
  *
  */
 @Entity
 @Table(name = "gateway_info")
-@NamedQueries({
-	@NamedQuery(name="getGatewayInfo", query=" from GatewayInfoDto GWID "),
-})
-public class GatewayInfoDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@NamedQueries({ @NamedQuery(name = "getGatewayInfo", query = " from GatewayInfoDto GWID "), })
+public class GatewayInfoDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1150671454003333803L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="video_url")
+
+	@Column(name = "video_url")
 	private String videoUrl;
-	
-	@Column(name="email_inbox_address")
+
+	@Column(name = "email_inbox_address")
 	private String emailInboxAddress;
-	
-	@Column(name="fda_website_url")
+
+	@Column(name = "fda_website_url")
 	private String fdaWebsiteUrl;
 
 	public Integer getId() {
@@ -71,5 +73,5 @@ public class GatewayInfoDto implements Serializable{
 	public void setFdaWebsiteUrl(String fdaWebsiteUrl) {
 		this.fdaWebsiteUrl = fdaWebsiteUrl;
 	}
-	
+
 }

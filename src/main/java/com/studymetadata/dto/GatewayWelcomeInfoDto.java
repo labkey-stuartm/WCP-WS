@@ -14,29 +14,33 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:28:36 PM
  *
  */
 @Entity
-@Table(name="gateway_welcome_info")
+@Table(name = "gateway_welcome_info")
 @NamedQueries({
-	@NamedQuery(name="getGatewayWelcomeInfoList", query=" from GatewayWelcomeInfoDto GWWID "),
-})
-public class GatewayWelcomeInfoDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "getGatewayWelcomeInfoList", query = "from GatewayWelcomeInfoDto GWWID "), })
+public class GatewayWelcomeInfoDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5468183451984469709L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "app_title")
 	private String appTitle;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "image_path")
 	private String imagePath;
 
@@ -71,6 +75,5 @@ public class GatewayWelcomeInfoDto implements Serializable{
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	
-	
+
 }

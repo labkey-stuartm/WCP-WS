@@ -17,111 +17,115 @@ import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:30:29 PM
  *
  */
 @Entity
-@Table(name="questions")
-@NamedQueries(value = { 
-	@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO where QDTO.status=true and QDTO.id IN (:questionIdList)"),
-})
-public class QuestionsDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "questions")
+@NamedQueries(value = {
+
+@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO"
+		+ " where QDTO.status=true and QDTO.id IN (:questionIdList)"), })
+public class QuestionsDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3036839955038582674L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="question")
+
+	@Column(name = "question")
 	private String question;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="response_type")
+
+	@Column(name = "response_type")
 	private Integer responseType;
-	
-	@Column(name="skippable")
+
+	@Column(name = "skippable")
 	private String skippable;
-	
-	@Column(name="add_line_chart")
+
+	@Column(name = "add_line_chart")
 	private String addLineChart;
-	
-	@Column(name="line_chart_timerange")
+
+	@Column(name = "line_chart_timerange")
 	private String lineChartTimeRange;
-	
-	@Column(name="allow_rollback_chart")
+
+	@Column(name = "allow_rollback_chart")
 	private String allowRollbackChart;
-	
-	@Column(name="chart_title")
+
+	@Column(name = "chart_title")
 	private String chartTitle;
-	
-	@Column(name="use_stastic_data")
+
+	@Column(name = "use_stastic_data")
 	private String useStasticData;
-	
-	@Column(name="stat_short_name")
+
+	@Column(name = "stat_short_name")
 	private String statShortName;
-	
-	@Column(name="stat_display_name")
+
+	@Column(name = "stat_display_name")
 	private String statDisplayName;
-	
-	@Column(name="stat_diaplay_units")
+
+	@Column(name = "stat_diaplay_units")
 	private String statDisplayUnits;
-	
-	@Column(name="stat_type")
+
+	@Column(name = "stat_type")
 	private Integer statType;
-	
-	@Column(name="stat_formula")
+
+	@Column(name = "stat_formula")
 	private Integer statFormula;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
-	
+
 	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
-	
-	@Column(name="use_anchor_date")
-	private Boolean useAnchorDate=false;
+
+	@Column(name = "use_anchor_date")
+	private Boolean useAnchorDate = false;
 
 	@Transient
 	private String activityId;
-	
+
 	@Transient
 	private String activityVersion;
-	
+
 	@Transient
 	private String activityType;
-	
+
 	@Transient
 	private String activityStepKey;
-	
-	/*phase_1B attributes*/
-	@Column(name="allow_healthkit")
-	private String allowHealthKit=StudyMetaDataConstants.NO;
-	
-	@Column(name="healthkit_datatype")
+
+	@Column(name = "allow_healthkit")
+	private String allowHealthKit = StudyMetaDataConstants.NO;
+
+	@Column(name = "healthkit_datatype")
 	private String healthkitDatatype;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -361,5 +365,5 @@ public class QuestionsDto implements Serializable{
 	public void setHealthkitDatatype(String healthkitDatatype) {
 		this.healthkitDatatype = healthkitDatatype;
 	}
-	
+
 }

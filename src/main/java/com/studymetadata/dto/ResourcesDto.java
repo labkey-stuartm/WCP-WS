@@ -14,98 +14,107 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:31:01 PM
  *
  */
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"),
-})
-public class ResourcesDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "getResourcesListByStudyId", query = "from ResourcesDto RDTO"
+		+ " where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"
+		+ " ORDER BY RDTO.sequenceNo"), })
+public class ResourcesDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5367238661369825902L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "text_or_pdf", length = 1)
 	private boolean textOrPdf;
-	
-	@Column(name="rich_text")
+
+	@Column(name = "rich_text")
 	private String richText;
-	
-	@Column(name="pdf_url")
+
+	@Column(name = "pdf_url")
 	private String pdfUrl;
-	
-	@Column(name="pdf_name")
+
+	@Column(name = "pdf_name")
 	private String pdfName;
-	
+
 	@Column(name = "resource_visibility", length = 1)
 	private boolean resourceVisibility;
-	
-	@Column(name="time_period_from_days")
+
+	@Column(name = "time_period_from_days")
 	private Integer timePeriodFromDays;
-	
-	@Column(name="time_period_to_days")
+
+	@Column(name = "time_period_to_days")
 	private Integer timePeriodToDays;
-	
-	@Column(name="start_date")
+
+	@Column(name = "start_date")
 	private String startDate;
-	
-	@Column(name="end_date")
+
+	@Column(name = "end_date")
 	private String endDate;
-	
-	@Column(name="resource_text")
+
+	@Column(name = "resource_text")
 	private String resourceText;
-	
+
 	@Column(name = "action", length = 1)
 	private boolean action;
-	
+
 	@Column(name = "study_protocol", length = 1)
 	private boolean studyProtocol;
-	
+
 	@Column(name = "status", length = 1)
 	private boolean status;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="anchor_date")
+	private Integer studyVersion = 1;
+
+	@Column(name = "anchor_date")
 	private String anchorDate;
-	
+
 	@Column(name = "resource_type", length = 1)
-	private boolean resourceType=false;
-	
+	private boolean resourceType = false;
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	 
+
 	@Column(name = "x_days_sign", length = 1)
 	private boolean xDaysSign = false;
-	 
+
 	@Column(name = "y_days_sign", length = 1)
 	private boolean yDaysSign = false;
-	
+
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
+
 	public Integer getId() {
 		return id;
 	}
@@ -313,5 +322,5 @@ public class ResourcesDto implements Serializable{
 	public void setyDaysSign(boolean yDaysSign) {
 		this.yDaysSign = yDaysSign;
 	}
-	
+
 }

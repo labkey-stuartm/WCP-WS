@@ -11,27 +11,31 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:29:09 PM
  *
  */
 @Entity
-@Table(name="line_chart_datasource")
-public class LineChartDatasourceDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "line_chart_datasource")
+public class LineChartDatasourceDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5758103951133634472L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="data_source_id")
+
+	@Column(name = "data_source_id")
 	private Integer dataSourceId;
-	
-	@Column(name="plot_color")
+
+	@Column(name = "plot_color")
 	private String plot_color;
-	
-	@Column(name="line_chart_id")
+
+	@Column(name = "line_chart_id")
 	private Integer lineChartId;
 
 	public Integer getId() {
@@ -65,5 +69,5 @@ public class LineChartDatasourceDto implements Serializable{
 	public void setLineChartId(Integer lineChartId) {
 		this.lineChartId = lineChartId;
 	}
-	
+
 }

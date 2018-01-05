@@ -1,6 +1,5 @@
 package com.studymetadata.web.servlet;
 
-
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -10,40 +9,55 @@ import org.apache.log4j.Logger;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:49:26 PM
+ *
+ */
 public class AuthenticationService {
-	
-	public static final Logger logger = Logger.getLogger(AuthenticationService.class);
-	
+
+	public static final Logger LOGGER = Logger
+			.getLogger(AuthenticationService.class);
+
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
-	
+	HashMap<String, String> authPropMap = StudyMetaDataUtil
+			.getAuthorizationProperties();
+
+	/**
+	 * Authenticate the provided authorization credentials
+	 * 
+	 * @author BTC
+	 * @param authCredentials
+	 * @return {@link Boolean}
+	 */
 	public boolean authenticate(String authCredentials) {
-		logger.info("INFO: AuthenticationService - authenticate() - Starts");
+		LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
 		boolean authenticationStatus = false;
 		String bundleIdAndAppToken = null;
-		try{
-			if(StringUtils.isNotEmpty(authCredentials)){
-				// header value format will be "Basic encodedstring" for Basic
-				// authentication. Example "Basic YWRtaW46YWRtaW4="
-				if(authCredentials.contains("Basic")){
-					final String encodedUserPassword = authCredentials.replaceFirst("Basic"+ " ", "");
-					byte[] decodedBytes = Base64.decode(encodedUserPassword);
-					bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
-					if(bundleIdAndAppToken.contains(":")){
-						final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
-						final String bundleId = tokenizer.nextToken();
-						final String appToken = tokenizer.nextToken();
-						if(authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)){
-							authenticationStatus = true;
-						}
+		try {
+			if (StringUtils.isNotEmpty(authCredentials)
+					&& authCredentials.contains("Basic")) {
+				final String encodedUserPassword = authCredentials
+						.replaceFirst("Basic" + " ", "");
+				byte[] decodedBytes = Base64.decode(encodedUserPassword);
+				bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
+				if (bundleIdAndAppToken.contains(":")) {
+					final StringTokenizer tokenizer = new StringTokenizer(
+							bundleIdAndAppToken, ":");
+					final String bundleId = tokenizer.nextToken();
+					final String appToken = tokenizer.nextToken();
+					if (authPropMap.containsKey(bundleId)
+							&& authPropMap.containsKey(appToken)) {
+						authenticationStatus = true;
 					}
 				}
 			}
-		}catch(Exception e){
-			logger.error("AuthenticationService - authenticate() :: ERROR", e);
+		} catch (Exception e) {
+			LOGGER.error("AuthenticationService - authenticate() :: ERROR", e);
 			return authenticationStatus;
 		}
-		logger.info("INFO: AuthenticationService - authenticate() - Ends");
+		LOGGER.info("INFO: AuthenticationService - authenticate() - Ends");
 		return authenticationStatus;
 	}
 }

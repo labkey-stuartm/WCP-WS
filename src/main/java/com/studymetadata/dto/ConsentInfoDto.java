@@ -14,89 +14,95 @@ import org.hibernate.annotations.NamedQuery;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:27:08 PM
  *
  */
 @Entity
-@Table(name="consent_info")
+@Table(name = "consent_info")
 @NamedQueries({
-	/*@NamedQuery(name="consentInfoDtoByConsentId", query="from ConsentInfoDto CIDTO where CIDTO.consentId =:consentId"),*/
-	@NamedQuery(name="consentInfoDtoByStudyId", query=" from ConsentInfoDto CIDTO where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
-	@NamedQuery(name="consentInfoDetailsByCustomStudyIdAndVersion", query=" from ConsentInfoDto CIDTO where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version ORDER BY CIDTO.sequenceNo"),
-})
-public class ConsentInfoDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+		@NamedQuery(name = "consentInfoDtoByStudyId", query = "from ConsentInfoDto CIDTO"
+				+ " where CIDTO.studyId =:studyId ORDER BY CIDTO.sequenceNo"),
+
+		@NamedQuery(name = "consentInfoDetailsByCustomStudyIdAndVersion", query = "from ConsentInfoDto CIDTO"
+				+ " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version"
+				+ " ORDER BY CIDTO.sequenceNo"), })
+public class ConsentInfoDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7398906510250618397L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
-	
+
 	@Column(name = "consent_item_type")
 	private String consentItemType;
-	
+
 	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "content_type")
 	private String contentType;
-	
+
 	@Column(name = "brief_summary")
 	private String briefSummary;
-	
+
 	@Column(name = "elaborated")
 	private String elaborated;
-	
+
 	@Column(name = "html_content")
 	private String htmlContent;
-	
+
 	@Column(name = "url")
 	private String url;
-	
+
 	@Column(name = "visual_step")
 	private String visualStep;
-	
+
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "display_title")
 	private String displayTitle;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
 
-	@Column(name="active")
-	private Boolean active=true;
-	
+	@Column(name = "active")
+	private Boolean active = true;
+
 	@Column(name = "consent_item_title_id")
 	private Integer consentItemTitleId;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -176,7 +182,7 @@ public class ConsentInfoDto implements Serializable{
 	public void setVisualStep(String visualStep) {
 		this.visualStep = visualStep;
 	}
-	
+
 	public Integer getSequenceNo() {
 		return sequenceNo;
 	}
@@ -272,6 +278,5 @@ public class ConsentInfoDto implements Serializable{
 	public void setLive(Integer live) {
 		this.live = live;
 	}
-	
-}
 
+}

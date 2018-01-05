@@ -3,7 +3,14 @@ package com.studymetadata.bean;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:09:22 PM
+ *
+ */
 public class ChartsBean {
+
 	private String title = "";
 	private String displayName = "";
 	private String type = "";

@@ -11,26 +11,30 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Mohan
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:28:05 PM
  *
  */
 @Entity
-@Table(name="form")
-public class FormDto implements Serializable{
+@Table(name = "form")
+public class FormDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8069151978635052398L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="form_id")
+	@Column(name = "form_id")
 	private Integer formId;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	@Column(name = "active")
 	private Boolean active;
-	
+
 	public Integer getFormId() {
 		return formId;
 	}
@@ -54,5 +58,5 @@ public class FormDto implements Serializable{
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
 }

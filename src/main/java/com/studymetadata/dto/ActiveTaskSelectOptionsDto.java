@@ -9,21 +9,30 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:25:37 PM
+ *
+ */
 @Entity
-@Table(name="active_task_select_options")
-public class ActiveTaskSelectOptionsDto implements Serializable{
+@Table(name = "active_task_select_options")
+public class ActiveTaskSelectOptionsDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3788580522549249379L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="active_task_select_options_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "active_task_select_options_id")
 	private Integer activeTaskSelectOptionsId;
-	
-	@Column(name="active_task_master_attr_id")
+
+	@Column(name = "active_task_master_attr_id")
 	private Integer activeTaskMasterAttrId;
-	
-	@Column(name="option_val")
+
+	@Column(name = "option_val")
 	private String optionVal;
 
 	public Integer getActiveTaskSelectOptionsId() {
@@ -49,5 +58,5 @@ public class ActiveTaskSelectOptionsDto implements Serializable{
 	public void setOptionVal(String optionVal) {
 		this.optionVal = optionVal;
 	}
-	
+
 }

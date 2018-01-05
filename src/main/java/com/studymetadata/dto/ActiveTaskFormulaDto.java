@@ -9,21 +9,30 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:25:06 PM
+ *
+ */
 @Entity
-@Table(name="activetask_formula")
-public class ActiveTaskFormulaDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "activetask_formula")
+public class ActiveTaskFormulaDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7509273488651910859L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="activetask_formula_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "activetask_formula_id")
 	private Integer activetaskFormulaId;
-	
-	@Column(name="value")
+
+	@Column(name = "value")
 	private String value;
-	
-	@Column(name="formula")
+
+	@Column(name = "formula")
 	private String formula;
 
 	public Integer getActivetaskFormulaId() {
@@ -49,5 +58,5 @@ public class ActiveTaskFormulaDto implements Serializable{
 	public void setFormula(String formula) {
 		this.formula = formula;
 	}
-	
+
 }

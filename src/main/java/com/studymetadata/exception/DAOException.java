@@ -1,7 +1,18 @@
 package com.studymetadata.exception;
 
+/**
+ * 
+ * @author BTC
+ * @createdOn Jan 4, 2018 3:33:54 PM
+ *
+ */
 public class DAOException extends CommonException {
 
+	/**
+	 * 
+	 * @param pErrorCode
+	 * @param arg1
+	 */
 	public DAOException(String pErrorCode, Throwable arg1) {
 		super(pErrorCode, arg1);
 	}
