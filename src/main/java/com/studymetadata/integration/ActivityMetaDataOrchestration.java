@@ -33,7 +33,9 @@ public class ActivityMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link ActivityResponse}
 	 * @throws OrchestrationException
 	 */
@@ -59,8 +61,11 @@ public class ActivityMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link ActiveTaskActivityMetaDataResponse}
 	 * @throws OrchestrationException
 	 */
@@ -88,8 +93,11 @@ public class ActivityMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link QuestionnaireActivityMetaDataResponse}
 	 * @throws OrchestrationException
 	 */

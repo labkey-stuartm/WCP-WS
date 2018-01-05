@@ -83,7 +83,9 @@ public class AppMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param skip
+	 *            the skip count
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link NotificationsResponse}
 	 * @throws DAOException
 	 */
@@ -259,7 +261,9 @@ public class AppMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param appVersion
+	 *            the app version
 	 * @param authCredentials
+	 *            the Basic Authorization
 	 * @return {@link AppUpdatesResponse}
 	 * @throws DAOException
 	 */
@@ -328,7 +332,9 @@ public class AppMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param studyVersion
+	 *            the study version
 	 * @return {@link StudyUpdatesResponse}
 	 * @throws DAOException
 	 */
@@ -455,12 +461,18 @@ public class AppMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param forceUpdate
+	 *            is force update
 	 * @param osType
+	 *            the platform type
 	 * @param appVersion
+	 *            the app version
 	 * @param bundleId
+	 *            the bundle identifier
 	 * @param customStudyId
+	 *            the study name
 	 * @param message
-	 * @return {@link String}
+	 *            the note about app version update
+	 * @return the success or failure
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -557,7 +569,8 @@ public class AppMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param dbQuery
-	 * @return {@link String}
+	 *            the input query
+	 * @return the success or failure
 	 * @throws DAOException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery) throws DAOException {

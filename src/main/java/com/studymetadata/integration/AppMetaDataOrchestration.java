@@ -57,7 +57,9 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param skip
+	 *            the skip count
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link NotificationsResponse}
 	 * @throws OrchestrationException
 	 */
@@ -81,7 +83,9 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param subject
+	 *            the Subject Details
 	 * @param body
+	 *            the Body Details
 	 * @return {@link AppResponse}
 	 * @throws OrchestrationException
 	 */
@@ -122,9 +126,13 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param subject
+	 *            the Subject Details
 	 * @param body
+	 *            the Body Details
 	 * @param firstName
+	 *            the First Name
 	 * @param email
+	 *            the Email Details
 	 * @return {@link AppResponse}
 	 * @throws OrchestrationException
 	 */
@@ -185,7 +193,9 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param appVersion
+	 *            the App Version
 	 * @param app
+	 *            the Basic Authorization
 	 * @return {@link AppUpdatesResponse}
 	 * @throws OrchestrationException
 	 */
@@ -207,7 +217,9 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param studyVersion
+	 *            the Study Version
 	 * @return {@link StudyUpdatesResponse}
 	 * @throws OrchestrationException
 	 */
@@ -230,12 +242,18 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param forceUpdate
+	 *            the Force Update Flag
 	 * @param osType
+	 *            the Platform Type
 	 * @param appVersion
+	 *            the App Version
 	 * @param bundleId
+	 *            the Bundle Identifier
 	 * @param customStudyId
+	 *            the Study Name
 	 * @param message
-	 * @return {@link String}
+	 *            the Description about the Update
+	 * @return the success or failure
 	 * @throws OrchestrationException
 	 */
 	public String updateAppVersionDetails(String forceUpdate, String osType,
@@ -261,7 +279,8 @@ public class AppMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param dbQuery
-	 * @return {@link String}
+	 *            the input query
+	 * @return the success or failure
 	 * @throws OrchestrationException
 	 */
 	public String interceptorDataBaseQuery(String dbQuery)

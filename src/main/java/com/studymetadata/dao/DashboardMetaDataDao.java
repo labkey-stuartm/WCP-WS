@@ -59,6 +59,7 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link StudyDashboardResponse}
 	 * @throws DAOException
 	 */
@@ -529,11 +530,17 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activityType
+	 *            the activity type
 	 * @param activeTask
+	 *            {@link ActiveTaskAttrtibutesValuesDto}
 	 * @param question
+	 *            {@link QuestionsDto}
 	 * @param chartsList
+	 *            {@link List<ChartsBean>}
 	 * @param chartTitle
+	 *            the chart title
 	 * @param taskTypeId
+	 *            the task type identifier
 	 * @param activeTaskMasterAttrIdNameMap
 	 * @return {@link List<ChartsBean>}
 	 * @throws DAOException
@@ -626,12 +633,19 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activityType
+	 *            the activity type
 	 * @param activeTask
+	 *            {@link ActiveTaskAttrtibutesValuesDto}
 	 * @param question
+	 *            {@link QuestionsDto}
 	 * @param statisticsList
+	 *            {@link List<StatisticsBean>}
 	 * @param formulaDtoList
+	 *            {@link List<ActiveTaskFormulaDto>}
 	 * @param statisticImageList
+	 *            {@link List<StatisticImageListDto>}
 	 * @param taskTypeId
+	 *            the task type identifier
 	 * @param activeTaskMasterAttrIdNameMap
 	 * @return {@link List<StatisticsBean>}
 	 * @throws DAOException
@@ -729,7 +743,8 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param timeRange
-	 * @return {@link String}
+	 *            the wcp time range type
+	 * @return time range code
 	 * @throws DAOException
 	 */
 	public String getTimeRangeType(String timeRange) throws DAOException {
@@ -771,8 +786,10 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param statisticTypeId
+	 *            the statistics type identifier
 	 * @param statisticImageList
-	 * @return {@link String}
+	 *            {@link List}
+	 * @return statistics type name
 	 * @throws DAOException
 	 */
 	public String getStatisticsType(Integer statisticTypeId,
@@ -802,8 +819,10 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param formulaTypeId
+	 *            the formula type identifier
 	 * @param formulaDtoList
-	 * @return {@link String}
+	 *            {@link List}
+	 * @return formula type name
 	 * @throws DAOException
 	 */
 	public String getFormulaType(Integer formulaTypeId,
@@ -833,7 +852,9 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTaskDto
+	 *            {@link ActiveTaskDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link ActiveTaskDto}
 	 * @throws DAOException
 	 */
@@ -973,7 +994,9 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link QuestionnairesDto}
 	 * @throws DAOException
 	 */
@@ -1333,7 +1356,8 @@ public class DashboardMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param masterId
-	 * @return {@link String}
+	 *            the master identifier
+	 * @return chart data source name
 	 * @throws DAOException
 	 */
 	public String getChartDataSourceNameByMasterId(Integer masterId,

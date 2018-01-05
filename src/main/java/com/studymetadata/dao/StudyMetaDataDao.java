@@ -90,6 +90,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
@@ -124,6 +125,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link GatewayInfoResponse}
 	 * @throws DAOException
 	 */
@@ -247,6 +249,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link StudyResponse}
 	 * @throws DAOException
 	 */
@@ -412,7 +415,8 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
-	 * @return EligibilityConsentResponse
+	 *            the study identifier
+	 * @return {@link EligibilityConsentResponse}
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
@@ -937,9 +941,13 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param consentVersion
+	 *            the consent version
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link ConsentDocumentResponse}
 	 * @throws DAOException
 	 */
@@ -1046,6 +1054,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link ResourcesResponse}
 	 * @throws DAOException
 	 */
@@ -1161,6 +1170,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link StudyInfoResponse}
 	 * @throws DAOException
 	 */
@@ -1503,6 +1513,7 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
@@ -1539,8 +1550,11 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activityId
+	 *            the activity identifier
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
@@ -1601,8 +1615,11 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activityId
+	 *            the activity identifier
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link Boolean}
 	 * @throws DAOException
 	 */
@@ -1646,7 +1663,8 @@ public class StudyMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param displaytitle
-	 * @return {@link String}
+	 *            the display title
+	 * @return consent document display title code
 	 * @throws DAOException
 	 */
 	public String getconsentDocumentDisplayTitle(String displaytitle)

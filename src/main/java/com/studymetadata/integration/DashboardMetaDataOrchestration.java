@@ -32,6 +32,7 @@ public class DashboardMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link StudyDashboardResponse}
 	 * @throws OrchestrationException
 	 */

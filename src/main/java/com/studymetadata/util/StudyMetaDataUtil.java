@@ -51,7 +51,7 @@ public class StudyMetaDataUtil {
 	 * Get properties defined in messageResource and application property files
 	 * 
 	 * @author BTC
-	 * @return HashMap
+	 * @return the properties
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static HashMap getAppProperties() {
@@ -89,8 +89,11 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param status
+	 *            the response status
 	 * @param title
+	 *            the response title
 	 * @param detail
+	 *            the response details
 	 * @return {@link FailureResponse}
 	 */
 	public static FailureResponse getFailureResponse(String status,
@@ -115,9 +118,13 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param status
+	 *            the response status
 	 * @param title
+	 *            the response title
 	 * @param detail
+	 *            the response details
 	 * @param response
+	 *            {@link HttpServletResponse}
 	 */
 	public static void getFailureResponse(String status, String title,
 			String detail, HttpServletResponse response) {
@@ -137,7 +144,9 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param month
+	 *            the month value
 	 * @param year
+	 *            the year value
 	 * @return {@link Integer}
 	 */
 	public static int noOfDaysForMonthYear(int month, int year) {
@@ -161,7 +170,9 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param startDate
+	 *            the start date
 	 * @param endDate
+	 *            the end date
 	 * @return {@link Integer}
 	 */
 	public static int noOfDaysBetweenTwoDates(String startDate, String endDate) {
@@ -186,7 +197,7 @@ public class StudyMetaDataUtil {
 	 * Get server current date
 	 * 
 	 * @author BTC
-	 * @return {@link String}
+	 * @return current date
 	 */
 	public static String getCurrentDate() {
 		LOGGER.info("INFO: StudyMetaDataUtil - getCurrentDate() :: Starts");
@@ -207,7 +218,7 @@ public class StudyMetaDataUtil {
 	 * Get server current date time
 	 * 
 	 * @author BTC
-	 * @return {@link String}
+	 * @return current date time
 	 */
 	public static String getCurrentDateTime() {
 		LOGGER.info("StudyMetaDataUtil: getCurrentDateTime() - Starts ");
@@ -230,9 +241,12 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param inputDate
+	 *            the input date
 	 * @param inputFormat
+	 *            the input format
 	 * @param outputFormat
-	 * @return {@link String}
+	 *            the output format
+	 * @return the formatted date
 	 */
 	public static String getFormattedDate1(String inputDate,
 			String inputFormat, String outputFormat) {
@@ -262,7 +276,9 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param dateOne
+	 *            the date1
 	 * @param dateTwo
+	 *            the date2
 	 * @return {@link String}
 	 */
 	public static String getTimeDiffInDaysHoursMins(Date dateOne, Date dateTwo) {
@@ -345,7 +361,7 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param encodedText
-	 * @return
+	 * @return {@link String}
 	 */
 	public static String getDecodedStringByBase64(String encodedText) {
 		LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
@@ -620,6 +636,7 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param authCredentials
+	 *            the Basic Authorization
 	 * @param type
 	 * @return {@link String}
 	 */
@@ -898,6 +915,7 @@ public class StudyMetaDataUtil {
 	 * 
 	 * @author BTC
 	 * @param authCredentials
+	 *            the Basic Authorization
 	 * @return {@link String}
 	 */
 	public static String getBundleIdFromAuthorization(String authCredentials) {

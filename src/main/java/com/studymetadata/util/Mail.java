@@ -32,8 +32,11 @@ public class Mail {
 	 * 
 	 * @author BTC
 	 * @param email
+	 *            the recipient mail id
 	 * @param subject
+	 *            the mail subject
 	 * @param messageBody
+	 *            the mail body
 	 * @return {@link Boolean}
 	 * @throws Exception
 	 */

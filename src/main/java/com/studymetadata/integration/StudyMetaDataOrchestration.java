@@ -38,6 +38,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
@@ -62,6 +63,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link GatewayInfoResponse}
 	 * @throws OrchestrationException
 	 */
@@ -86,6 +88,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link StudyResponse}
 	 * @throws OrchestrationException
 	 */
@@ -107,6 +110,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link EligibilityConsentResponse}
 	 * @throws OrchestrationException
 	 */
@@ -132,9 +136,13 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param consentVersion
+	 *            the consent version
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link ConsentDocumentResponse}
 	 * @throws OrchestrationException
 	 */
@@ -160,6 +168,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link ResourcesResponse}
 	 * @throws OrchestrationException
 	 */
@@ -183,6 +192,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link StudyInfoResponse}
 	 * @throws OrchestrationException
 	 */
@@ -225,6 +235,7 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
@@ -246,8 +257,11 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param activityId
+	 *            the activity identifier
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
@@ -273,8 +287,11 @@ public class StudyMetaDataOrchestration {
 	 * 
 	 * @author BTC
 	 * @param activityId
+	 *            the activity identifier
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */

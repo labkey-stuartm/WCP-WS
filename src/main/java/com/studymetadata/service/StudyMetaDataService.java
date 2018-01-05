@@ -69,9 +69,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link GatewayInfoResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -113,9 +116,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link StudyResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -153,9 +159,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Idetifier
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link EligibilityConsentResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -219,12 +228,18 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param consentVersion
+	 *            the Consent Version
 	 * @param activityId
+	 *            the Activity Identifier
 	 * @param activityVersion
+	 *            the Activity Version
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link ConsentDocumentResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -289,9 +304,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link ResourcesResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -352,9 +370,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link StudyInfoResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -414,10 +435,14 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link ActivityResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -480,11 +505,17 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param activityId
+	 *            the Activity Identifier
 	 * @param activityVersion
+	 *            the Activity Version
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link ActiveTaskActivityMetaDataResponse} or
+	 *         {@link QuestionnaireActivityMetaDataResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -585,9 +616,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link StudyDashboardResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -648,8 +682,10 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link TermsPolicyResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -686,10 +722,14 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param skip
+	 *            the skip count
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link NotificationsResponse}
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -739,9 +779,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param params
+	 *            the feedback details
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link AppResponse}
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -783,9 +826,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param params
+	 *            the contact details
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link AppResponse}
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -835,10 +881,14 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param appVersion
+	 *            the App Version
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link AppUpdatesResponse}
 	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -880,10 +930,14 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the Study Identifier
 	 * @param studyVersion
+	 *            the Study Version
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return {@link StudyUpdatesResponse}
 	 */
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -944,9 +998,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param params
+	 *            the App Version Details
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return the success or failure
 	 */
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1031,7 +1088,7 @@ public class StudyMetaDataService {
 	 * Ping application
 	 * 
 	 * @author BTC
-	 * @return {@link String}
+	 * @return It Works!
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -1049,9 +1106,12 @@ public class StudyMetaDataService {
 	 * 
 	 * @author BTC
 	 * @param params
+	 *            the input query
 	 * @param context
+	 *            {@link ServletContext}
 	 * @param response
-	 * @return {@link Object}
+	 *            {@link HttpServletResponse}
+	 * @return the success or failure
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -1094,7 +1154,7 @@ public class StudyMetaDataService {
 	 * Check for mail
 	 * 
 	 * @author BTC
-	 * @return {@link Object}
+	 * @return the success or failure
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

@@ -64,7 +64,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
- * Provides activity metadata business logic and model objects details. 
+ * Provides activity metadata business logic and model objects details.
  * 
  * @author BTC
  * @createdOn Jan 4, 2018 3:23:22 PM
@@ -91,7 +91,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param authorization
+	 *            the Basic Authorization
 	 * @return {@link ActivityResponse}
 	 * @throws DAOException
 	 */
@@ -303,8 +305,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link ActiveTaskActivityMetaDataResponse}
 	 * @throws DAOException
 	 */
@@ -351,8 +356,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link QuestionnaireActivityMetaDataResponse}
 	 * @throws DAOException
 	 */
@@ -397,9 +405,13 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param session
+	 *            {@link Session}
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link ActiveTaskActivityStructureBean}
 	 * @throws DAOException
 	 */
@@ -448,12 +460,7 @@ public class ActivityMetaDataDao {
 						: StudyMetaDataUtil.getFormattedDateTimeZone(
 								activeTaskDto.getModifiedDate(),
 								StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-								StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)); // column
-				// not
-				// there
-				// in
-				// the
-				// database
+								StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 				metadata.setName(StringUtils.isEmpty(activeTaskDto
 						.getShortTitle()) ? "" : activeTaskDto.getShortTitle());
 				metadata.setStudyId(studyId);
@@ -621,9 +628,13 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param studyId
+	 *            the study identifier
 	 * @param activityId
+	 *            the activity identifier
 	 * @param session
+	 *            {@link Session}
 	 * @param activityVersion
+	 *            the activity version
 	 * @return {@link QuestionnaireActivityStructureBean}
 	 * @throws DAOException
 	 */
@@ -863,8 +874,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param frequencyDetails
+	 *            {@link ActivityFrequencyBean}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link ActivityFrequencyBean}
 	 * @throws DAOException
 	 */
@@ -902,7 +916,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -940,8 +956,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1003,7 +1022,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1101,7 +1122,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1182,8 +1205,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTask
+	 *            {@link ActiveTaskDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1238,8 +1264,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param frequencyDetails
+	 *            {@link ActivityFrequencyBean}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link ActivityFrequencyBean}
 	 * @throws DAOException
 	 */
@@ -1279,7 +1308,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1317,8 +1348,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1380,7 +1414,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1479,7 +1515,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1560,8 +1598,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param runDetailsBean
+	 *            {@link List<ActivityFrequencyScheduleBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link List<ActivityFrequencyScheduleBean>}
 	 * @throws DAOException
 	 */
@@ -1615,16 +1656,26 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param type
+	 *            the questionnaire step type
 	 * @param instructionsDtoList
+	 *            {@link List<InstructionsDto>}
 	 * @param questionsDtoList
+	 *            {@link List<QuestionsDto>}
 	 * @param formsList
+	 *            {@link List<FormMappingDto>}
 	 * @param sequenceNoMap
+	 *            {@link Map<String, Integer>}
 	 * @param stepsSequenceTreeMap
+	 *            {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @param questionnaireStepDetailsMap
+	 *            {@link Map<String, QuestionnairesStepsDto>}
 	 * @param questionResponseTypeMasterInfoList
 	 * @param questionaireStepsList
+	 *            {@link List<QuestionResponsetypeMasterInfoDto>}
 	 * @param questionnaireDto
+	 *            {@link QuestionnairesDto}
 	 * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @throws DAOException
 	 */
@@ -1683,9 +1734,13 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param instructionsDtoList
+	 *            {@link List<InstructionsDto>}
 	 * @param sequenceNoMap
+	 *            {@link Map<String, Integer>}
 	 * @param stepsSequenceTreeMap
+	 *            {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @param questionnaireStepDetailsMap
+	 *            {@link Map<String, QuestionnairesStepsDto>}
 	 * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @throws DAOException
 	 */
@@ -1762,13 +1817,21 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionsDtoList
+	 *            {@link List<QuestionsDto>}
 	 * @param sequenceNoMap
+	 *            {@link Map<String, Integer>}
 	 * @param stepsSequenceTreeMap
+	 *            {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @param session
+	 *            {@link Session}
 	 * @param questionnaireStepDetailsMap
+	 *            {@link Map<String, QuestionnairesStepsDto>}
 	 * @param questionResponseTypeMasterInfoList
+	 *            {@link List<QuestionResponsetypeMasterInfoDto>}
 	 * @param questionaireStepsList
+	 *            {@link List<QuestionnairesStepsDto>}
 	 * @param questionnaireDto
+	 *            {@link QuestionnairesDto}
 	 * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @throws DAOException
 	 */
@@ -2031,11 +2094,17 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param formsList
+	 *            {@link List<FormMappingDto>}
 	 * @param sequenceNoMap
+	 *            {@link Map<String, Integer>}
 	 * @param session
+	 *            {@link Session}
 	 * @param stepsSequenceTreeMap
+	 *            {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @param questionnaireStepDetailsMap
+	 *            {@link Map<String, QuestionnairesStepsDto>}
 	 * @param questionResponseTypeMasterInfoList
+	 *            {@link List<QuestionResponsetypeMasterInfoDto>}
 	 * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
 	 * @throws DAOException
 	 */
@@ -2200,9 +2269,12 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param attributeValues
+	 *            {@link ActiveTaskAttrtibutesValuesDto}
 	 * @param masterAttributeValue
+	 *            {@link ActiveTaskMasterAttributeDto}
 	 * @param fetalKickCounterFormat
-	 * @return {@link Object}
+	 *            {@link FetalKickCounterFormatBean}
+	 * @return {@link FetalKickCounterFormatBean}
 	 * @throws DAOException
 	 */
 	public Object fetalKickCounterDetails(
@@ -2251,9 +2323,12 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param attributeValues
+	 *            {@link ActiveTaskAttrtibutesValuesDto}
 	 * @param masterAttributeValue
+	 *            {@link ActiveTaskMasterAttributeDto}
 	 * @param spatialSpanMemoryFormat
-	 * @return {@link Object}
+	 *            {@link SpatialSpanMemoryFormatBean}
+	 * @return {@link SpatialSpanMemoryFormatBean}
 	 * @throws DAOException
 	 */
 	public Object spatialSpanMemoryDetails(
@@ -2344,8 +2419,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionDto
+	 *            {@link QuestionsDto}
 	 * @param questionResultType
+	 *            the question result type
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2462,6 +2540,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2541,6 +2620,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2612,8 +2692,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionDto
+	 *            {@link QuestionsDto}
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2672,7 +2755,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionDto
+	 *            {@link QuestionsDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2723,7 +2808,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionDto
+	 *            {@link QuestionsDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2781,8 +2868,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionDto
+	 *            {@link QuestionsDto}
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2838,6 +2928,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2901,6 +2992,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -2969,6 +3061,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -3014,8 +3107,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param activeTaskDto
+	 *            {@link ActiveTaskDto}
 	 * @param activityBean
+	 *            {@link ActivitiesBean}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link ActivitiesBean}
 	 * @throws DAOException
 	 */
@@ -3188,8 +3284,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaire
+	 *            {@link QuestionnairesDto}
 	 * @param activityBean
+	 *            {@link ActivitiesBean}
 	 * @param session
+	 *            {@link Session}
 	 * @return {@link ActivitiesBean}
 	 * @throws DAOException
 	 */
@@ -3361,6 +3460,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionaireStepsList
+	 *            {@link List<QuestionnairesStepsDto>}
 	 * @return {@link List<QuestionnairesStepsDto>}
 	 * @throws DAOException
 	 */
@@ -3397,8 +3497,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param destinationBean
+	 *            {@link DestinationBean}
 	 * @param destinationDto
+	 *            {@link QuestionResponseSubTypeDto}
 	 * @param questionaireStepsList
+	 *            {@link List<QuestionnairesStepsDto>}
 	 * @return {@link DestinationBean}
 	 * @throws DAOException
 	 */
@@ -3432,7 +3535,8 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param imagePath
-	 * @return {@link String}
+	 *            the input image path
+	 * @return the converted base64 code
 	 * @throws DAOException
 	 */
 	public String getBase64Image(String imagePath) throws DAOException {
@@ -3463,8 +3567,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param step
+	 *            the step value
 	 * @param maxValue
+	 *            the maximum value
 	 * @param minValue
+	 *            the minimum value
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3500,8 +3607,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param step
+	 *            the step value
 	 * @param maxValue
+	 *            the maximum value
 	 * @param minValue
+	 *            the minimum value
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3523,9 +3633,13 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param step
+	 *            the step value
 	 * @param maxValue
+	 *            the maximum value
 	 * @param minValue
+	 *            the minimum value
 	 * @param defaultValue
+	 *            the default value
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3549,8 +3663,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param maxValue
+	 *            the maximum value
 	 * @param minValue
+	 *            the minimum value
 	 * @param actualFractionDigits
+	 *            the fraction digits
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3604,8 +3721,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param maxValue
+	 *            the maximum value
 	 * @param minValue
+	 *            the minimum value
 	 * @param defaultValue
+	 *            the default value
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3632,6 +3752,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param stepValue
+	 *            the step value
 	 * @return {@link Integer}
 	 * @throws DAOException
 	 */
@@ -3661,6 +3782,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param time
+	 *            the time (HH:MM) hours
 	 * @return {@link Long}
 	 * @throws DAOException
 	 */
@@ -3683,8 +3805,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param reponseType
+	 *            {@link QuestionReponseTypeDto}
 	 * @param destinationsList
+	 *            {@link List<DestinationBean>}
 	 * @param questionBean
+	 *            {@link QuestionnaireActivityStepsBean}
 	 * @return {@link List<DestinationBean>}
 	 * @throws DAOException
 	 */
@@ -3895,6 +4020,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param questionBean
+	 *            {@link QuestionnaireActivityStepsBean}
 	 * @return {@link Map<String, Object>}
 	 * @throws DAOException
 	 */
@@ -4001,6 +4127,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param conditionFormula
+	 *            the conditional branching formula
 	 * @return {@link String}
 	 * @throws DAOException
 	 */
@@ -4036,9 +4163,13 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param destinationsList
+	 *            {@link List<DestinationBean>}
 	 * @param valueOfX
+	 *            the X value
 	 * @param trueOperator
+	 *            the true condition operator
 	 * @param falseOperator
+	 *            the false condition operator
 	 * @return {@link List<DestinationBean>}
 	 * @throws DAOException
 	 */
@@ -4069,7 +4200,9 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param destinationsList
+	 *            {@link List<DestinationBean>}
 	 * @param questionBean
+	 *            {@link QuestionnaireActivityStepsBean}
 	 * @return {@link List<DestinationBean>}
 	 * @throws DAOException
 	 */
@@ -4149,8 +4282,11 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param destinationsList
+	 *            {@link List<DestinationBean>}
 	 * @param stringFormat
+	 *            the format
 	 * @param questionBean
+	 *            {@link QuestionnaireActivityStepsBean}
 	 * @return {@link List<DestinationBean>}
 	 * @throws DAOException
 	 */
@@ -4196,6 +4332,7 @@ public class ActivityMetaDataDao {
 	 * 
 	 * @author BTC
 	 * @param dateRange
+	 *            the wcp date range value
 	 * @return {@link String}
 	 */
 	public String getDateRangeType(String dateRange) {

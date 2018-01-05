@@ -31,6 +31,7 @@ public class AuthenticationService {
 	 * 
 	 * @author BTC
 	 * @param authCredentials
+	 *            the Basic Authorization
 	 * @return {@link Boolean}
 	 */
 	public boolean authenticate(String authCredentials) {
