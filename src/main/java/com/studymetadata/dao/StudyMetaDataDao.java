@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import com.studymetadata.dto.ActiveTaskDto;
 import com.studymetadata.dto.ComprehensionTestQuestionDto;
 import com.studymetadata.dto.ComprehensionTestResponseDto;
@@ -37,6 +38,7 @@ import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.StudyMetaDataConstants;
 import com.studymetadata.util.HibernateUtil;
+import com.studymetadata.util.StudyMetaDataEnum;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.AnchorDateBean;
 import com.studymetadata.bean.ComprehensionDetailsBean;
@@ -66,7 +68,7 @@ import com.studymetadata.bean.WithdrawalConfigBean;
  * Provides study metadata business logic and model objects details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:23:46 PM
+ * @since Jan 4, 2018 3:23:46 PM
  *
  */
 public class StudyMetaDataDao {
@@ -196,7 +198,7 @@ public class StudyMetaDataDao {
 										+ platformType
 										+ "%' and SDTO.type= :type and SDTO.live=1)"
 										+ " ORDER BY RDTO.sequenceNo")
-						.setString("type", StudyMetaDataConstants.STUDY_TYPE_GT)
+						.setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT)
 						.list();
 				if (null != resourcesList && !resourcesList.isEmpty()) {
 					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
@@ -274,8 +276,8 @@ public class StudyMetaDataDao {
 										+ platformType
 										+ "%'"
 										+ " and (SDTO.status= :status OR SDTO.live=1)")
-						.setString("type", StudyMetaDataConstants.STUDY_TYPE_GT)
-						.setString("status",
+						.setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT)
+						.setString(StudyMetaDataEnum.QF_STATUS.value(),
 								StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
 						.list();
 				if (null != studiesList && !studiesList.isEmpty()) {
@@ -440,18 +442,18 @@ public class StudyMetaDataDao {
 
 			studyDto = (StudyDto) session
 					.getNamedQuery("getLiveStudyIdByCustomStudyId")
-					.setString("customStudyId", studyId).uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			if (studyDto != null) {
 				studyVersionDto = (StudyVersionDto) session
 						.getNamedQuery(
 								"getLiveVersionDetailsByCustomStudyIdAndVersion")
-						.setString("customStudyId", studyDto.getCustomStudyId())
-						.setFloat("studyVersion", studyDto.getVersion())
+						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyDto.getCustomStudyId())
+						.setFloat(StudyMetaDataEnum.QF_STUDY_VERSION.value(), studyDto.getVersion())
 						.setMaxResults(1).uniqueResult();
 
 				studySequenceDto = (StudySequenceDto) session
 						.getNamedQuery("getStudySequenceDetailsByStudyId")
-						.setInteger("studyId", studyDto.getId()).uniqueResult();
+						.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId()).uniqueResult();
 				if (studySequenceDto != null) {
 
 					if (studySequenceDto.getEligibility().equalsIgnoreCase(
@@ -459,7 +461,7 @@ public class StudyMetaDataDao {
 
 						eligibilityDto = (EligibilityDto) session
 								.getNamedQuery("eligibilityDtoByStudyId")
-								.setInteger("studyId", studyDto.getId())
+								.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
 								.uniqueResult();
 						if (eligibilityDto != null) {
 
@@ -551,9 +553,9 @@ public class StudyMetaDataDao {
 					consentDto = (ConsentDto) session
 							.getNamedQuery(
 									"consentDetailsByCustomStudyIdAndVersion")
-							.setString("customStudyId",
+							.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
 									studyVersionDto.getCustomStudyId())
-							.setFloat("version",
+							.setFloat(StudyMetaDataEnum.QF_VERSION.value(),
 									studyVersionDto.getConsentVersion())
 							.uniqueResult();
 					if (null != consentDto) {
@@ -640,11 +642,11 @@ public class StudyMetaDataDao {
 										.getNamedQuery(
 												"consentInfoDetailsByCustomStudyIdAndVersion")
 										.setString(
-												"customStudyId",
+												StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
 												studyVersionDto
 														.getCustomStudyId())
 										.setFloat(
-												"version",
+												StudyMetaDataEnum.QF_VERSION.value(),
 												studyVersionDto
 														.getConsentVersion())
 										.list();
@@ -750,7 +752,7 @@ public class StudyMetaDataDao {
 								comprehensionQuestionList = session
 										.getNamedQuery(
 												"comprehensionQuestionByStudyId")
-										.setInteger("studyId", studyDto.getId())
+										.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
 										.list();
 								if (null != comprehensionQuestionList
 										&& !comprehensionQuestionList.isEmpty()) {
@@ -967,11 +969,11 @@ public class StudyMetaDataDao {
 
 			studyDto = (StudyDto) session
 					.getNamedQuery("getLiveStudyIdByCustomStudyId")
-					.setString("customStudyId", studyId).uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			if (studyDto == null) {
 				studyDto = (StudyDto) session
 						.getNamedQuery("getPublishedStudyByCustomId")
-						.setString("customStudyId", studyId).uniqueResult();
+						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			}
 
 			if (studyDto != null) {
@@ -1003,14 +1005,14 @@ public class StudyMetaDataDao {
 						consent = (ConsentDto) session
 								.getNamedQuery(
 										"consentDetailsByCustomStudyIdAndVersion")
-								.setString("customStudyId", studyId)
-								.setFloat("version",
+								.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
+								.setFloat(StudyMetaDataEnum.QF_VERSION.value(),
 										studyVersionDto.getConsentVersion())
 								.uniqueResult();
 					} else {
 						consent = (ConsentDto) session
 								.getNamedQuery("consentDtoByStudyId")
-								.setInteger("studyId", studyDto.getId())
+								.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
 								.uniqueResult();
 					}
 
@@ -1071,12 +1073,12 @@ public class StudyMetaDataDao {
 
 			studyDto = (StudyDto) session
 					.getNamedQuery("getLiveStudyIdByCustomStudyId")
-					.setString("customStudyId", studyId).uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			if (studyDto != null) {
 
 				resourcesDtoList = session
 						.getNamedQuery("getResourcesListByStudyId")
-						.setInteger("studyId", studyDto.getId()).list();
+						.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId()).list();
 				if (null != resourcesDtoList && !resourcesDtoList.isEmpty()) {
 
 					List<ResourcesBean> resourcesBeanList = new ArrayList<>();
@@ -1185,11 +1187,11 @@ public class StudyMetaDataDao {
 			session = sessionFactory.openSession();
 			studyDto = (StudyDto) session
 					.getNamedQuery("getLiveStudyIdByCustomStudyId")
-					.setString("customStudyId", studyId).uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			if (studyDto == null) {
 				studyDto = (StudyDto) session
 						.getNamedQuery("getPublishedStudyByCustomId")
-						.setString("customStudyId", studyId).uniqueResult();
+						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
 			}
 
 			if (studyDto != null) {
@@ -1200,7 +1202,7 @@ public class StudyMetaDataDao {
 				List<InfoBean> infoList = new ArrayList<>();
 				studyPageDtoList = session
 						.getNamedQuery("studyPageDetailsByStudyId")
-						.setInteger("studyId", studyDto.getId()).list();
+						.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId()).list();
 				if (null != studyPageDtoList && !studyPageDtoList.isEmpty()) {
 					for (StudyPageDto studyPageInfo : studyPageDtoList) {
 						InfoBean info = new InfoBean();
@@ -1529,7 +1531,7 @@ public class StudyMetaDataDao {
 							"from StudyDto SDTO"
 									+ " where SDTO.customStudyId= :customStudyId"
 									+ " ORDER BY SDTO.id DESC")
-					.setString("customStudyId", studyId).setMaxResults(1)
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).setMaxResults(1)
 					.uniqueResult();
 			isValidStudy = (studyDto == null) ? false : true;
 		} catch (Exception e) {
@@ -1573,10 +1575,10 @@ public class StudyMetaDataDao {
 									+ " where ATDTO.shortTitle= :shortTitle"
 									+ " and ROUND(ATDTO.version, 1)= :version and ATDTO.customStudyId= :customStudyId"
 									+ " ORDER BY ATDTO.id DESC")
-					.setString("shortTitle",
+					.setString(StudyMetaDataEnum.QF_SHORT_TITLE.value(),
 							StudyMetaDataUtil.replaceSingleQuotes(activityId))
-					.setFloat("version", Float.parseFloat(activityVersion))
-					.setString("customStudyId", studyId).setMaxResults(1)
+					.setFloat(StudyMetaDataEnum.QF_VERSION.value(), Float.parseFloat(activityVersion))
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).setMaxResults(1)
 					.uniqueResult();
 			isValidActivity = (activeTaskDto == null) ? false : true;
 
@@ -1588,11 +1590,11 @@ public class StudyMetaDataDao {
 										+ " and ROUND(QDTO.version, 1)= :version and QDTO.customStudyId= :customStudyId"
 										+ " ORDER BY QDTO.id DESC")
 						.setString(
-								"shortTitle",
+								StudyMetaDataEnum.QF_SHORT_TITLE.value(),
 								StudyMetaDataUtil
 										.replaceSingleQuotes(activityId))
-						.setFloat("version", Float.parseFloat(activityVersion))
-						.setString("customStudyId", studyId).setMaxResults(1)
+						.setFloat(StudyMetaDataEnum.QF_VERSION.value(), Float.parseFloat(activityVersion))
+						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).setMaxResults(1)
 						.uniqueResult();
 				isValidActivity = (questionnaireDto == null) ? false : true;
 			}
@@ -1637,10 +1639,10 @@ public class StudyMetaDataDao {
 									+ " where ATDTO.shortTitle= :shortTitle"
 									+ " and ROUND(ATDTO.version, 1)= :version and ATDTO.customStudyId= :customStudyId"
 									+ " ORDER BY ATDTO.id DESC")
-					.setString("shortTitle",
+					.setString(StudyMetaDataEnum.QF_SHORT_TITLE.value(),
 							StudyMetaDataUtil.replaceSingleQuotes(activityId))
-					.setFloat("version", Float.parseFloat(activityVersion))
-					.setString("customStudyId", studyId).setMaxResults(1)
+					.setFloat(StudyMetaDataEnum.QF_VERSION.value(), Float.parseFloat(activityVersion))
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).setMaxResults(1)
 					.uniqueResult();
 			if (activeTaskDto != null) {
 				isActivityTypeQuestionnaire = false;

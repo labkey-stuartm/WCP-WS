@@ -3,7 +3,7 @@ package com.studymetadata.exception;
 /**
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:36:01 PM
+ * @since Jan 4, 2018 3:36:01 PM
  *
  */
 public interface ErrorCodes {

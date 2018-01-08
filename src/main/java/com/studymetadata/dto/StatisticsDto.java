@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides activity statistics information for study.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:31:23 PM
+ * @since Jan 4, 2018 3:31:23 PM
  *
  */
 @Entity

@@ -9,7 +9,7 @@ import java.util.List;
  * {@link CorrectAnswersBean}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:09:33 PM
+ * @since Jan 4, 2018 3:09:33 PM
  *
  */
 public class ComprehensionDetailsBean {

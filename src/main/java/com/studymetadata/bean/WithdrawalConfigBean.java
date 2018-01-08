@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides withdrawal configuration details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:16:23 PM
+ * @since Jan 4, 2018 3:16:23 PM
  *
  */
 public class WithdrawalConfigBean {

@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides question response type master information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:30:24 PM
+ * @since Jan 4, 2018 3:30:24 PM
  *
  */
 @Entity

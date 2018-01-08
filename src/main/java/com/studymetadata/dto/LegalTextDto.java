@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides application privacy and policy, terms of use information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:29:02 PM
+ * @since Jan 4, 2018 3:29:02 PM
  *
  */
 @Entity

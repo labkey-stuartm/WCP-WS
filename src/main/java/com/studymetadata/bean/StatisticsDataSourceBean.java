@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:14:44 PM
+ * @since Jan 4, 2018 3:14:44 PM
  *
  */
 public class StatisticsDataSourceBean {

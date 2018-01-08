@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides start and end time of activity
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:05:13 PM
+ * @since Jan 4, 2018 3:05:13 PM
  *
  */
 public class ActivityFrequencyScheduleBean {

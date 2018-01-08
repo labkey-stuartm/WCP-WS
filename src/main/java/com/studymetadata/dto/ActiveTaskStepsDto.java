@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides active task steps details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:25:44 PM
+ * @since Jan 4, 2018 3:25:44 PM
  *
  */
 @Entity

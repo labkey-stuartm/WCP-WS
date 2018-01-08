@@ -20,7 +20,7 @@ import org.hibernate.annotations.NamedQuery;
  * <li>Consent {@link ConsentDto}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:31:58 PM
+ * @since Jan 4, 2018 3:31:58 PM
  *
  */
 @Entity

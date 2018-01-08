@@ -6,7 +6,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides status of the request in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:07:24 PM
+ * @since Jan 4, 2018 3:07:24 PM
  *
  */
 public class AppResponse {

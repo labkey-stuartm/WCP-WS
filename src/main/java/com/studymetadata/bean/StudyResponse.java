@@ -9,7 +9,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides studies metadata details {@link StudyBean} in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:15:27 PM
+ * @since Jan 4, 2018 3:15:27 PM
  *
  */
 public class StudyResponse {

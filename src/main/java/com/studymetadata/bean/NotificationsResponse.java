@@ -10,7 +10,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:12:19 PM
+ * @since Jan 4, 2018 3:12:19 PM
  *
  */
 public class NotificationsResponse {

@@ -20,7 +20,7 @@ import com.studymetadata.bean.StudyResponse;
  * {@link StudyMetaDataDao} repository.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:37:11 PM
+ * @since Jan 4, 2018 3:37:11 PM
  *
  */
 public class StudyMetaDataOrchestration {

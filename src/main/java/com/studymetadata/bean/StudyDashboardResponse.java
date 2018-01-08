@@ -6,7 +6,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides study dashboard metadata details {@link DashboardBean} in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:15:11 PM
+ * @since Jan 4, 2018 3:15:11 PM
  *
  */
 public class StudyDashboardResponse {

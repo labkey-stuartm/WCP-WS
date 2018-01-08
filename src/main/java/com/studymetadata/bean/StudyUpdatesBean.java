@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides study updates information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:15:34 PM
+ * @since Jan 4, 2018 3:15:34 PM
  *
  */
 public class StudyUpdatesBean {

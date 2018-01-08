@@ -19,7 +19,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides question metadata and configuration details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:30:29 PM
+ * @since Jan 4, 2018 3:30:29 PM
  *
  */
 @Entity

@@ -11,7 +11,7 @@ import java.util.Map;
  * {@link QuestionnaireActivityStepsBean}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:12:46 PM
+ * @since Jan 4, 2018 3:12:46 PM
  *
  */
 public class QuestionnaireActivityStepsBean {

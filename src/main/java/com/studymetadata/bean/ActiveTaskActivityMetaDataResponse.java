@@ -7,7 +7,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * information of activity {@link ActiveTaskActivityStructureBean}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:04:23 PM
+ * @since Jan 4, 2018 3:04:23 PM
  *
  */
 public class ActiveTaskActivityMetaDataResponse {

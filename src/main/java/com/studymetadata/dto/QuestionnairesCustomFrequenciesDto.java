@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * manually scheduled frequency type.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:29:46 PM
+ * @since Jan 4, 2018 3:29:46 PM
  *
  */
 @Entity

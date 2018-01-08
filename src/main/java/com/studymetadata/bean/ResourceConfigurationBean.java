@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides configuration details for resource.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:13:11 PM
+ * @since Jan 4, 2018 3:13:11 PM
  *
  */
 public class ResourceConfigurationBean {

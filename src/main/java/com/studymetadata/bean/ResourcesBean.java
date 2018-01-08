@@ -7,7 +7,7 @@ import java.util.Map;
  * Provides brief details about resource.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:13:43 PM
+ * @since Jan 4, 2018 3:13:43 PM
  *
  */
 public class ResourcesBean {

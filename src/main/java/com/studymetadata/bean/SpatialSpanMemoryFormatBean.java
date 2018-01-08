@@ -7,7 +7,7 @@ package com.studymetadata.bean;
  * Provides spatial span memory active task metadata details.
  * 
  * @author BTC
- * @createdOn Nov 3, 2017 12:20:02 PM
+ * @since Nov 3, 2017 12:20:02 PM
  *
  */
 public class SpatialSpanMemoryFormatBean {

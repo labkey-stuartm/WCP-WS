@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * {@link StudyDto}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:27:50 PM
+ * @since Jan 4, 2018 3:27:50 PM
  *
  */
 @Entity

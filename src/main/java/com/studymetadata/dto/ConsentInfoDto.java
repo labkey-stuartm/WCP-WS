@@ -24,7 +24,7 @@ import org.hibernate.annotations.NamedQuery;
  * <ol>
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:27:08 PM
+ * @since Jan 4, 2018 3:27:08 PM
  *
  */
 @Entity

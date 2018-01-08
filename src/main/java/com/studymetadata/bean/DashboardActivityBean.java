@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides activity dashboard details
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:10:26 PM
+ * @since Jan 4, 2018 3:10:26 PM
  *
  */
 public class DashboardActivityBean {

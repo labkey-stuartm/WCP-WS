@@ -10,7 +10,7 @@ import java.util.List;
  * answers.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:10:52 PM
+ * @since Jan 4, 2018 3:10:52 PM
  *
  */
 public class EligibilityBean {

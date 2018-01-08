@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:03:53 PM
+ * @since Jan 4, 2018 3:03:53 PM
  *
  */
 public class AccessResponse extends SuccessResponse {

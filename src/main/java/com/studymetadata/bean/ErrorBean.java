@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides error details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:11:15 PM
+ * @since Jan 4, 2018 3:11:15 PM
  *
  */
 public class ErrorBean {

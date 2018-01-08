@@ -38,12 +38,13 @@ import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
+import com.studymetadata.util.StudyMetaDataEnum;
 
 /**
  * Provides dashboard metadata business logic and model objects details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:23:41 PM
+ * @since Jan 4, 2018 3:23:41 PM
  *
  */
 public class DashboardMetaDataDao {
@@ -90,20 +91,27 @@ public class DashboardMetaDataDao {
 			session = sessionFactory.openSession();
 			studyDto = (StudyDto) session
 					.getNamedQuery("getLiveStudyIdByCustomStudyId")
-					.setString("customStudyId", studyId).uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+							studyId).uniqueResult();
 			if (studyDto != null) {
 				studyVersionDto = (StudyVersionDto) session
 						.getNamedQuery(
 								"getLiveVersionDetailsByCustomStudyIdAndVersion")
-						.setString("customStudyId", studyDto.getCustomStudyId())
-						.setFloat("studyVersion", studyDto.getVersion())
-						.setMaxResults(1).uniqueResult();
+						.setString(
+								StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+								studyDto.getCustomStudyId())
+						.setFloat(StudyMetaDataEnum.QF_STUDY_VERSION.value(),
+								studyDto.getVersion()).setMaxResults(1)
+						.uniqueResult();
 
 				activeTaskList = session
 						.getNamedQuery("getActiveTaskDetailsByCustomStudyId")
-						.setString("customStudyId",
+						.setString(
+								StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
 								studyVersionDto.getCustomStudyId())
-						.setInteger("live", 1).setInteger("active", 0).list();
+						.setInteger(StudyMetaDataEnum.QF_LIVE.value(), 1)
+						.setInteger(StudyMetaDataEnum.QF_ACTIVE.value(), 0)
+						.list();
 				if (activeTaskList != null && !activeTaskList.isEmpty()) {
 					for (ActiveTaskDto activeTask : activeTaskList) {
 						boolean addToDashboardFlag = false;
@@ -134,9 +142,11 @@ public class DashboardMetaDataDao {
 
 				questionnaireList = session
 						.getNamedQuery("getQuestionnaireDetailsByCustomStudyId")
-						.setString("customStudyId",
+						.setString(
+								StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
 								studyVersionDto.getCustomStudyId())
-						.setInteger("live", 1).setBoolean("active", false)
+						.setInteger(StudyMetaDataEnum.QF_LIVE.value(), 1)
+						.setBoolean(StudyMetaDataEnum.QF_ACTIVE.value(), false)
 						.list();
 				if (questionnaireList != null && !questionnaireList.isEmpty()) {
 					for (QuestionnairesDto questionnaireDto : questionnaireList) {

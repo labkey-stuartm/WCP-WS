@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * Extends abstract class {@link HttpServlet} to provide servlet for a Web site
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:54:12 PM
+ * @since Jan 4, 2018 3:54:12 PM
  * @see javax.servlet.http.HttpServlet
  */
 public class StudyMetaDataController extends HttpServlet {

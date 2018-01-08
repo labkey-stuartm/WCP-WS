@@ -16,7 +16,7 @@ import org.hibernate.annotations.NamedQuery;
  * Provides gateway welcome information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:28:36 PM
+ * @since Jan 4, 2018 3:28:36 PM
  *
  */
 @Entity

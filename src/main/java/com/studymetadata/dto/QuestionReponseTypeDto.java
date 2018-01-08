@@ -32,7 +32,7 @@ import javax.persistence.Table;
  * <ol>
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:30:10 PM
+ * @since Jan 4, 2018 3:30:10 PM
  *
  */
 @Entity

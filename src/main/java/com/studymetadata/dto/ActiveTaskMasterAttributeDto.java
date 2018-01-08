@@ -17,7 +17,7 @@ import org.hibernate.annotations.Type;
  * Provides attribute configuration details of available active tasks.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:25:30 PM
+ * @since Jan 4, 2018 3:25:30 PM
  *
  */
 @Entity

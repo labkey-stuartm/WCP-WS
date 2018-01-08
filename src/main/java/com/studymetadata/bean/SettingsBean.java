@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides study settings details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:14:11 PM
+ * @since Jan 4, 2018 3:14:11 PM
  *
  */
 public class SettingsBean {

@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides line chart x-axis configuration details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:29:25 PM
+ * @since Jan 4, 2018 3:29:25 PM
  *
  */
 @Entity

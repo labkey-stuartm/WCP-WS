@@ -9,7 +9,7 @@ import java.util.Map;
  * Provides steps metadata information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:22:18 PM
+ * @since Jan 4, 2018 3:22:18 PM
  *
  */
 public class StepsStructureBean {

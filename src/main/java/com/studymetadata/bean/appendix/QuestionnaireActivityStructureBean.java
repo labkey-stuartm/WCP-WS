@@ -12,7 +12,7 @@ import com.studymetadata.bean.QuestionnaireActivityStepsBean;
  * {@link QuestionnaireActivityStepsBean}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:21:30 PM
+ * @since Jan 4, 2018 3:21:30 PM
  *
  */
 public class QuestionnaireActivityStructureBean {

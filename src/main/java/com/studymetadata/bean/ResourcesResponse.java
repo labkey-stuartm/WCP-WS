@@ -9,7 +9,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides resource metadata details {@link ResourcesBean} in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:13:51 PM
+ * @since Jan 4, 2018 3:13:51 PM
  *
  */
 public class ResourcesResponse {

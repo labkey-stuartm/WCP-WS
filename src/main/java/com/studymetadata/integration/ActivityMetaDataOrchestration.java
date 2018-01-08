@@ -15,7 +15,7 @@ import com.studymetadata.util.StudyMetaDataUtil;
  * {@link ActivityMetaDataDao} repository.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:36:39 PM
+ * @since Jan 4, 2018 3:36:39 PM
  *
  */
 public class ActivityMetaDataOrchestration {

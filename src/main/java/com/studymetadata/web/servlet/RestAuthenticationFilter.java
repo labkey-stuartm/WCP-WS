@@ -21,7 +21,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Implements {@link Filter} interface to filter the incoming requests.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:51:20 PM
+ * @since Jan 4, 2018 3:51:20 PM
  * @see javax.servlet.Filter
  */
 public class RestAuthenticationFilter implements Filter {

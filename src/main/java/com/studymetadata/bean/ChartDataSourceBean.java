@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * {@link DashboardActivityBean}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:08:12 PM
+ * @since Jan 4, 2018 3:08:12 PM
  *
  */
 public class ChartDataSourceBean {

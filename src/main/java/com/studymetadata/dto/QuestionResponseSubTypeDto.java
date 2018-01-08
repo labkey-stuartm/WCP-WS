@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides questionnaire response sub type information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:30:19 PM
+ * @since Jan 4, 2018 3:30:19 PM
  *
  */
 @Entity

@@ -9,7 +9,7 @@ import java.util.List;
  * {@link SharingBean} and consent review details {@link ReviewBean}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:09:50 PM
+ * @since Jan 4, 2018 3:09:50 PM
  *
  */
 public class ConsentDetailsBean {

@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides branding information of study.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:07:49 PM
+ * @since Jan 4, 2018 3:07:49 PM
  *
  */
 public class BrandingBean {

@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides consent details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:09:43 PM
+ * @since Jan 4, 2018 3:09:43 PM
  *
  */
 public class ConsentBean {

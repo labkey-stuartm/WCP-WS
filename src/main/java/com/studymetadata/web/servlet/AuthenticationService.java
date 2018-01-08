@@ -14,7 +14,7 @@ import com.sun.jersey.core.util.Base64;
  * data.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:49:26 PM
+ * @since Jan 4, 2018 3:49:26 PM
  *
  */
 public class AuthenticationService {

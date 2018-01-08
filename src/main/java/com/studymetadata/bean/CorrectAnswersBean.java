@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides details about the correct answers for comprehension test
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:10:20 PM
+ * @since Jan 4, 2018 3:10:20 PM
  *
  */
 public class CorrectAnswersBean {

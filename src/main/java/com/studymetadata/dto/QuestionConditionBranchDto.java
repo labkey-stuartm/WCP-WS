@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * Provides question conditional branching details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:29:40 PM
+ * @since Jan 4, 2018 3:29:40 PM
  *
  */
 @Entity

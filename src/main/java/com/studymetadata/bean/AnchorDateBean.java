@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * question details {@link QuestionInfoBean}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:05:37 PM
+ * @since Jan 4, 2018 3:05:37 PM
  *
  */
 public class AnchorDateBean {

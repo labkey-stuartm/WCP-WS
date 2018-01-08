@@ -16,7 +16,7 @@ import org.hibernate.annotations.NamedQuery;
  * Provides study {@link StudyDto} comprehension test question details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:26:26 PM
+ * @since Jan 4, 2018 3:26:26 PM
  *
  */
 @Entity

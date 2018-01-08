@@ -28,7 +28,7 @@ import com.sun.jersey.core.util.Base64;
  * Provides static methods.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:47:44 PM
+ * @since Jan 4, 2018 3:47:44 PM
  *
  */
 public class StudyMetaDataUtil {

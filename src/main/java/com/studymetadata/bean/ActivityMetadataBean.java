@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * activity, version of activity etc
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:05:20 PM
+ * @since Jan 4, 2018 3:05:20 PM
  *
  */
 public class ActivityMetadataBean {

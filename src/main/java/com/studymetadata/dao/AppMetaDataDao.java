@@ -28,13 +28,14 @@ import com.studymetadata.dto.StudyVersionDto;
 import com.studymetadata.exception.DAOException;
 import com.studymetadata.util.HibernateUtil;
 import com.studymetadata.util.StudyMetaDataConstants;
+import com.studymetadata.util.StudyMetaDataEnum;
 import com.studymetadata.util.StudyMetaDataUtil;
 
 /**
  * Provides app metadata business logic and model objects details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:23:35 PM
+ * @since Jan 4, 2018 3:23:35 PM
  *
  */
 public class AppMetaDataDao {
@@ -116,9 +117,10 @@ public class AppMetaDataDao {
 				session = sessionFactory.openSession();
 				appVersion = (AppVersionDto) session
 						.getNamedQuery("AppVersionDto.findByBundleIdOsType")
-						.setString("bundleId", bundleIdType)
-						.setString("osType", deviceType).setMaxResults(1)
-						.uniqueResult();
+						.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(),
+								bundleIdType)
+						.setString(StudyMetaDataEnum.QF_OS_TYPE.value(),
+								deviceType).setMaxResults(1).uniqueResult();
 				if (appVersion != null) {
 					if (StringUtils.isNotEmpty(appVersion.getCustomStudyId())) {
 						customStudyQuery = " and NDTO.customStudyId in (select SDTO.customStudyId"
@@ -285,9 +287,10 @@ public class AppMetaDataDao {
 				appVersionDto = (AppVersionDto) session
 						.getNamedQuery(
 								"AppVersionDto.findByBundleIdOsTypeAppVersion")
-						.setString("bundleId", bundleId)
-						.setString("osType", os).setMaxResults(1)
-						.uniqueResult();
+						.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(),
+								bundleId)
+						.setString(StudyMetaDataEnum.QF_OS_TYPE.value(), os)
+						.setMaxResults(1).uniqueResult();
 				if (appVersionDto != null) {
 					if (Float.compare(Float.parseFloat(appVersion),
 							appVersionDto.getAppVersion().floatValue()) < 0) {
@@ -355,9 +358,10 @@ public class AppMetaDataDao {
 			session = sessionFactory.openSession();
 			studyVersionList = session
 					.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion")
-					.setString("customStudyId", studyId)
-					.setFloat("studyVersion", Float.valueOf(studyVersion))
-					.list();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+							studyId)
+					.setFloat(StudyMetaDataEnum.QF_STUDY_VERSION.value(),
+							Float.valueOf(studyVersion)).list();
 			if (studyVersionList != null && !studyVersionList.isEmpty()) {
 				currentVersion = studyVersionList.get(0);
 				latestVersion = studyVersionList
@@ -370,9 +374,11 @@ public class AppMetaDataDao {
 				studyActivityStatus = (StudyDto) session
 						.getNamedQuery(
 								"getActivityUpdatedOrNotByStudyIdAndVersion")
-						.setString("customStudyId", studyId)
-						.setFloat("version", latestVersion.getStudyVersion())
-						.uniqueResult();
+						.setString(
+								StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+								studyId)
+						.setFloat(StudyMetaDataEnum.QF_VERSION.value(),
+								latestVersion.getStudyVersion()).uniqueResult();
 				if (studyActivityStatus != null
 						&& studyActivityStatus.getHasActivetaskDraft() != null
 						&& studyActivityStatus.getHasQuestionnaireDraft() != null) {
@@ -398,9 +404,11 @@ public class AppMetaDataDao {
 										+ " where RDTO.studyId in (select SDTO.id"
 										+ " from StudyDto SDTO"
 										+ " where SDTO.customStudyId= :customStudyId and ROUND(SDTO.version, 1)= :version)")
-						.setString("customStudyId", studyId)
-						.setFloat("version", latestVersion.getStudyVersion())
-						.list();
+						.setString(
+								StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+								studyId)
+						.setFloat(StudyMetaDataEnum.QF_VERSION.value(),
+								latestVersion.getStudyVersion()).list();
 				if (resourcesList == null || resourcesList.isEmpty()) {
 					updates.setResources(false);
 				}
@@ -416,8 +424,8 @@ public class AppMetaDataDao {
 							"from StudyDto SDTO"
 									+ " where SDTO.customStudyId= :customStudyId"
 									+ " ORDER BY SDTO.id DESC")
-					.setString("customStudyId", studyId).setMaxResults(1)
-					.uniqueResult();
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+							studyId).setMaxResults(1).uniqueResult();
 			if (studyDto != null) {
 				switch (studyDto.getStatus()) {
 				case StudyMetaDataConstants.STUDY_STATUS_ACTIVE:
@@ -491,8 +499,9 @@ public class AppMetaDataDao {
 			appVersionDtoList = session
 					.getNamedQuery(
 							"AppVersionDto.findByBundleIdOsTypeAppVersion")
-					.setString("bundleId", bundleId)
-					.setString("osType", osType).list();
+					.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(), bundleId)
+					.setString(StudyMetaDataEnum.QF_OS_TYPE.value(), osType)
+					.list();
 			if (appVersionDtoList != null && !appVersionDtoList.isEmpty()) {
 				if (Float.compare(Float.parseFloat(appVersion),
 						appVersionDtoList.get(0).getAppVersion().floatValue()) == 0) {

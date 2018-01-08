@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 /**
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:33:38 PM
+ * @since Jan 4, 2018 3:33:38 PM
  *
  */
 public abstract class CommonException extends Exception {

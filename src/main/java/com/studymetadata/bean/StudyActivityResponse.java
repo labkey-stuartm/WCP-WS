@@ -6,7 +6,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides study activity metadata details {@link ActivitiesBean} in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:14:52 PM
+ * @since Jan 4, 2018 3:14:52 PM
  *
  */
 public class StudyActivityResponse {

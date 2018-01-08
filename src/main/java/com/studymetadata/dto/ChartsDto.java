@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides activities chart configuration details.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:26:11 PM
+ * @since Jan 4, 2018 3:26:11 PM
  *
  */
 @Entity

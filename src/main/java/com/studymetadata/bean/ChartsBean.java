@@ -8,7 +8,7 @@ import java.util.Map;
  * information {@link ChartDataSourceBean} etc
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:09:22 PM
+ * @since Jan 4, 2018 3:09:22 PM
  *
  */
 public class ChartsBean {

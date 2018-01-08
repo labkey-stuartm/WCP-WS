@@ -16,7 +16,7 @@ import org.hibernate.annotations.NamedQuery;
  * Provides study {@link StudyDto} pages information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:31:44 PM
+ * @since Jan 4, 2018 3:31:44 PM
  *
  */
 @Entity

@@ -5,7 +5,7 @@ package com.studymetadata.bean;
  * {@link SettingsBean}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:15:05 PM
+ * @since Jan 4, 2018 3:15:05 PM
  *
  */
 public class StudyBean {

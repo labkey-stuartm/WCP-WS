@@ -8,7 +8,7 @@ import java.util.List;
  * {@link StatisticsBean} information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:10:35 PM
+ * @since Jan 4, 2018 3:10:35 PM
  *
  */
 public class DashboardBean {

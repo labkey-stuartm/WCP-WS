@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides line chart datasource details for the activity.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:29:09 PM
+ * @since Jan 4, 2018 3:29:09 PM
  *
  */
 @Entity

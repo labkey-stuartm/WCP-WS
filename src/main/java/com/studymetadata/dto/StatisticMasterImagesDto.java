@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides statistics image details for the identifier.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:31:17 PM
+ * @since Jan 4, 2018 3:31:17 PM
  *
  */
 @Entity

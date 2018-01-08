@@ -25,6 +25,7 @@ import com.studymetadata.integration.AppMetaDataOrchestration;
 import com.studymetadata.integration.DashboardMetaDataOrchestration;
 import com.studymetadata.integration.StudyMetaDataOrchestration;
 import com.studymetadata.util.StudyMetaDataConstants;
+import com.studymetadata.util.StudyMetaDataEnum;
 import com.studymetadata.util.StudyMetaDataUtil;
 import com.studymetadata.bean.ActiveTaskActivityMetaDataResponse;
 import com.studymetadata.bean.ActivityResponse;
@@ -47,7 +48,7 @@ import com.studymetadata.bean.TermsPolicyResponse;
  * Activities metadata and configurations.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:37:26 PM
+ * @since Jan 4, 2018 3:37:26 PM
  *
  */
 @Path("/")
@@ -797,8 +798,8 @@ public class StudyMetaDataService {
 		AppResponse appResponse = new AppResponse();
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String subject = serviceJson.getString("subject");
-			String body = serviceJson.getString("body");
+			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
+			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
 			if (StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body)) {
 				appResponse = appMetaDataOrchestration.feedback(subject, body);
 			} else {
@@ -844,10 +845,10 @@ public class StudyMetaDataService {
 		AppResponse appResponse = new AppResponse();
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String subject = serviceJson.getString("subject");
-			String body = serviceJson.getString("body");
-			String firstName = serviceJson.getString("firstName");
-			String email = serviceJson.getString("email");
+			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
+			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
+			String firstName = serviceJson.getString(StudyMetaDataEnum.RP_FIRST_NAME.value());
+			String email = serviceJson.getString(StudyMetaDataEnum.RP_EMAIL.value());
 			boolean inputFlag1 = StringUtils.isNotEmpty(subject)
 					&& StringUtils.isNotEmpty(body);
 			boolean inputFlag2 = StringUtils.isNotEmpty(firstName)
@@ -1016,12 +1017,12 @@ public class StudyMetaDataService {
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String forceUpdate = serviceJson.getString("forceUpdate");
-			String osType = serviceJson.getString("osType");
-			String appVersion = serviceJson.getString("appVersion");
-			String bundleId = serviceJson.getString("bundleId");
-			String customStudyId = serviceJson.getString("studyId");
-			String message = serviceJson.getString("message");
+			String forceUpdate = serviceJson.getString(StudyMetaDataEnum.RP_FORCE_UPDATE.value());
+			String osType = serviceJson.getString(StudyMetaDataEnum.RP_OS_TYPE.value());
+			String appVersion = serviceJson.getString(StudyMetaDataEnum.RP_APP_VERSION.value());
+			String bundleId = serviceJson.getString(StudyMetaDataEnum.RP_BUNDLE_IDENTIFIER.value());
+			String customStudyId = serviceJson.getString(StudyMetaDataEnum.RP_STUDY_IDENTIFIER.value());
+			String message = serviceJson.getString(StudyMetaDataEnum.RP_MESSAGE.value());
 			if (StringUtils.isNotEmpty(forceUpdate)
 					&& StringUtils.isNotEmpty(osType)
 					&& StringUtils.isNotEmpty(appVersion)
@@ -1124,7 +1125,7 @@ public class StudyMetaDataService {
 		String message = "OOPS! Something went wrong.";
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String dbQuery = serviceJson.getString("dbQuery");
+			String dbQuery = serviceJson.getString(StudyMetaDataEnum.RP_QUERY.value());
 			if (StringUtils.isNotEmpty(dbQuery)) {
 				message = appMetaDataOrchestration
 						.interceptorDataBaseQuery(dbQuery);

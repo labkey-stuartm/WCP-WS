@@ -8,7 +8,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * {@link QuestionnaireActivityStructureBean} in response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:12:39 PM
+ * @since Jan 4, 2018 3:12:39 PM
  *
  */
 public class QuestionnaireActivityMetaDataResponse {

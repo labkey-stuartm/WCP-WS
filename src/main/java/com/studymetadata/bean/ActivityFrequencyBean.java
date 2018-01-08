@@ -8,7 +8,7 @@ import java.util.List;
  * and frequency type
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:05:06 PM
+ * @since Jan 4, 2018 3:05:06 PM
  *
  */
 public class ActivityFrequencyBean {

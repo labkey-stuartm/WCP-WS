@@ -7,7 +7,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * version.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:15:40 PM
+ * @since Jan 4, 2018 3:15:40 PM
  *
  */
 public class StudyUpdatesResponse {

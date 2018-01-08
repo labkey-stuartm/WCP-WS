@@ -6,7 +6,7 @@ package com.studymetadata.bean;
  * {@link ActivityFrequencyBean}, start and end time of activity etc
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:04:55 PM
+ * @since Jan 4, 2018 3:04:55 PM
  *
  */
 public class ActivitiesBean {

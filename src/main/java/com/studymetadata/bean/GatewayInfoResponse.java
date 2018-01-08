@@ -10,7 +10,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * {@link GatewayInfoResourceBean}
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:11:52 PM
+ * @since Jan 4, 2018 3:11:52 PM
  *
  */
 public class GatewayInfoResponse {

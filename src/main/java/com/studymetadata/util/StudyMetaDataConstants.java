@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
  * Provides constants.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:39:39 PM
+ * @since Jan 4, 2018 3:39:39 PM
  *
  */
 public interface StudyMetaDataConstants {
@@ -43,7 +43,8 @@ public interface StudyMetaDataConstants {
 
 	public static final String SDF_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-
+	public static final String SDF_DATE_PATTERN = "yyyy-MM-dd";
+	
 	public static final String PASS_SALT = "BTCSoft";
 
 	public static final String STUDY_TYPE_GT = "GT";

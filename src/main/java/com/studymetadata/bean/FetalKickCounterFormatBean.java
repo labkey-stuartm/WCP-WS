@@ -9,7 +9,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * Provides fetal kick count activity details.
  * 
  * @author BTC
- * @createdOn Nov 3, 2017 12:22:36 PM
+ * @since Nov 3, 2017 12:22:36 PM
  *
  */
 public class FetalKickCounterFormatBean {

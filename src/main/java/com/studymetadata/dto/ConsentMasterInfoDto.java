@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Provides consent {@link ConsentDto} master information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:27:16 PM
+ * @since Jan 4, 2018 3:27:16 PM
  *
  */
 @Entity

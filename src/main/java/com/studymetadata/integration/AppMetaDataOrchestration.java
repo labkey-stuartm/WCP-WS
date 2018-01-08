@@ -20,7 +20,7 @@ import com.studymetadata.util.StudyMetaDataUtil;
  * {@link AppMetaDataDao} repository.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:36:47 PM
+ * @since Jan 4, 2018 3:36:47 PM
  *
  */
 public class AppMetaDataOrchestration {

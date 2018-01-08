@@ -18,7 +18,7 @@ import org.hibernate.annotations.Type;
  * formula details to plot charts.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:24:23 PM
+ * @since Jan 4, 2018 3:24:23 PM
  *
  */
 @Entity

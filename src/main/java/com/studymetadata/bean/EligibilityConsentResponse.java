@@ -7,7 +7,7 @@ import com.studymetadata.util.StudyMetaDataConstants;
  * {@link ConsentDetailsBean} metadata details in the response.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:11:04 PM
+ * @since Jan 4, 2018 3:11:04 PM
  *
  */
 public class EligibilityConsentResponse {

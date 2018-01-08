@@ -9,7 +9,7 @@ import java.util.List;
  * {@link ActiveTaskActivityStepsBean}.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:04:40 PM
+ * @since Jan 4, 2018 3:04:40 PM
  *
  */
 public class ActiveTaskActivityStructureBean {

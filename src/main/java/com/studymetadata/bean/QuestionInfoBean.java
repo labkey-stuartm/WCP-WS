@@ -4,7 +4,7 @@ package com.studymetadata.bean;
  * Provides questions information.
  * 
  * @author BTC
- * @createdOn Jan 4, 2018 3:12:25 PM
+ * @since Jan 4, 2018 3:12:25 PM
  *
  */
 public class QuestionInfoBean {
