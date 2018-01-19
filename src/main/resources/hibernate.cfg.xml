@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- <!DOCTYPE hibernate-configuration PUBLIC
-"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"> -->
+<!-- <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration 
+	DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"> -->
 <!DOCTYPE hibernate-configuration SYSTEM 
     "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
@@ -11,78 +10,67 @@
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="show_sql">true</property>
 		<property name="hibernate.connection.autocommit">true</property>
-		
-		<!-- 50 Server -->
-		<!-- <property name="hibernate.connection.url">jdbc:mysql://${db.url}</property>
-		<property name="hibernate.connection.username">${db.username}</property>
-		<property name="hibernate.connection.password">${db.password}</property> -->
-
 		<property name="hibernate.c3p0.min_size">5</property>
 		<property name="hibernate.c3p0.max_size">50</property>
 		<property name="hibernate.c3p0.timeout">300</property>
 		<property name="hibernate.c3p0.max_statements">20</property>
 		<property name="hibernate.c3p0.idle_test_period">250</property>
 		<property name="hibernate.c3p0.acquire_increment">2</property>
-		
 		<property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
 		<property name="hibernate.c3p0.testConnectionOnCheckout">true</property>
 		<property name="hibernate.c3p0.idleConnectionTestPeriod">200</property>
-		<!-- <property name="hibernate.c3p0.validationInterval">200</property>
-		<property name="hibernate.c3p0.validationQuery">SELECT 1</property> -->
-
 		<property name="hibernate.cache.use_second_level_cache">false</property>
 		<property name="hibernate.cache.use_query_cache">false</property>
-		<!-- Disable the second-level cache -->
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
 
-		<mapping class="com.studymetadata.dto.BrandingDto"/>
-		<mapping class="com.studymetadata.dto.ChartsDto"/>
-		<mapping class="com.studymetadata.dto.ComprehensionTestQuestionDto"/>
-		<mapping class="com.studymetadata.dto.ComprehensionTestResponseDto"/>
-		<mapping class="com.studymetadata.dto.ConsentDto"/>
-		<mapping class="com.studymetadata.dto.ConsentInfoDto"/>
-		<mapping class="com.studymetadata.dto.EligibilityDto"/>
-		<mapping class="com.studymetadata.dto.EligibilityTestDto"/>
-		<mapping class="com.studymetadata.dto.EligibilityTestResponseDto"/>
-		<mapping class="com.studymetadata.dto.GatewayInfoDto"/>
-		<mapping class="com.studymetadata.dto.GatewayWelcomeInfoDto"/>
-		<mapping class="com.studymetadata.dto.LegalTextDto"/>
-		<mapping class="com.studymetadata.dto.NotificationDto"/>
-		<mapping class="com.studymetadata.dto.QuestionnairesDto"/>
-		<mapping class="com.studymetadata.dto.QuestionnairesFrequenciesDto"/>
-		<mapping class="com.studymetadata.dto.QuestionnairesStepsDto"/>
-		<mapping class="com.studymetadata.dto.QuestionsDto"/>
-		<mapping class="com.studymetadata.dto.QuestionsResponseTypeDto"/>
-		<mapping class="com.studymetadata.dto.ResourcesDto"/>
-		<mapping class="com.studymetadata.dto.StudyDto"/>
-		<mapping class="com.studymetadata.dto.StudyPageDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskFrequencyDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskStepsDto"/>
-		<mapping class="com.studymetadata.dto.LineChartDto"/>
-		<mapping class="com.studymetadata.dto.LineChartDatasourceDto"/>
-		<mapping class="com.studymetadata.dto.LineChartXAxisDto"/>
-		<mapping class="com.studymetadata.dto.StatisticsDto"/>
-		<mapping class="com.studymetadata.dto.ReferenceTablesDto"/>
-		<mapping class="com.studymetadata.dto.QuestionnairesCustomFrequenciesDto"/>
-		<mapping class="com.studymetadata.dto.FormDto"/>
-		<mapping class="com.studymetadata.dto.FormMappingDto"/>
-		<mapping class="com.studymetadata.dto.InstructionsDto"/>
-		<mapping class="com.studymetadata.dto.StudySequenceDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskCustomFrequenciesDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskFormulaDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskListDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskMasterAttributeDto"/>
-		<mapping class="com.studymetadata.dto.ActiveTaskSelectOptionsDto"/>
-		<mapping class="com.studymetadata.dto.ConsentMasterInfoDto"/>
-		<mapping class="com.studymetadata.dto.QuestionResponsetypeMasterInfoDto"/>
-		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto"/>
-		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto"/>
-		<mapping class="com.studymetadata.dto.StatisticImageListDto"/>
-		<mapping class="com.studymetadata.dto.StudyVersionDto"/>
-		<mapping class="com.studymetadata.dto.AppVersionDto"/>
-		<mapping class="com.studymetadata.dto.HealthKitDataKeyDto"/>
-		<mapping class="com.studymetadata.dto.QuestionConditionBranchDto"/>
+		<mapping class="com.studymetadata.dto.BrandingDto" />
+		<mapping class="com.studymetadata.dto.ChartsDto" />
+		<mapping class="com.studymetadata.dto.ComprehensionTestQuestionDto" />
+		<mapping class="com.studymetadata.dto.ComprehensionTestResponseDto" />
+		<mapping class="com.studymetadata.dto.ConsentDto" />
+		<mapping class="com.studymetadata.dto.ConsentInfoDto" />
+		<mapping class="com.studymetadata.dto.EligibilityDto" />
+		<mapping class="com.studymetadata.dto.EligibilityTestDto" />
+		<mapping class="com.studymetadata.dto.EligibilityTestResponseDto" />
+		<mapping class="com.studymetadata.dto.GatewayInfoDto" />
+		<mapping class="com.studymetadata.dto.GatewayWelcomeInfoDto" />
+		<mapping class="com.studymetadata.dto.LegalTextDto" />
+		<mapping class="com.studymetadata.dto.NotificationDto" />
+		<mapping class="com.studymetadata.dto.QuestionnairesDto" />
+		<mapping class="com.studymetadata.dto.QuestionnairesFrequenciesDto" />
+		<mapping class="com.studymetadata.dto.QuestionnairesStepsDto" />
+		<mapping class="com.studymetadata.dto.QuestionsDto" />
+		<mapping class="com.studymetadata.dto.QuestionsResponseTypeDto" />
+		<mapping class="com.studymetadata.dto.ResourcesDto" />
+		<mapping class="com.studymetadata.dto.StudyDto" />
+		<mapping class="com.studymetadata.dto.StudyPageDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskFrequencyDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskStepsDto" />
+		<mapping class="com.studymetadata.dto.LineChartDto" />
+		<mapping class="com.studymetadata.dto.LineChartDatasourceDto" />
+		<mapping class="com.studymetadata.dto.LineChartXAxisDto" />
+		<mapping class="com.studymetadata.dto.StatisticsDto" />
+		<mapping class="com.studymetadata.dto.ReferenceTablesDto" />
+		<mapping class="com.studymetadata.dto.QuestionnairesCustomFrequenciesDto" />
+		<mapping class="com.studymetadata.dto.FormDto" />
+		<mapping class="com.studymetadata.dto.FormMappingDto" />
+		<mapping class="com.studymetadata.dto.InstructionsDto" />
+		<mapping class="com.studymetadata.dto.StudySequenceDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskCustomFrequenciesDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskAttrtibutesValuesDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskFormulaDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskListDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskMasterAttributeDto" />
+		<mapping class="com.studymetadata.dto.ActiveTaskSelectOptionsDto" />
+		<mapping class="com.studymetadata.dto.ConsentMasterInfoDto" />
+		<mapping class="com.studymetadata.dto.QuestionResponsetypeMasterInfoDto" />
+		<mapping class="com.studymetadata.dto.QuestionResponseSubTypeDto" />
+		<mapping class="com.studymetadata.dto.QuestionReponseTypeDto" />
+		<mapping class="com.studymetadata.dto.StatisticImageListDto" />
+		<mapping class="com.studymetadata.dto.StudyVersionDto" />
+		<mapping class="com.studymetadata.dto.AppVersionDto" />
+		<mapping class="com.studymetadata.dto.HealthKitDataKeyDto" />
+		<mapping class="com.studymetadata.dto.QuestionConditionBranchDto" />
 	</session-factory>
 </hibernate-configuration>

@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.integration;
 
 import java.util.HashMap;
@@ -20,7 +42,6 @@ import com.studymetadata.util.StudyMetaDataUtil;
  * {@link AppMetaDataDao} repository.
  * 
  * @author BTC
- * @since Jan 4, 2018 3:36:47 PM
  *
  */
 public class AppMetaDataOrchestration {
@@ -272,29 +293,5 @@ public class AppMetaDataOrchestration {
 		}
 		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Ends");
 		return updateAppVersionResponse;
-	}
-
-	/**
-	 * Update input Query
-	 * 
-	 * @author BTC
-	 * @param dbQuery
-	 *            the input query
-	 * @return the success or failure
-	 * @throws OrchestrationException
-	 */
-	public String interceptorDataBaseQuery(String dbQuery)
-			throws OrchestrationException {
-		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Starts");
-		String message = "OOPS! Something went wrong.";
-		try {
-			message = appMetaDataDao.interceptorDataBaseQuery(dbQuery);
-		} catch (Exception e) {
-			LOGGER.error(
-					"AppMetaDataOrchestration - interceptorDataBaseQuery() :: ERROR",
-					e);
-		}
-		LOGGER.info("INFO: AppMetaDataOrchestration - interceptorDataBaseQuery() :: Ends");
-		return message;
 	}
 }

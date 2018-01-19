@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.service;
 
 import java.util.HashMap;
@@ -48,7 +70,6 @@ import com.studymetadata.bean.TermsPolicyResponse;
  * Activities metadata and configurations.
  * 
  * @author BTC
- * @since Jan 4, 2018 3:37:26 PM
  *
  */
 @Path("/")
@@ -798,8 +819,10 @@ public class StudyMetaDataService {
 		AppResponse appResponse = new AppResponse();
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
-			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
+			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT
+					.value());
+			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY
+					.value());
 			if (StringUtils.isNotEmpty(subject) && StringUtils.isNotEmpty(body)) {
 				appResponse = appMetaDataOrchestration.feedback(subject, body);
 			} else {
@@ -845,10 +868,14 @@ public class StudyMetaDataService {
 		AppResponse appResponse = new AppResponse();
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT.value());
-			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY.value());
-			String firstName = serviceJson.getString(StudyMetaDataEnum.RP_FIRST_NAME.value());
-			String email = serviceJson.getString(StudyMetaDataEnum.RP_EMAIL.value());
+			String subject = serviceJson.getString(StudyMetaDataEnum.RP_SUBJECT
+					.value());
+			String body = serviceJson.getString(StudyMetaDataEnum.RP_BODY
+					.value());
+			String firstName = serviceJson
+					.getString(StudyMetaDataEnum.RP_FIRST_NAME.value());
+			String email = serviceJson.getString(StudyMetaDataEnum.RP_EMAIL
+					.value());
 			boolean inputFlag1 = StringUtils.isNotEmpty(subject)
 					&& StringUtils.isNotEmpty(body);
 			boolean inputFlag2 = StringUtils.isNotEmpty(firstName)
@@ -1017,12 +1044,18 @@ public class StudyMetaDataService {
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		try {
 			JSONObject serviceJson = new JSONObject(params);
-			String forceUpdate = serviceJson.getString(StudyMetaDataEnum.RP_FORCE_UPDATE.value());
-			String osType = serviceJson.getString(StudyMetaDataEnum.RP_OS_TYPE.value());
-			String appVersion = serviceJson.getString(StudyMetaDataEnum.RP_APP_VERSION.value());
-			String bundleId = serviceJson.getString(StudyMetaDataEnum.RP_BUNDLE_IDENTIFIER.value());
-			String customStudyId = serviceJson.getString(StudyMetaDataEnum.RP_STUDY_IDENTIFIER.value());
-			String message = serviceJson.getString(StudyMetaDataEnum.RP_MESSAGE.value());
+			String forceUpdate = serviceJson
+					.getString(StudyMetaDataEnum.RP_FORCE_UPDATE.value());
+			String osType = serviceJson.getString(StudyMetaDataEnum.RP_OS_TYPE
+					.value());
+			String appVersion = serviceJson
+					.getString(StudyMetaDataEnum.RP_APP_VERSION.value());
+			String bundleId = serviceJson
+					.getString(StudyMetaDataEnum.RP_BUNDLE_IDENTIFIER.value());
+			String customStudyId = serviceJson
+					.getString(StudyMetaDataEnum.RP_STUDY_IDENTIFIER.value());
+			String message = serviceJson.getString(StudyMetaDataEnum.RP_MESSAGE
+					.value());
 			if (StringUtils.isNotEmpty(forceUpdate)
 					&& StringUtils.isNotEmpty(osType)
 					&& StringUtils.isNotEmpty(appVersion)
@@ -1101,82 +1134,4 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
 		return response;
 	}
-
-	/**
-	 * insert, update, alter or delete the DB changes
-	 * 
-	 * @author BTC
-	 * @param params
-	 *            the input query
-	 * @param context
-	 *            {@link ServletContext}
-	 * @param response
-	 *            {@link HttpServletResponse}
-	 * @return the success or failure
-	 */
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("testQuery")
-	public Object interceptorDataBaseQuery(String params,
-			@Context ServletContext context,
-			@Context HttpServletResponse response) {
-		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
-		String message = "OOPS! Something went wrong.";
-		try {
-			JSONObject serviceJson = new JSONObject(params);
-			String dbQuery = serviceJson.getString(StudyMetaDataEnum.RP_QUERY.value());
-			if (StringUtils.isNotEmpty(dbQuery)) {
-				message = appMetaDataOrchestration
-						.interceptorDataBaseQuery(dbQuery);
-			} else {
-				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102,
-						ErrorCodes.UNKNOWN,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
-						response);
-				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT).build();
-			}
-		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataService - interceptorDataBaseQuery() :: ERROR",
-					e);
-			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104,
-					ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE,
-					response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(StudyMetaDataConstants.FAILURE).build();
-		}
-		LOGGER.info("INFO: StudyMetaDataService - interceptorDataBaseQuery() :: Starts");
-		return message;
-	}
-
-	/**
-	 * Check for mail
-	 * 
-	 * @author BTC
-	 * @return the success or failure
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Path("mail")
-	public String sampleMail() {
-		LOGGER.info("INFO: StudyMetaDataService - sampleMail() :: Starts ");
-		boolean flag;
-		String response = "";
-		try {
-			flag = studyMetaDataOrchestration.sampleMail();
-			if (flag) {
-				response = "Mail Sent Successfully";
-			} else {
-				response = "Sending mail failed";
-			}
-		} catch (Exception e) {
-			LOGGER.error("StudyMetaDataService - sampleMail() :: ERROR ", e);
-		}
-		LOGGER.info("INFO: StudyMetaDataService - sampleMail() :: Ends ");
-		return response;
-	}
-
 }

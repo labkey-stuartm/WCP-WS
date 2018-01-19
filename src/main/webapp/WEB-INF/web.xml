@@ -34,17 +34,6 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet-mapping> <servlet-name>fdahpStudyDesignerWS REST Service</servlet-name> 
-		<url-pattern>/*</url-pattern> </servlet-mapping> -->
-	<!-- Added for Quartz scheduler : Starts -->
-	<!-- <servlet> <servlet-name>InitializeServlet</servlet-name> <servlet-class>com.fdahpStudyDesignerWS.corn.InitializeServlet</servlet-class> 
-		<load-on-startup>1</load-on-startup> </servlet> -->
-	<!-- Added for Quartz scheduler : Ends -->
-
-	<!-- <security-constraint> <web-resource-collection> <web-resource-name>Permitted 
-		Actions</web-resource-name> <url-pattern>/*</url-pattern> <http-method>GET</http-method> 
-		<http-method>POST</http-method> </web-resource-collection> </security-constraint> -->
-
 	<!-- Force SSL for entire site -->
 	<security-constraint>
 		<web-resource-collection>
@@ -71,14 +60,6 @@
 	<context-param>
 		<param-name>SSLFACTORY</param-name>
 		<param-value>javax.net.ssl.SSLSocketFactory</param-value>
-	</context-param>
-	<context-param>
-		<param-name>FromEmailAddress</param-name>
-		<param-value>apps@boston-technology.com</param-value>
-	</context-param>
-	<context-param>
-		<param-name>FromEmailPassword</param-name>
-		<param-value>password789</param-value>
 	</context-param>
 	<context-param>
 		<param-name>defaultHtmlEscape</param-name>
