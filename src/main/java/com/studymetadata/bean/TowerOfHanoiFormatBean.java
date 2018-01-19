@@ -22,45 +22,22 @@
  */
 package com.studymetadata.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Provides active task details. i.e. type of activity, metadata information
- * {@link ActivityMetadataBean} and steps details
- * {@link ActiveTaskActivityStepsBean}.
+ * Provides tower of hanoi active task metadata details.
  * 
  * @author BTC
  *
  */
-public class ActiveTaskActivityStructureBean {
+public class TowerOfHanoiFormatBean {
 
-	private String type = "";
-	private ActivityMetadataBean metadata = new ActivityMetadataBean();
-	private List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
+	private Integer numberOfDisks = 0;
 
-	public String getType() {
-		return type;
+	public Integer getNumberOfDisks() {
+		return numberOfDisks;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public ActivityMetadataBean getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(ActivityMetadataBean metadata) {
-		this.metadata = metadata;
-	}
-
-	public List<ActiveTaskActivityStepsBean> getSteps() {
-		return steps;
-	}
-
-	public void setSteps(List<ActiveTaskActivityStepsBean> steps) {
-		this.steps = steps;
+	public void setNumberOfDisks(Integer numberOfDisks) {
+		this.numberOfDisks = numberOfDisks;
 	}
 
 }

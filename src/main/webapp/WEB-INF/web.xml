@@ -24,8 +24,8 @@
 			<param-value>true</param-value>
 		</init-param>
 		<init-param>
-    		<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
-    		<param-value>true</param-value>
+			<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+			<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -34,22 +34,6 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet-mapping> <servlet-name>fdahpStudyDesignerWS REST Service</servlet-name> 
-		<url-pattern>/*</url-pattern> </servlet-mapping> -->
-	<!-- Added for Quartz scheduler : Starts -->
-	<!-- <servlet> <servlet-name>InitializeServlet</servlet-name> <servlet-class>com.fdahpStudyDesignerWS.corn.InitializeServlet</servlet-class> 
-		<load-on-startup>1</load-on-startup> </servlet> -->
-	<!-- Added for Quartz scheduler : Ends -->
-
-	<!-- <security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Permitted Actions</web-resource-name>
-			<url-pattern>/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-	</security-constraint> -->
-	
 	<!-- Force SSL for entire site -->
 	<security-constraint>
 		<web-resource-collection>
@@ -57,11 +41,11 @@
 			<url-pattern>/*</url-pattern>
 		</web-resource-collection>
 		<user-data-constraint>
-			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-			<!-- <transport-guarantee>NONE</transport-guarantee> -->
+			<!-- <transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
+			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
@@ -78,19 +62,11 @@
 		<param-value>javax.net.ssl.SSLSocketFactory</param-value>
 	</context-param>
 	<context-param>
-		<param-name>FromEmailAddress</param-name>
-		<param-value>apps@boston-technology.com</param-value>
-	</context-param>
-	<context-param>
-		<param-name>FromEmailPassword</param-name>
-		<param-value>password789</param-value>
-	</context-param>
-	<context-param>
 		<param-name>defaultHtmlEscape</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
-	<!-- RESTful Services HTTP basic Authentication filter-->
+
+	<!-- RESTful Services HTTP basic Authentication filter -->
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.studymetadata.web.servlet.RestAuthenticationFilter</filter-class>

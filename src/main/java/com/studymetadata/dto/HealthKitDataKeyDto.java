@@ -35,43 +35,40 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
- * Provides study {@link StudyDto} branding details.
+ * Provides health kit keys information.
  * 
  * @author BTC
  *
  */
 @Entity
-@Table(name = "branding")
+@Table(name = "health_kit_keys_info")
 @NamedQueries({
 
-@NamedQuery(name = "brandingDetailsByStudyId", query = "from BrandingDto BDTO"
-		+ " where BDTO.studyId =:studyId"), })
-public class BrandingDto implements Serializable {
+		@NamedQuery(name = "getHealthKitDataList", query = "from HealthKitDataKeyDto HKDKDTO"),
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3782834655524137288L;
+		@NamedQuery(name = "getHealthKitDisplayNameByKeyText", query = "select HKDKDTO.displayName"
+				+ " from HealthKitDataKeyDto HKDKDTO"
+				+ " where HKDKDTO.key=:key"), })
+public class HealthKitDataKeyDto implements Serializable {
+
+	private static final long serialVersionUID = 8578293542156754826L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "study_id")
-	private Integer studyId;
+	@Column(name = "key_text")
+	private String key;
 
-	@Column(name = "background")
-	private String background;
+	@Column(name = "category")
+	private String category;
 
-	@Column(name = "font")
-	private String font;
+	@Column(name = "display_name")
+	private String displayName;
 
-	@Column(name = "tint")
-	private String tint;
-
-	@Column(name = "logo_image_path")
-	private String logoImagePath;
+	@Column(name = "result_type")
+	private String resultType;
 
 	public Integer getId() {
 		return id;
@@ -81,43 +78,35 @@ public class BrandingDto implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getStudyId() {
-		return studyId;
+	public String getKey() {
+		return key;
 	}
 
-	public void setStudyId(Integer studyId) {
-		this.studyId = studyId;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
-	public String getBackground() {
-		return background;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setBackground(String background) {
-		this.background = background;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
-	public String getFont() {
-		return font;
+	public String getDisplayName() {
+		return displayName;
 	}
 
-	public void setFont(String font) {
-		this.font = font;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
-	public String getTint() {
-		return tint;
+	public String getResultType() {
+		return resultType;
 	}
 
-	public void setTint(String tint) {
-		this.tint = tint;
-	}
-
-	public String getLogoImagePath() {
-		return logoImagePath;
-	}
-
-	public void setLogoImagePath(String logoImagePath) {
-		this.logoImagePath = logoImagePath;
+	public void setResultType(String resultType) {
+		this.resultType = resultType;
 	}
 }

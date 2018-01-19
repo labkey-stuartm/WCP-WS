@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -9,100 +31,146 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Provides questionnaire {@link QuestionnairesDto} response type information.
+ * <p>
+ * Response types {@link QuestionResponsetypeMasterInfoDto} mentioned below:
+ * <ol>
+ * <li>Scale
+ * <li>Continuous Scale
+ * <li>Text Scale
+ * <li>Value Picker
+ * <li>Image Choice
+ * <li>Text Choice
+ * <li>Boolean
+ * <li>Numeric
+ * <li>Time of the day
+ * <li>Date
+ * <li>Text
+ * <li>Email
+ * <li>Time interval
+ * <li>Height
+ * <li>Location
+ * <ol>
+ * 
+ * @author BTC
+ *
+ */
 @Entity
-@Table(name="response_type_value")
+@Table(name = "response_type_value")
 public class QuestionReponseTypeDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5612905113940249120L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="response_type_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "response_type_id")
 	private Integer responseTypeId;
-	
-	@Column(name="questions_response_type_id")
+
+	@Column(name = "questions_response_type_id")
 	private Integer questionsResponseTypeId;
-	
-	@Column(name="max_value")
+
+	@Column(name = "max_value")
 	private String maxValue;
-	
-	@Column(name="min_value")
+
+	@Column(name = "min_value")
 	private String minValue;
-	
-	@Column(name="default_value")
+
+	@Column(name = "default_value")
 	private String defaultValue;
-	
-	@Column(name="step")
+
+	@Column(name = "step")
 	private Integer step;
-	
-	@Column(name="vertical")
+
+	@Column(name = "vertical")
 	private Boolean vertical;
-	
-	@Column(name="max_desc")
+
+	@Column(name = "max_desc")
 	private String maxDescription;
-	
-	@Column(name="min_desc")
+
+	@Column(name = "min_desc")
 	private String minDescription;
-	
-	@Column(name="min_image")
+
+	@Column(name = "min_image")
 	private String minImage;
-	
-	@Column(name="max_image")
+
+	@Column(name = "max_image")
 	private String maxImage;
-	
-	@Column(name="max_fraction_digits")
+
+	@Column(name = "max_fraction_digits")
 	private Integer maxFractionDigits;
-	
-	@Column(name="text_choices")
+
+	@Column(name = "text_choices")
 	private String textChoices;
-	
-	@Column(name="selection_style")
+
+	@Column(name = "selection_style")
 	private String selectionStyle;
-	
-	@Column(name="image_size")
+
+	@Column(name = "image_size")
 	private String imageSize;
-	
-	@Column(name="style")
+
+	@Column(name = "style")
 	private String style;
-	
-	@Column(name="unit")
+
+	@Column(name = "unit")
 	private String unit;
-	
-	@Column(name="placeholder")
+
+	@Column(name = "placeholder")
 	private String placeholder;
-	
-	@Column(name="min_date")
+
+	@Column(name = "min_date")
 	private String minDate;
-	
-	@Column(name="max_date")
+
+	@Column(name = "max_date")
 	private String maxDate;
-	
-	@Column(name="default_date")
+
+	@Column(name = "default_date")
 	private String defaultDate;
-	
-	@Column(name="max_length")
+
+	@Column(name = "max_length")
 	private Integer maxLength;
-	
-	@Column(name="validation_regex")
+
+	@Column(name = "validation_regex")
 	private String validationRegex;
-	
-	@Column(name="invalid_message")
+
+	@Column(name = "invalid_message")
 	private String invalidMessage;
-	
-	@Column(name="multiple_lines")
+
+	@Column(name = "multiple_lines")
 	private Boolean multipleLines;
-	
-	@Column(name="measurement_system")
+
+	@Column(name = "measurement_system")
 	private String measurementSystem;
-	
-	@Column(name="use_current_location")
+
+	@Column(name = "use_current_location")
 	private Boolean useCurrentLocation;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
+
+	@Column(name = "defalut_time")
+	private String defalutTime;
+
+	@Column(name = "validation_characters")
+	private String validationCharacters;
+
+	@Column(name = "validation_condition")
+	private String validationCondition;
+
+	@Column(name = "validation_except_text")
+	private String validationExceptText;
+
+	@Column(name = "formula_based_logic")
+	private String formulaBasedLogic;
+
+	@Column(name = "condition_formula")
+	private String conditionFormula;
 
 	public Integer getResponseTypeId() {
 		return responseTypeId;
@@ -335,5 +403,53 @@ public class QuestionReponseTypeDto implements Serializable {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
+	public String getDefalutTime() {
+		return defalutTime;
+	}
+
+	public void setDefalutTime(String defalutTime) {
+		this.defalutTime = defalutTime;
+	}
+
+	public String getValidationCharacters() {
+		return validationCharacters;
+	}
+
+	public void setValidationCharacters(String validationCharacters) {
+		this.validationCharacters = validationCharacters;
+	}
+
+	public String getValidationCondition() {
+		return validationCondition;
+	}
+
+	public void setValidationCondition(String validationCondition) {
+		this.validationCondition = validationCondition;
+	}
+
+	public String getValidationExceptText() {
+		return validationExceptText;
+	}
+
+	public void setValidationExceptText(String validationExceptText) {
+		this.validationExceptText = validationExceptText;
+	}
+
+	public String getFormulaBasedLogic() {
+		return formulaBasedLogic;
+	}
+
+	public void setFormulaBasedLogic(String formulaBasedLogic) {
+		this.formulaBasedLogic = formulaBasedLogic;
+	}
+
+	public String getConditionFormula() {
+		return conditionFormula;
+	}
+
+	public void setConditionFormula(String conditionFormula) {
+		this.conditionFormula = conditionFormula;
+	}
+
 }

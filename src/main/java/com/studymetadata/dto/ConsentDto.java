@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -13,98 +35,110 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides study {@link StudyDto} consent overview information.
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="consent")
+@Table(name = "consent")
 @NamedQueries({
-	@NamedQuery(name="consentDtoByStudyId", query=" from ConsentDto CDTO where CDTO.studyId =:studyId "),
-	@NamedQuery(name="consentDetailsByCustomStudyIdAndVersion", query=" from ConsentDto CDTO where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"),
-})
-public class ConsentDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+		@NamedQuery(name = "consentDtoByStudyId", query = "from ConsentDto CDTO"
+				+ " where CDTO.studyId =:studyId"),
+
+		@NamedQuery(name = "consentDetailsByCustomStudyIdAndVersion", query = " from ConsentDto CDTO"
+				+ " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"), })
+public class ConsentDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2879304018919940909L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
-	
+
 	@Column(name = "comprehension_test_minimum_score")
 	private Integer comprehensionTestMinimumScore;
-	
+
 	@Column(name = "share_data_permissions")
-	private Integer shareDataPermissions;
-	
+	private String shareDataPermissions;
+
 	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "tagline_description")
 	private String taglineDescription;
-	
+
 	@Column(name = "short_description")
 	private String shortDescription;
-	
+
 	@Column(name = "long_description")
 	private String longDescription;
-	
-	
+
 	@Column(name = "learn_more_text")
 	private String learnMoreText;
-	
+
 	@Column(name = "consent_doc_type")
 	private String consentDocType;
-	
+
 	@Column(name = "consent_doc_content")
 	private String consentDocContent;
-	
+
 	@Column(name = "allow_without_permission")
-	private Integer allowWithoutPermission;
-	
+	private String allowWithoutPermission;
+
 	@Column(name = "html_consent")
 	private String htmlConsent;
-	
+
 	@Column(name = "e_consent_firstname")
 	private String eConsentFirstName;
-	
+
 	@Column(name = "e_consent_lastname")
 	private String eConsentLastName;
-	
+
 	@Column(name = "e_consent_agree")
 	private String eConsentAgree;
-	
+
 	@Column(name = "e_consent_signature")
 	private String eConsentSignature;
-	
+
 	@Column(name = "e_consent_datetime")
 	private String eConsentDatetime;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
+
+	@Column(name = "need_comprehension_test")
+	private String needComprehensionTest;
+
+	@Column(name = "aggrement_of_consent")
+	private String aggrementOfConsent;
+
 	public Integer getId() {
 		return id;
 	}
@@ -130,11 +164,11 @@ public class ConsentDto implements Serializable{
 		this.comprehensionTestMinimumScore = comprehensionTestMinimumScore;
 	}
 
-	public Integer getShareDataPermissions() {
+	public String getShareDataPermissions() {
 		return shareDataPermissions;
 	}
 
-	public void setShareDataPermissions(Integer shareDataPermissions) {
+	public void setShareDataPermissions(String shareDataPermissions) {
 		this.shareDataPermissions = shareDataPermissions;
 	}
 
@@ -194,11 +228,11 @@ public class ConsentDto implements Serializable{
 		this.consentDocContent = consentDocContent;
 	}
 
-	public Integer getAllowWithoutPermission() {
+	public String getAllowWithoutPermission() {
 		return allowWithoutPermission;
 	}
 
-	public void setAllowWithoutPermission(Integer allowWithoutPermission) {
+	public void setAllowWithoutPermission(String allowWithoutPermission) {
 		this.allowWithoutPermission = allowWithoutPermission;
 	}
 
@@ -305,5 +339,21 @@ public class ConsentDto implements Serializable{
 	public void setLive(Integer live) {
 		this.live = live;
 	}
-	
+
+	public String getNeedComprehensionTest() {
+		return needComprehensionTest;
+	}
+
+	public void setNeedComprehensionTest(String needComprehensionTest) {
+		this.needComprehensionTest = needComprehensionTest;
+	}
+
+	public String getAggrementOfConsent() {
+		return aggrementOfConsent;
+	}
+
+	public void setAggrementOfConsent(String aggrementOfConsent) {
+		this.aggrementOfConsent = aggrementOfConsent;
+	}
+
 }

@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -10,103 +32,122 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
+import com.studymetadata.util.StudyMetaDataConstants;
+
 /**
+ * Provides question metadata and configuration details.
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="questions")
-public class QuestionsDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "questions")
+@NamedQueries(value = {
+
+@NamedQuery(name = "getQuestionsListFromIds", query = "from QuestionsDto QDTO"
+		+ " where QDTO.status=true and QDTO.id IN (:questionIdList)"), })
+public class QuestionsDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3036839955038582674L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="question")
+
+	@Column(name = "question")
 	private String question;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="response_type")
+
+	@Column(name = "response_type")
 	private Integer responseType;
-	
-	@Column(name="skippable")
+
+	@Column(name = "skippable")
 	private String skippable;
-	
-	@Column(name="add_line_chart")
+
+	@Column(name = "add_line_chart")
 	private String addLineChart;
-	
-	@Column(name="line_chart_timerange")
+
+	@Column(name = "line_chart_timerange")
 	private String lineChartTimeRange;
-	
-	@Column(name="allow_rollback_chart")
+
+	@Column(name = "allow_rollback_chart")
 	private String allowRollbackChart;
-	
-	@Column(name="chart_title")
+
+	@Column(name = "chart_title")
 	private String chartTitle;
-	
-	@Column(name="use_stastic_data")
+
+	@Column(name = "use_stastic_data")
 	private String useStasticData;
-	
-	@Column(name="stat_short_name")
+
+	@Column(name = "stat_short_name")
 	private String statShortName;
-	
-	@Column(name="stat_display_name")
+
+	@Column(name = "stat_display_name")
 	private String statDisplayName;
-	
-	@Column(name="stat_diaplay_units")
+
+	@Column(name = "stat_diaplay_units")
 	private String statDisplayUnits;
-	
-	@Column(name="stat_type")
+
+	@Column(name = "stat_type")
 	private Integer statType;
-	
-	@Column(name="stat_formula")
+
+	@Column(name = "stat_formula")
 	private Integer statFormula;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="active")
+	private Integer studyVersion = 1;
+
+	@Column(name = "active")
 	private Boolean active;
-	
+
 	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
-	
-	@Column(name="use_anchor_date")
-	private Boolean useAnchorDate=false;
+
+	@Column(name = "use_anchor_date")
+	private Boolean useAnchorDate = false;
 
 	@Transient
 	private String activityId;
-	
+
 	@Transient
 	private String activityVersion;
-	
+
 	@Transient
 	private String activityType;
-	
+
 	@Transient
 	private String activityStepKey;
-	
+
+	@Column(name = "allow_healthkit")
+	private String allowHealthKit = StudyMetaDataConstants.NO;
+
+	@Column(name = "healthkit_datatype")
+	private String healthkitDatatype;
+
 	public Integer getId() {
 		return id;
 	}
@@ -330,5 +371,21 @@ public class QuestionsDto implements Serializable{
 	public void setUseAnchorDate(Boolean useAnchorDate) {
 		this.useAnchorDate = useAnchorDate;
 	}
-	
+
+	public String getAllowHealthKit() {
+		return allowHealthKit;
+	}
+
+	public void setAllowHealthKit(String allowHealthKit) {
+		this.allowHealthKit = allowHealthKit;
+	}
+
+	public String getHealthkitDatatype() {
+		return healthkitDatatype;
+	}
+
+	public void setHealthkitDatatype(String healthkitDatatype) {
+		this.healthkitDatatype = healthkitDatatype;
+	}
+
 }

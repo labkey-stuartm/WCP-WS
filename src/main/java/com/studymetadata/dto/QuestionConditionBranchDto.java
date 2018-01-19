@@ -29,65 +29,83 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * Provides active task steps details.
+ * Provides question conditional branching details.
  * 
  * @author BTC
  *
  */
 @Entity
-@Table(name = "active_task_steps")
-public class ActiveTaskStepsDto implements Serializable {
+@Table(name = "question_condtion_branching")
+@NamedQueries({
+
+@NamedQuery(name = "getQuestionConditionBranchList", query = "from QuestionConditionBranchDto QCBDTO"
+		+ " where QCBDTO.questionId =:questionId"
+		+ " ORDER BY QCBDTO.sequenceNo"), })
+public class QuestionConditionBranchDto implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8677367389857232011L;
+	private static final long serialVersionUID = 2517716372949869931L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "step_id")
-	private Integer stepId;
+	@Column(name = "condition_id")
+	private Integer conditionId;
 
-	@Column(name = "active_task_id")
-	private Integer activeTaskId;
+	@Column(name = "question_id")
+	private Integer questionId;
 
-	@Column(name = "active_task_stepscol")
-	private String activeTaskStepscol;
+	@Column(name = "input_type")
+	private String inputType;
 
-	@Column(name = "sd_live_form_id")
-	private String sdLiveFormId;
+	@Column(name = "input_type_value")
+	private String inputTypeValue;
 
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+	@Column(name = "parent_sequence_no")
+	private Integer parentSequenceNo;
 
-	public Integer getActiveTaskId() {
-		return activeTaskId;
+	@Column(name = "active")
+	private Boolean active;
+
+	public Integer getConditionId() {
+		return conditionId;
 	}
 
-	public void setActiveTaskId(Integer activeTaskId) {
-		this.activeTaskId = activeTaskId;
+	public void setConditionId(Integer conditionId) {
+		this.conditionId = conditionId;
 	}
 
-	public String getActiveTaskStepscol() {
-		return activeTaskStepscol;
+	public Integer getQuestionId() {
+		return questionId;
 	}
 
-	public void setActiveTaskStepscol(String activeTaskStepscol) {
-		this.activeTaskStepscol = activeTaskStepscol;
+	public void setQuestionId(Integer questionId) {
+		this.questionId = questionId;
 	}
 
-	public String getSdLiveFormId() {
-		return sdLiveFormId;
+	public String getInputType() {
+		return inputType;
 	}
 
-	public void setSdLiveFormId(String sdLiveFormId) {
-		this.sdLiveFormId = sdLiveFormId;
+	public void setInputType(String inputType) {
+		this.inputType = inputType;
+	}
+
+	public String getInputTypeValue() {
+		return inputTypeValue;
+	}
+
+	public void setInputTypeValue(String inputTypeValue) {
+		this.inputTypeValue = inputTypeValue;
 	}
 
 	public Integer getSequenceNo() {
@@ -98,20 +116,20 @@ public class ActiveTaskStepsDto implements Serializable {
 		this.sequenceNo = sequenceNo;
 	}
 
-	public Integer getStepId() {
-		return stepId;
+	public Integer getParentSequenceNo() {
+		return parentSequenceNo;
 	}
 
-	public void setStepId(Integer stepId) {
-		this.stepId = stepId;
+	public void setParentSequenceNo(Integer parentSequenceNo) {
+		this.parentSequenceNo = parentSequenceNo;
 	}
 
-	public Integer getStudyVersion() {
-		return studyVersion;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 }

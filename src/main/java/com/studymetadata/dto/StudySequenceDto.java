@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -13,78 +35,83 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides information about status of the sub tasks for study {@link StudyDto}.
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="study_sequence")
+@Table(name = "study_sequence")
 @NamedQueries({
-	@NamedQuery(name="getStudySequenceDetailsByStudyId", query=" from StudySequenceDto SSDTO where SSDTO.studyId =:studyId "),
-})
-public class StudySequenceDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "getStudySequenceDetailsByStudyId", query = "from StudySequenceDto SSDTO"
+		+ " where SSDTO.studyId =:studyId "), })
+public class StudySequenceDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6095431690838787358L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="study_sequence_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "study_sequence_id")
 	private Integer studySequenceId;
-	
-	@Column(name="actions")
+
+	@Column(name = "actions")
 	private String actions;
-	
-	@Column(name="basic_info")
+
+	@Column(name = "basic_info")
 	private String basicInfo;
-	
-	@Column(name="check_list")
+
+	@Column(name = "check_list")
 	private String checkList;
-	
-	@Column(name="comprehension_test")
+
+	@Column(name = "comprehension_test")
 	private String comprehensionTest;
-	
-	@Column(name="consent_edu_info")
+
+	@Column(name = "consent_edu_info")
 	private String consentEduInfo;
-	
-	@Column(name="e_consent")
+
+	@Column(name = "e_consent")
 	private String eConsent;
-	
-	@Column(name="eligibility")
+
+	@Column(name = "eligibility")
 	private String eligibility;
-	
-	@Column(name="miscellaneous_branding")
+
+	@Column(name = "miscellaneous_branding")
 	private String miscellaneousBranding;
-	
-	@Column(name="miscellaneous_notification")
+
+	@Column(name = "miscellaneous_notification")
 	private String miscellaneousNotification;
-	
-	@Column(name="miscellaneous_resources")
+
+	@Column(name = "miscellaneous_resources")
 	private String miscellaneousResources;
-	
-	@Column(name="over_view")
+
+	@Column(name = "over_view")
 	private String overView;
-	
-	@Column(name="setting_admins")
+
+	@Column(name = "setting_admins")
 	private String settingAdmins;
-	
-	@Column(name="study_dashboard_chart")
+
+	@Column(name = "study_dashboard_chart")
 	private String studyDashboardChart;
-	
-	@Column(name="study_dashboard_stats")
+
+	@Column(name = "study_dashboard_stats")
 	private String studyDashboardStats;
-	
-	@Column(name="study_exc_active_task")
+
+	@Column(name = "study_exc_active_task")
 	private String studyExcActiveTask;
-	
-	@Column(name="study_exc_questionnaries")
+
+	@Column(name = "study_exc_questionnaries")
 	private String studyExcQuestionnaries;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
 
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	public Integer getStudyVersion() {
 		return studyVersion;
 	}
@@ -92,7 +119,7 @@ public class StudySequenceDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 	public Integer getStudySequenceId() {
 		return studySequenceId;
 	}
@@ -236,5 +263,5 @@ public class StudySequenceDto implements Serializable{
 	public void setStudyId(Integer studyId) {
 		this.studyId = studyId;
 	}
-	
+
 }

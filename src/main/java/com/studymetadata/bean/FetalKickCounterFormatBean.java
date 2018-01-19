@@ -22,45 +22,34 @@
  */
 package com.studymetadata.bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.studymetadata.util.StudyMetaDataConstants;
 
 /**
- * Provides active task details. i.e. type of activity, metadata information
- * {@link ActivityMetadataBean} and steps details
- * {@link ActiveTaskActivityStepsBean}.
+ * Provides fetal kick count activity details.
  * 
  * @author BTC
  *
  */
-public class ActiveTaskActivityStructureBean {
+public class FetalKickCounterFormatBean {
 
-	private String type = "";
-	private ActivityMetadataBean metadata = new ActivityMetadataBean();
-	private List<ActiveTaskActivityStepsBean> steps = new ArrayList<>();
+	private Integer duration = Integer
+			.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);
+	private Integer kickCount = StudyMetaDataConstants.MAX_KICK_COUNT;
 
-	public String getType() {
-		return type;
+	public Integer getDuration() {
+		return duration;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setDuration(Integer duration) {
+		this.duration = duration;
 	}
 
-	public ActivityMetadataBean getMetadata() {
-		return metadata;
+	public Integer getKickCount() {
+		return kickCount;
 	}
 
-	public void setMetadata(ActivityMetadataBean metadata) {
-		this.metadata = metadata;
-	}
-
-	public List<ActiveTaskActivityStepsBean> getSteps() {
-		return steps;
-	}
-
-	public void setSteps(List<ActiveTaskActivityStepsBean> steps) {
-		this.steps = steps;
+	public void setKickCount(Integer kickCount) {
+		this.kickCount = kickCount;
 	}
 
 }

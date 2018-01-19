@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -13,80 +35,97 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides questionnaire details for study.
+ * <ol>
+ * <li>Frequency type of activity
+ * <li>Study identifier
+ * <li>Activity identifier
+ * <li>Lifetime of questionnaire
+ * <li>Version details
+ * <ol>
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="questionnaires")
+@Table(name = "questionnaires")
 @NamedQueries({
-	@NamedQuery(name="questionnairesListByStudyId", query="from QuestionnairesDto QDTO where QDTO.studyId =:studyId"),
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
-	@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active) ORDER BY QDTO.createdDate DESC")
-})
-public class QuestionnairesDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+		@NamedQuery(name = "questionnairesListByStudyId", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.studyId =:studyId"),
+
+		@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyIdAndIsLive", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and QDTO.live=:live"),
+
+		@NamedQuery(name = "getQuestionnaireDetailsByCustomStudyId", query = "from QuestionnairesDto QDTO"
+				+ " where QDTO.status=true and QDTO.customStudyId=:customStudyId and (QDTO.live=:live OR QDTO.active=:active)"
+				+ " ORDER BY QDTO.createdDate DESC") })
+public class QuestionnairesDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9053445608384935386L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="frequency")
+
+	@Column(name = "frequency")
 	private String frequency;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
-	@Column(name="study_lifetime_start")
+
+	@Column(name = "study_lifetime_start")
 	private String studyLifetimeStart;
-	
-	@Column(name="study_lifetime_end")
+
+	@Column(name = "study_lifetime_end")
 	private String studyLifetimeEnd;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private Integer createdBy;
-	
-	@Column(name="created_date")
+
+	@Column(name = "created_date")
 	private String createdDate;
-	
-	@Column(name="modified_by")
+
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
-	@Column(name="modified_date")
+
+	@Column(name = "modified_date")
 	private String modifiedDate;
-	
-	@Column(name="day_of_the_week")
+
+	@Column(name = "day_of_the_week")
 	private String dayOfTheWeek;
-	
-	@Column(name="repeat_questionnaire")
+
+	@Column(name = "repeat_questionnaire")
 	private Integer repeatQuestionnaire;
-	
-	@Column(name="short_title")
+
+	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="branching")
-	private Boolean branching=false;
-	
+
+	@Column(name = "branching")
+	private Boolean branching = false;
+
 	@Column(name = "active")
 	private Boolean active;
-	
+
 	@Column(name = "status")
 	private Boolean status;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "is_live")
 	private Integer live = 0;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -238,5 +277,5 @@ public class QuestionnairesDto implements Serializable{
 	public void setLive(Integer live) {
 		this.live = live;
 	}
-	
+
 }

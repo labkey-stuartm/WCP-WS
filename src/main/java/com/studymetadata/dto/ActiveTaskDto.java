@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -13,89 +35,105 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides active task {@link ActiveTaskDto} information for study.
+ * <ol>
+ * <li>Frequency type of activity
+ * <li>Study identifier
+ * <li>Activity identifier
+ * <li>Lifetime of active task
+ * <li>Version details
+ * <ol>
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="active_task")
+@Table(name = "active_task")
 @NamedQueries({
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
-	@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active) ORDER BY ATDTO.createdDate DESC")
-})
-public class ActiveTaskDto implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+		@NamedQuery(name = "getActiveTaskDetailsByCustomStudyIdAndIsLive", query = "from ActiveTaskDto ATDTO"
+				+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and ATDTO.live=:live"),
+
+		@NamedQuery(name = "getActiveTaskDetailsByCustomStudyId", query = "from ActiveTaskDto ATDTO"
+				+ " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active)"
+				+ " ORDER BY ATDTO.createdDate DESC") })
+public class ActiveTaskDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4577109970844567694L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name="active_task_lifetime_end")
+	@Column(name = "active_task_lifetime_end")
 	private String activeTaskLifetimeEnd;
 
-	@Column(name="active_task_lifetime_start")
+	@Column(name = "active_task_lifetime_start")
 	private String activeTaskLifetimeStart;
 
-	@Column(name="frequency")
+	@Column(name = "frequency")
 	private String frequency;
-	
-	@Column(name="duration")
+
+	@Column(name = "duration")
 	private String duration;
 
-	@Column(name="study_id")
+	@Column(name = "study_id")
 	private Integer studyId;
 
-	@Column(name="task_title")
+	@Column(name = "task_title")
 	private String taskTitle;
-	
-	@Column(name="created_by")
+
+	@Column(name = "created_by")
 	private Integer createdBy;
-	
-	@Column(name="created_date")
+
+	@Column(name = "created_date")
 	private String createdDate;
-	
-	@Column(name="modified_by")
+
+	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
-	@Column(name="modified_date")
+
+	@Column(name = "modified_date")
 	private String modifiedDate;
-	
-	@Column(name="repeat_active_task")
+
+	@Column(name = "repeat_active_task")
 	private Integer repeatActiveTask;
-	
-	@Column(name="day_of_the_week")
+
+	@Column(name = "day_of_the_week")
 	private String dayOfTheWeek;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
+	private Integer studyVersion = 1;
+
 	@Column(name = "task_type_id")
 	private Integer taskTypeId;
-	
-	@Column(name="display_name")
+
+	@Column(name = "display_name")
 	private String displayName;
-	
-	@Column(name="short_title")
+
+	@Column(name = "short_title")
 	private String shortTitle;
-	
-	@Column(name="instruction")
+
+	@Column(name = "instruction")
 	private String instruction;
-	
+
 	@Column(name = "action", length = 1)
 	private boolean action = false;
-	
+
 	@Column(name = "version")
-	private Float version=0f;
-	
-	@Column(name="custom_study_id")
+	private Float version = 0f;
+
+	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
-	@Column(name="is_live")
+
+	@Column(name = "is_live")
 	private Integer live = 0;
 
-	@Column(name="active")
-	private Integer active=0;
-	
+	@Column(name = "active")
+	private Integer active = 0;
+
 	public Integer getId() {
 		return id;
 	}
@@ -279,5 +317,5 @@ public class ActiveTaskDto implements Serializable{
 	public void setActive(Integer active) {
 		this.active = active;
 	}
-	
+
 }

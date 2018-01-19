@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -10,40 +32,43 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Provides questionnaire {@link QuestionnairesDto} frequency details.
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
-@Table(name="questionnaires_frequencies")
-public class QuestionnairesFrequenciesDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = "questionnaires_frequencies")
+public class QuestionnairesFrequenciesDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5584696841111331744L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="questionnaires_id")
+
+	@Column(name = "questionnaires_id")
 	private Integer questionnairesId;
-	
-	@Column(name="frequency_date")
+
+	@Column(name = "frequency_date")
 	private String frequencyDate;
-	
-	@Column(name="frequency_time")
+
+	@Column(name = "frequency_time")
 	private String frequencyTime;
-	
-	@Column(name="is_launch_study")
+
+	@Column(name = "is_launch_study")
 	private Boolean isLaunchStudy = false;
-	
-	@Column(name="is_study_life_time")
-	private Boolean isStudyLifeTime=false;
-	
+
+	@Column(name = "is_study_life_time")
+	private Boolean isStudyLifeTime = false;
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	
+	private Integer studyVersion = 1;
+
 	public Integer getId() {
 		return id;
 	}
@@ -99,5 +124,5 @@ public class QuestionnairesFrequenciesDto implements Serializable{
 	public void setStudyVersion(Integer studyVersion) {
 		this.studyVersion = studyVersion;
 	}
-	
+
 }

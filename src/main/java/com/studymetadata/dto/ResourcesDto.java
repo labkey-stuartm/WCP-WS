@@ -1,3 +1,25 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 package com.studymetadata.dto;
 
 import java.io.Serializable;
@@ -13,99 +35,108 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 /**
+ * Provides study {@link StudyDto} resources information.
  * 
- * @author Mohan
+ * @author BTC
  *
  */
 @Entity
 @Table(name = "resources")
 @NamedQueries({
-	@NamedQuery(name="getResourcesListByStudyId", query=" from ResourcesDto RDTO where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"),
-})
-public class ResourcesDto implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+
+@NamedQuery(name = "getResourcesListByStudyId", query = "from ResourcesDto RDTO"
+		+ " where RDTO.studyId =:studyId  and RDTO.status=true and RDTO.action=true"
+		+ " ORDER BY RDTO.sequenceNo"), })
+public class ResourcesDto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5367238661369825902L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name="study_id")
+
+	@Column(name = "study_id")
 	private Integer studyId;
-	
-	@Column(name="title")
+
+	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "text_or_pdf", length = 1)
 	private boolean textOrPdf;
-	
-	@Column(name="rich_text")
+
+	@Column(name = "rich_text")
 	private String richText;
-	
-	@Column(name="pdf_url")
+
+	@Column(name = "pdf_url")
 	private String pdfUrl;
-	
-	@Column(name="pdf_name")
+
+	@Column(name = "pdf_name")
 	private String pdfName;
-	
+
 	@Column(name = "resource_visibility", length = 1)
 	private boolean resourceVisibility;
-	
-	@Column(name="time_period_from_days")
+
+	@Column(name = "time_period_from_days")
 	private Integer timePeriodFromDays;
-	
-	@Column(name="time_period_to_days")
+
+	@Column(name = "time_period_to_days")
 	private Integer timePeriodToDays;
-	
-	@Column(name="start_date")
+
+	@Column(name = "start_date")
 	private String startDate;
-	
-	@Column(name="end_date")
+
+	@Column(name = "end_date")
 	private String endDate;
-	
-	@Column(name="resource_text")
+
+	@Column(name = "resource_text")
 	private String resourceText;
-	
+
 	@Column(name = "action", length = 1)
 	private boolean action;
-	
+
 	@Column(name = "study_protocol", length = 1)
 	private boolean studyProtocol;
-	
+
 	@Column(name = "status", length = 1)
 	private boolean status;
-	
+
 	@Column(name = "created_by")
 	private Integer createdBy;
-	
+
 	@Column(name = "created_on")
 	private String createdOn;
-	
+
 	@Column(name = "modified_by")
 	private Integer modifiedBy;
-	
+
 	@Column(name = "modified_on")
 	private String modifiedOn;
-	
+
 	@Column(name = "study_version")
-	private Integer studyVersion=1;
-	
-	@Column(name="anchor_date")
+	private Integer studyVersion = 1;
+
+	@Column(name = "anchor_date")
 	private String anchorDate;
-	
+
 	@Column(name = "resource_type", length = 1)
-	private boolean resourceType=false;
-	
+	private boolean resourceType = false;
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	 
+
 	@Column(name = "x_days_sign", length = 1)
 	private boolean xDaysSign = false;
-	 
+
 	@Column(name = "y_days_sign", length = 1)
 	private boolean yDaysSign = false;
-	
+
+	@Column(name = "sequence_no")
+	private Integer sequenceNo;
+
 	public Integer getId() {
 		return id;
 	}
@@ -313,5 +344,5 @@ public class ResourcesDto implements Serializable{
 	public void setyDaysSign(boolean yDaysSign) {
 		this.yDaysSign = yDaysSign;
 	}
-	
+
 }
