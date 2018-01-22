@@ -5,11 +5,11 @@
 	id="WebApp_ID" version="2.5">
 	<display-name>StudyMetaData</display-name>
 	<listener>
-		<listener-class>com.studymetadata.util.ServletContextHolder</listener-class>
+		<listener-class>com.hphc.mystudies.util.ServletContextHolder</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>StudyMetaDataController REST Service</servlet-name>
-		<servlet-class>com.studymetadata.web.servlet.StudyMetaDataController</servlet-class>
+		<servlet-class>com.hphc.mystudies.web.servlet.StudyMetaDataController</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
@@ -17,7 +17,7 @@
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>com.studymetadata.service,com.studymetadata.dto,com.studymetadata.corn,org.codehaus.jackson.jaxrs</param-value>
+			<param-value>com.hphc.mystudies.service,com.hphc.mystudies.dto,com.hphc.mystudies.corn,org.codehaus.jackson.jaxrs</param-value>
 		</init-param>
 		<init-param>
 			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -66,10 +66,9 @@
 		<param-value>true</param-value>
 	</context-param>
 
-	<!-- RESTful Services HTTP basic Authentication filter -->
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
-		<filter-class>com.studymetadata.web.servlet.RestAuthenticationFilter</filter-class>
+		<filter-class>com.hphc.mystudies.web.servlet.RestAuthenticationFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
