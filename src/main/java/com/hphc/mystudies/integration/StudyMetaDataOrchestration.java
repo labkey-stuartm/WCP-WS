@@ -310,4 +310,25 @@ public class StudyMetaDataOrchestration {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
 		return flag;
 	}
+	
+	/**
+	 * Check Enrollment Token is valid or not.
+	 * 
+	 * @author BTC
+	 * @param token
+	 * @return {@link Boolean}
+	 * @throws OrchestrationException
+	 */
+	public boolean isValidToken(String token) throws OrchestrationException {
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Starts");
+		boolean flag = false;
+		try {
+			flag = studyMetaDataDao.isValidToken(token);
+		} catch (Exception e) {
+			LOGGER.error(
+					"StudyMetaDataOrchestration - isValidToken() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Ends");
+		return flag;
+	}
 }

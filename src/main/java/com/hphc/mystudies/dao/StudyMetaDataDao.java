@@ -68,6 +68,7 @@ import com.hphc.mystudies.dto.ConsentInfoDto;
 import com.hphc.mystudies.dto.ConsentMasterInfoDto;
 import com.hphc.mystudies.dto.EligibilityDto;
 import com.hphc.mystudies.dto.EligibilityTestDto;
+import com.hphc.mystudies.dto.EnrollmentTokenDto;
 import com.hphc.mystudies.dto.FormMappingDto;
 import com.hphc.mystudies.dto.GatewayInfoDto;
 import com.hphc.mystudies.dto.GatewayWelcomeInfoDto;
@@ -293,6 +294,16 @@ public class StudyMetaDataDao {
 				studiesList = session
 						.createQuery(
 								"from StudyDto SDTO"
+										+ " where SDTO.platform like '%"
+										+ platformType
+										+ "%'"
+										+ " and (SDTO.status= :status OR SDTO.live=1)")
+						.setString(StudyMetaDataEnum.QF_STATUS.value(),
+								StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
+						.list();
+				/*studiesList = session
+						.createQuery(
+								"from StudyDto SDTO"
 										+ " where SDTO.type= :type and SDTO.platform like '%"
 										+ platformType
 										+ "%'"
@@ -300,7 +311,7 @@ public class StudyMetaDataDao {
 						.setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT)
 						.setString(StudyMetaDataEnum.QF_STATUS.value(),
 								StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
-						.list();
+						.list();*/
 				if (null != studiesList && !studiesList.isEmpty()) {
 					List<StudyBean> studyBeanList = new ArrayList<>();
 					for (StudyDto studyDto : studiesList) {
@@ -1736,4 +1747,41 @@ public class StudyMetaDataDao {
 		return consentTitle;
 	}
 
+	/**
+	 * Check study for the provided study identifier
+	 * 
+	 * @author BTC
+	 * @param studyId
+	 *            the study identifier
+	 * @return {@link Boolean}
+	 * @throws DAOException
+	 */
+	public boolean isValidToken(String token) throws DAOException {
+		LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Starts");
+		Session session = null;
+		boolean isValidStudy = false;
+		EnrollmentTokenDto tokenDto = null;
+		try {
+			session = sessionFactory.openSession();
+			tokenDto = (EnrollmentTokenDto) session
+					.createQuery(
+							"from EnrollmentTokenDto "
+									+ " where enrollmentToken= :enrollmentToken"
+									+ " ORDER BY id DESC")
+					.setString("enrollmentToken", token).setMaxResults(1)
+					.uniqueResult();
+			if(null != tokenDto) {
+				isValidStudy = true;
+			}
+		} catch (Exception e) {
+			LOGGER.error(
+					"StudyMetaDataDao - isValidToken() :: ERROR", e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Ends");
+		return isValidStudy;
+	}
 }

@@ -43,6 +43,7 @@ public interface StudyMetaDataConstants {
 	public final String LOGIN_FAILURE = "Please check your login credentials.";
 	public final String INVALID_STUDY_ID = "Sorry, something went wrong. Please try again.";
 	public final String INVALID_ACTIVITY_ID = "ActivityId does not exists. Please check";
+	public final String INVALID_ENROLLMENT_TOKEN = "Sorry, the enrollment token is not valid. Please check and try again.";
 
 	SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat(

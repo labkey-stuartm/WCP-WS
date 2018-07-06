@@ -72,5 +72,6 @@
 		<mapping class="com.hphc.mystudies.dto.AppVersionDto" />
 		<mapping class="com.hphc.mystudies.dto.HealthKitDataKeyDto" />
 		<mapping class="com.hphc.mystudies.dto.QuestionConditionBranchDto" />
+		<mapping class="com.hphc.mystudies.dto.EnrollmentTokenDto" />
 	</session-factory>
 </hibernate-configuration>

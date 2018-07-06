@@ -47,6 +47,7 @@ import com.hphc.mystudies.bean.AppResponse;
 import com.hphc.mystudies.bean.AppUpdatesResponse;
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
 import com.hphc.mystudies.bean.EligibilityConsentResponse;
+import com.hphc.mystudies.bean.EnrollmentTokenResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
 import com.hphc.mystudies.bean.NotificationsResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
@@ -1118,6 +1119,65 @@ public class StudyMetaDataService {
 		return updateAppVersionResponse;
 	}
 
+	/**
+	 * Get eligibility and consent info for the provided study identifier
+	 * 
+	 * @author BTC
+	 * @param studyId
+	 *            the Study Idetifier
+	 * @param context
+	 *            {@link ServletContext}
+	 * @param response
+	 *            {@link HttpServletResponse}
+	 * @return {@link EligibilityConsentResponse}
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("validateEnrollmentToken")
+	public Object validateEnrollmentToken(
+			@QueryParam("token") String token,
+			@Context ServletContext context,
+			@Context HttpServletResponse response) {
+		LOGGER.info("INFO: StudyMetaDataService - validateEnrollmentToken() :: Starts");
+		EnrollmentTokenResponse enrollmentTokenResponse = new EnrollmentTokenResponse();
+		Boolean isValidFlag = false;
+		try {
+			if (StringUtils.isNotEmpty(token)) {
+				isValidFlag = studyMetaDataOrchestration.isValidToken(token);
+				if (isValidFlag) {
+					enrollmentTokenResponse.setMessage(StudyMetaDataConstants.SUCCESS);
+				} else {
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102,
+							ErrorCodes.INVALID_INPUT,
+							StudyMetaDataConstants.INVALID_ENROLLMENT_TOKEN, response);
+					return Response.status(Response.Status.NOT_FOUND)
+							.entity(StudyMetaDataConstants.INVALID_ENROLLMENT_TOKEN)
+							.build();
+				}
+			} else {
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102,
+						ErrorCodes.INVALID_INPUT,
+						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
+						response);
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)
+						.build();
+			}
+		} catch (Exception e) {
+			LOGGER.error(
+					"StudyMetaDataService - validateEnrollmentToken() :: ERROR",
+					e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104,
+					ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE,
+					response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataConstants.FAILURE).build();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - validateEnrollmentToken() :: Ends");
+		return enrollmentTokenResponse;
+	}
+	
 	/**
 	 * Ping application
 	 * 
