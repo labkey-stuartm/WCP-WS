@@ -502,27 +502,27 @@ public class StudyMetaDataDao {
 									.getEligibilityMechanism()) {
 								switch (eligibilityDto
 										.getEligibilityMechanism()) {
-								case 1:
-									eligibility
+										case 1:
+											eligibility
 											.setType(StudyMetaDataConstants.TYPE_TOKEN);
-									break;
-								case 2:
-									eligibility
+											break;
+										case 2:
+											eligibility
 											.setType(StudyMetaDataConstants.TYPE_BOTH);
-									break;
-								case 3:
-									eligibility
+											break;
+										case 3:
+											eligibility
 											.setType(StudyMetaDataConstants.TYPE_TEST);
-									break;
-								default:
-									eligibility.setType("");
-									break;
+											break;
+										default:
+											eligibility.setType("");
+											break;
 								}
 							}
 							eligibility.setTokenTitle(StringUtils
 									.isEmpty(eligibilityDto
 											.getInstructionalText()) ? ""
-									: eligibilityDto.getInstructionalText());
+													: eligibilityDto.getInstructionalText());
 
 							eligibilityTestList = session
 									.createQuery(
@@ -540,9 +540,9 @@ public class StudyMetaDataDao {
 								for (EligibilityTestDto eligibilityTest : eligibilityTestList) {
 									QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
 									questionStep
-											.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+									.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
 									questionStep
-											.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
+									.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
 									questionStep.setKey(eligibilityTest
 											.getShortTitle());
 									questionStep.setTitle(eligibilityTest
@@ -559,8 +559,8 @@ public class StudyMetaDataDao {
 									if (eligibilityTest.getResponseYesOption()) {
 										HashMap<String, Object> correctAnsHashMap = new HashMap<>();
 										correctAnsHashMap
-												.put("key", eligibilityTest
-														.getShortTitle());
+										.put("key", eligibilityTest
+												.getShortTitle());
 										correctAnsHashMap.put("answer", true);
 										correctAnswers.add(correctAnsHashMap);
 									}
@@ -568,8 +568,8 @@ public class StudyMetaDataDao {
 									if (eligibilityTest.getResponseNoOption()) {
 										HashMap<String, Object> correctAnsHashMap = new HashMap<>();
 										correctAnsHashMap
-												.put("key", eligibilityTest
-														.getShortTitle());
+										.put("key", eligibilityTest
+												.getShortTitle());
 										correctAnsHashMap.put("answer", false);
 										correctAnswers.add(correctAnsHashMap);
 									}
@@ -578,7 +578,7 @@ public class StudyMetaDataDao {
 								eligibility.setCorrectAnswers(correctAnswers);
 							}
 							eligibilityConsentResponse
-									.setEligibility(eligibility);
+							.setEligibility(eligibility);
 						}
 					}
 
@@ -597,364 +597,338 @@ public class StudyMetaDataDao {
 						SharingBean sharingBean = new SharingBean();
 
 						// check whether share data permission is yes or no
-						if (consentDto.getShareDataPermissions()
-								.equalsIgnoreCase(StudyMetaDataConstants.YES)) {
-							sharingBean.setTitle(StringUtils.isEmpty(consentDto
-									.getTitle()) ? "" : consentDto.getTitle());
-							sharingBean.setText(StringUtils.isEmpty(consentDto
-									.getTaglineDescription()) ? "" : consentDto
-									.getTaglineDescription());
+
+						if (StringUtils.isNotEmpty(consentDto
+								.getShareDataPermissions())
+								&& consentDto
+								.getShareDataPermissions()
+								.equalsIgnoreCase(
+										StudyMetaDataConstants.YES)) {
 							sharingBean
-									.setLearnMore(StringUtils
-											.isEmpty(consentDto
-													.getLearnMoreText()) ? ""
-											: consentDto.getLearnMoreText());
+							.setTitle(StringUtils
+									.isEmpty(consentDto
+											.getTitle()) ? ""
+													: consentDto.getTitle());
 							sharingBean
-									.setLongDesc(StringUtils.isEmpty(consentDto
+							.setText(StringUtils.isEmpty(consentDto
+									.getTaglineDescription()) ? ""
+											: consentDto
+											.getTaglineDescription());
+							sharingBean.setLearnMore(StringUtils
+									.isEmpty(consentDto
+											.getLearnMoreText()) ? ""
+													: consentDto.getLearnMoreText());
+							sharingBean.setLongDesc(StringUtils
+									.isEmpty(consentDto
 											.getLongDescription()) ? ""
-											: consentDto.getLongDescription());
+													: consentDto.getLongDescription());
 							sharingBean
-									.setShortDesc(StringUtils
-											.isEmpty(consentDto
-													.getShortDescription()) ? ""
-											: consentDto.getShortDescription());
+							.setShortDesc(StringUtils.isEmpty(consentDto
+									.getShortDescription()) ? ""
+											: consentDto
+											.getShortDescription());
 							if (consentDto.getAllowWithoutPermission() != null
 									&& StudyMetaDataConstants.YES
-											.equalsIgnoreCase(consentDto
-													.getAllowWithoutPermission())) {
-								if (StringUtils.isNotEmpty(consentDto
-										.getShareDataPermissions())
-										&& consentDto
-												.getShareDataPermissions()
-												.equalsIgnoreCase(
-														StudyMetaDataConstants.YES)) {
-									sharingBean
-											.setTitle(StringUtils
-													.isEmpty(consentDto
-															.getTitle()) ? ""
-													: consentDto.getTitle());
-									sharingBean
-											.setText(StringUtils.isEmpty(consentDto
-													.getTaglineDescription()) ? ""
-													: consentDto
-															.getTaglineDescription());
-									sharingBean.setLearnMore(StringUtils
-											.isEmpty(consentDto
-													.getLearnMoreText()) ? ""
-											: consentDto.getLearnMoreText());
-									sharingBean.setLongDesc(StringUtils
-											.isEmpty(consentDto
-													.getLongDescription()) ? ""
-											: consentDto.getLongDescription());
-									sharingBean
-											.setShortDesc(StringUtils.isEmpty(consentDto
-													.getShortDescription()) ? ""
-													: consentDto
-															.getShortDescription());
-									if (consentDto.getAllowWithoutPermission() != null
-											&& StudyMetaDataConstants.YES
-													.equalsIgnoreCase(consentDto
-															.getAllowWithoutPermission())) {
-										sharingBean
-												.setAllowWithoutSharing(true);
-									}
-								}
-								consent.setSharing(sharingBean);
+									.equalsIgnoreCase(consentDto
+											.getAllowWithoutPermission())) {
+								sharingBean
+								.setAllowWithoutSharing(true);
 							}
+						}
+						consent.setSharing(sharingBean);
+					}
 
-							consentMasterInfoList = session.createQuery(
-									"from ConsentMasterInfoDto CMIDTO").list();
+					consentMasterInfoList = session.createQuery(
+							"from ConsentMasterInfoDto CMIDTO").list();
 
-							if (studySequenceDto
-									.getConsentEduInfo()
-									.equalsIgnoreCase(
-											StudyMetaDataConstants.STUDY_SEQUENCE_Y)) {
+					if (studySequenceDto
+							.getConsentEduInfo()
+							.equalsIgnoreCase(
+									StudyMetaDataConstants.STUDY_SEQUENCE_Y)) {
 
-								consentInfoDtoList = session
-										.getNamedQuery(
-												"consentInfoDetailsByCustomStudyIdAndVersion")
-										.setString(
-												StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
-												studyVersionDto
-														.getCustomStudyId())
-										.setFloat(
-												StudyMetaDataEnum.QF_VERSION.value(),
-												studyVersionDto
-														.getConsentVersion())
-										.list();
-								if (null != consentInfoDtoList
-										&& !consentInfoDtoList.isEmpty()) {
+						consentInfoDtoList = session
+								.getNamedQuery(
+										"consentInfoDetailsByCustomStudyIdAndVersion")
+								.setString(
+										StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+										studyVersionDto
+										.getCustomStudyId())
+								.setFloat(
+										StudyMetaDataEnum.QF_VERSION.value(),
+										studyVersionDto
+										.getConsentVersion())
+								.list();
+						if (null != consentInfoDtoList
+								&& !consentInfoDtoList.isEmpty()) {
 
-									List<ConsentBean> consentBeanList = new ArrayList<>();
-									for (ConsentInfoDto consentInfoDto : consentInfoDtoList) {
+							List<ConsentBean> consentBeanList = new ArrayList<>();
+							for (ConsentInfoDto consentInfoDto : consentInfoDtoList) {
 
-										ConsentBean consentBean = new ConsentBean();
-										consentBean
-												.setText(StringUtils.isEmpty(consentInfoDto
-														.getBriefSummary()) ? ""
-														: consentInfoDto
-																.getBriefSummary()
-																.replaceAll(
-																		"&#34;",
-																		"\"")
-																.replaceAll(
-																		"&#39;",
-																		"'"));
-										consentBean
-												.setTitle(StringUtils.isEmpty(consentInfoDto
-														.getDisplayTitle()) ? ""
-														: consentInfoDto
-																.getDisplayTitle()
-																.replaceAll(
-																		"&#34;",
-																		"\"")
-																.replaceAll(
-																		"&#39;",
-																		"'"));
-										if (consentInfoDto
-												.getConsentItemTitleId() != null) {
-											if (consentMasterInfoList != null
-													&& !consentMasterInfoList
-															.isEmpty()) {
-												for (ConsentMasterInfoDto masterInfo : consentMasterInfoList) {
-													if (masterInfo.getId()
-															.intValue() == consentInfoDto
-															.getConsentItemTitleId()
-															.intValue()) {
-														consentBean
-																.setType(masterInfo
-																		.getCode());
-														break;
-													}
-												}
+								ConsentBean consentBean = new ConsentBean();
+								consentBean
+								.setText(StringUtils.isEmpty(consentInfoDto
+										.getBriefSummary()) ? ""
+												: consentInfoDto
+												.getBriefSummary()
+												.replaceAll(
+														"&#34;",
+														"\"")
+												.replaceAll(
+														"&#39;",
+														"'"));
+								consentBean
+								.setTitle(StringUtils.isEmpty(consentInfoDto
+										.getDisplayTitle()) ? ""
+												: consentInfoDto
+												.getDisplayTitle()
+												.replaceAll(
+														"&#34;",
+														"\"")
+												.replaceAll(
+														"&#39;",
+														"'"));
+								if (consentInfoDto
+										.getConsentItemTitleId() != null) {
+									if (consentMasterInfoList != null
+											&& !consentMasterInfoList
+											.isEmpty()) {
+										for (ConsentMasterInfoDto masterInfo : consentMasterInfoList) {
+											if (masterInfo.getId()
+													.intValue() == consentInfoDto
+													.getConsentItemTitleId()
+													.intValue()) {
+												consentBean
+												.setType(masterInfo
+														.getCode());
+												break;
 											}
-										} else {
-											consentBean
-													.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM
-															.toLowerCase());
 										}
-										consentBean.setDescription("");
-										consentBean
-												.setHtml(StringUtils.isEmpty(consentInfoDto
-														.getElaborated()) ? ""
-														: consentInfoDto
-																.getElaborated()
-																.replaceAll(
-																		"&#34;",
-																		"'")
-																.replaceAll(
-																		"em>",
-																		"i>")
-																.replaceAll(
-																		"<a",
-																		"<a style='text-decoration:underline;color:blue;'"));
-										consentBean.setUrl(StringUtils
-												.isEmpty(consentInfoDto
-														.getUrl()) ? ""
-												: consentInfoDto.getUrl());
-
-										if (StringUtils
-												.isNotEmpty(consentInfoDto
-														.getVisualStep())
-												&& consentInfoDto
-														.getVisualStep()
-														.equalsIgnoreCase(
-																StudyMetaDataConstants.YES)) {
-											consentBean.setVisualStep(true);
-										} else {
-											consentBean.setVisualStep(false);
-										}
-										consentBeanList.add(consentBean);
 									}
-									consent.setVisualScreens(consentBeanList);
+								} else {
+									consentBean
+									.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM
+											.toLowerCase());
 								}
+								consentBean.setDescription("");
+								consentBean
+								.setHtml(StringUtils.isEmpty(consentInfoDto
+										.getElaborated()) ? ""
+												: consentInfoDto
+												.getElaborated()
+												.replaceAll(
+														"&#34;",
+														"'")
+												.replaceAll(
+														"em>",
+														"i>")
+												.replaceAll(
+														"<a",
+														"<a style='text-decoration:underline;color:blue;'"));
+								consentBean.setUrl(StringUtils
+										.isEmpty(consentInfoDto
+												.getUrl()) ? ""
+														: consentInfoDto.getUrl());
+
+								if (StringUtils
+										.isNotEmpty(consentInfoDto
+												.getVisualStep())
+										&& consentInfoDto
+										.getVisualStep()
+										.equalsIgnoreCase(
+												StudyMetaDataConstants.YES)) {
+									consentBean.setVisualStep(true);
+								} else {
+									consentBean.setVisualStep(false);
+								}
+								consentBeanList.add(consentBean);
+							}
+							consent.setVisualScreens(consentBeanList);
+						}
+					}
+
+					if (studySequenceDto
+							.getComprehensionTest()
+							.equalsIgnoreCase(
+									StudyMetaDataConstants.STUDY_SEQUENCE_Y)
+							&& (consentDto != null
+							&& consentDto
+							.getNeedComprehensionTest() != null && consentDto
+							.getNeedComprehensionTest()
+							.equalsIgnoreCase(
+									StudyMetaDataConstants.YES))) {
+
+						comprehensionQuestionList = session
+								.getNamedQuery(
+										"comprehensionQuestionByStudyId")
+								.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+								.list();
+						if (null != comprehensionQuestionList
+								&& !comprehensionQuestionList.isEmpty()) {
+							ComprehensionDetailsBean comprehensionDetailsBean = new ComprehensionDetailsBean();
+							if (consentDto != null
+									&& consentDto
+									.getComprehensionTestMinimumScore() != null) {
+								comprehensionDetailsBean
+								.setPassScore(consentDto
+										.getComprehensionTestMinimumScore());
+							} else {
+								comprehensionDetailsBean
+								.setPassScore(0);
 							}
 
-							if (studySequenceDto
-									.getComprehensionTest()
-									.equalsIgnoreCase(
-											StudyMetaDataConstants.STUDY_SEQUENCE_Y)
-									&& (consentDto != null
-											&& consentDto
-													.getNeedComprehensionTest() != null && consentDto
-											.getNeedComprehensionTest()
-											.equalsIgnoreCase(
-													StudyMetaDataConstants.YES))) {
+							List<QuestionnaireActivityStepsBean> comprehensionList = new ArrayList<>();
+							List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
+							for (ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList) {
+								QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
+								questionStep
+								.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
+								questionStep
+								.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
+								questionStep
+								.setKey(comprehensionQuestionDto
+										.getId().toString());
+								questionStep.setTitle("");
+								questionStep
+								.setText(comprehensionQuestionDto
+										.getQuestionText());
+								questionStep.setSkippable(false);
+								questionStep.setGroupName("");
+								questionStep.setRepeatable(false);
+								questionStep.setRepeatableText("");
+								questionStep.setHealthDataKey("");
 
-								comprehensionQuestionList = session
+								List<ComprehensionTestResponseDto> comprehensionTestResponseList = session
 										.getNamedQuery(
-												"comprehensionQuestionByStudyId")
-										.setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+												"comprehensionQuestionResponseByCTID")
+										.setInteger(
+												"comprehensionTestQuestionId",
+												comprehensionQuestionDto
+												.getId())
 										.list();
-								if (null != comprehensionQuestionList
-										&& !comprehensionQuestionList.isEmpty()) {
-									ComprehensionDetailsBean comprehensionDetailsBean = new ComprehensionDetailsBean();
-									if (consentDto != null
-											&& consentDto
-													.getComprehensionTestMinimumScore() != null) {
-										comprehensionDetailsBean
-												.setPassScore(consentDto
-														.getComprehensionTestMinimumScore());
-									} else {
-										comprehensionDetailsBean
-												.setPassScore(0);
-									}
+								if (comprehensionTestResponseList != null
+										&& !comprehensionTestResponseList
+										.isEmpty()) {
 
-									List<QuestionnaireActivityStepsBean> comprehensionList = new ArrayList<>();
-									List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
-									for (ComprehensionTestQuestionDto comprehensionQuestionDto : comprehensionQuestionList) {
-										QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
-										questionStep
-												.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
-										questionStep
-												.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
-										questionStep
-												.setKey(comprehensionQuestionDto
-														.getId().toString());
-										questionStep.setTitle("");
-										questionStep
-												.setText(comprehensionQuestionDto
-														.getQuestionText());
-										questionStep.setSkippable(false);
-										questionStep.setGroupName("");
-										questionStep.setRepeatable(false);
-										questionStep.setRepeatableText("");
-										questionStep.setHealthDataKey("");
+									CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
+									Map<String, Object> questionFormat = new LinkedHashMap<>();
+									List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
+									StringBuilder sb = new StringBuilder();
 
-										List<ComprehensionTestResponseDto> comprehensionTestResponseList = session
-												.getNamedQuery(
-														"comprehensionQuestionResponseByCTID")
-												.setInteger(
-														"comprehensionTestQuestionId",
-														comprehensionQuestionDto
-																.getId())
-												.list();
-										if (comprehensionTestResponseList != null
-												&& !comprehensionTestResponseList
-														.isEmpty()) {
-
-											CorrectAnswersBean correctAnswerBean = new CorrectAnswersBean();
-											Map<String, Object> questionFormat = new LinkedHashMap<>();
-											List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
-											StringBuilder sb = new StringBuilder();
-
-											for (ComprehensionTestResponseDto compResp : comprehensionTestResponseList) {
-												if (compResp.getCorrectAnswer()) {
-													sb.append(StringUtils
-															.isEmpty(sb) ? compResp
+									for (ComprehensionTestResponseDto compResp : comprehensionTestResponseList) {
+										if (compResp.getCorrectAnswer()) {
+											sb.append(StringUtils
+													.isEmpty(sb) ? compResp
 															.getResponseOption()
 															.trim()
 															: "&@##@&"
-																	+ compResp
-																			.getResponseOption()
-																			.trim());
-												}
-												LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
-												textChoiceMap
-														.put("text",
-																StringUtils
-																		.isEmpty(compResp
-																				.getResponseOption()
-																				.trim()) ? ""
-																		: compResp
-																				.getResponseOption()
-																				.trim());
-												textChoiceMap
-														.put("value",
-																StringUtils
-																		.isEmpty(compResp
-																				.getResponseOption()
-																				.trim()) ? ""
-																		: compResp
-																				.getResponseOption()
-																				.trim());
-												textChoiceMap.put("detail", "");
-												textChoiceMap.put("exclusive",
-														false);
-												textChoiceMapList
-														.add(textChoiceMap);
-											}
-
-											questionFormat.put("textChoices",
-													textChoiceMapList);
-
-											if (comprehensionQuestionDto
-													.getStructureOfCorrectAns()) {
-												questionFormat.put(
-														"selectionStyle",
-														"Multiple");
-											} else {
-												questionFormat.put(
-														"selectionStyle",
-														"Single");
-											}
-
-											questionStep
-													.setFormat(questionFormat);
-											if (StringUtils.isNotEmpty(sb
-													.toString())) {
-												correctAnswerBean.setAnswer(sb
-														.toString().split(
-																"&@##@&"));
-											}
-
-											correctAnswerBean
-													.setKey(comprehensionQuestionDto
-															.getId().toString());
-											correctAnswerBean
-													.setEvaluation(comprehensionQuestionDto
-															.getStructureOfCorrectAns() ? StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ALL
-															: StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ANY);
-											correctAnswerBeanList
-													.add(correctAnswerBean);
+															+ compResp
+															.getResponseOption()
+															.trim());
 										}
-
-										comprehensionList.add(questionStep);
+										LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+										textChoiceMap
+										.put("text",
+												StringUtils
+												.isEmpty(compResp
+														.getResponseOption()
+														.trim()) ? ""
+																: compResp
+																.getResponseOption()
+																.trim());
+										textChoiceMap
+										.put("value",
+												StringUtils
+												.isEmpty(compResp
+														.getResponseOption()
+														.trim()) ? ""
+																: compResp
+																.getResponseOption()
+																.trim());
+										textChoiceMap.put("detail", "");
+										textChoiceMap.put("exclusive",
+												false);
+										textChoiceMapList
+										.add(textChoiceMap);
 									}
-									comprehensionDetailsBean
-											.setQuestions(comprehensionList);
-									comprehensionDetailsBean
-											.setCorrectAnswers(correctAnswerBeanList);
-									consent.setComprehension(comprehensionDetailsBean);
+
+									questionFormat.put("textChoices",
+											textChoiceMapList);
+
+									if (comprehensionQuestionDto
+											.getStructureOfCorrectAns()) {
+										questionFormat.put(
+												"selectionStyle",
+												"Multiple");
+									} else {
+										questionFormat.put(
+												"selectionStyle",
+												"Single");
+									}
+
+									questionStep
+									.setFormat(questionFormat);
+									if (StringUtils.isNotEmpty(sb
+											.toString())) {
+										correctAnswerBean.setAnswer(sb
+												.toString().split(
+														"&@##@&"));
+									}
+
+									correctAnswerBean
+									.setKey(comprehensionQuestionDto
+											.getId().toString());
+									correctAnswerBean
+									.setEvaluation(comprehensionQuestionDto
+											.getStructureOfCorrectAns() ? StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ALL
+													: StudyMetaDataConstants.COMPREHENSION_RESPONSE_STRUCTURE_ANY);
+									correctAnswerBeanList
+									.add(correctAnswerBean);
 								}
+
+								comprehensionList.add(questionStep);
 							}
-
-							if (consentDto != null) {
-								ReviewBean reviewBean = new ReviewBean();
-								if (consentDto
-										.getConsentDocType()
-										.equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)) {
-									reviewBean
-											.setReviewHTML(StringUtils.isEmpty(consentDto
-													.getConsentDocContent()) ? ""
-													: consentDto
-															.getConsentDocContent()
-															.replaceAll(
-																	"&#34;",
-																	"'")
-															.replaceAll("em>",
-																	"i>")
-															.replaceAll("<a",
-																	"<a style='text-decoration:underline;color:blue;'"));
-								}
-
-								reviewBean
-										.setReasonForConsent(StringUtils.isNotEmpty(consentDto
-												.getAggrementOfConsent()) ? consentDto
-												.getAggrementOfConsent()
-												: StudyMetaDataConstants.REASON_FOR_CONSENT);
-								consent.setReview(reviewBean);
-							}
-							eligibilityConsentResponse.setConsent(consent);
-
-							eligibilityConsentResponse
-									.setMessage(StudyMetaDataConstants.SUCCESS);
+							comprehensionDetailsBean
+							.setQuestions(comprehensionList);
+							comprehensionDetailsBean
+							.setCorrectAnswers(correctAnswerBeanList);
+							consent.setComprehension(comprehensionDetailsBean);
 						}
-					} else {
-						eligibilityConsentResponse
-								.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 					}
+
+					if (consentDto != null) {
+						ReviewBean reviewBean = new ReviewBean();
+						if (consentDto
+								.getConsentDocType()
+								.equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)) {
+							reviewBean
+							.setReviewHTML(StringUtils.isEmpty(consentDto
+									.getConsentDocContent()) ? ""
+											: consentDto
+											.getConsentDocContent()
+											.replaceAll(
+													"&#34;",
+													"'")
+											.replaceAll("em>",
+													"i>")
+											.replaceAll("<a",
+													"<a style='text-decoration:underline;color:blue;'"));
+						}
+
+						reviewBean
+						.setReasonForConsent(StringUtils.isNotEmpty(consentDto
+								.getAggrementOfConsent()) ? consentDto
+										.getAggrementOfConsent()
+										: StudyMetaDataConstants.REASON_FOR_CONSENT);
+						consent.setReview(reviewBean);
+					}
+					eligibilityConsentResponse.setConsent(consent);
+
+					eligibilityConsentResponse
+					.setMessage(StudyMetaDataConstants.SUCCESS);
 				}
+			} else {
+				eligibilityConsentResponse
+				.setMessage(StudyMetaDataConstants.INVALID_STUDY_ID);
 			}
 		} catch (Exception e) {
 			LOGGER.error(
