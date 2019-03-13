@@ -42,6 +42,8 @@ public class ActivitiesBean {
 	private String lastModified = "";
 	private String state = "";
 	private String taskSubType = "";
+	private String schedulingType = "";
+	private ActivityAnchorDateBean anchorDate = new ActivityAnchorDateBean();
 	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 
 	public String getActivityId() {
@@ -132,4 +134,19 @@ public class ActivitiesBean {
 		this.frequency = frequency;
 	}
 
+	public String getSchedulingType() {
+		return schedulingType;
+	}
+
+	public void setSchedulingType(String schedulingType) {
+		this.schedulingType = schedulingType;
+	}
+
+	public ActivityAnchorDateBean getAnchorDate() {
+		return anchorDate;
+	}
+
+	public void setAnchorDate(ActivityAnchorDateBean anchorDate) {
+		this.anchorDate = anchorDate;
+	}
 }

@@ -36,6 +36,7 @@ public class ActivityFrequencyBean {
 
 	private String type = "";
 	private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
+	private List<ActivityFrequencyAnchorRunsBean> anchorRuns = new ArrayList<>();
 
 	public String getType() {
 		return type;
@@ -53,4 +54,11 @@ public class ActivityFrequencyBean {
 		this.runs = runs;
 	}
 
+	public List<ActivityFrequencyAnchorRunsBean> getAnchorRuns() {
+		return anchorRuns;
+	}
+
+	public void setAnchorRuns(List<ActivityFrequencyAnchorRunsBean> anchorRuns) {
+		this.anchorRuns = anchorRuns;
+	}
 }
