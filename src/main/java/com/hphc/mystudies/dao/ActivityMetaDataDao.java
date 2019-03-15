@@ -315,7 +315,7 @@ public class ActivityMetaDataDao {
 											StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 						}
 						/**Phase2 a code for anchor date **/
-						if(!questionaire.getScheduleType().isEmpty()) {
+						if(questionaire.getScheduleType()!=null && !questionaire.getScheduleType().isEmpty()) {
 							activityBean.setSchedulingType(questionaire.getScheduleType());
 							if(questionaire.getScheduleType().equals(StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE))
 								activityBean = this.getAnchordateDetailsByActivityIdForQuestionnaire(questionaire, activityBean, session);
