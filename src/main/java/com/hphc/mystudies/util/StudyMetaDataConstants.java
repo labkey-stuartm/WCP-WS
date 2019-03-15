@@ -301,5 +301,10 @@ public interface StudyMetaDataConstants {
 
 	public static final String FDA_SMD_PRIVACY_POLICY = "fda.smd.pricaypolicy";
 	public static final String FDA_SMD_TERMS = "fda.smd.terms";
+	
+	public static final String ANCHOR_TYPE_ENROLLMENTDATE = "EnrollmentDate";
+	public static final String ANCHOR_TYPE_ACTIVITYRESPONSE = "ActivityResponse";
+	public static final String SCHEDULETYPE_REGULAR = "Regular";
+	public static final String SCHEDULETYPE_ANCHORDATE= "AnchorDate";
 
 }

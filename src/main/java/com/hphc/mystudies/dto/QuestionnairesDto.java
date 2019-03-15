@@ -125,6 +125,12 @@ public class QuestionnairesDto implements Serializable {
 
 	@Column(name = "is_live")
 	private Integer live = 0;
+	
+	@Column(name = "schedule_type")
+	private String scheduleType = "";
+	
+	@Column(name = "anchor_date_id")
+	private Integer anchorDateId;
 
 	public Integer getId() {
 		return id;
@@ -278,4 +284,19 @@ public class QuestionnairesDto implements Serializable {
 		this.live = live;
 	}
 
+	public String getScheduleType() {
+		return scheduleType;
+	}
+
+	public void setScheduleType(String scheduleType) {
+		this.scheduleType = scheduleType;
+	}
+
+	public Integer getAnchorDateId() {
+		return anchorDateId;
+	}
+
+	public void setAnchorDateId(Integer anchorDateId) {
+		this.anchorDateId = anchorDateId;
+	}
 }
