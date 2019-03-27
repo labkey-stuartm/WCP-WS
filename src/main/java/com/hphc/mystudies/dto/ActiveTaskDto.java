@@ -133,6 +133,12 @@ public class ActiveTaskDto implements Serializable {
 
 	@Column(name = "active")
 	private Integer active = 0;
+	
+	@Column(name = "schedule_type")
+	private String scheduleType = "";
+	
+	@Column(name = "anchor_date_id")
+	private Integer anchorDateId;
 
 	public Integer getId() {
 		return id;
@@ -318,4 +324,19 @@ public class ActiveTaskDto implements Serializable {
 		this.active = active;
 	}
 
+	public String getScheduleType() {
+		return scheduleType;
+	}
+
+	public void setScheduleType(String scheduleType) {
+		this.scheduleType = scheduleType;
+	}
+
+	public Integer getAnchorDateId() {
+		return anchorDateId;
+	}
+
+	public void setAnchorDateId(Integer anchorDateId) {
+		this.anchorDateId = anchorDateId;
+	}
 }
