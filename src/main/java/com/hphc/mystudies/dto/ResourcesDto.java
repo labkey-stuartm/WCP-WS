@@ -136,6 +136,9 @@ public class ResourcesDto implements Serializable {
 
 	@Column(name = "sequence_no")
 	private Integer sequenceNo;
+	
+	@Column(name = "anchor_date_id")
+	private Integer anchorDateId;
 
 	public Integer getId() {
 		return id;
@@ -345,4 +348,19 @@ public class ResourcesDto implements Serializable {
 		this.yDaysSign = yDaysSign;
 	}
 
+	public Integer getSequenceNo() {
+		return sequenceNo;
+	}
+
+	public void setSequenceNo(Integer sequenceNo) {
+		this.sequenceNo = sequenceNo;
+	}
+
+	public Integer getAnchorDateId() {
+		return anchorDateId;
+	}
+
+	public void setAnchorDateId(Integer anchorDateId) {
+		this.anchorDateId = anchorDateId;
+	}
 }

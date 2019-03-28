@@ -61,6 +61,7 @@ import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
 import com.hphc.mystudies.bean.WithdrawalConfigBean;
 import com.hphc.mystudies.dto.ActiveTaskDto;
+import com.hphc.mystudies.dto.AnchorDateTypeDto;
 import com.hphc.mystudies.dto.ComprehensionTestQuestionDto;
 import com.hphc.mystudies.dto.ComprehensionTestResponseDto;
 import com.hphc.mystudies.dto.ConsentDto;
@@ -1148,6 +1149,66 @@ public class StudyMetaDataDao {
 							} else {
 								availability.put("endDays", 0);
 							}
+							//Phase 2a anchordate
+							if(resourcesDto.getAnchorDateId()!=null) {
+								availability.put("availabilityType", StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE);
+								String searchQuery = "";
+								searchQuery = "from AnchorDateTypeDto a where a.id="+resourcesDto.getAnchorDateId()+"";
+								 AnchorDateTypeDto anchorDateTypeDto= (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+								 if(anchorDateTypeDto!=null) {
+									 if(!anchorDateTypeDto.getName().replace(" ", "").equalsIgnoreCase(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE)) {
+										 availability.put("sourceType", StudyMetaDataConstants.ANCHOR_TYPE_ACTIVITYRESPONSE);
+								         searchQuery = "select s.step_short_title,qr.short_title"+
+								    			 " from questionnaires qr,questions q, questionnaires_steps s"+
+								    			 " where"+
+								    			 " s.questionnaires_id=qr.id"+
+								    			 " and s.instruction_form_id=q.id"+
+								    			 " and s.step_type='Question'"+
+								    			 " and qr.custom_study_id='"+studyId+"'"+
+								    			 " and qr.schedule_type='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
+								    			 " and qr.frequency = '"+StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME+"'"+
+								    			 " and q.anchor_date_id="+resourcesDto.getAnchorDateId();
+								         List<?> result = session.createSQLQuery(searchQuery).list();
+								           if (null != result && !result.isEmpty()) {
+								        		 Object[] objects = (Object[]) result.get(0);
+								        		 availability.put("sourceKey",(String)objects[0]);
+								        		 availability.put("sourceActivityId",(String)objects[1]);
+								        		 availability.put("sourceFormKey","");
+								           }else {
+								        	   searchQuery = "select q.short_title, qsf.step_short_title ,qq.short_title "+
+										    			 " from questions q,form_mapping fm,form f,questionnaires_steps qsf,questionnaires qq"+
+										    			 " where"+
+										    			 " q.id=fm.question_id"+
+										    			 " and f.form_id=fm.form_id"+
+										    			 " and f.form_id=qsf.instruction_form_id"+
+										    			 " and qsf.step_type='Form'"+
+										    			 " and qsf.questionnaires_id=qq.id"+
+										    			 " and q.anchor_date_id="+resourcesDto.getAnchorDateId()+
+										    			 " and qq.custom_study_id='"+studyId+"'"+
+										    			 " and qq.schedule_type='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
+										    			 " and qq.frequency = '"+StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME+"'";
+								        	   List<?> result1 = session.createSQLQuery(searchQuery).list();
+									           if (null != result1 && !result1.isEmpty()) {
+									        	  //for(int i=0;i<result1.size();i++) {
+									        		 Object[] objects = (Object[]) result1.get(0);
+									        		 availability.put("sourceKey",(String)objects[0]);
+									        		 availability.put("sourceActivityId",(String)objects[2]);
+									        		 availability.put("sourceFormKey",(String)objects[1]);
+									        	   //}
+								                }
+								         }
+								         }else {
+									    	 availability.put("sourceType", StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE);
+									    	 availability.put("sourceKey","");
+							        		 availability.put("sourceActivityId","");
+							        		 availability.put("sourceFormKey","");
+									     }
+								 }	 
+								
+							}else {
+								availability.put("availabilityType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR);
+							}
+						   //phase 2a anchordate
 							resourcesBean.setAvailability(availability);
 						}
 						resourcesBean.setNotificationText(StringUtils
