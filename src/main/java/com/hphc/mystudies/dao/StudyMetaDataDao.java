@@ -1175,19 +1175,20 @@ public class StudyMetaDataDao {
 								        		 availability.put("sourceActivityId",(String)objects[1]);
 								        		 availability.put("sourceFormKey","");
 								           }else {
-								        	   searchQuery = "select q.short_title, qsf.step_short_title ,qq.short_title "+
-										    			 " from questions q,form_mapping fm,form f,questionnaires_steps qsf,questionnaires qq"+
+								        	   String query= "";
+									           query = "select q.shortTitle, qsf.stepShortTitle ,qq.shortTitle as questionnaireShort"+
+										    			 " from QuestionsDto q,FormMappingDto fm,FormDto f,QuestionnairesStepsDto qsf,QuestionnairesDto qq"+
 										    			 " where"+
-										    			 " q.id=fm.question_id"+
-										    			 " and f.form_id=fm.form_id"+
-										    			 " and f.form_id=qsf.instruction_form_id"+
-										    			 " and qsf.step_type='Form'"+
-										    			 " and qsf.questionnaires_id=qq.id"+
-										    			 " and q.anchor_date_id="+resourcesDto.getAnchorDateId()+
-										    			 " and qq.custom_study_id='"+studyId+"'"+
-										    			 " and qq.schedule_type='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
+										    			 " q.id=fm.questionId"+
+										    			 " and f.formId=fm.formId"+
+										    			 " and f.formId=qsf.instructionFormId"+
+										    			 " and qsf.stepType='Form'"+
+										    			 " and qsf.questionnairesId=qq.id"+
+										    			 " and q.anchorDateId="+resourcesDto.getAnchorDateId()+
+										    			 " and qq.customStudyId='"+studyId+"'"+
+										    			 " and qq.scheduleType='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
 										    			 " and qq.frequency = '"+StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME+"'";
-								        	   List<?> result1 = session.createSQLQuery(searchQuery).list();
+									           List<?> result1 = session.createQuery(query).list();
 									           if (null != result1 && !result1.isEmpty()) {
 									        	  //for(int i=0;i<result1.size();i++) {
 									        		 Object[] objects = (Object[]) result1.get(0);

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -4552,34 +4553,31 @@ public class ActivityMetaDataDao {
 			    			 " and q.anchor_date_id="+activeTaskDto.getAnchorDateId();
 			         List<?> result = session.createSQLQuery(searchQuery).list();
 			           if (null != result && !result.isEmpty()) {
-			        	 //for(int i=0;i<result.size();i++) {
 			        		 Object[] objects = (Object[]) result.get(0);
 			        		 activityAnchorDateBean.setSourceKey((String)objects[0]);
 			        		 activityAnchorDateBean.setSourceActivityId((String)objects[1]);
-			        	 //}
 			           }else {
-			        	   searchQuery = "select q.short_title, qsf.step_short_title ,qq.short_title "+
-					    			 " from questions q,form_mapping fm,form f,questionnaires_steps qsf,questionnaires qq"+
+			        	   String query= "";
+				           query = "select q.shortTitle, qsf.stepShortTitle ,qq.shortTitle as questionnaireShort"+
+					    			 " from QuestionsDto q,FormMappingDto fm,FormDto f,QuestionnairesStepsDto qsf,QuestionnairesDto qq"+
 					    			 " where"+
-					    			 " q.id=fm.question_id"+
-					    			 " and f.form_id=fm.form_id"+
-					    			 " and f.form_id=qsf.instruction_form_id"+
-					    			 " and qsf.step_type='Form'"+
-					    			 " and qsf.questionnaires_id=qq.id"+
-					    			 " and q.anchor_date_id="+activeTaskDto.getAnchorDateId()+
-					    			 " and qq.custom_study_id='"+activeTaskDto.getCustomStudyId()+"'"+
-					    			 " and qq.schedule_type='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
+					    			 " q.id=fm.questionId"+
+					    			 " and f.formId=fm.formId"+
+					    			 " and f.formId=qsf.instructionFormId"+
+					    			 " and qsf.stepType='Form'"+
+					    			 " and qsf.questionnairesId=qq.id"+
+					    			 " and q.anchorDateId="+activeTaskDto.getAnchorDateId()+
+					    			 " and qq.customStudyId='"+activeTaskDto.getCustomStudyId()+"'"+
+					    			 " and qq.scheduleType='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
 					    			 " and qq.frequency = '"+StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME+"'";
-			        	   List<?> result1 = session.createSQLQuery(searchQuery).list();
+				           List<?> result1 = session.createQuery(query).list();
 				           if (null != result1 && !result1.isEmpty()) {
-				        	  //for(int i=0;i<result1.size();i++) {
-				        		 Object[] objects = (Object[]) result1.get(0);
-				        		 activityAnchorDateBean.setSourceKey((String)objects[0]);
-				        		 activityAnchorDateBean.setSourceFormKey((String)objects[1]);
-				        		 activityAnchorDateBean.setSourceActivityId((String)objects[2]);
-				        	   //}
-			                }
-			         }
+				        	   Object[] objects = (Object[]) result1.get(0);
+				        	   activityAnchorDateBean.setSourceKey((String)objects[0]);
+			        		   activityAnchorDateBean.setSourceFormKey((String)objects[1]);
+				        	   activityAnchorDateBean.setSourceActivityId((String)objects[2]);
+				           } 
+			            }
 			         }else {
 				    	 activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE);
 				     }   
@@ -4753,27 +4751,27 @@ public class ActivityMetaDataDao {
 			        		 activityAnchorDateBean.setSourceActivityId((String)objects[1]);
 			        	 //}
 			           }else {
-			        	   searchQuery = "select q.short_title, qsf.step_short_title ,qq.short_title "+
-					    			 " from questions q,form_mapping fm,form f,questionnaires_steps qsf,questionnaires qq"+
+			        	   String query= "";
+				           query = "select q.shortTitle, qsf.stepShortTitle ,qq.shortTitle as questionnaireShort"+
+					    			 " from QuestionsDto q,FormMappingDto fm,FormDto f,QuestionnairesStepsDto qsf,QuestionnairesDto qq"+
 					    			 " where"+
-					    			 " q.id=fm.question_id"+
-					    			 " and f.form_id=fm.form_id"+
-					    			 " and f.form_id=qsf.instruction_form_id"+
-					    			 " and qsf.step_type='Form'"+
-					    			 " and qsf.questionnaires_id=qq.id"+
-					    			 " and q.anchor_date_id="+questionaire.getAnchorDateId()+
-					    			 " and qq.custom_study_id='"+questionaire.getCustomStudyId()+"'"+
-					    			 " and qq.schedule_type='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
+					    			 " q.id=fm.questionId"+
+					    			 " and f.formId=fm.formId"+
+					    			 " and f.formId=qsf.instructionFormId"+
+					    			 " and qsf.stepType='Form'"+
+					    			 " and qsf.questionnairesId=qq.id"+
+					    			 " and q.anchorDateId="+questionaire.getAnchorDateId()+
+					    			 " and qq.customStudyId='"+questionaire.getCustomStudyId()+"'"+
+					    			 " and qq.scheduleType='"+StudyMetaDataConstants.SCHEDULETYPE_REGULAR+"'"+
 					    			 " and qq.frequency = '"+StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME+"'";
-			        	   List<?> result1 = session.createSQLQuery(searchQuery).list();
+				           List<?> result1 = session.createQuery(query).list();
+				           System.out.println("Total Number Of Records : "+result1.size());
 				           if (null != result1 && !result1.isEmpty()) {
-				        	  //for(int i=0;i<result1.size();i++) {
-				        		 Object[] objects = (Object[]) result1.get(0);
-				        		 activityAnchorDateBean.setSourceKey((String)objects[0]);
-				        		 activityAnchorDateBean.setSourceFormKey((String)objects[1]);
-				        		 activityAnchorDateBean.setSourceActivityId((String)objects[2]);
-				        	   //}
-			                }
+				        	   Object[] objects = (Object[]) result1.get(0);
+				        	   activityAnchorDateBean.setSourceKey((String)objects[0]);
+			        		   activityAnchorDateBean.setSourceFormKey((String)objects[1]);
+				        	   activityAnchorDateBean.setSourceActivityId((String)objects[2]);
+				           }
 			         }
 			         }else {
 				    	 activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE);

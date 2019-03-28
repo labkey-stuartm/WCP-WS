@@ -147,6 +147,9 @@ public class QuestionsDto implements Serializable {
 
 	@Column(name = "healthkit_datatype")
 	private String healthkitDatatype;
+	
+	@Column(name = "anchor_date_id")
+	private Integer anchorDateId;
 
 	public Integer getId() {
 		return id;
@@ -388,4 +391,11 @@ public class QuestionsDto implements Serializable {
 		this.healthkitDatatype = healthkitDatatype;
 	}
 
+	public Integer getAnchorDateId() {
+		return anchorDateId;
+	}
+
+	public void setAnchorDateId(Integer anchorDateId) {
+		this.anchorDateId = anchorDateId;
+	}
 }
