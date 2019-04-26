@@ -1194,4 +1194,46 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
 		return response;
 	}
+	
+	/**
+	 * Get all the configured studies from the WCP
+	 * 
+	 * @author BTC
+	 * @param studyId
+	 * @param context
+	 *            {@link ServletContext}
+	 * @param response
+	 *            {@link HttpServletResponse}
+	 * @return {@link StudyResponse}
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("study")
+	public Object study(@QueryParam("studyId") String studyId,
+			@Context ServletContext context,
+			@Context HttpServletResponse response) {
+		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
+		StudyResponse studyResponse = new StudyResponse();
+		try {
+			studyResponse = studyMetaDataOrchestration.study(studyId);
+			if (!studyResponse.getMessage().equals(
+					StudyMetaDataConstants.SUCCESS)) {
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103,
+						ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE,
+						response);
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity(StudyMetaDataConstants.NO_RECORD).build();
+			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104,
+					ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE,
+					response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataConstants.FAILURE).build();
+		}
+		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
+		return studyResponse;
+	}
 }

@@ -331,4 +331,25 @@ public class StudyMetaDataOrchestration {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Ends");
 		return flag;
 	}
+	
+	/**
+	 * Get all the configured studies from the WCP
+	 * 
+	 * @author BTC
+	 * @param studyId       
+	 * @return {@link StudyResponse}
+	 * @throws OrchestrationException
+	 */
+	public StudyResponse study(String studyId)
+			throws OrchestrationException {
+		LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");
+		StudyResponse studyResponse = new StudyResponse();
+		try {
+			studyResponse = studyMetaDataDao.study(studyId);
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataOrchestration - study() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Ends");
+		return studyResponse;
+	}
 }
