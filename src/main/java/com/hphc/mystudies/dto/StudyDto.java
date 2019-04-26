@@ -180,6 +180,12 @@ public class StudyDto implements Serializable {
 
 	@Column(name = "has_activitetask_draft")
 	private Integer hasActivetaskDraft = 0;
+	
+	@Column(name = "app_id")
+	private String appId;
+	
+	@Column(name = "org_id")
+	private String orgId;
 
 	public Integer getId() {
 		return id;
@@ -477,4 +483,19 @@ public class StudyDto implements Serializable {
 		this.hasActivetaskDraft = hasActivetaskDraft;
 	}
 
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
 }

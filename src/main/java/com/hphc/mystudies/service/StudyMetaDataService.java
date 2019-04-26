@@ -150,13 +150,14 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyList")
-	public Object studyList(@HeaderParam("Authorization") String authorization,
+	public Object studyList(@HeaderParam("Authorization") String authorization,@HeaderParam("applicationId") String applicationId,
+			@HeaderParam("orgId") String orgId,
 			@Context ServletContext context,
 			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
-			studyResponse = studyMetaDataOrchestration.studyList(authorization);
+			studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
 			if (!studyResponse.getMessage().equals(
 					StudyMetaDataConstants.SUCCESS)) {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103,
