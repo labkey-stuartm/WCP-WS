@@ -4802,6 +4802,7 @@ public class ActivityMetaDataDao {
 			        	 if(QuestionnairesFrequenciesDtoList!=null && QuestionnairesFrequenciesDtoList.size()>0) {
 			        		 start.setTime(QuestionnairesFrequenciesDtoList.get(0).getFrequencyTime());
 			        		 end.setRepeatInterval(questionaire.getRepeatQuestionnaire()==null?0:questionaire.getRepeatQuestionnaire());
+			        		 start.setAnchorDays(QuestionnairesFrequenciesDtoList.get(0).isxDaysSign()?-QuestionnairesFrequenciesDtoList.get(0).getTimePeriodFromDays():QuestionnairesFrequenciesDtoList.get(0).getTimePeriodFromDays());
 			        		 end.setAnchorDays(0);
 			        		 end.setTime(StudyMetaDataConstants.DEFAULT_MAX_TIME);
 			        	 }
