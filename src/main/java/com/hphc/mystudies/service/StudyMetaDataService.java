@@ -45,6 +45,7 @@ import com.hphc.mystudies.bean.ActiveTaskActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ActivityResponse;
 import com.hphc.mystudies.bean.AppResponse;
 import com.hphc.mystudies.bean.AppUpdatesResponse;
+import com.hphc.mystudies.bean.AppVersionInfoBean;
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
 import com.hphc.mystudies.bean.EligibilityConsentResponse;
 import com.hphc.mystudies.bean.EnrollmentTokenResponse;
@@ -1235,5 +1236,17 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
 		return studyResponse;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("versionInfo")
+	public Object getAppVersionInfo() {
+		AppVersionInfoBean appVersionInfoBean= null;
+		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
+		appVersionInfoBean=appMetaDataOrchestration.getAppVersionInfo();
+		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: ends");
+		return appVersionInfoBean;
 	}
 }
