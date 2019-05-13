@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -2212,6 +2211,65 @@ public class ActivityMetaDataDao {
 									: questionStepDetails
 											.getDestinationStepType());
 					destinationsList.add(destination);
+					
+					//other type add destination if there start
+					QuestionReponseTypeDto otherReponseSubType = (QuestionReponseTypeDto) session
+							.createQuery(
+									"from QuestionReponseTypeDto QRTDTO"
+											+ " where QRTDTO.questionsResponseTypeId="
+											+ questionsDto.getId()
+											+ " ORDER BY QRTDTO.responseTypeId DESC")
+							.setMaxResults(1).uniqueResult();
+					
+					if(otherReponseSubType!=null && otherReponseSubType.getOtherType()!=null && StringUtils.isNotEmpty(otherReponseSubType.getOtherType()) && otherReponseSubType.getOtherType().equals("on")){
+						DestinationBean otherDestination = new DestinationBean();
+						otherDestination
+									.setCondition(StringUtils
+											.isEmpty(otherReponseSubType
+													.getOtherValue()) ? ""
+											: otherReponseSubType.getOtherValue());
+
+						if (questionnaireDto.getBranching()) {
+							if (otherReponseSubType.getOtherDestinationStepId() != null
+									&& otherReponseSubType
+											.getOtherDestinationStepId()
+											.intValue() > 0) {
+								for (QuestionnairesStepsDto stepsDto : questionaireStepsList) {
+									if (otherReponseSubType.getOtherDestinationStepId().equals(
+											stepsDto.getStepId())) {
+										otherDestination.setDestination(StringUtils.isEmpty(stepsDto
+												.getStepShortTitle()) ? "" : stepsDto
+												.getStepShortTitle());
+										break;
+									}
+								}
+							} else if (otherReponseSubType
+									.getOtherDestinationStepId() != null
+									&& otherReponseSubType
+											.getOtherDestinationStepId()
+											.equals(0)) {
+								otherDestination.setDestination("");
+							} else {
+								otherDestination
+										.setDestination((questionStepDetails
+												.getDestinationStepType() == null || questionStepDetails
+												.getDestinationStepType()
+												.isEmpty()) ? ""
+												: questionStepDetails
+														.getDestinationStepType());
+							}
+						} else {
+							otherDestination
+									.setDestination((questionStepDetails
+											.getDestinationStepType() == null || questionStepDetails
+											.getDestinationStepType()
+											.isEmpty()) ? ""
+											: questionStepDetails
+													.getDestinationStepType());
+						}
+						destinationsList.add(otherDestination);
+					}
+					//other type add destination if there end
 					questionBean.setDestinations(destinationsList);
 
 					questionBean.setHealthDataKey("");
@@ -3062,6 +3120,47 @@ public class ActivityMetaDataDao {
 					textChoiceMapList.add(textChoiceMap);
 				}
 			}
+			//other type add destination if there start
+			QuestionReponseTypeDto otherReponseSubType = (QuestionReponseTypeDto) session
+					.createQuery(
+							"from QuestionReponseTypeDto QRTDTO"
+									+ " where QRTDTO.questionsResponseTypeId="
+									+ questionDto.getId()
+									+ " ORDER BY QRTDTO.responseTypeId DESC")
+					.setMaxResults(1).uniqueResult();
+			
+			if(otherReponseSubType!=null && otherReponseSubType.getOtherType()!=null && StringUtils.isNotEmpty(otherReponseSubType.getOtherType()) && otherReponseSubType.getOtherType().equals("on")){
+				LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+				textChoiceMap.put("text", StringUtils.isEmpty(otherReponseSubType
+						.getOtherText()) ? "" : otherReponseSubType.getOtherText());
+				textChoiceMap.put("value", StringUtils.isEmpty(otherReponseSubType
+						.getOtherValue()) ? "" : otherReponseSubType.getOtherValue());
+				textChoiceMap.put("detail", StringUtils.isEmpty(otherReponseSubType
+						.getOtherDescription()) ? "" : otherReponseSubType.getOtherDescription());
+				textChoiceMap.put(
+						"exclusive",
+						(otherReponseSubType.getOtherExclusive() == null || otherReponseSubType
+								.getOtherExclusive().equalsIgnoreCase(
+										StudyMetaDataConstants.NO)) ? false
+								: true);
+				LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
+				textChoiceOtherMap.put("placeholder", StringUtils.isEmpty(otherReponseSubType.getOtherPlaceholderText()) ? "" : 
+					otherReponseSubType.getOtherPlaceholderText());
+				textChoiceOtherMap.put("isMandatory",
+						(otherReponseSubType.getOtherParticipantFill() == null || otherReponseSubType
+								.getOtherParticipantFill().equalsIgnoreCase(
+										StudyMetaDataConstants.NO)) ? false
+								: true);
+				textChoiceOtherMap.put("textfieldReq",
+						(otherReponseSubType.getOtherIncludeText() == null || otherReponseSubType
+								.getOtherIncludeText().equalsIgnoreCase(
+										StudyMetaDataConstants.NO)) ? false
+								: true);
+				textChoiceMap.put("other", textChoiceOtherMap);
+				
+				textChoiceMapList.add(textChoiceMap);
+			}
+			//other type add destination if there end
 			questionFormat.put("textChoices", textChoiceMapList);
 			questionFormat.put(
 					"selectionStyle",

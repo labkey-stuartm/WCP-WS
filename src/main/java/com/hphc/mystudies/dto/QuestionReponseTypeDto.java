@@ -171,6 +171,34 @@ public class QuestionReponseTypeDto implements Serializable {
 
 	@Column(name = "condition_formula")
 	private String conditionFormula;
+	
+	
+	@Column(name = "other_type")
+	private String otherType;
+	
+	@Column(name = "other_text")
+	private String otherText;
+
+	@Column(name = "other_value")
+	private String otherValue;
+	
+	@Column(name = "other_exclusive")
+	private String otherExclusive;
+	
+	@Column(name = "other_destination_step_id")
+	private Integer otherDestinationStepId;
+	
+	@Column(name = "other_description")
+	private String otherDescription;
+	
+	@Column(name = "other_include_text")
+	private String otherIncludeText;
+	
+	@Column(name = "other_placeholder_text")
+	private String otherPlaceholderText;
+	
+	@Column(name = "other_participant_fill")
+	private String otherParticipantFill;
 
 	public Integer getResponseTypeId() {
 		return responseTypeId;
@@ -452,4 +480,75 @@ public class QuestionReponseTypeDto implements Serializable {
 		this.conditionFormula = conditionFormula;
 	}
 
+	public String getOtherType() {
+		return otherType;
+	}
+
+	public void setOtherType(String otherType) {
+		this.otherType = otherType;
+	}
+
+	public String getOtherText() {
+		return otherText;
+	}
+
+	public void setOtherText(String otherText) {
+		this.otherText = otherText;
+	}
+
+	public String getOtherValue() {
+		return otherValue;
+	}
+
+	public void setOtherValue(String otherValue) {
+		this.otherValue = otherValue;
+	}
+
+	public String getOtherExclusive() {
+		return otherExclusive;
+	}
+
+	public void setOtherExclusive(String otherExclusive) {
+		this.otherExclusive = otherExclusive;
+	}
+
+	public Integer getOtherDestinationStepId() {
+		return otherDestinationStepId;
+	}
+
+	public void setOtherDestinationStepId(Integer otherDestinationStepId) {
+		this.otherDestinationStepId = otherDestinationStepId;
+	}
+
+	public String getOtherDescription() {
+		return otherDescription;
+	}
+
+	public void setOtherDescription(String otherDescription) {
+		this.otherDescription = otherDescription;
+	}
+
+	public String getOtherIncludeText() {
+		return otherIncludeText;
+	}
+
+	public void setOtherIncludeText(String otherIncludeText) {
+		this.otherIncludeText = otherIncludeText;
+	}
+
+	public String getOtherPlaceholderText() {
+		return otherPlaceholderText;
+	}
+
+	public void setOtherPlaceholderText(String otherPlaceholderText) {
+		this.otherPlaceholderText = otherPlaceholderText;
+	}
+
+	public String getOtherParticipantFill() {
+		return otherParticipantFill;
+	}
+
+	public void setOtherParticipantFill(String otherParticipantFill) {
+		this.otherParticipantFill = otherParticipantFill;
+	}
 }
