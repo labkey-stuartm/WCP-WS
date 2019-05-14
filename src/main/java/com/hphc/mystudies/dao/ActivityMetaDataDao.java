@@ -3143,21 +3143,23 @@ public class ActivityMetaDataDao {
 								.getOtherExclusive().equalsIgnoreCase(
 										StudyMetaDataConstants.NO)) ? false
 								: true);
-				LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
-				textChoiceOtherMap.put("placeholder", StringUtils.isEmpty(otherReponseSubType.getOtherPlaceholderText()) ? "" : 
-					otherReponseSubType.getOtherPlaceholderText());
-				textChoiceOtherMap.put("isMandatory",
-						(otherReponseSubType.getOtherParticipantFill() == null || otherReponseSubType
-								.getOtherParticipantFill().equalsIgnoreCase(
-										StudyMetaDataConstants.NO)) ? false
-								: true);
-				textChoiceOtherMap.put("textfieldReq",
-						(otherReponseSubType.getOtherIncludeText() == null || otherReponseSubType
-								.getOtherIncludeText().equalsIgnoreCase(
-										StudyMetaDataConstants.NO)) ? false
-								: true);
-				textChoiceMap.put("other", textChoiceOtherMap);
-				
+				if(StringUtils.isNotEmpty(otherReponseSubType.getOtherIncludeText())&& 
+						otherReponseSubType.getOtherIncludeText().equals(StudyMetaDataConstants.YES)){
+					LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
+					textChoiceOtherMap.put("placeholder", StringUtils.isEmpty(otherReponseSubType.getOtherPlaceholderText()) ? "" : 
+						otherReponseSubType.getOtherPlaceholderText());
+					textChoiceOtherMap.put("isMandatory",
+							(otherReponseSubType.getOtherParticipantFill() == null || otherReponseSubType
+									.getOtherParticipantFill().equalsIgnoreCase(
+											StudyMetaDataConstants.NO)) ? false
+									: true);
+					textChoiceOtherMap.put("textfieldReq",
+							(otherReponseSubType.getOtherIncludeText() == null || otherReponseSubType
+									.getOtherIncludeText().equalsIgnoreCase(
+											StudyMetaDataConstants.NO)) ? false
+									: true);
+					textChoiceMap.put("other", textChoiceOtherMap);
+				}
 				textChoiceMapList.add(textChoiceMap);
 			}
 			//other type add destination if there end
