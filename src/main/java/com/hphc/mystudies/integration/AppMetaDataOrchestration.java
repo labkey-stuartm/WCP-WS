@@ -28,10 +28,13 @@ import org.apache.log4j.Logger;
 
 import com.hphc.mystudies.bean.AppResponse;
 import com.hphc.mystudies.bean.AppUpdatesResponse;
+import com.hphc.mystudies.bean.AppVersionInfoBean;
+import com.hphc.mystudies.bean.DeviceVersion;
 import com.hphc.mystudies.bean.NotificationsResponse;
 import com.hphc.mystudies.bean.StudyUpdatesResponse;
 import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dao.AppMetaDataDao;
+import com.hphc.mystudies.dto.AppVersionInfo;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.Mail;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
@@ -294,4 +297,30 @@ public class AppMetaDataOrchestration {
 		LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Ends");
 		return updateAppVersionResponse;
 	}
+	
+	public AppVersionInfoBean getAppVersionInfo() {
+		LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Starts");
+		
+		AppVersionInfoBean aAppVersionInfoBean=new AppVersionInfoBean();
+		AppVersionInfo appVersionInfo=null;
+		DeviceVersion android=new DeviceVersion();
+		DeviceVersion ios=new DeviceVersion();
+
+		
+		appVersionInfo=appMetaDataDao.getAppVersionInfo();
+		
+		android.setLatestVersion(appVersionInfo.getAndroidVersion());
+		android.setForceUpdate("true");
+		
+		ios.setForceUpdate("true");
+		ios.setLatestVersion(appVersionInfo.getIosVersion());
+		
+		aAppVersionInfoBean.setAndroid(android);
+		aAppVersionInfoBean.setIos(ios);
+		
+		LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
+		return aAppVersionInfoBean;
+	}
+	
+	
 }

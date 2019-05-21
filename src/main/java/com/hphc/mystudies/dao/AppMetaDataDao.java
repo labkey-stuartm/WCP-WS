@@ -43,6 +43,7 @@ import com.hphc.mystudies.bean.StudyUpdatesBean;
 import com.hphc.mystudies.bean.StudyUpdatesResponse;
 import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dto.AppVersionDto;
+import com.hphc.mystudies.dto.AppVersionInfo;
 import com.hphc.mystudies.dto.NotificationDto;
 import com.hphc.mystudies.dto.ResourcesDto;
 import com.hphc.mystudies.dto.StudyDto;
@@ -620,5 +621,21 @@ public class AppMetaDataDao {
 			}
 		}
 		return message;
+	}
+	
+	public AppVersionInfo getAppVersionInfo() {
+		LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Starts");
+		Session session = null;
+		AppVersionInfo appVersionInfo=null;
+		try {
+			session = sessionFactory.openSession();
+			appVersionInfo = (AppVersionInfo) session
+					.getNamedQuery("AppVersionInfo.findAll")
+					.uniqueResult();
+		} catch (Exception e) {
+			LOGGER.error("ERROR: AppMetaDataDao - getAppVersionInfo()", e);
+		}		
+		LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Ends");
+		return appVersionInfo;
 	}
 }
