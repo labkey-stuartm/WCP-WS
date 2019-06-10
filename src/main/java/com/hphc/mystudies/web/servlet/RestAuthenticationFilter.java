@@ -62,8 +62,8 @@ public class RestAuthenticationFilter implements Filter {
 
 			if (StringUtils.isNotEmpty(authCredentials)) {
 				AuthenticationService authenticationService = new AuthenticationService();
-				boolean authenticationStatus = authenticationService
-						.authenticate(authCredentials);
+				boolean authenticationStatus = authenticationService.authenticate(authCredentials);
+				//boolean authenticationStatus = true;
 				if (authenticationStatus) {
 					filter.doFilter(request, response);
 				} else {
