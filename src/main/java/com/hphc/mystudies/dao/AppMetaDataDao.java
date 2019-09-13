@@ -114,7 +114,7 @@ public class AppMetaDataDao {
 	 * @throws DAOException
 	 */
 	@SuppressWarnings("unchecked")
-	public NotificationsResponse notifications(String skip, String authorization)
+	public NotificationsResponse notifications(String skip, String authorization,String appId)
 			throws DAOException {
 		LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
 		Session session = null;
@@ -138,7 +138,7 @@ public class AppMetaDataDao {
 					&& StringUtils.isNotEmpty(deviceType)) {
 				platformType = deviceType.substring(0, 1).toUpperCase();
 				session = sessionFactory.openSession();
-				appVersion = (AppVersionDto) session
+				/*appVersion = (AppVersionDto) session
 						.getNamedQuery("AppVersionDto.findByBundleIdOsType")
 						.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(),
 								bundleIdType)
@@ -159,8 +159,8 @@ public class AppMetaDataDao {
 								+ " and NDTO.notificationType='"
 								+ StudyMetaDataConstants.NOTIFICATION_TYPE_ST
 								+ "'";
-					}
-
+					}*/
+			
 					List<String> notificationTypeList = Arrays
 							.asList(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL,
 									StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY,
@@ -169,12 +169,20 @@ public class AppMetaDataDao {
 									StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT);
 
 					// Get criteria for the Standalone Study
+				/*
+				 * notificationStudyTypeQuery = "from NotificationDto NDTO" +
+				 * " where NDTO.notificationSubType in (:notificationTypeList) " +
+				 * customStudyQuery + " and NDTO.notificationSent=true or NDTO.anchorDate=true"
+				 * + " ORDER BY NDTO.notificationId DESC";
+				 */
+					
 					notificationStudyTypeQuery = "from NotificationDto NDTO"
 							+ " where NDTO.notificationSubType in (:notificationTypeList) "
-							+ customStudyQuery
-							+ " and NDTO.notificationSent=true or NDTO.anchorDate=true"
+							+ " and NDTO.appId='"
+							+ appId
+							+ "' and NDTO.notificationSent=true"
 							+ " ORDER BY NDTO.notificationId DESC";
-
+					
 					notificationList = session
 							.createQuery(notificationStudyTypeQuery)
 							.setParameterList("notificationTypeList",
@@ -265,8 +273,8 @@ public class AppMetaDataDao {
 									.get(notificationId));
 						}
 					}
-				}
-			}
+				/*}*/
+			 } 
 
 			notificationsResponse.setNotifications(notifyList);
 			notificationsResponse.setMessage(StudyMetaDataConstants.SUCCESS);

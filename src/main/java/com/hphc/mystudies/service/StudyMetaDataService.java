@@ -762,6 +762,7 @@ public class StudyMetaDataService {
 	@Path("notifications")
 	public Object notifications(@QueryParam("skip") String skip,
 			@HeaderParam("Authorization") String authorization,
+			@HeaderParam("applicationId") String appId,
 			@Context ServletContext context,
 			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
@@ -769,7 +770,7 @@ public class StudyMetaDataService {
 		try {
 			if (StringUtils.isNotEmpty(skip)) {
 				notificationsResponse = appMetaDataOrchestration.notifications(
-						skip, authorization);
+						skip, authorization,appId);
 				if (!notificationsResponse.getMessage().equals(
 						StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103,

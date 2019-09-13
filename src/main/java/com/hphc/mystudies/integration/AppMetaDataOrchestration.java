@@ -87,13 +87,13 @@ public class AppMetaDataOrchestration {
 	 * @return {@link NotificationsResponse}
 	 * @throws OrchestrationException
 	 */
-	public NotificationsResponse notifications(String skip, String authorization)
+	public NotificationsResponse notifications(String skip, String authorization,String appId)
 			throws OrchestrationException {
 		LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try {
 			notificationsResponse = appMetaDataDao.notifications(skip,
-					authorization);
+					authorization,appId);
 		} catch (Exception e) {
 			LOGGER.error("AppMetaDataOrchestration - notifications() :: ERROR",
 					e);

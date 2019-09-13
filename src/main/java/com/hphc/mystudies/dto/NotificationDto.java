@@ -110,6 +110,9 @@ public class NotificationDto implements Serializable {
 
 	@Column(name = "x_days")
 	private Integer xDays;
+	
+	@Column(name = "app_id")
+	private String appId;
 
 	public Integer getNotificationId() {
 		return notificationId;
@@ -277,6 +280,14 @@ public class NotificationDto implements Serializable {
 
 	public void setNotificationSubType(String notificationSubType) {
 		this.notificationSubType = notificationSubType;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 }
