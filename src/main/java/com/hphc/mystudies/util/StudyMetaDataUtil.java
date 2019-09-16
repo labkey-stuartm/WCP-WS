@@ -946,7 +946,7 @@ public class StudyMetaDataUtil {
 
 	public static String saveResponsesActivityDocument(String jsonData, String activityId, String studyId,
 			String activityRunId, String participantId, String version) {
-		LOGGER.info("INFO: AppUtil - saveResponsesActivityDocument() :: starts");
+		LOGGER.info("INFO: StudyMetaDataUtil - saveResponsesActivityDocument() :: starts");
 		File serverFile;
 		String consentFileName = null;
 		try {
@@ -962,7 +962,7 @@ public class StudyMetaDataUtil {
 				consentFileName = getStandardFileNameForResponses(activityId, studyId, activityRunId, participantId,
 						version);
 				LOGGER.warn(
-						"WARN: AppUtil - saveResponsesActivityDocument() :: CONSENT FILE NAME ==> " + consentFileName);
+						"WARN: StudyMetaDataUtil - saveResponsesActivityDocument() :: CONSENT FILE NAME ==> " + consentFileName);
 				serverFile = new File(directory.getAbsolutePath() + File.separator + consentFileName);
 
 				serverFile.getAbsolutePath();
@@ -970,9 +970,9 @@ public class StudyMetaDataUtil {
 				saveFileInPath(serverFile, bytes);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR: AppUtil - saveResponsesActivityDocument()", e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - saveResponsesActivityDocument()", e);
 		}
-		LOGGER.info("INFO: AppUtil - saveResponsesActivityDocument() :: ends");
+		LOGGER.info("INFO: StudyMetaDataUtil - saveResponsesActivityDocument() :: ends");
 		return consentFileName;
 	}
 
@@ -984,15 +984,15 @@ public class StudyMetaDataUtil {
 	 * @param bytes      the byte array of file
 	 */
 	public static void saveFileInPath(File serverFile, byte[] bytes) {
-		LOGGER.info("INFO: AppUtil - saveFileInPath() :: starts");
+		LOGGER.info("INFO: StudyMetaDataUtil - saveFileInPath() :: starts");
 		try (FileOutputStream fileOutputStream = new FileOutputStream(serverFile);
 				BufferedOutputStream stream = new BufferedOutputStream(fileOutputStream);) {
 			stream.write(bytes);
-			LOGGER.warn("WARN: AppUtil - saveFileInPath() :: CONSENT FILE PATH ==> " + serverFile.getAbsolutePath());
+			LOGGER.warn("WARN: StudyMetaDataUtil - saveFileInPath() :: CONSENT FILE PATH ==> " + serverFile.getAbsolutePath());
 		} catch (Exception e) {
-			LOGGER.error("ERROR: AppUtil - saveFileInPath()", e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - saveFileInPath()", e);
 		}
-		LOGGER.info("INFO: AppUtil - saveFileInPath() :: ends");
+		LOGGER.info("INFO: StudyMetaDataUtil - saveFileInPath() :: ends");
 	}
 
 	/**
@@ -1005,7 +1005,7 @@ public class StudyMetaDataUtil {
 	 */
 	public static String getStandardFileNameForResponses(String activityId, String studyId, String activityRunId,
 			String participantId, String version) {
-		LOGGER.info("INFO: AppUtil - getStandardFileNameForResponses() :: starts");
+		LOGGER.info("INFO: StudyMetaDataUtil - getStandardFileNameForResponses() :: starts");
 		String fileName = null;
 		try {
 			fileName = new StringBuilder().append("FDAHPHCI_")
@@ -1013,9 +1013,9 @@ public class StudyMetaDataUtil {
 					.append("_").append(activityId).append("_").append(activityRunId).append("_").append(participantId)
 					.append("_").append(version).append(".json").toString();
 		} catch (Exception e) {
-			LOGGER.error("ERROR: AppUtil - getStandardFileNameForResponses()", e);
+			LOGGER.error("ERROR: StudyMetaDataUtil - getStandardFileNameForResponses()", e);
 		}
-		LOGGER.info("INFO: AppUtil - getStandardFileNameForResponses() :: ends");
+		LOGGER.info("INFO: StudyMetaDataUtil - getStandardFileNameForResponses() :: ends");
 		return fileName;
 	}
 

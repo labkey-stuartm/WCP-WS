@@ -994,7 +994,7 @@ public class StudyMetaDataService {
 	@Path("activityResponce")
 	public Object storeJsonResponseFile(String params, @HeaderParam("Authorization") String authorization,
 			@Context ServletContext context, @Context HttpServletResponse response) throws Exception {
-		LOGGER.info("INFO: ActivityController - storeJsonResponseFile() :: starts");
+		LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: starts");
 		ErrorResponse errorResponse = new ErrorResponse();
 		// boolean isValidEnrollmentId = false;
 		// ActivityConditionDto activityConditionDto = null;
@@ -1036,17 +1036,17 @@ public class StudyMetaDataService {
 						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
 			}
 		} catch (JSONException e) {
-			LOGGER.error("ERROR: ActivityController - storeJsonResponseFile()", e);
+			LOGGER.error("ERROR: StudyMetaDataService - storeJsonResponseFile()", e);
 			// return AppUtil.httpResponseForNotAcceptable(ErrorCode.EC_44.code());
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
 					.build();
 		} catch (Exception e) {
-			LOGGER.error("ERROR: ActivityController - storeJsonResponseFile()", e);
+			LOGGER.error("ERROR: StudyMetaDataService - storeJsonResponseFile()", e);
 			// return AppUtil.httpResponseForInternalServerError();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
 					.build();
 		}
-		LOGGER.info("INFO: ActivityController - storeJsonResponseFile() :: ends");
+		LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: ends");
 		return errorResponse;
 	}
 }

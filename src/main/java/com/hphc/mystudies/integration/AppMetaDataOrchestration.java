@@ -271,7 +271,7 @@ public class AppMetaDataOrchestration {
 	}
 
 	public ErrorResponse storeResponseActivitiesTemp(String jsonData) throws Exception {
-		LOGGER.info("INFO: StudyServiceImpl - storeResponseActivitiesTemp() :: starts");
+		LOGGER.info("INFO: AppMetaDataOrchestration - storeResponseActivitiesTemp() :: starts");
 		ErrorResponse errorResponse = new ErrorResponse();
 		JSONObject json = null, metadataJson = null;
 		// ResponseActivityTempDto responseActivityTempDto = null;
@@ -321,9 +321,9 @@ public class AppMetaDataOrchestration {
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR: StudyServiceImpl - storeResponseActivitiesTemp()", e);
+			LOGGER.error("ERROR: AppMetaDataOrchestration - storeResponseActivitiesTemp()", e);
 		}
-		LOGGER.info("INFO: StudyServiceImpl - storeResponseActivitiesTemp() :: ends");
+		LOGGER.info("INFO: AppMetaDataOrchestration - storeResponseActivitiesTemp() :: ends");
 		return errorResponse;
 	}
 
