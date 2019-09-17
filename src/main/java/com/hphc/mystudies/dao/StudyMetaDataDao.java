@@ -256,16 +256,10 @@ public class StudyMetaDataDao {
 
 				// Get all configured studies from the WCP by platform supported
 				studiesList = session
-                 .createQuery(
-								"from StudyDto SDTO"
-										+ " where SDTO.platform like '%"
-										+ platformType
-										+ "%'"
-										+ " and SDTO.appId='"+applicationId+"'"
-										+ " and SDTO.orgId='"+orgId+"' "
-										+ " and (SDTO.status= :status OR SDTO.live=1)")
-						.setString(StudyMetaDataEnum.QF_STATUS.value(),
-								StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
+						.createQuery("from StudyDto SDTO" + " where SDTO.platform like '%" + platformType + "%'"
+								+ " and SDTO.appId='" + applicationId + "'" + " and SDTO.orgId='" + orgId + "' "
+								+ " and (SDTO.status= :status OR SDTO.live=1)")
+						.setString(StudyMetaDataEnum.QF_STATUS.value(), StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
 						.list();
 				/*
 				 * studiesList = session .createQuery( "from StudyDto SDTO" +
@@ -312,11 +306,19 @@ public class StudyMetaDataDao {
 						studyBean.setStudyId(
 								StringUtils.isEmpty(studyDto.getCustomStudyId()) ? "" : studyDto.getCustomStudyId());
 
+						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor()) ? ""
+								: studyDto.getResearchSponsor());
+
 						if (StringUtils.isNotEmpty(studyDto.getCategory())
 								&& StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+							/*
+							 * List<ReferenceTablesDto> referenceTablesList = session
+							 * .createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (" +
+							 * studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")") .list();
+							 */
 							List<ReferenceTablesDto> referenceTablesList = session
 									.createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN ("
-											+ studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")")
+											+ studyDto.getCategory() + ")")
 									.list();
 							if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
 								for (ReferenceTablesDto reference : referenceTablesList) {
@@ -324,10 +326,10 @@ public class StudyMetaDataDao {
 											.equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
 										studyBean.setCategory(
 												StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-									} else {
-										studyBean.setSponsorName(
-												StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-									}
+									} /*
+										 * else { studyBean.setSponsorName( StringUtils.isEmpty(reference.getValue()) ?
+										 * "" : reference.getValue()); }
+										 */
 								}
 							}
 						}
@@ -1396,7 +1398,7 @@ public class StudyMetaDataDao {
 		LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Ends");
 		return isValidStudy;
 	}
-	
+
 	/**
 	 * Get all the configured studies from the WCP
 	 * 
@@ -1456,11 +1458,19 @@ public class StudyMetaDataDao {
 						studyBean.setStudyId(
 								StringUtils.isEmpty(studyDto.getCustomStudyId()) ? "" : studyDto.getCustomStudyId());
 
+						studyBean.setSponsorName(StringUtils.isEmpty(studyDto.getResearchSponsor()) ? ""
+								: studyDto.getResearchSponsor());
+
 						if (StringUtils.isNotEmpty(studyDto.getCategory())
 								&& StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+							/*
+							 * List<ReferenceTablesDto> referenceTablesList = session
+							 * .createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (" +
+							 * studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")") .list();
+							 */
 							List<ReferenceTablesDto> referenceTablesList = session
 									.createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN ("
-											+ studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")")
+											+ studyDto.getCategory() + ")")
 									.list();
 							if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
 								for (ReferenceTablesDto reference : referenceTablesList) {
@@ -1468,10 +1478,10 @@ public class StudyMetaDataDao {
 											.equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
 										studyBean.setCategory(
 												StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-									} else {
-										studyBean.setSponsorName(
-												StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-									}
+									} /*
+										 * else { studyBean.setSponsorName( StringUtils.isEmpty(reference.getValue()) ?
+										 * "" : reference.getValue()); }
+										 */
 								}
 							}
 						}
