@@ -3159,6 +3159,12 @@ public class ActivityMetaDataDao {
 											StudyMetaDataConstants.NO)) ? false
 									: true);
 					textChoiceMap.put("other", textChoiceOtherMap);
+				}else {
+					LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
+					textChoiceOtherMap.put("placeholder", "");
+					textChoiceOtherMap.put("isMandatory", "");
+					textChoiceOtherMap.put("textfieldReq", "");
+					textChoiceMap.put("other", textChoiceOtherMap);
 				}
 				textChoiceMapList.add(textChoiceMap);
 			}

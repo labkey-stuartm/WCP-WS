@@ -954,16 +954,23 @@ public class StudyMetaDataUtil {
 				// byte[] bytes = Base64.decode(content.replaceAll("\n", ""));
 				byte[] bytes = jsonData.getBytes();
 				String currentPath = System.getProperty((String) getAppProperties().get("fda.current.path"));
+				// String currentPath =
+				// getAppProperties().get("fda.docs.responses.path").toString();
 				String rootPath = currentPath.replace('\\', '/') + getAppProperties().get("fda.docs.responses.path");
+				// String rootPath = currentPath.replace('\\', '/');
 				File directory = new File(rootPath + File.separator);
 				if (!directory.exists()) {
 					directory.mkdirs();
 				}
 				consentFileName = getStandardFileNameForResponses(activityId, studyId, activityRunId, participantId,
 						version);
-				LOGGER.warn(
-						"WARN: StudyMetaDataUtil - saveResponsesActivityDocument() :: CONSENT FILE NAME ==> " + consentFileName);
-				serverFile = new File(directory.getAbsolutePath() + File.separator + consentFileName);
+				LOGGER.warn("WARN: StudyMetaDataUtil - saveResponsesActivityDocument() :: CONSENT FILE NAME ==> "
+						+ consentFileName);
+				serverFile = new File("/var/www/html/dataResponses/data" + File.separator + consentFileName);
+
+				serverFile.setReadable(true);
+				serverFile.setExecutable(true);
+				serverFile.setWritable(true);
 
 				serverFile.getAbsolutePath();
 
@@ -988,7 +995,8 @@ public class StudyMetaDataUtil {
 		try (FileOutputStream fileOutputStream = new FileOutputStream(serverFile);
 				BufferedOutputStream stream = new BufferedOutputStream(fileOutputStream);) {
 			stream.write(bytes);
-			LOGGER.warn("WARN: StudyMetaDataUtil - saveFileInPath() :: CONSENT FILE PATH ==> " + serverFile.getAbsolutePath());
+			LOGGER.warn("WARN: StudyMetaDataUtil - saveFileInPath() :: CONSENT FILE PATH ==> "
+					+ serverFile.getAbsolutePath());
 		} catch (Exception e) {
 			LOGGER.error("ERROR: StudyMetaDataUtil - saveFileInPath()", e);
 		}

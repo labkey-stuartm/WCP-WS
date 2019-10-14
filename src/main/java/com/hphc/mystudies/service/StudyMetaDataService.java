@@ -143,11 +143,16 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
-			studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
-			if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
-				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-						StudyMetaDataConstants.FAILURE, response);
-				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+			if(!StringUtils.isEmpty(authorization) && !StringUtils.isEmpty(applicationId) && !StringUtils.isEmpty(orgId)) {
+				studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
+				if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
+							StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+				}
+			}else {
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);

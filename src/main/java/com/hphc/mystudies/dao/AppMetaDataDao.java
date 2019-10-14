@@ -172,16 +172,24 @@ public class AppMetaDataDao {
 				/*
 				 * notificationStudyTypeQuery = "from NotificationDto NDTO" +
 				 * " where NDTO.notificationSubType in (:notificationTypeList) " +
-				 * customStudyQuery + " and NDTO.notificationSent=true or NDTO.anchorDate=true"
+				 * customStudyQuery + " and NDTO.notificationSent=true or NDTO.anchorDate=true" 
 				 * + " ORDER BY NDTO.notificationId DESC";
+				 */
+					
+				/*
+				 * notificationStudyTypeQuery = "from NotificationDto NDTO" +
+				 * " where NDTO.notificationSubType in (:notificationTypeList) " +
+				 * " and NDTO.appId='" + appId +
+				 * "' or NDTO.appId is null and NDTO.notificationSent=true" +
+				 * " ORDER BY NDTO.notificationId DESC";
 				 */
 					
 					notificationStudyTypeQuery = "from NotificationDto NDTO"
 							+ " where NDTO.notificationSubType in (:notificationTypeList) "
 							+ " and NDTO.appId='"
 							+ appId
-							+ "' and NDTO.notificationSent=true"
-							+ " ORDER BY NDTO.notificationId DESC";
+							+ "' or NDTO.appId is null and NDTO.notificationSent=true"
+							+ " ORDER BY NDTO.scheduleDate DESC";
 					
 					notificationList = session
 							.createQuery(notificationStudyTypeQuery)
