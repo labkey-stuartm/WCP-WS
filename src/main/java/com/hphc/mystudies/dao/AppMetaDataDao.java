@@ -25,6 +25,7 @@ package com.hphc.mystudies.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,8 +199,10 @@ public class AppMetaDataDao {
 							.setFirstResult(Integer.parseInt(skip))
 							.setMaxResults(20).list();
 					if (notificationList != null && !notificationList.isEmpty()) {
-						Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>();
-						List<Integer> notificationIdsList = new ArrayList<>();
+						//Map<Integer, NotificationsBean> notificationTreeMap = new HashMap<>();
+						Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
+						//List<Integer> notificationIdsList = new ArrayList<>();
+						List<String> scheduleDateTimes = new ArrayList<>();
 						for (NotificationDto notificationDto : notificationList) {
 							NotificationsBean notifyBean = new NotificationsBean();
 							notifyBean.setNotificationId(notificationDto
@@ -267,18 +270,31 @@ public class AppMetaDataDao {
 													StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
 													StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
-							notificationIdsList.add(notificationDto
-									.getNotificationId());
+						/*
+						 * notificationIdsList.add(notificationDto .getNotificationId());
+						 * notificationTreeMap.put( notificationDto.getNotificationId(), notifyBean);
+						 */
+							scheduleDateTimes.add(scheduledDate+" "+scheduledTime);
 							notificationTreeMap.put(
-									notificationDto.getNotificationId(),
+									scheduledDate+" "+scheduledTime,
 									notifyBean);
 						}
 
-						Collections.sort(notificationIdsList,
-								Collections.reverseOrder());
-						for (Integer notificationId : notificationIdsList) {
-							notifyList.add(notificationTreeMap
-									.get(notificationId));
+					/*
+					 * Collections.sort(notificationIdsList, Collections.reverseOrder()); for
+					 * (Integer notificationId : notificationIdsList) {
+					 * notifyList.add(notificationTreeMap .get(notificationId)); }
+					 */
+						Collections.sort(scheduleDateTimes, new Comparator<String>() {
+
+							@Override
+							public int compare(String dateTimeOne, String dateTimeTwo) {
+								return dateTimeTwo.compareTo(dateTimeOne);
+							}
+							
+						});
+						for(String dateTime:scheduleDateTimes) {
+							notifyList.add(notificationTreeMap.get(dateTime));
 						}
 					}
 				/*}*/
