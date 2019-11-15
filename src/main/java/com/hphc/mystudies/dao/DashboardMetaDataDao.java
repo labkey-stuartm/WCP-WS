@@ -171,21 +171,30 @@ public class DashboardMetaDataDao {
 						.setBoolean(StudyMetaDataEnum.QF_ACTIVE.value(), false)
 						.list();
 				if (questionnaireList != null && !questionnaireList.isEmpty()) {
-					for (QuestionnairesDto questionnaireDto : questionnaireList) {
+					for (QuestionnairesDto questionnaire : questionnaireList) {
 						boolean addToDashboardFlag = false;
-						questionnaireDto = this
+						QuestionnairesDto questionnaireDto = this
 								.getTimeDetailsByActivityIdForQuestionnaire(
-										questionnaireDto, session);
+										questionnaire, session);
 						if (questionnaireDto.getActive()) {
 							addToDashboardFlag = true;
 						} else {
-							if (StudyMetaDataConstants.SDF_DATE.parse(
-									questionnaireDto.getModifiedDate()).after(
-									StudyMetaDataConstants.SDF_DATE
-											.parse(questionnaireDto
-													.getStudyLifetimeStart()))) {
-								addToDashboardFlag = true;
+							if(questionnaire.getStudyLifetimeStart() == null) {
+								if (StudyMetaDataConstants.SDF_DATE.parse(
+										questionnaireDto.getModifiedDate()).after(
+										StudyMetaDataConstants.SDF_DATE
+												.parse(questionnaireDto
+														.getStudyLifetimeStart()))) {
+									addToDashboardFlag = true;
+								}
 							}
+							
+							/*
+							 * if (StudyMetaDataConstants.SDF_DATE.parse(
+							 * questionnaireDto.getModifiedDate()).after( StudyMetaDataConstants.SDF_DATE
+							 * .parse(questionnaireDto .getStudyLifetimeStart()))) { addToDashboardFlag =
+							 * true; }
+							 */
 						}
 
 						if (addToDashboardFlag) {
@@ -979,21 +988,31 @@ public class DashboardMetaDataDao {
 						String endDate = activeTaskCustomFrequencyList.get(0)
 								.getFrequencyEndDate();
 						for (ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList) {
-							if (StudyMetaDataConstants.SDF_DATE
-									.parse(startDate)
-									.after(StudyMetaDataConstants.SDF_DATE
-											.parse(customFrequency
-													.getFrequencyStartDate()))) {
-								startDate = customFrequency
-										.getFrequencyStartDate();
+							
+							if(StringUtils.isNotEmpty(startDate)){
+								if (StudyMetaDataConstants.SDF_DATE
+										.parse(startDate)
+										.after(StudyMetaDataConstants.SDF_DATE
+												.parse(customFrequency
+														.getFrequencyStartDate()))) {
+									startDate = customFrequency
+											.getFrequencyStartDate();
+								}
+							}else {
+								startDate="";
 							}
-
-							if (StudyMetaDataConstants.SDF_DATE.parse(endDate)
-									.before(StudyMetaDataConstants.SDF_DATE
-											.parse(customFrequency
-													.getFrequencyEndDate()))) {
-								endDate = customFrequency.getFrequencyEndDate();
+							
+							if(StringUtils.isNotEmpty(endDate)){
+								if (StudyMetaDataConstants.SDF_DATE.parse(endDate)
+										.before(StudyMetaDataConstants.SDF_DATE
+												.parse(customFrequency
+														.getFrequencyEndDate()))) {
+									endDate = customFrequency.getFrequencyEndDate();
+								}
+							}else {
+								endDate="";
 							}
+							
 						}
 
 						startDateTime = startDate
@@ -1120,20 +1139,29 @@ public class DashboardMetaDataDao {
 						String endDate = questionnaireCustomFrequencyList
 								.get(0).getFrequencyEndDate();
 						for (QuestionnairesCustomFrequenciesDto customFrequency : questionnaireCustomFrequencyList) {
-							if (StudyMetaDataConstants.SDF_DATE
-									.parse(startDate)
-									.after(StudyMetaDataConstants.SDF_DATE
-											.parse(customFrequency
-													.getFrequencyStartDate()))) {
-								startDate = customFrequency
-										.getFrequencyStartDate();
+							
+							if(StringUtils.isNotEmpty(startDate)) {
+								if (StudyMetaDataConstants.SDF_DATE
+										.parse(startDate)
+										.after(StudyMetaDataConstants.SDF_DATE
+												.parse(customFrequency
+														.getFrequencyStartDate()))) {
+									startDate = customFrequency
+											.getFrequencyStartDate();
+								}
+							}else {
+								startDate="";
 							}
-
-							if (StudyMetaDataConstants.SDF_DATE.parse(endDate)
-									.before(StudyMetaDataConstants.SDF_DATE
-											.parse(customFrequency
-													.getFrequencyEndDate()))) {
-								endDate = customFrequency.getFrequencyEndDate();
+							
+							if(StringUtils.isNotEmpty(endDate)) {
+								if (StudyMetaDataConstants.SDF_DATE.parse(endDate)
+										.before(StudyMetaDataConstants.SDF_DATE
+												.parse(customFrequency
+														.getFrequencyEndDate()))) {
+									endDate = customFrequency.getFrequencyEndDate();
+								}
+							}else {
+								endDate="";
 							}
 						}
 
