@@ -35,6 +35,7 @@ import java.util.List;
 public class ActivityFrequencyBean {
 
 	private String type = "";
+	private boolean addNewRuns = false;
 	private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
 	private List<ActivityFrequencyAnchorRunsBean> anchorRuns = new ArrayList<>();
 
@@ -60,5 +61,13 @@ public class ActivityFrequencyBean {
 
 	public void setAnchorRuns(List<ActivityFrequencyAnchorRunsBean> anchorRuns) {
 		this.anchorRuns = anchorRuns;
+	}
+
+	public boolean isAddNewRuns() {
+		return addNewRuns;
+	}
+
+	public void setAddNewRuns(boolean addNewRuns) {
+		this.addNewRuns = addNewRuns;
 	}
 }

@@ -53,6 +53,7 @@ import com.hphc.mystudies.bean.EnrollmentTokenResponse;
 import com.hphc.mystudies.bean.ErrorResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
 import com.hphc.mystudies.bean.NotificationsResponse;
+import com.hphc.mystudies.bean.ParticipantPropertiesResponseBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ResourcesResponse;
 import com.hphc.mystudies.bean.StudyDashboardResponse;
@@ -143,14 +144,15 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
-			if(!StringUtils.isEmpty(authorization) && !StringUtils.isEmpty(applicationId) && !StringUtils.isEmpty(orgId)) {
+			if (!StringUtils.isEmpty(authorization) && !StringUtils.isEmpty(applicationId)
+					&& !StringUtils.isEmpty(orgId)) {
 				studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
 				if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
 							StudyMetaDataConstants.FAILURE, response);
 					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
 				}
-			}else {
+			} else {
 				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
 						.build();
 			}
@@ -1053,5 +1055,24 @@ public class StudyMetaDataService {
 		}
 		LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: ends");
 		return errorResponse;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("participantProperties")
+	public Object getParticipantProperties(@QueryParam("studyId") String studyId,
+			@QueryParam("studyVersion") String studyVersion, @HeaderParam("applicationId") String appId,
+			@Context ServletContext context, @Context HttpServletResponse response) {
+		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: Starts");
+		ParticipantPropertiesResponseBean participantPropertiesResponseBean = null;
+		try {
+			participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
+					studyVersion, appId);
+		} catch (Exception e) {
+			LOGGER.error("ERROR: StudyMetaDataService - getParticipantProperties()", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: ends");
+		return participantPropertiesResponseBean;
 	}
 }

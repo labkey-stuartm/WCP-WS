@@ -17,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "anchordate_type")
-public class AnchorDateTypeDto implements Serializable{
+public class AnchorDateTypeDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,23 +25,26 @@ public class AnchorDateTypeDto implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "custom_study_id")
 	private String customStudyId;
-	
+
 	@Column(name = "study_id")
 	private Integer studyId;
 
 	@Column(name = "name")
 	private String name;
-	
-	//0-not used and 1- used
+
+	// 0-not used and 1- used
 	@Column(name = "has_anchortype_draft")
 	private Integer hasAnchortypeDraft = 0;
-	
+
 	@Column(name = "version")
 	private Float version = 0f;
-	
+
+	@Column(name = "participant_property")
+	private boolean participantProperty = false;
+
 	public Integer getId() {
 		return id;
 	}
@@ -88,5 +91,13 @@ public class AnchorDateTypeDto implements Serializable{
 
 	public void setVersion(Float version) {
 		this.version = version;
+	}
+
+	public boolean isParticipantProperty() {
+		return participantProperty;
+	}
+
+	public void setParticipantProperty(boolean participantProperty) {
+		this.participantProperty = participantProperty;
 	}
 }

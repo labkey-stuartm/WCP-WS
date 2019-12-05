@@ -22,17 +22,23 @@
  */
 package com.hphc.mystudies.integration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
 import com.hphc.mystudies.bean.EligibilityConsentResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
+import com.hphc.mystudies.bean.ParticipantPropertiesMetadata;
+import com.hphc.mystudies.bean.ParticipantPropertiesResponseBean;
+import com.hphc.mystudies.bean.ParticipantPropertyMetaData;
 import com.hphc.mystudies.bean.ResourcesResponse;
 import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
 import com.hphc.mystudies.dao.StudyMetaDataDao;
+import com.hphc.mystudies.dto.ParticipantPropertiesBO;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
@@ -45,8 +51,7 @@ import com.hphc.mystudies.util.StudyMetaDataUtil;
  */
 public class StudyMetaDataOrchestration {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(StudyMetaDataOrchestration.class);
+	private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
 
 	@SuppressWarnings("unchecked")
 	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -57,22 +62,17 @@ public class StudyMetaDataOrchestration {
 	 * Check Authorization for the provided authorization identifier
 	 * 
 	 * @author BTC
-	 * @param authorization
-	 *            the Basic Authorization
+	 * @param authorization the Basic Authorization
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
-	public boolean isValidAuthorizationId(String authorization)
-			throws OrchestrationException {
+	public boolean isValidAuthorizationId(String authorization) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
 		boolean hasValidAuthorization = false;
 		try {
-			hasValidAuthorization = studyMetaDataDao
-					.isValidAuthorizationId(authorization);
+			hasValidAuthorization = studyMetaDataDao.isValidAuthorizationId(authorization);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
 		return hasValidAuthorization;
@@ -82,22 +82,17 @@ public class StudyMetaDataOrchestration {
 	 * Get Gateway info and Gateway resources data
 	 * 
 	 * @author BTC
-	 * @param authorization
-	 *            the Basic Authorization
+	 * @param authorization the Basic Authorization
 	 * @return {@link GatewayInfoResponse}
 	 * @throws OrchestrationException
 	 */
-	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization)
-			throws OrchestrationException {
+	public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Starts");
 		GatewayInfoResponse gatewayInfo = new GatewayInfoResponse();
 		try {
-			gatewayInfo = studyMetaDataDao
-					.gatewayAppResourcesInfo(authorization);
+			gatewayInfo = studyMetaDataDao.gatewayAppResourcesInfo(authorization);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Ends");
 		return gatewayInfo;
@@ -107,8 +102,7 @@ public class StudyMetaDataOrchestration {
 	 * Get all the configured studies from the WCP
 	 * 
 	 * @author BTC
-	 * @param authorization
-	 *            the Basic Authorization
+	 * @param authorization the Basic Authorization
 	 * @return {@link StudyResponse}
 	 * @throws OrchestrationException
 	 */
@@ -129,22 +123,17 @@ public class StudyMetaDataOrchestration {
 	 * Get eligibility and consent info for the provided study identifier
 	 * 
 	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
+	 * @param studyId the study identifier
 	 * @return {@link EligibilityConsentResponse}
 	 * @throws OrchestrationException
 	 */
-	public EligibilityConsentResponse eligibilityConsentMetadata(String studyId)
-			throws OrchestrationException {
+	public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Starts");
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
 		try {
-			eligibilityConsentResponse = studyMetaDataDao
-					.eligibilityConsentMetadata(studyId);
+			eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
@@ -155,29 +144,22 @@ public class StudyMetaDataOrchestration {
 	 * identifier and activity version for the provided study identifier
 	 * 
 	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
-	 * @param consentVersion
-	 *            the consent version
-	 * @param activityId
-	 *            the activity identifier
-	 * @param activityVersion
-	 *            the activity version
+	 * @param studyId         the study identifier
+	 * @param consentVersion  the consent version
+	 * @param activityId      the activity identifier
+	 * @param activityVersion the activity version
 	 * @return {@link ConsentDocumentResponse}
 	 * @throws OrchestrationException
 	 */
-	public ConsentDocumentResponse consentDocument(String studyId,
-			String consentVersion, String activityId, String activityVersion)
-			throws OrchestrationException {
+	public ConsentDocumentResponse consentDocument(String studyId, String consentVersion, String activityId,
+			String activityVersion) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		try {
-			consentDocumentResponse = studyMetaDataDao.consentDocument(studyId,
-					consentVersion, activityId, activityVersion);
+			consentDocumentResponse = studyMetaDataDao.consentDocument(studyId, consentVersion, activityId,
+					activityVersion);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - consentDocument() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - consentDocument() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Ends");
 		return consentDocumentResponse;
@@ -187,21 +169,17 @@ public class StudyMetaDataOrchestration {
 	 * Get resources metadata for the provided study identifier
 	 * 
 	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
+	 * @param studyId the study identifier
 	 * @return {@link ResourcesResponse}
 	 * @throws OrchestrationException
 	 */
-	public ResourcesResponse resourcesForStudy(String studyId)
-			throws OrchestrationException {
+	public ResourcesResponse resourcesForStudy(String studyId) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		try {
 			resourcesResponse = studyMetaDataDao.resourcesForStudy(studyId);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - resourcesForStudy() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - resourcesForStudy() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Ends");
 		return resourcesResponse;
@@ -211,13 +189,11 @@ public class StudyMetaDataOrchestration {
 	 * Get study metadata for the provided study identifier
 	 * 
 	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
+	 * @param studyId the study identifier
 	 * @return {@link StudyInfoResponse}
 	 * @throws OrchestrationException
 	 */
-	public StudyInfoResponse studyInfo(String studyId)
-			throws OrchestrationException {
+	public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		try {
@@ -233,8 +209,7 @@ public class StudyMetaDataOrchestration {
 	 * Check study for the provided study identifier
 	 * 
 	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
+	 * @param studyId the study identifier
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
@@ -244,8 +219,7 @@ public class StudyMetaDataOrchestration {
 		try {
 			flag = studyMetaDataDao.isValidStudy(studyId);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
+			LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
 		return flag;
@@ -255,62 +229,49 @@ public class StudyMetaDataOrchestration {
 	 * Check activity for the provided study and activity identifier
 	 * 
 	 * @author BTC
-	 * @param activityId
-	 *            the activity identifier
-	 * @param studyId
-	 *            the study identifier
-	 * @param activityVersion
-	 *            the activity version
+	 * @param activityId      the activity identifier
+	 * @param studyId         the study identifier
+	 * @param activityVersion the activity version
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
-	public boolean isValidActivity(String activityId, String studyId,
-			String activityVersion) throws OrchestrationException {
+	public boolean isValidActivity(String activityId, String studyId, String activityVersion)
+			throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
 		boolean flag = false;
 		try {
-			flag = studyMetaDataDao.isValidActivity(activityId, studyId,
-					activityVersion);
+			flag = studyMetaDataDao.isValidActivity(activityId, studyId, activityVersion);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - isValidActivity() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
 		return flag;
 	}
 
 	/**
-	 * Check whether activity is questionnaire for the provided study and
-	 * activity identifier
+	 * Check whether activity is questionnaire for the provided study and activity
+	 * identifier
 	 * 
 	 * @author BTC
-	 * @param activityId
-	 *            the activity identifier
-	 * @param studyId
-	 *            the study identifier
-	 * @param activityVersion
-	 *            the activity version
+	 * @param activityId      the activity identifier
+	 * @param studyId         the study identifier
+	 * @param activityVersion the activity version
 	 * @return {@link Boolean}
 	 * @throws OrchestrationException
 	 */
-	public boolean isActivityTypeQuestionnaire(String activityId,
-			String studyId, String activityVersion)
+	public boolean isActivityTypeQuestionnaire(String activityId, String studyId, String activityVersion)
 			throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
 		boolean flag = false;
 		try {
-			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId,
-					studyId, activityVersion);
+			flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId, studyId, activityVersion);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR",
-					e);
+			LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
 		return flag;
 	}
-	
+
 	/**
 	 * Check Enrollment Token is valid or not.
 	 * 
@@ -325,23 +286,21 @@ public class StudyMetaDataOrchestration {
 		try {
 			flag = studyMetaDataDao.isValidToken(token);
 		} catch (Exception e) {
-			LOGGER.error(
-					"StudyMetaDataOrchestration - isValidToken() :: ERROR", e);
+			LOGGER.error("StudyMetaDataOrchestration - isValidToken() :: ERROR", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Ends");
 		return flag;
 	}
-	
+
 	/**
 	 * Get all the configured studies from the WCP
 	 * 
 	 * @author BTC
-	 * @param studyId       
+	 * @param studyId
 	 * @return {@link StudyResponse}
 	 * @throws OrchestrationException
 	 */
-	public StudyResponse study(String studyId)
-			throws OrchestrationException {
+	public StudyResponse study(String studyId) throws OrchestrationException {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
@@ -351,5 +310,45 @@ public class StudyMetaDataOrchestration {
 		}
 		LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Ends");
 		return studyResponse;
+	}
+
+	public ParticipantPropertiesResponseBean getParticipantProperties(String studyId, String studyVersion, String appId)
+			throws Exception {
+		LOGGER.info("INFO: StudyMetaDataOrchestration - getParticipantProperties() :: Starts");
+		ParticipantPropertiesResponseBean participantPropertiesResponseBean = new ParticipantPropertiesResponseBean();
+		List<ParticipantPropertyMetaData> participantPropertyMetadataList = new ArrayList<>();
+		ParticipantPropertiesMetadata participantPropertiesMetadata = new ParticipantPropertiesMetadata();
+		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
+		try {
+			participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, studyVersion, appId);
+			if (!participantPropertiesBOList.isEmpty()) {
+				for (ParticipantPropertiesBO pbo : participantPropertiesBOList) {
+					ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
+					participantPropertyMetaData.setPropertyId(pbo.getId().toString());
+					participantPropertyMetaData.setPropertyName(pbo.getShortTitle());
+					participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
+					participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
+					participantPropertyMetaData.setShouldRefresh(pbo.isRefreshedValue());
+					participantPropertyMetaData.setDataSource(pbo.getDataSource());
+					if (pbo.isStatus()) {
+						participantPropertyMetaData.setStatus("active");
+					} else {
+						participantPropertyMetaData.setStatus("deactivated");
+					}
+					participantPropertyMetaData.setVersion("1.0");
+					participantPropertyMetadataList.add(participantPropertyMetaData);
+				}
+				participantPropertiesResponseBean.setMessage("success");
+			}
+
+			participantPropertiesMetadata.setStudyId(studyId);
+			participantPropertiesMetadata.setStudyVersion(studyVersion);
+			participantPropertiesResponseBean.setMetadata(participantPropertiesMetadata);
+			participantPropertiesResponseBean.setParticipantProperties(participantPropertyMetadataList);
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataOrchestration - getParticipantProperties() :: ERROR", e);
+		}
+		LOGGER.info("INFO: StudyMetaDataOrchestration - getParticipantProperties() :: Ends");
+		return participantPropertiesResponseBean;
 	}
 }

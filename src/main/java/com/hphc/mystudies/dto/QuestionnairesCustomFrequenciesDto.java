@@ -66,13 +66,13 @@ public class QuestionnairesCustomFrequenciesDto implements Serializable {
 
 	@Column(name = "study_version")
 	private Integer studyVersion = 1;
-	
+
 	@Column(name = "x_days_sign", length = 1)
 	private boolean xDaysSign = false;
 
 	@Column(name = "y_days_sign", length = 1)
 	private boolean yDaysSign = false;
-	
+
 	@Column(name = "time_period_from_days")
 	private Integer timePeriodFromDays;
 
@@ -158,4 +158,5 @@ public class QuestionnairesCustomFrequenciesDto implements Serializable {
 	public void setTimePeriodToDays(Integer timePeriodToDays) {
 		this.timePeriodToDays = timePeriodToDays;
 	}
+
 }

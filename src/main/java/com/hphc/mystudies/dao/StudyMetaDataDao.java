@@ -73,6 +73,7 @@ import com.hphc.mystudies.dto.EnrollmentTokenDto;
 import com.hphc.mystudies.dto.FormMappingDto;
 import com.hphc.mystudies.dto.GatewayInfoDto;
 import com.hphc.mystudies.dto.GatewayWelcomeInfoDto;
+import com.hphc.mystudies.dto.ParticipantPropertiesBO;
 import com.hphc.mystudies.dto.QuestionnairesDto;
 import com.hphc.mystudies.dto.QuestionnairesStepsDto;
 import com.hphc.mystudies.dto.QuestionsDto;
@@ -861,10 +862,39 @@ public class StudyMetaDataDao {
 								AnchorDateTypeDto anchorDateTypeDto = (AnchorDateTypeDto) session
 										.createQuery(searchQuery).uniqueResult();
 								if (anchorDateTypeDto != null) {
-									if (!anchorDateTypeDto.getName().replace(" ", "")
+									if (anchorDateTypeDto.isParticipantProperty()) {
+										query = session.createQuery(
+												"From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='"
+														+ studyId + "' and PPBO.active=1 and PPBO.anchorDateId="
+														+ anchorDateTypeDto.getId());
+										ParticipantPropertiesBO participantPropertiesBO = (ParticipantPropertiesBO) query
+												.uniqueResult();
+										availability.put("sourceType",
+												StudyMetaDataConstants.ANCHOR_TYPE_PARTICIPANTPROPERTY);
+										Map<String, Object> propertyMetadata = new LinkedHashMap<>();
+										propertyMetadata.put("propertyType", participantPropertiesBO.getPropertyType());
+										propertyMetadata.put("propertyId", participantPropertiesBO.getId());
+										propertyMetadata.put("propertyDataFormat",
+												participantPropertiesBO.getDataType());
+										propertyMetadata.put("shouldRefresh",
+												participantPropertiesBO.isRefreshedValue());
+										propertyMetadata.put("dataSource", participantPropertiesBO.getDataSource());
+										if (participantPropertiesBO.isStatus()) {
+											propertyMetadata.put("status", "active");
+										} else {
+											propertyMetadata.put("status", "deactivated");
+										}
+										propertyMetadata.put("externalPropertyId", "To b discussed");
+										propertyMetadata.put("dateOfEntryId", "To b discussed");
+										availability.put("propertyMetadata", propertyMetadata);
+										availability.put("sourceKey", "");
+										availability.put("sourceActivityId", "");
+										availability.put("sourceFormKey", "");
+									} else if (!anchorDateTypeDto.getName().replace(" ", "")
 											.equalsIgnoreCase(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE)) {
 										availability.put("sourceType",
 												StudyMetaDataConstants.ANCHOR_TYPE_ACTIVITYRESPONSE);
+										availability.put("propertyMetadata", "");
 										searchQuery = "select s.step_short_title,qr.short_title"
 												+ " from questionnaires qr,questions q, questionnaires_steps s"
 												+ " where" + " s.questionnaires_id=qr.id"
@@ -904,11 +934,14 @@ public class StudyMetaDataDao {
 											}
 										}
 									} else {
+
 										availability.put("sourceType",
 												StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE);
+										availability.put("propertyMetadata", "");
 										availability.put("sourceKey", "");
 										availability.put("sourceActivityId", "");
 										availability.put("sourceFormKey", "");
+
 									}
 								}
 
@@ -1529,5 +1562,28 @@ public class StudyMetaDataDao {
 		}
 		LOGGER.info("INFO: StudyMetaDataDao - study() :: Ends");
 		return studyResponse;
+	}
+
+	public List<ParticipantPropertiesBO> getParticipantProperties(String studyId, String studyVersion, String appId)
+			throws Exception {
+		LOGGER.info("INFO: StudyMetaDataDao - getParticipantProperties() :: Starts");
+		Session session = null;
+		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
+		try {
+			if (StringUtils.isNotEmpty(studyId)) {
+				session = sessionFactory.openSession();
+				query = session.createQuery("From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='" + studyId
+						+ "' and PPBO.active=1");
+				participantPropertiesBOList = query.list();
+			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataDao - getParticipantProperties() :: ERROR", e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getParticipantProperties() :: Ends");
+		return participantPropertiesBOList;
 	}
 }

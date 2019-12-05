@@ -6,6 +6,7 @@ public class ActivityAnchorDateBean {
 	private String sourceActivityId = "";
 	private String sourceKey = "";
 	private String sourceFormKey = "";
+	private ParticipantPropertyBean propertyMetadata =new ParticipantPropertyBean();
 	private ActivityAnchorStartBean start = new ActivityAnchorStartBean();
 	private ActivityAnchorEndBean end = new ActivityAnchorEndBean();
 	
@@ -44,5 +45,11 @@ public class ActivityAnchorDateBean {
 	}
 	public void setSourceFormKey(String sourceFormKey) {
 		this.sourceFormKey = sourceFormKey;
+	}
+	public ParticipantPropertyBean getPropertyMetadata() {
+		return propertyMetadata;
+	}
+	public void setPropertyMetadata(ParticipantPropertyBean propertyMetadata) {
+		this.propertyMetadata = propertyMetadata;
 	}
 }

@@ -61,6 +61,7 @@ import com.hphc.mystudies.bean.ActivityMetadataBean;
 import com.hphc.mystudies.bean.ActivityResponse;
 import com.hphc.mystudies.bean.DestinationBean;
 import com.hphc.mystudies.bean.FetalKickCounterFormatBean;
+import com.hphc.mystudies.bean.ParticipantPropertyBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
 import com.hphc.mystudies.bean.SpatialSpanMemoryFormatBean;
@@ -75,6 +76,7 @@ import com.hphc.mystudies.dto.ActiveTaskMasterAttributeDto;
 import com.hphc.mystudies.dto.AnchorDateTypeDto;
 import com.hphc.mystudies.dto.FormMappingDto;
 import com.hphc.mystudies.dto.InstructionsDto;
+import com.hphc.mystudies.dto.ParticipantPropertiesBO;
 import com.hphc.mystudies.dto.QuestionReponseTypeDto;
 import com.hphc.mystudies.dto.QuestionResponseSubTypeDto;
 import com.hphc.mystudies.dto.QuestionResponsetypeMasterInfoDto;
@@ -184,6 +186,7 @@ public class ActivityMetaDataDao {
 									frequencyDetails, session);
 							frequencyDetails.setType(StringUtils.isEmpty(activeTaskDto.getFrequency()) ? ""
 									: activeTaskDto.getFrequency());
+							frequencyDetails.setAddNewRuns(activeTaskDto.isAddNewRuns());
 							activityBean.setFrequency(frequencyDetails);
 
 							activityBean = this.getTimeDetailsByActivityIdForActiveTask(activeTaskDto, activityBean,
@@ -236,12 +239,13 @@ public class ActivityMetaDataDao {
 						activityBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
 						activityBean.setState(questionaire.getActive() ? StudyMetaDataConstants.ACTIVITY_STATUS_ACTIVE
 								: StudyMetaDataConstants.ACTIVITY_STATUS_DELETED);
-
 						ActivityFrequencyBean frequencyDetails = new ActivityFrequencyBean();
 						frequencyDetails = this.getFrequencyRunsDetailsForQuestionaires(questionaire, frequencyDetails,
 								session);
 						frequencyDetails.setType(
 								StringUtils.isEmpty(questionaire.getFrequency()) ? "" : questionaire.getFrequency());
+						frequencyDetails.setAddNewRuns(questionaire.isAddNewRuns());
+
 						activityBean.setFrequency(frequencyDetails);
 						activityBean.setActivityId(questionaire.getShortTitle());
 						activityBean.setActivityVersion(
@@ -3527,7 +3531,31 @@ public class ActivityMetaDataDao {
 			searchQuery = "from AnchorDateTypeDto a where a.id=" + activeTaskDto.getAnchorDateId() + "";
 			AnchorDateTypeDto anchorDateTypeDto = (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
 			if (anchorDateTypeDto != null) {
-				if (!anchorDateTypeDto.getName().replace(" ", "")
+				if (anchorDateTypeDto.isParticipantProperty()) {
+					query = session.createQuery("From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='"
+							+ activeTaskDto.getCustomStudyId() + "' and PPBO.active=1 and PPBO.anchorDateId="
+							+ anchorDateTypeDto.getId());
+					ParticipantPropertiesBO participantPropertiesBO = (ParticipantPropertiesBO) query.uniqueResult();
+					activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_PARTICIPANTPROPERTY);
+					ParticipantPropertyBean participantPropertyBean = new ParticipantPropertyBean();
+					participantPropertyBean.setPropertyId(participantPropertiesBO.getId().toString());
+					participantPropertyBean.setPropertyType(participantPropertiesBO.getPropertyType());
+					participantPropertyBean.setPropertyDataFormat(participantPropertiesBO.getDataType());
+					participantPropertyBean.setShouldRefresh(participantPropertiesBO.isRefreshedValue());
+					participantPropertyBean.setDataSource(participantPropertiesBO.getDataSource());
+					if (participantPropertiesBO.isStatus()) {
+						participantPropertyBean.setStatus("active");
+					} else {
+						participantPropertyBean.setStatus("deactivated");
+					}
+					participantPropertyBean.setExternalPropertyId("To b discussed");
+					participantPropertyBean.setDateOfEntryId("To b discussed");
+					activityAnchorDateBean.setPropertyMetadata(participantPropertyBean);
+					activityAnchorDateBean.setSourceKey("");
+					activityAnchorDateBean.setSourceFormKey("");
+					activityAnchorDateBean.setSourceActivityId("");
+
+				} else if (!anchorDateTypeDto.getName().replace(" ", "")
 						.equalsIgnoreCase(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE)) {
 					activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_ACTIVITYRESPONSE);
 					searchQuery = "select s.step_short_title,qr.short_title"
@@ -3716,7 +3744,30 @@ public class ActivityMetaDataDao {
 			searchQuery = "from AnchorDateTypeDto a where a.id=" + questionaire.getAnchorDateId() + "";
 			AnchorDateTypeDto anchorDateTypeDto = (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
 			if (anchorDateTypeDto != null) {
-				if (!anchorDateTypeDto.getName().replace(" ", "")
+				if (anchorDateTypeDto.isParticipantProperty()) {
+					query = session.createQuery("From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='"
+							+ questionaire.getCustomStudyId() + "' and PPBO.active=1 and PPBO.anchorDateId="
+							+ anchorDateTypeDto.getId());
+					ParticipantPropertiesBO participantPropertiesBO = (ParticipantPropertiesBO) query.uniqueResult();
+					activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_PARTICIPANTPROPERTY);
+					ParticipantPropertyBean participantPropertyBean = new ParticipantPropertyBean();
+					participantPropertyBean.setPropertyId(participantPropertiesBO.getId().toString());
+					participantPropertyBean.setPropertyType(participantPropertiesBO.getPropertyType());
+					participantPropertyBean.setPropertyDataFormat(participantPropertiesBO.getDataType());
+					participantPropertyBean.setShouldRefresh(participantPropertiesBO.isRefreshedValue());
+					participantPropertyBean.setDataSource(participantPropertiesBO.getDataSource());
+					if (participantPropertiesBO.isStatus()) {
+						participantPropertyBean.setStatus("active");
+					} else {
+						participantPropertyBean.setStatus("deactivated");
+					}
+					participantPropertyBean.setExternalPropertyId("To b discussed");
+					participantPropertyBean.setDateOfEntryId("To b discussed");
+					activityAnchorDateBean.setPropertyMetadata(participantPropertyBean);
+					activityAnchorDateBean.setSourceKey("");
+					activityAnchorDateBean.setSourceFormKey("");
+					activityAnchorDateBean.setSourceActivityId("");
+				} else if (!anchorDateTypeDto.getName().replace(" ", "")
 						.equalsIgnoreCase(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE)) {
 					activityAnchorDateBean.setSourceType(StudyMetaDataConstants.ANCHOR_TYPE_ACTIVITYRESPONSE);
 					searchQuery = "select s.step_short_title,qr.short_title"
