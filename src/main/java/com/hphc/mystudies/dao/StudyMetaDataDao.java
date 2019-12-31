@@ -862,7 +862,8 @@ public class StudyMetaDataDao {
 								AnchorDateTypeDto anchorDateTypeDto = (AnchorDateTypeDto) session
 										.createQuery(searchQuery).uniqueResult();
 								if (anchorDateTypeDto != null) {
-									if (anchorDateTypeDto.isParticipantProperty()) {
+									if (null != anchorDateTypeDto.getParticipantProperty()
+											&& anchorDateTypeDto.getParticipantProperty()) {
 										query = session.createQuery(
 												"From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='"
 														+ studyId + "' and PPBO.active=1 and PPBO.anchorDateId="
@@ -877,9 +878,9 @@ public class StudyMetaDataDao {
 										propertyMetadata.put("propertyDataFormat",
 												participantPropertiesBO.getDataType());
 										propertyMetadata.put("shouldRefresh",
-												participantPropertiesBO.isRefreshedValue());
+												participantPropertiesBO.getRefreshedValue());
 										propertyMetadata.put("dataSource", participantPropertiesBO.getDataSource());
-										if (participantPropertiesBO.isStatus()) {
+										if (participantPropertiesBO.getStatus()) {
 											propertyMetadata.put("status", "active");
 										} else {
 											propertyMetadata.put("status", "deactivated");
@@ -1564,16 +1565,18 @@ public class StudyMetaDataDao {
 		return studyResponse;
 	}
 
-	public List<ParticipantPropertiesBO> getParticipantProperties(String studyId, String studyVersion, String appId)
-			throws Exception {
+	public List<ParticipantPropertiesBO> getParticipantProperties(String studyId, String studyVersion, String appId,
+			String orgId) throws Exception {
 		LOGGER.info("INFO: StudyMetaDataDao - getParticipantProperties() :: Starts");
 		Session session = null;
 		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
 		try {
 			if (StringUtils.isNotEmpty(studyId)) {
 				session = sessionFactory.openSession();
-				query = session.createQuery("From ParticipantPropertiesBO PPBO WHERE PPBO.customStudyId ='" + studyId
-						+ "' and PPBO.active=1");
+
+				query = session.createQuery("From ParticipantPropertiesBO PBO WHERE PBO.customStudyId ='" + studyId
+						+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId
+						+ "' and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
 				participantPropertiesBOList = query.list();
 			}
 		} catch (Exception e) {

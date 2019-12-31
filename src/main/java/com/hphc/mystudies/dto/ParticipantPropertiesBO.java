@@ -18,7 +18,7 @@ public class ParticipantPropertiesBO {
 	@Column(name = "short_title")
 	private String shortTitle;
 
-	@Column(name = "property_name")
+	@Column(name = "property_name", length = 300)
 	private String propertyName;
 
 	@Column(name = "property_type")
@@ -28,16 +28,16 @@ public class ParticipantPropertiesBO {
 	private String dataType;
 
 	@Column(name = "use_as_anchor_date")
-	private boolean useAsAnchorDate;
+	private Boolean useAsAnchorDate;
 
 	@Column(name = "data_source")
 	private String dataSource;
 
 	@Column(name = "populated_at_enrollment")
-	private boolean populatedAtEnrollment;
+	private Boolean populatedAtEnrollment;
 
 	@Column(name = "refreshed_value")
-	private boolean refreshedValue;
+	private Boolean refreshedValue;
 
 	@Column(name = "created_by")
 	private Integer createdBy;
@@ -58,13 +58,34 @@ public class ParticipantPropertiesBO {
 	private Integer studyId;
 
 	@Column(name = "status")
-	private boolean status;
+	private Boolean status;
 
 	@Column(name = "active")
-	private boolean active;
+	private Boolean active;
 
 	@Column(name = "anchor_date_id")
 	private Integer anchorDateId;
+
+	@Column(name = "completed")
+	private Boolean completed = false;
+
+	@Column(name = "version")
+	private Float version = 0f;
+
+	@Column(name = "is_live")
+	private Integer live = 0;
+
+	@Column(name = "is_change")
+	private Boolean isChange = false;
+
+	@Column(name = "app_id")
+	private String appId;
+
+	@Column(name = "org_id")
+	private String orgId = "OrgName";
+
+	@Column(name = "is_used")
+	private Boolean isUsed = false;
 
 	public Integer getId() {
 		return id;
@@ -106,11 +127,11 @@ public class ParticipantPropertiesBO {
 		this.dataType = dataType;
 	}
 
-	public boolean isUseAsAnchorDate() {
+	public Boolean getUseAsAnchorDate() {
 		return useAsAnchorDate;
 	}
 
-	public void setUseAsAnchorDate(boolean useAsAnchorDate) {
+	public void setUseAsAnchorDate(Boolean useAsAnchorDate) {
 		this.useAsAnchorDate = useAsAnchorDate;
 	}
 
@@ -122,19 +143,19 @@ public class ParticipantPropertiesBO {
 		this.dataSource = dataSource;
 	}
 
-	public boolean isPopulatedAtEnrollment() {
+	public Boolean getPopulatedAtEnrollment() {
 		return populatedAtEnrollment;
 	}
 
-	public void setPopulatedAtEnrollment(boolean populatedAtEnrollment) {
+	public void setPopulatedAtEnrollment(Boolean populatedAtEnrollment) {
 		this.populatedAtEnrollment = populatedAtEnrollment;
 	}
 
-	public boolean isRefreshedValue() {
+	public Boolean getRefreshedValue() {
 		return refreshedValue;
 	}
 
-	public void setRefreshedValue(boolean refreshedValue) {
+	public void setRefreshedValue(Boolean refreshedValue) {
 		this.refreshedValue = refreshedValue;
 	}
 
@@ -186,19 +207,19 @@ public class ParticipantPropertiesBO {
 		this.studyId = studyId;
 	}
 
-	public boolean isStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
-	public boolean isActive() {
+	public Boolean getActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
@@ -210,15 +231,59 @@ public class ParticipantPropertiesBO {
 		this.anchorDateId = anchorDateId;
 	}
 
-	@Override
-	public String toString() {
-		return "ParticipantPropertiesBO [id=" + id + ", shortTitle=" + shortTitle + ", propertyName=" + propertyName
-				+ ", propertyType=" + propertyType + ", dataType=" + dataType + ", useAsAnchorDate=" + useAsAnchorDate
-				+ ", dataSource=" + dataSource + ", populatedAtEnrollment=" + populatedAtEnrollment
-				+ ", refreshedValue=" + refreshedValue + ", createdBy=" + createdBy + ", createdDate=" + createdDate
-				+ ", modifiedBy=" + modifiedBy + ", modifiedDate=" + modifiedDate + ", customStudyId=" + customStudyId
-				+ ", studyId=" + studyId + ", status=" + status + ", active=" + active + ", anchorDateId="
-				+ anchorDateId + "]";
+	public Boolean getCompleted() {
+		return completed;
 	}
 
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
+	}
+
+	public Float getVersion() {
+		return version;
+	}
+
+	public void setVersion(Float version) {
+		this.version = version;
+	}
+
+	public Integer getLive() {
+		return live;
+	}
+
+	public void setLive(Integer live) {
+		this.live = live;
+	}
+
+	public Boolean getIsChange() {
+		return isChange;
+	}
+
+	public void setIsChange(Boolean isChange) {
+		this.isChange = isChange;
+	}
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	public Boolean getIsUsed() {
+		return isUsed;
+	}
+
+	public void setIsUsed(Boolean isUsed) {
+		this.isUsed = isUsed;
+	}
 }

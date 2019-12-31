@@ -43,7 +43,7 @@ public class AnchorDateTypeDto implements Serializable {
 	private Float version = 0f;
 
 	@Column(name = "participant_property")
-	private boolean participantProperty = false;
+	private Boolean participantProperty = false;
 
 	public Integer getId() {
 		return id;
@@ -93,11 +93,11 @@ public class AnchorDateTypeDto implements Serializable {
 		this.version = version;
 	}
 
-	public boolean isParticipantProperty() {
+	public Boolean getParticipantProperty() {
 		return participantProperty;
 	}
 
-	public void setParticipantProperty(boolean participantProperty) {
+	public void setParticipantProperty(Boolean participantProperty) {
 		this.participantProperty = participantProperty;
 	}
 }

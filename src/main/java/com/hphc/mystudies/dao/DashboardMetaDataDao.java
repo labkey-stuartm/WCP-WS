@@ -183,7 +183,7 @@ public class DashboardMetaDataDao {
 								if (StudyMetaDataConstants.SDF_DATE.parse(
 										questionnaireDto.getModifiedDate()).after(
 										StudyMetaDataConstants.SDF_DATE
-												.parse(questionnaireDto
+														.parse(questionnaireDto
 														.getStudyLifetimeStart()))) {
 									addToDashboardFlag = true;
 								}

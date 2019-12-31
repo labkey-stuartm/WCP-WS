@@ -33,9 +33,11 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.annotations.Type;
 
 /**
- * Provides information about status of the sub tasks for study {@link StudyDto}.
+ * Provides information about status of the sub tasks for study
+ * {@link StudyDto}.
  * 
  * @author BTC
  *
@@ -44,8 +46,8 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name = "study_sequence")
 @NamedQueries({
 
-@NamedQuery(name = "getStudySequenceDetailsByStudyId", query = "from StudySequenceDto SSDTO"
-		+ " where SSDTO.studyId =:studyId "), })
+		@NamedQuery(name = "getStudySequenceDetailsByStudyId", query = "from StudySequenceDto SSDTO"
+				+ " where SSDTO.studyId =:studyId "), })
 public class StudySequenceDto implements Serializable {
 
 	/**
@@ -105,6 +107,10 @@ public class StudySequenceDto implements Serializable {
 
 	@Column(name = "study_exc_questionnaries")
 	private String studyExcQuestionnaries;
+
+	@Column(name = "participant_properties")
+	@Type(type = "yes_no")
+	private Boolean participantProperties = false;
 
 	@Column(name = "study_id")
 	private Integer studyId;
@@ -262,6 +268,14 @@ public class StudySequenceDto implements Serializable {
 
 	public void setStudyId(Integer studyId) {
 		this.studyId = studyId;
+	}
+
+	public Boolean getParticipantProperties() {
+		return participantProperties;
+	}
+
+	public void setParticipantProperties(Boolean participantProperties) {
+		this.participantProperties = participantProperties;
 	}
 
 }

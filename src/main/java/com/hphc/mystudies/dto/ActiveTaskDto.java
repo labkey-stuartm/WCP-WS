@@ -141,7 +141,7 @@ public class ActiveTaskDto implements Serializable {
 	private Integer anchorDateId;
 
 	@Column(name = "add_new_runs")
-	private boolean addNewRuns = false;
+	private Boolean addNewRuns = false;
 
 	public Integer getId() {
 		return id;
@@ -343,11 +343,11 @@ public class ActiveTaskDto implements Serializable {
 		this.anchorDateId = anchorDateId;
 	}
 
-	public boolean isAddNewRuns() {
+	public Boolean getAddNewRuns() {
 		return addNewRuns;
 	}
 
-	public void setAddNewRuns(boolean addNewRuns) {
+	public void setAddNewRuns(Boolean addNewRuns) {
 		this.addNewRuns = addNewRuns;
 	}
 }

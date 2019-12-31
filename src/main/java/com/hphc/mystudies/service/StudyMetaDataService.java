@@ -1063,12 +1063,13 @@ public class StudyMetaDataService {
 	@Path("participantProperties")
 	public Object getParticipantProperties(@QueryParam("studyId") String studyId,
 			@QueryParam("studyVersion") String studyVersion, @HeaderParam("applicationId") String appId,
-			@Context ServletContext context, @Context HttpServletResponse response) {
+			@HeaderParam("orgId") String orgId, @Context ServletContext context,
+			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: Starts");
 		ParticipantPropertiesResponseBean participantPropertiesResponseBean = null;
 		try {
 			participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
-					studyVersion, appId);
+					studyVersion, appId, orgId);
 		} catch (Exception e) {
 			LOGGER.error("ERROR: StudyMetaDataService - getParticipantProperties()", e);
 		}

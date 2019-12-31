@@ -312,15 +312,16 @@ public class StudyMetaDataOrchestration {
 		return studyResponse;
 	}
 
-	public ParticipantPropertiesResponseBean getParticipantProperties(String studyId, String studyVersion, String appId)
-			throws Exception {
+	public ParticipantPropertiesResponseBean getParticipantProperties(String studyId, String studyVersion, String appId,
+			String orgId) throws Exception {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - getParticipantProperties() :: Starts");
 		ParticipantPropertiesResponseBean participantPropertiesResponseBean = new ParticipantPropertiesResponseBean();
 		List<ParticipantPropertyMetaData> participantPropertyMetadataList = new ArrayList<>();
 		ParticipantPropertiesMetadata participantPropertiesMetadata = new ParticipantPropertiesMetadata();
 		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
 		try {
-			participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, studyVersion, appId);
+			participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, studyVersion, appId,
+					orgId);
 			if (!participantPropertiesBOList.isEmpty()) {
 				for (ParticipantPropertiesBO pbo : participantPropertiesBOList) {
 					ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
@@ -328,14 +329,14 @@ public class StudyMetaDataOrchestration {
 					participantPropertyMetaData.setPropertyName(pbo.getShortTitle());
 					participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
 					participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
-					participantPropertyMetaData.setShouldRefresh(pbo.isRefreshedValue());
+					participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
 					participantPropertyMetaData.setDataSource(pbo.getDataSource());
-					if (pbo.isStatus()) {
+					if (pbo.getStatus()) {
 						participantPropertyMetaData.setStatus("active");
 					} else {
 						participantPropertyMetaData.setStatus("deactivated");
 					}
-					participantPropertyMetaData.setVersion("1.0");
+					participantPropertyMetaData.setVersion(pbo.getVersion().toString());
 					participantPropertyMetadataList.add(participantPropertyMetaData);
 				}
 				participantPropertiesResponseBean.setMessage("success");
