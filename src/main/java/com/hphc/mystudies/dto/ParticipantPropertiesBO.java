@@ -84,8 +84,14 @@ public class ParticipantPropertiesBO {
 	@Column(name = "org_id")
 	private String orgId = "OrgName";
 
-	@Column(name = "is_used")
-	private Boolean isUsed = false;
+	@Column(name = "is_used_in_questionnaire")
+	private Boolean isUsedInQuestionnaire = false;
+
+	@Column(name = "is_used_in_active_task")
+	private Boolean isUsedInActiveTask = false;
+
+	@Column(name = "is_used_in_resource")
+	private Boolean isUsedInResource = false;
 
 	public Integer getId() {
 		return id;
@@ -279,11 +285,27 @@ public class ParticipantPropertiesBO {
 		this.orgId = orgId;
 	}
 
-	public Boolean getIsUsed() {
-		return isUsed;
+	public Boolean getIsUsedInQuestionnaire() {
+		return isUsedInQuestionnaire;
 	}
 
-	public void setIsUsed(Boolean isUsed) {
-		this.isUsed = isUsed;
+	public Boolean getIsUsedInActiveTask() {
+		return isUsedInActiveTask;
+	}
+
+	public Boolean getIsUsedInResource() {
+		return isUsedInResource;
+	}
+
+	public void setIsUsedInQuestionnaire(Boolean isUsedInQuestionnaire) {
+		this.isUsedInQuestionnaire = isUsedInQuestionnaire;
+	}
+
+	public void setIsUsedInActiveTask(Boolean isUsedInActiveTask) {
+		this.isUsedInActiveTask = isUsedInActiveTask;
+	}
+
+	public void setIsUsedInResource(Boolean isUsedInResource) {
+		this.isUsedInResource = isUsedInResource;
 	}
 }
