@@ -46,27 +46,22 @@ public interface StudyMetaDataConstants {
 	public final String INVALID_ENROLLMENT_TOKEN = "Sorry, the enrollment token is not valid. Please check and try again.";
 
 	SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat(
-			"MM/dd/yyyy hh:mm a");
+	SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 	SimpleDateFormat SDF_DATE = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat SDF_TIME_24 = new SimpleDateFormat("HH:mm:ss");
 	SimpleDateFormat SDF_TIME_12 = new SimpleDateFormat("hh:mm a");
 
 	SimpleDateFormat SDF_MMDDYYYY = new SimpleDateFormat("MM/dd/yyyy");
 	SimpleDateFormat DISPLAY_DATE = new SimpleDateFormat("EEE, MMM dd, yyyy");
-	SimpleDateFormat DISPLAY_DATE_TIME = new SimpleDateFormat(
-			"EEE, MMM dd, yyyy 'at' hh:mm a");
-	SimpleDateFormat DISPLAY_DATE_TIME_MIN = new SimpleDateFormat(
-			"dd MMM yyyy  HH:mm:ss");
-	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ssZ");
-	SimpleDateFormat SDF_DATE_TIME_TIMEZONE_MILLISECONDS = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	SimpleDateFormat DISPLAY_DATE_TIME = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' hh:mm a");
+	SimpleDateFormat DISPLAY_DATE_TIME_MIN = new SimpleDateFormat("dd MMM yyyy  HH:mm:ss");
+	SimpleDateFormat SDF_DATE_TIME_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+	SimpleDateFormat SDF_DATE_TIME_TIMEZONE_MILLISECONDS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 	public static final String SDF_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String SDF_DATE_PATTERN = "yyyy-MM-dd";
-	
+
 	public static final String PASS_SALT = "BTCSoft";
 
 	public static final String STUDY_TYPE_GT = "GT";
@@ -95,6 +90,7 @@ public interface StudyMetaDataConstants {
 
 	public static final String INVALID_AUTHORIZATION = "Invalid Authorization key";
 	public static final String INVALID_INPUT = "Invalid inputs";
+	public static final String INVALID_STUDY_VERSION = "Invalid study version";
 	public static final String NO_RECORD = "No records found";
 
 	public static final String TYPE_VIDEO = "video";
@@ -301,11 +297,11 @@ public interface StudyMetaDataConstants {
 
 	public static final String FDA_SMD_PRIVACY_POLICY = "fda.smd.pricaypolicy";
 	public static final String FDA_SMD_TERMS = "fda.smd.terms";
-	
+
 	public static final String ANCHOR_TYPE_ENROLLMENTDATE = "EnrollmentDate";
 	public static final String ANCHOR_TYPE_PARTICIPANTPROPERTY = "ParticipantProperty";
 	public static final String ANCHOR_TYPE_ACTIVITYRESPONSE = "ActivityResponse";
 	public static final String SCHEDULETYPE_REGULAR = "Regular";
-	public static final String SCHEDULETYPE_ANCHORDATE= "AnchorDate";
+	public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
 
 }

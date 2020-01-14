@@ -1068,10 +1068,34 @@ public class StudyMetaDataService {
 		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: Starts");
 		ParticipantPropertiesResponseBean participantPropertiesResponseBean = null;
 		try {
-			participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
-					studyVersion, appId, orgId);
+			if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(appId) && !StringUtils.isEmpty(orgId)) {
+				try {
+					if (StringUtils.isEmpty(studyVersion)) {
+						participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
+								studyVersion, appId, orgId);
+					} else {
+						Float studyVersionVal = Float.valueOf(studyVersion);
+						participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
+								studyVersion, appId, orgId);
+					}
+				} catch (NumberFormatException nfe) {
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
+							StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+					return Response.status(Response.Status.BAD_REQUEST)
+							.entity(StudyMetaDataConstants.INVALID_STUDY_VERSION).build();
+				}
+			} else {
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
+						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
+						.build();
+			}
 		} catch (Exception e) {
 			LOGGER.error("ERROR: StudyMetaDataService - getParticipantProperties()", e);
+			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
+					StudyMetaDataConstants.FAILURE, response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
+					.build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: ends");
 		return participantPropertiesResponseBean;

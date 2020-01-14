@@ -1573,10 +1573,16 @@ public class StudyMetaDataDao {
 		try {
 			if (StringUtils.isNotEmpty(studyId)) {
 				session = sessionFactory.openSession();
-
-				query = session.createQuery("From ParticipantPropertiesBO PBO WHERE PBO.customStudyId ='" + studyId
-						+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId
-						+ "' and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
+				if (StringUtils.isNotEmpty(studyVersion)) {
+					query = session.createQuery("From ParticipantPropertiesBO PBO WHERE PBO.customStudyId ='" + studyId
+							+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId + "' and PBO.studyVersion like "
+							+ Float.valueOf(studyVersion)
+							+ " and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
+				} else {
+					query = session.createQuery("From ParticipantPropertiesBO PBO WHERE PBO.customStudyId ='" + studyId
+							+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId
+							+ "' and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
+				}
 				participantPropertiesBOList = query.list();
 			}
 		} catch (Exception e) {
