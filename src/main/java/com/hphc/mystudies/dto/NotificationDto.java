@@ -110,9 +110,12 @@ public class NotificationDto implements Serializable {
 
 	@Column(name = "x_days")
 	private Integer xDays;
-	
+
 	@Column(name = "app_id")
 	private String appId;
+
+	@Column(name = "is_active")
+	private Boolean isActive = true;
 
 	public Integer getNotificationId() {
 		return notificationId;
@@ -288,6 +291,14 @@ public class NotificationDto implements Serializable {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }

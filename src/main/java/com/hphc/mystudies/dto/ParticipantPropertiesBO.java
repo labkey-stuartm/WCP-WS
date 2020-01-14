@@ -93,6 +93,9 @@ public class ParticipantPropertiesBO {
 	@Column(name = "is_used_in_resource")
 	private Boolean isUsedInResource = false;
 
+	@Column(name = "study_version")
+	private Float studyVersion;
+
 	public Integer getId() {
 		return id;
 	}
@@ -307,5 +310,13 @@ public class ParticipantPropertiesBO {
 
 	public void setIsUsedInResource(Boolean isUsedInResource) {
 		this.isUsedInResource = isUsedInResource;
+	}
+
+	public Float getStudyVersion() {
+		return studyVersion;
+	}
+
+	public void setStudyVersion(Float studyVersion) {
+		this.studyVersion = studyVersion;
 	}
 }
