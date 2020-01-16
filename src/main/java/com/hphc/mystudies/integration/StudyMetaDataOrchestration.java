@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
@@ -39,6 +40,7 @@ import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
 import com.hphc.mystudies.dao.StudyMetaDataDao;
 import com.hphc.mystudies.dto.ParticipantPropertiesBO;
+import com.hphc.mystudies.dto.ParticipantPropertiesDraftBO;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 
@@ -319,25 +321,145 @@ public class StudyMetaDataOrchestration {
 		List<ParticipantPropertyMetaData> participantPropertyMetadataList = new ArrayList<>();
 		ParticipantPropertiesMetadata participantPropertiesMetadata = new ParticipantPropertiesMetadata();
 		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
+		List<ParticipantPropertiesDraftBO> participantPropertiesDraftBOList = null;
 		try {
-			participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, studyVersion, appId,
-					orgId);
-			if (!participantPropertiesBOList.isEmpty()) {
+			if (StringUtils.isNotEmpty(studyVersion)) {
+				participantPropertiesDraftBOList = studyMetaDataDao.getParticipantPropertiesByStudyVersion(studyId,
+						studyVersion, appId, orgId);
+			} else {
+				participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, appId, orgId);
+			}
+
+			if (null != participantPropertiesBOList && !participantPropertiesBOList.isEmpty()) {
 				for (ParticipantPropertiesBO pbo : participantPropertiesBOList) {
-					ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
-					participantPropertyMetaData.setPropertyId(pbo.getId().toString());
-					participantPropertyMetaData.setPropertyName(pbo.getShortTitle());
-					participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
-					participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
-					participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
-					participantPropertyMetaData.setDataSource(pbo.getDataSource());
-					if (pbo.getStatus()) {
-						participantPropertyMetaData.setStatus("active");
+					if (pbo.getDataType().equalsIgnoreCase("date")
+							&& pbo.getDataSource().equalsIgnoreCase("ExternalSystem")) {
+						ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
+						participantPropertyMetaData.setPropertyId(pbo.getShortTitle());
+						participantPropertyMetaData.setPropertyName(pbo.getPropertyName());
+						participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData.setStatus("active");
+						} else {
+							participantPropertyMetaData.setStatus("deactivated");
+						}
+						participantPropertyMetaData.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData);
+
+						ParticipantPropertyMetaData participantPropertyMetaData1 = new ParticipantPropertyMetaData();
+						participantPropertyMetaData1.setPropertyId(pbo.getShortTitle() + "ExternalId");
+						participantPropertyMetaData1.setPropertyName(pbo.getShortTitle() + " External Id");
+						participantPropertyMetaData1.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData1.setPropertyDataType("string");
+						participantPropertyMetaData1.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData1.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData1.setStatus("active");
+						} else {
+							participantPropertyMetaData1.setStatus("deactivated");
+						}
+						participantPropertyMetaData1.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData1);
+
+						ParticipantPropertyMetaData participantPropertyMetaData2 = new ParticipantPropertyMetaData();
+						participantPropertyMetaData2.setPropertyId(pbo.getShortTitle() + "EntryDate");
+						participantPropertyMetaData2.setPropertyName(pbo.getShortTitle() + " Entry Date");
+						participantPropertyMetaData2.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData2.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData2.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData2.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData2.setStatus("active");
+						} else {
+							participantPropertyMetaData2.setStatus("deactivated");
+						}
+						participantPropertyMetaData2.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData2);
 					} else {
-						participantPropertyMetaData.setStatus("deactivated");
+						ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
+						participantPropertyMetaData.setPropertyId(pbo.getShortTitle());
+						participantPropertyMetaData.setPropertyName(pbo.getPropertyName());
+						participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData.setStatus("active");
+						} else {
+							participantPropertyMetaData.setStatus("deactivated");
+						}
+						participantPropertyMetaData.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData);
 					}
-					participantPropertyMetaData.setVersion(pbo.getVersion().toString());
-					participantPropertyMetadataList.add(participantPropertyMetaData);
+				}
+				participantPropertiesResponseBean.setMessage("success");
+			} else if (null != participantPropertiesDraftBOList && !participantPropertiesDraftBOList.isEmpty()) {
+				for (ParticipantPropertiesDraftBO pbo : participantPropertiesDraftBOList) {
+					if (pbo.getDataType().equalsIgnoreCase("date")
+							&& pbo.getDataSource().equalsIgnoreCase("ExternalSystem")) {
+						ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
+						participantPropertyMetaData.setPropertyId(pbo.getShortTitle());
+						participantPropertyMetaData.setPropertyName(pbo.getPropertyName());
+						participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData.setStatus("active");
+						} else {
+							participantPropertyMetaData.setStatus("deactivated");
+						}
+						participantPropertyMetaData.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData);
+
+						ParticipantPropertyMetaData participantPropertyMetaData1 = new ParticipantPropertyMetaData();
+						participantPropertyMetaData1.setPropertyId(pbo.getShortTitle() + "ExternalId");
+						participantPropertyMetaData1.setPropertyName(pbo.getShortTitle() + " External Id");
+						participantPropertyMetaData1.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData1.setPropertyDataType("string");
+						participantPropertyMetaData1.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData1.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData1.setStatus("active");
+						} else {
+							participantPropertyMetaData1.setStatus("deactivated");
+						}
+						participantPropertyMetaData1.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData1);
+
+						ParticipantPropertyMetaData participantPropertyMetaData2 = new ParticipantPropertyMetaData();
+						participantPropertyMetaData2.setPropertyId(pbo.getShortTitle() + "EntryDate");
+						participantPropertyMetaData2.setPropertyName(pbo.getShortTitle() + " Entry Date");
+						participantPropertyMetaData2.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData2.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData2.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData2.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData2.setStatus("active");
+						} else {
+							participantPropertyMetaData2.setStatus("deactivated");
+						}
+						participantPropertyMetaData2.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData2);
+					} else {
+						ParticipantPropertyMetaData participantPropertyMetaData = new ParticipantPropertyMetaData();
+						participantPropertyMetaData.setPropertyId(pbo.getShortTitle());
+						participantPropertyMetaData.setPropertyName(pbo.getPropertyName());
+						participantPropertyMetaData.setPropertyType(pbo.getPropertyType());
+						participantPropertyMetaData.setPropertyDataType(pbo.getDataType());
+						participantPropertyMetaData.setShouldRefresh(pbo.getRefreshedValue());
+						participantPropertyMetaData.setDataSource(pbo.getDataSource());
+						if (pbo.getStatus()) {
+							participantPropertyMetaData.setStatus("active");
+						} else {
+							participantPropertyMetaData.setStatus("deactivated");
+						}
+						participantPropertyMetaData.setVersion(pbo.getVersion().toString());
+						participantPropertyMetadataList.add(participantPropertyMetaData);
+					}
 				}
 				participantPropertiesResponseBean.setMessage("success");
 			}
