@@ -1626,4 +1626,33 @@ public class StudyMetaDataDao {
 		return participantPropertiesBOList;
 	}
 
+	public Float getStudylatestVersion(String studyId) {
+		LOGGER.info("INFO: StudyMetaDataDao - getStudylatestVersion() :: Starts");
+		Session session = null;
+		StudyDto studyDto = null;
+		Float version = null;
+		try {
+			session = sessionFactory.openSession();
+			studyDto = (StudyDto) session.getNamedQuery("getLiveStudyIdByCustomStudyId")
+					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
+			if (studyDto == null) {
+				studyDto = (StudyDto) session.getNamedQuery("getPublishedStudyByCustomId")
+						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).uniqueResult();
+			}
+
+			if (null != studyDto) {
+				version = studyDto.getVersion();
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataDao - getStudylatestVersion() :: ERROR", e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataDao - getStudylatestVersion() :: Ends");
+		return version;
+	}
+
 }

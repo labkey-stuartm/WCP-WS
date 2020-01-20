@@ -324,8 +324,9 @@ public class StudyMetaDataOrchestration {
 		List<ParticipantPropertiesDraftBO> participantPropertiesDraftBOList = null;
 		try {
 			if (StringUtils.isNotEmpty(studyVersion)) {
+				String studyVer = studyVersion.replace(".0", "");
 				participantPropertiesDraftBOList = studyMetaDataDao.getParticipantPropertiesByStudyVersion(studyId,
-						studyVersion, appId, orgId);
+						studyVer, appId, orgId);
 			} else {
 				participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, appId, orgId);
 			}
@@ -465,7 +466,13 @@ public class StudyMetaDataOrchestration {
 			}
 
 			participantPropertiesMetadata.setStudyId(studyId);
-			participantPropertiesMetadata.setStudyVersion(studyVersion);
+			if (StringUtils.isNotEmpty(studyVersion)) {
+				participantPropertiesMetadata.setStudyVersion(Float.valueOf(studyVersion).toString());
+			} else {
+				Float latestStudyVersion = studyMetaDataDao.getStudylatestVersion(studyId);
+				participantPropertiesMetadata
+						.setStudyVersion(null != latestStudyVersion ? latestStudyVersion.toString() : "");
+			}
 			participantPropertiesResponseBean.setMetadata(participantPropertiesMetadata);
 			participantPropertiesResponseBean.setParticipantProperties(participantPropertyMetadataList);
 		} catch (Exception e) {
