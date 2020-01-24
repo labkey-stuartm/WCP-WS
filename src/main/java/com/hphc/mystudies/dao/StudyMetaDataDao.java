@@ -1578,8 +1578,7 @@ public class StudyMetaDataDao {
 		return studyResponse;
 	}
 
-	public List<ParticipantPropertiesBO> getParticipantProperties(String studyId, String appId, String orgId)
-			throws Exception {
+	public List<ParticipantPropertiesBO> getParticipantProperties(String studyId) throws Exception {
 		LOGGER.info("INFO: StudyMetaDataDao - getParticipantProperties() :: Starts");
 		Session session = null;
 		List<ParticipantPropertiesBO> participantPropertiesBOList = null;
@@ -1587,7 +1586,6 @@ public class StudyMetaDataDao {
 			if (StringUtils.isNotEmpty(studyId)) {
 				session = sessionFactory.openSession();
 				query = session.createQuery("From ParticipantPropertiesBO PBO WHERE PBO.customStudyId ='" + studyId
-						+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId
 						+ "' and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
 				participantPropertiesBOList = query.list();
 			}
@@ -1603,7 +1601,7 @@ public class StudyMetaDataDao {
 	}
 
 	public List<ParticipantPropertiesDraftBO> getParticipantPropertiesByStudyVersion(String studyId,
-			String studyVersion, String appId, String orgId) throws Exception {
+			String studyVersion) throws Exception {
 		LOGGER.info("INFO: StudyMetaDataDao - getParticipantPropertiesByStudyVersion() :: Starts");
 		Session session = null;
 		List<ParticipantPropertiesDraftBO> participantPropertiesBOList = null;
@@ -1611,8 +1609,8 @@ public class StudyMetaDataDao {
 			if (StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)) {
 				session = sessionFactory.openSession();
 				query = session.createQuery("From ParticipantPropertiesDraftBO PBO WHERE PBO.customStudyId ='" + studyId
-						+ "' and PBO.appId='" + appId + "' and PBO.orgId='" + orgId + "' and PBO.studyVersion like "
-						+ studyVersion + " and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
+						+ "' and PBO.studyVersion like " + studyVersion
+						+ " and PBO.active=1 and PBO.live=1  order by PBO.createdDate DESC");
 				participantPropertiesBOList = query.list();
 			}
 		} catch (Exception e) {

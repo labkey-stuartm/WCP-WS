@@ -91,6 +91,7 @@ public interface StudyMetaDataConstants {
 	public static final String INVALID_AUTHORIZATION = "Invalid Authorization key";
 	public static final String INVALID_INPUT = "Invalid inputs";
 	public static final String INVALID_STUDY_VERSION = "Invalid study version";
+	public static final String INVALID_STUDY = "Study does not exists. Please check";
 	public static final String NO_RECORD = "No records found";
 
 	public static final String TYPE_VIDEO = "video";

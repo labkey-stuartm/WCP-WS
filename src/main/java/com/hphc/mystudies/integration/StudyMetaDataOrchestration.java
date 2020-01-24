@@ -314,8 +314,8 @@ public class StudyMetaDataOrchestration {
 		return studyResponse;
 	}
 
-	public ParticipantPropertiesResponseBean getParticipantProperties(String studyId, String studyVersion, String appId,
-			String orgId) throws Exception {
+	public ParticipantPropertiesResponseBean getParticipantProperties(String studyId, String studyVersion)
+			throws Exception {
 		LOGGER.info("INFO: StudyMetaDataOrchestration - getParticipantProperties() :: Starts");
 		ParticipantPropertiesResponseBean participantPropertiesResponseBean = new ParticipantPropertiesResponseBean();
 		List<ParticipantPropertyMetaData> participantPropertyMetadataList = new ArrayList<>();
@@ -326,9 +326,9 @@ public class StudyMetaDataOrchestration {
 			if (StringUtils.isNotEmpty(studyVersion)) {
 				String studyVer = studyVersion.replace(".0", "");
 				participantPropertiesDraftBOList = studyMetaDataDao.getParticipantPropertiesByStudyVersion(studyId,
-						studyVer, appId, orgId);
+						studyVer);
 			} else {
-				participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId, appId, orgId);
+				participantPropertiesBOList = studyMetaDataDao.getParticipantProperties(studyId);
 			}
 
 			if (null != participantPropertiesBOList && !participantPropertiesBOList.isEmpty()) {

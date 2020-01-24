@@ -1062,33 +1062,38 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("participantProperties")
 	public Object getParticipantProperties(@QueryParam("studyId") String studyId,
-			@QueryParam("studyVersion") String studyVersion, @HeaderParam("applicationId") String appId,
-			@HeaderParam("orgId") String orgId, @Context ServletContext context,
+			@QueryParam("studyVersion") String studyVersion, @Context ServletContext context,
 			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - getParticipantProperties() :: Starts");
 		ParticipantPropertiesResponseBean participantPropertiesResponseBean = null;
 		try {
-			if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(appId) && !StringUtils.isEmpty(orgId)) {
-				try {
-					if (StringUtils.isEmpty(studyVersion)) {
-						participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
-								studyVersion, appId, orgId);
-					} else {
-						Float studyVersionVal = Float.valueOf(studyVersion);
-						participantPropertiesResponseBean = studyMetaDataOrchestration.getParticipantProperties(studyId,
-								studyVersion, appId, orgId);
+			if (!StringUtils.isEmpty(studyId)) {
+				if (studyMetaDataOrchestration.isValidStudy(studyId)) {
+					try {
+						if (StringUtils.isEmpty(studyVersion)) {
+							participantPropertiesResponseBean = studyMetaDataOrchestration
+									.getParticipantProperties(studyId, studyVersion);
+						} else {
+							Float studyVersionVal = Float.valueOf(studyVersion);
+							participantPropertiesResponseBean = studyMetaDataOrchestration
+									.getParticipantProperties(studyId, studyVersion);
+						}
+					} catch (NumberFormatException nfe) {
+						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
+								StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						return Response.status(Response.Status.NOT_FOUND)
+								.entity(StudyMetaDataConstants.INVALID_STUDY_VERSION).build();
 					}
-				} catch (NumberFormatException nfe) {
+				} else {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
 							StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-					return Response.status(Response.Status.BAD_REQUEST)
-							.entity(StudyMetaDataConstants.INVALID_STUDY_VERSION).build();
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY)
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
 						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
-						.build();
+				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_INPUT).build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("ERROR: StudyMetaDataService - getParticipantProperties()", e);
