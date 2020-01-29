@@ -894,7 +894,7 @@ public class StudyMetaDataDao {
 												propertyMetadata.put("externalPropertyId",
 														participantPropertiesBO.getShortTitle() + "ExternalId");
 												propertyMetadata.put("dateOfEntryId",
-														participantPropertiesBO.getShortTitle() + "DateOfEntry");
+														participantPropertiesBO.getShortTitle() + "EntryDate");
 											} else {
 												propertyMetadata.put("externalPropertyId", "");
 												propertyMetadata.put("dateOfEntryId", "");
@@ -908,7 +908,7 @@ public class StudyMetaDataDao {
 											.equalsIgnoreCase(StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE)) {
 										availability.put("sourceType",
 												StudyMetaDataConstants.ANCHOR_TYPE_ACTIVITYRESPONSE);
-										availability.put("propertyMetadata", "");
+										availability.put("propertyMetadata", new LinkedHashMap<>());
 										searchQuery = "select s.step_short_title,qr.short_title"
 												+ " from questionnaires qr,questions q, questionnaires_steps s"
 												+ " where" + " s.questionnaires_id=qr.id"
@@ -951,7 +951,7 @@ public class StudyMetaDataDao {
 
 										availability.put("sourceType",
 												StudyMetaDataConstants.ANCHOR_TYPE_ENROLLMENTDATE);
-										availability.put("propertyMetadata", "");
+										availability.put("propertyMetadata", new LinkedHashMap<>());
 										availability.put("sourceKey", "");
 										availability.put("sourceActivityId", "");
 										availability.put("sourceFormKey", "");
