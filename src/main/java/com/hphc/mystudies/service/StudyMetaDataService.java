@@ -987,10 +987,29 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("versionInfo")
-	public Object getAppVersionInfo() {
+	public Object getAppVersionInfo(@HeaderParam("applicationId") String appId, @HeaderParam("orgId") String orgId,
+			@Context HttpServletResponse response) {
 		AppVersionInfoBean appVersionInfoBean = null;
 		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
-		appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo();
+		try {
+			if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(orgId)) {
+				appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo(appId, orgId);
+				if (appVersionInfoBean == null) {
+					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
+							StudyMetaDataConstants.FAILURE, response);
+					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+				}
+			} else {
+				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
+						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("ERROR: StudyMetaDataService - getAppVersionInfo()", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
+					.build();
+		}
 		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: ends");
 		return appVersionInfoBean;
 	}

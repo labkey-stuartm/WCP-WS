@@ -15,11 +15,10 @@ import javax.persistence.Table;
 @Table(name = "version_info")
 @NamedQueries(value = {
 
-		@NamedQuery(name = "AppVersionInfo.findAll", query = "FROM AppVersionInfo")
-, })
+		@NamedQuery(name = "AppVersionInfo.findAll", query = "FROM AppVersionInfo where appId=:appId AND orgId=:orgId"), })
 
-public class AppVersionInfo implements Serializable{
-	
+public class AppVersionInfo implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -36,6 +35,18 @@ public class AppVersionInfo implements Serializable{
 	@Column(name = "ios")
 	private String iosVersion = "";
 
+	@Column(name = "app_id")
+	private String appId;
+
+	@Column(name = "org_id")
+	private String orgId;
+
+	@Column(name = "android_force_update")
+	private Boolean androidForceUpdate;
+
+	@Column(name = "ios_force_update")
+	private Boolean iosForceUpdate;
+
 	public int getVersionInfoId() {
 		return versionInfoId;
 	}
@@ -43,8 +54,6 @@ public class AppVersionInfo implements Serializable{
 	public void setVersionInfoId(int versionInfoId) {
 		this.versionInfoId = versionInfoId;
 	}
-
-	
 
 	public String getAndroidVersion() {
 		return androidVersion;
@@ -62,5 +71,36 @@ public class AppVersionInfo implements Serializable{
 		this.iosVersion = iosVersion;
 	}
 
-	
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	public Boolean getAndroidForceUpdate() {
+		return androidForceUpdate;
+	}
+
+	public void setAndroidForceUpdate(Boolean androidForceUpdate) {
+		this.androidForceUpdate = androidForceUpdate;
+	}
+
+	public Boolean getIosForceUpdate() {
+		return iosForceUpdate;
+	}
+
+	public void setIosForceUpdate(Boolean iosForceUpdate) {
+		this.iosForceUpdate = iosForceUpdate;
+	}
+
 }
