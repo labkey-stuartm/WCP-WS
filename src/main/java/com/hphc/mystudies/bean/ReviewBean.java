@@ -32,6 +32,7 @@ public class ReviewBean {
 
 	private String reasonForConsent = "";
 	private String reviewHTML = "";
+	private String consentByLAR = "";
 
 	public String getReasonForConsent() {
 		return reasonForConsent;
@@ -47,6 +48,14 @@ public class ReviewBean {
 
 	public void setReviewHTML(String reviewHTML) {
 		this.reviewHTML = reviewHTML;
+	}
+
+	public String getConsentByLAR() {
+		return consentByLAR;
+	}
+
+	public void setConsentByLAR(String consentByLAR) {
+		this.consentByLAR = consentByLAR;
 	}
 
 }

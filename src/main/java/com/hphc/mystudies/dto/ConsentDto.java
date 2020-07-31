@@ -44,8 +44,7 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name = "consent")
 @NamedQueries({
 
-		@NamedQuery(name = "consentDtoByStudyId", query = "from ConsentDto CDTO"
-				+ " where CDTO.studyId =:studyId"),
+		@NamedQuery(name = "consentDtoByStudyId", query = "from ConsentDto CDTO" + " where CDTO.studyId =:studyId"),
 
 		@NamedQuery(name = "consentDetailsByCustomStudyIdAndVersion", query = " from ConsentDto CDTO"
 				+ " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version"), })
@@ -139,6 +138,9 @@ public class ConsentDto implements Serializable {
 	@Column(name = "aggrement_of_consent")
 	private String aggrementOfConsent;
 
+	@Column(name = "consent_by_LAR")
+	private String consentByLAR;
+
 	public Integer getId() {
 		return id;
 	}
@@ -159,8 +161,7 @@ public class ConsentDto implements Serializable {
 		return comprehensionTestMinimumScore;
 	}
 
-	public void setComprehensionTestMinimumScore(
-			Integer comprehensionTestMinimumScore) {
+	public void setComprehensionTestMinimumScore(Integer comprehensionTestMinimumScore) {
 		this.comprehensionTestMinimumScore = comprehensionTestMinimumScore;
 	}
 
@@ -354,6 +355,14 @@ public class ConsentDto implements Serializable {
 
 	public void setAggrementOfConsent(String aggrementOfConsent) {
 		this.aggrementOfConsent = aggrementOfConsent;
+	}
+
+	public String getConsentByLAR() {
+		return consentByLAR;
+	}
+
+	public void setConsentByLAR(String consentByLAR) {
+		this.consentByLAR = consentByLAR;
 	}
 
 }

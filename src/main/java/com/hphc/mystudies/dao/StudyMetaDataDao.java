@@ -675,6 +675,9 @@ public class StudyMetaDataDao {
 						reviewBean.setReasonForConsent(StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
 								? consentDto.getAggrementOfConsent()
 								: StudyMetaDataConstants.REASON_FOR_CONSENT);
+						reviewBean.setConsentByLAR(
+								StringUtils.isNotEmpty(consentDto.getConsentByLAR()) ? consentDto.getConsentByLAR()
+										: "No");
 						consent.setReview(reviewBean);
 					}
 					eligibilityConsentResponse.setConsent(consent);
