@@ -141,6 +141,18 @@ public class ConsentDto implements Serializable {
 	@Column(name = "consent_by_LAR")
 	private String consentByLAR;
 
+	@Column(name = "additional_signature")
+	private String additionalSignature;
+
+	@Column(name = "signature_one")
+	private String signatureOne;
+
+	@Column(name = "signature_two")
+	private String signatureTwo;
+
+	@Column(name = "signature_three")
+	private String signatureThree;
+
 	public Integer getId() {
 		return id;
 	}
@@ -363,6 +375,38 @@ public class ConsentDto implements Serializable {
 
 	public void setConsentByLAR(String consentByLAR) {
 		this.consentByLAR = consentByLAR;
+	}
+
+	public String getAdditionalSignature() {
+		return additionalSignature;
+	}
+
+	public String getSignatureOne() {
+		return signatureOne;
+	}
+
+	public String getSignatureTwo() {
+		return signatureTwo;
+	}
+
+	public String getSignatureThree() {
+		return signatureThree;
+	}
+
+	public void setAdditionalSignature(String additionalSignature) {
+		this.additionalSignature = additionalSignature;
+	}
+
+	public void setSignatureOne(String signatureOne) {
+		this.signatureOne = signatureOne;
+	}
+
+	public void setSignatureTwo(String signatureTwo) {
+		this.signatureTwo = signatureTwo;
+	}
+
+	public void setSignatureThree(String signatureThree) {
+		this.signatureThree = signatureThree;
 	}
 
 }

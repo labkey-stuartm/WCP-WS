@@ -678,6 +678,31 @@ public class StudyMetaDataDao {
 						reviewBean.setConsentByLAR(
 								StringUtils.isNotEmpty(consentDto.getConsentByLAR()) ? consentDto.getConsentByLAR()
 										: "No");
+						reviewBean.setAdditionalSignature(StringUtils.isNotBlank(consentDto.getAdditionalSignature())
+								? consentDto.getAdditionalSignature()
+								: "No");
+						if (StringUtils.isNotBlank(consentDto.getAdditionalSignature())
+								&& StringUtils.equals(consentDto.getAdditionalSignature(), "Yes")) {
+							if (StringUtils.isNotBlank(consentDto.getSignatureOne())
+									&& StringUtils.isNotBlank(consentDto.getSignatureTwo())
+									&& StringUtils.isNotBlank(consentDto.getSignatureThree())) {
+								String[] signatures = new String[3];
+								signatures[0] = consentDto.getSignatureOne();
+								signatures[1] = consentDto.getSignatureTwo();
+								signatures[2] = consentDto.getSignatureThree();
+								reviewBean.setSignatures(signatures);
+							} else if (StringUtils.isNotBlank(consentDto.getSignatureOne())
+									&& StringUtils.isNotBlank(consentDto.getSignatureTwo())) {
+								String[] signatures = new String[2];
+								signatures[0] = consentDto.getSignatureOne();
+								signatures[1] = consentDto.getSignatureTwo();
+								reviewBean.setSignatures(signatures);
+							} else if (StringUtils.isNotBlank(consentDto.getSignatureOne())) {
+								String[] signatures = new String[1];
+								signatures[0] = consentDto.getSignatureOne();
+								reviewBean.setSignatures(signatures);
+							}
+						}
 						consent.setReview(reviewBean);
 					}
 					eligibilityConsentResponse.setConsent(consent);

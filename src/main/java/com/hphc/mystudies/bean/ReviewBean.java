@@ -33,6 +33,8 @@ public class ReviewBean {
 	private String reasonForConsent = "";
 	private String reviewHTML = "";
 	private String consentByLAR = "";
+	private String additionalSignature = "";
+	private String[] signatures;
 
 	public String getReasonForConsent() {
 		return reasonForConsent;
@@ -56,6 +58,22 @@ public class ReviewBean {
 
 	public void setConsentByLAR(String consentByLAR) {
 		this.consentByLAR = consentByLAR;
+	}
+
+	public String getAdditionalSignature() {
+		return additionalSignature;
+	}
+
+	public String[] getSignatures() {
+		return signatures;
+	}
+
+	public void setAdditionalSignature(String additionalSignature) {
+		this.additionalSignature = additionalSignature;
+	}
+
+	public void setSignatures(String[] signatures) {
+		this.signatures = signatures;
 	}
 
 }
