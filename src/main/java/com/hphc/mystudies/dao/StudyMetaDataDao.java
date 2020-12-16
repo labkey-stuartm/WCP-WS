@@ -460,8 +460,8 @@ public class StudyMetaDataDao {
 									questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
 									questionStep.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
 									questionStep.setKey(eligibilityTest.getShortTitle());
-									questionStep.setTitle(eligibilityTest.getShortTitle());
-									questionStep.setText(eligibilityTest.getQuestion());
+									questionStep.setTitle(eligibilityTest.getQuestion());
+									questionStep.setText(StudyMetaDataConstants.ELIGIBILITY_TEXT);
 									questionStep.setSkippable(false);
 									questionStep.setGroupName("");
 									questionStep.setRepeatable(false);
@@ -600,8 +600,8 @@ public class StudyMetaDataDao {
 								questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
 								questionStep.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
 								questionStep.setKey(comprehensionQuestionDto.getId().toString());
-								questionStep.setTitle("");
-								questionStep.setText(comprehensionQuestionDto.getQuestionText());
+								questionStep.setTitle(comprehensionQuestionDto.getQuestionText());
+								questionStep.setText(StudyMetaDataConstants.COMPREHENSION_TEXT);
 								questionStep.setSkippable(false);
 								questionStep.setGroupName("");
 								questionStep.setRepeatable(false);
