@@ -66,6 +66,7 @@ import com.hphc.mystudies.integration.ActivityMetaDataOrchestration;
 import com.hphc.mystudies.integration.AppMetaDataOrchestration;
 import com.hphc.mystudies.integration.DashboardMetaDataOrchestration;
 import com.hphc.mystudies.integration.StudyMetaDataOrchestration;
+import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
@@ -140,7 +141,8 @@ public class StudyMetaDataService {
 	@Path("studyList")
 	public Object studyList(@HeaderParam("Authorization") String authorization,
 			@HeaderParam("applicationId") String applicationId, @HeaderParam("orgId") String orgId,
-			@Context ServletContext context, @Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context ServletContext context,
+			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
@@ -149,19 +151,22 @@ public class StudyMetaDataService {
 				studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
 				if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NOT_FOUND)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
 						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
 		return studyResponse;
@@ -180,7 +185,8 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("eligibilityConsent")
-	public Object eligibilityConsentMetadata(@QueryParam("studyId") String studyId, @Context ServletContext context,
+	public Object eligibilityConsentMetadata(@QueryParam("studyId") String studyId,
+			@HeaderParam("language") String language, @Context ServletContext context,
 			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
 		EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
@@ -190,29 +196,34 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
 				eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
 				if (!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - eligibilityConsentMetadata() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Ends");
 		return eligibilityConsentResponse;
@@ -237,8 +248,8 @@ public class StudyMetaDataService {
 	@Path("consentDocument")
 	public Object consentDocument(@QueryParam("studyId") String studyId,
 			@QueryParam("consentVersion") String consentVersion, @QueryParam("activityId") String activityId,
-			@QueryParam("activityVersion") String activityVersion, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+			@QueryParam("activityVersion") String activityVersion, @HeaderParam("language") String language,
+			@Context ServletContext context, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
 		Boolean isValidFlag = false;
@@ -247,8 +258,10 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
@@ -256,21 +269,24 @@ public class StudyMetaDataService {
 						activityId, activityVersion);
 				if (!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
 		return consentDocumentResponse;
@@ -289,8 +305,8 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("resources")
-	public Object resourcesForStudy(@QueryParam("studyId") String studyId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+	public Object resourcesForStudy(@QueryParam("studyId") String studyId, @HeaderParam("language") String language,
+			@Context ServletContext context, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
 		ResourcesResponse resourcesResponse = new ResourcesResponse();
 		Boolean isValidFlag = false;
@@ -299,29 +315,33 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
-
 				resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
 				if (!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - resourcesForStudy() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
 		return resourcesResponse;
@@ -341,7 +361,7 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyInfo")
 	public Object studyInfo(@QueryParam("studyId") String studyId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
 		StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
 		Boolean isValidFlag = false;
@@ -350,29 +370,35 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
 				studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
 				if (!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Ends");
 		return studyInfoResponse;
@@ -393,8 +419,8 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("activityList")
 	public Object studyActivityList(@HeaderParam("Authorization") String authorization,
-			@QueryParam("studyId") String studyId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+			@QueryParam("studyId") String studyId, @HeaderParam("language") String language,
+			@Context ServletContext context, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
 		ActivityResponse activityResponse = new ActivityResponse();
 		Boolean isValidFlag = false;
@@ -403,29 +429,34 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
 				activityResponse = activityMetaDataOrchestration.studyActivityList(studyId, authorization);
 				if (!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyActivityList() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Ends");
 		return activityResponse;
@@ -449,7 +480,8 @@ public class StudyMetaDataService {
 	@Path("activity")
 	public Object studyActivityMetadata(@QueryParam("studyId") String studyId,
 			@QueryParam("activityId") String activityId, @QueryParam("activityVersion") String activityVersion,
-			@Context ServletContext context, @Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context ServletContext context,
+			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
 		QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse = new QuestionnaireActivityMetaDataResponse();
 		ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse = new ActiveTaskActivityMetaDataResponse();
@@ -461,16 +493,20 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
 				isValidFlag = studyMetaDataOrchestration.isValidActivity(activityId, studyId, activityVersion);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_ACTIVITY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_ACTIVITY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_ACTIVITY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_ACTIVITY_ID))
 							.build();
 				}
 
@@ -481,8 +517,10 @@ public class StudyMetaDataService {
 							.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
 					if (!activeTaskActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-								StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD)
+								StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE),
+								response);
+						return Response.status(Response.Status.NO_CONTENT)
+								.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
 								.build();
 					}
 					return activeTaskActivityMetaDataResponse;
@@ -491,25 +529,28 @@ public class StudyMetaDataService {
 							.studyQuestionnaireActivityMetadata(studyId, activityId, activityVersion);
 					if (!questionnaireActivityMetaDataResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 						StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-								StudyMetaDataConstants.FAILURE, response);
-						return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD)
+								StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE),
+								response);
+						return Response.status(Response.Status.NO_CONTENT)
+								.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
 								.build();
 					}
 					return questionnaireActivityMetaDataResponse;
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyActivityMetadata() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 	}
 
@@ -527,7 +568,7 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("studyDashboard")
 	public Object studyDashboardInfo(@QueryParam("studyId") String studyId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
 		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
 		Boolean isValidFlag = false;
@@ -536,29 +577,34 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
 
 				studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId);
 				if (!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyDashboardInfo() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Ends");
 		return studyDashboardResponse;
@@ -612,8 +658,8 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("notifications")
 	public Object notifications(@QueryParam("skip") String skip, @HeaderParam("Authorization") String authorization,
-			@HeaderParam("applicationId") String appId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+			@HeaderParam("applicationId") String appId, @HeaderParam("language") String language,
+			@Context ServletContext context, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
 		NotificationsResponse notificationsResponse = new NotificationsResponse();
 		try {
@@ -621,21 +667,24 @@ public class StudyMetaDataService {
 				notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization, appId);
 				if (!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG).build();
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - notifications() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - notifications() :: Ends");
 		return notificationsResponse;
@@ -779,7 +828,8 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("studyUpdates")
 	public Object studyUpdates(@QueryParam("studyId") String studyId, @QueryParam("studyVersion") String studyVersion,
-			@Context ServletContext context, @Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context ServletContext context,
+			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
 		Boolean isValidFlag = false;
@@ -788,29 +838,33 @@ public class StudyMetaDataService {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
 				if (!isValidFlag) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.INVALID_INPUT,
-							StudyMetaDataConstants.INVALID_STUDY_ID, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_STUDY_ID)
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID),
+							response);
+					return Response.status(Response.Status.NOT_FOUND).entity(
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_STUDY_ID))
 							.build();
 				}
-
 				studyUpdatesResponse = appMetaDataOrchestration.studyUpdates(studyId, studyVersion);
 				if (!studyUpdatesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NO_CONTENT).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NO_CONTENT)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.BAD_REQUEST).entity(StudyMetaDataConstants.INVALID_INPUT)
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
 						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - appUpdates() :: ERROR", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
 		return studyUpdatesResponse;
@@ -961,23 +1015,25 @@ public class StudyMetaDataService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("study")
-	public Object study(@QueryParam("studyId") String studyId, @Context ServletContext context,
-			@Context HttpServletResponse response) {
+	public Object study(@QueryParam("studyId") String studyId, @HeaderParam("language") String language,
+			@Context ServletContext context, @Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
 		StudyResponse studyResponse = new StudyResponse();
 		try {
 			studyResponse = studyMetaDataOrchestration.study(studyId);
 			if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-						StudyMetaDataConstants.FAILURE, response);
-				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+						.build();
 			}
 		} catch (Exception e) {
 			LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
 			StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN,
-					StudyMetaDataConstants.FAILURE, response);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+					StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
 		return studyResponse;
@@ -988,7 +1044,7 @@ public class StudyMetaDataService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("versionInfo")
 	public Object getAppVersionInfo(@HeaderParam("applicationId") String appId, @HeaderParam("orgId") String orgId,
-			@Context HttpServletResponse response) {
+			@HeaderParam("language") String language, @Context HttpServletResponse response) {
 		AppVersionInfoBean appVersionInfoBean = null;
 		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
 		try {
@@ -996,19 +1052,23 @@ public class StudyMetaDataService {
 				appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo(appId, orgId);
 				if (appVersionInfoBean == null) {
 					StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_103, ErrorCodes.NO_DATA,
-							StudyMetaDataConstants.FAILURE, response);
-					return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.NO_RECORD).build();
+							StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE), response);
+					return Response.status(Response.Status.NOT_FOUND)
+							.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.NO_RECORD))
+							.build();
 				}
 			} else {
 				StudyMetaDataUtil.getFailureResponse(ErrorCodes.STATUS_102, ErrorCodes.UNKNOWN,
-						StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG, response);
-				return Response.status(Response.Status.NOT_FOUND).entity(StudyMetaDataConstants.INVALID_INPUT).build();
+						StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT), response);
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.INVALID_INPUT))
+						.build();
 			}
 
 		} catch (Exception e) {
 			LOGGER.error("ERROR: StudyMetaDataService - getAppVersionInfo()", e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(StudyMetaDataConstants.FAILURE)
-					.build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(StudyMetaDataUtil.getTranslatedText(language, MultiLanguageConstants.FAILURE)).build();
 		}
 		LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: ends");
 		return appVersionInfoBean;

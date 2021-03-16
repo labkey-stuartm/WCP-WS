@@ -26,6 +26,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1025,6 +1027,49 @@ public class StudyMetaDataUtil {
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getStandardFileNameForResponses() :: ends");
 		return fileName;
+	}
+	
+	public static String getTranslatedText(String language, String errorText) {
+		LOGGER.info("INFO: StudyMetaDataUtil - getTranslatedText() :: starts");
+		Object rawErrorText="";
+		String translatedErrorText="";
+		if(language==null) {
+			language="";
+		}
+		switch (language) {
+		case MultiLanguageConstants.SPANISH:
+			try {
+				Field idField = StudyMetaDataConstantsSpanish.class.getField(errorText);
+				try {
+					rawErrorText = idField.get(null);
+					translatedErrorText=getBase64String((String)rawErrorText);
+				} catch (IllegalAccessException e) {
+					LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Spanish Inner try block", e);
+				}
+			} catch (NoSuchFieldException e) {
+				LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Spanish Outer try block", e);
+			}
+			break;
+		default:
+			try {
+				Field idField = StudyMetaDataConstants.class.getField(errorText);
+				try {
+					rawErrorText = idField.get(null);
+					translatedErrorText=getBase64String((String)rawErrorText);
+				} catch (IllegalAccessException e) {
+					LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Inner try block", e);
+				}
+			} catch (NoSuchFieldException e) {
+				LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Outer try block", e);
+			}
+		}
+		LOGGER.info("INFO: StudyMetaDataUtil - getTranslatedText() :: ends");
+		return translatedErrorText;
+	}
+	
+	private static String getBase64String(String inputString) {
+		byte[] data = inputString.getBytes(StandardCharsets.UTF_8);
+		return java.util.Base64.getEncoder().encodeToString(data);
 	}
 
 }

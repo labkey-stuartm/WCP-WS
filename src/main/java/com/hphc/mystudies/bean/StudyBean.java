@@ -33,6 +33,7 @@ public class StudyBean {
 
 	private String studyId = "";
 	private String studyVersion = "";
+	private String studyLanguage = "";
 	private String title = "";
 	private String category = "";
 	private String sponsorName = "";
@@ -111,6 +112,14 @@ public class StudyBean {
 
 	public void setSettings(SettingsBean settings) {
 		this.settings = settings;
+	}
+
+	public String getStudyLanguage() {
+		return studyLanguage;
+	}
+
+	public void setStudyLanguage(String studyLanguage) {
+		this.studyLanguage = studyLanguage;
 	}
 
 }
