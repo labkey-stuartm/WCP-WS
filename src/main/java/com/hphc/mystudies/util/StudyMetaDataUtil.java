@@ -1031,7 +1031,6 @@ public class StudyMetaDataUtil {
 	
 	public static String getTranslatedText(String language, String errorText) {
 		LOGGER.info("INFO: StudyMetaDataUtil - getTranslatedText() :: starts");
-		Object rawErrorText="";
 		String translatedErrorText="";
 		if(language==null) {
 			language="";
@@ -1041,7 +1040,7 @@ public class StudyMetaDataUtil {
 			try {
 				Field idField = StudyMetaDataConstantsSpanish.class.getField(errorText);
 				try {
-					rawErrorText = idField.get(null);
+					Object rawErrorText = idField.get(null);
 					translatedErrorText=getBase64String((String)rawErrorText);
 				} catch (IllegalAccessException e) {
 					LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Spanish Inner try block", e);
@@ -1054,8 +1053,7 @@ public class StudyMetaDataUtil {
 			try {
 				Field idField = StudyMetaDataConstants.class.getField(errorText);
 				try {
-					rawErrorText = idField.get(null);
-					translatedErrorText=getBase64String((String)rawErrorText);
+					translatedErrorText=(String) idField.get(null);
 				} catch (IllegalAccessException e) {
 					LOGGER.error("ERROR: StudyMetaDataUtil - getTranslatedText() - Inner try block", e);
 				}
@@ -1071,5 +1069,4 @@ public class StudyMetaDataUtil {
 		byte[] data = inputString.getBytes(StandardCharsets.UTF_8);
 		return java.util.Base64.getEncoder().encodeToString(data);
 	}
-
 }
