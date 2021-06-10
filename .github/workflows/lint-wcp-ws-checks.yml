@@ -3,7 +3,7 @@ name: lint-WCP-WS
 on:
   pull_request:
     branches:
-      - develop
+      - $default-branch
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
