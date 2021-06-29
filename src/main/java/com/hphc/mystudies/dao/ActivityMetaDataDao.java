@@ -461,7 +461,8 @@ public class ActivityMetaDataDao {
 
 					if (!taskMasterAttrIdList.isEmpty()) {
 						activeTaskMaterList = session.createQuery(" from ActiveTaskMasterAttributeDto ATMADTO"
-								+ " where ATMADTO.masterId in (" + StringUtils.join(taskMasterAttrIdList, ",") + ")")
+								+ " where ATMADTO.masterId in (:idList)")
+								.setParameterList("idList", taskMasterAttrIdList)
 								.list();
 
 						if (activeTaskMaterList != null && !activeTaskMaterList.isEmpty()) {
@@ -671,8 +672,8 @@ public class ActivityMetaDataDao {
 
 					if (!instructionIdList.isEmpty()) {
 						List<InstructionsDto> instructionsDtoList = session
-								.createQuery("from InstructionsDto IDTO where IDTO.id in ("
-										+ StringUtils.join(instructionIdList, ",") + ") and IDTO.status=true")
+								.createQuery("from InstructionsDto IDTO where IDTO.id in (:idList) and IDTO.status=true")
+								.setParameterList("idList", instructionIdList)
 								.list();
 						if (instructionsDtoList != null && !instructionsDtoList.isEmpty()) {
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) this
@@ -686,8 +687,8 @@ public class ActivityMetaDataDao {
 
 					if (!questionIdList.isEmpty()) {
 						List<QuestionsDto> questionsList = session
-								.createQuery(" from QuestionsDto QDTO" + " where QDTO.id in ("
-										+ StringUtils.join(questionIdList, ",") + ") and QDTO.status=true")
+								.createQuery(" from QuestionsDto QDTO where QDTO.id in (:idList) and QDTO.status=true")
+								.setParameterList("idList", questionIdList)
 								.list();
 						if (questionsList != null && !questionsList.isEmpty()) {
 							stepsSequenceTreeMap = (TreeMap<Integer, QuestionnaireActivityStepsBean>) this
@@ -1812,8 +1813,9 @@ public class ActivityMetaDataDao {
 					formBean.setDestinations(destinations);
 
 					List<QuestionsDto> formQuestionsList;
-					formQuestionsList = session.createQuery("from QuestionsDto QDTO" + " where QDTO.id in ("
-							+ StringUtils.join(formQuestionIdsList, ',') + ")").list();
+					formQuestionsList = session.createQuery("from QuestionsDto QDTO where QDTO.id in (:idList)")
+							.setParameterList("idList", formQuestionIdsList)
+							.list();
 					if (formQuestionsList != null && !formQuestionsList.isEmpty()) {
 						for (QuestionsDto formQuestionDto : formQuestionsList) {
 							QuestionnaireActivityStepsBean formQuestionBean = new QuestionnaireActivityStepsBean();

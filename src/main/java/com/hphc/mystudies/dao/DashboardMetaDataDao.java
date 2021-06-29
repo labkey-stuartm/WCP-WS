@@ -22,11 +22,7 @@
  */
 package com.hphc.mystudies.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -190,11 +186,11 @@ public class DashboardMetaDataDao {
 					if (questionnaireIdsList != null && !questionnaireIdsList.isEmpty()) {
 
 						questionnaireStepsList = session.createQuery("from QuestionnairesStepsDto QSDTO"
-								+ " where QSDTO.questionnairesId in (" + StringUtils.join(questionnaireIdsList, ',')
-								+ ")" + " and QSDTO.stepType in ('"
-								+ StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION + "','"
-								+ StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM + "')" + " and QSDTO.status=true"
-								+ " ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo").list();
+								+ " where QSDTO.questionnairesId in (:questionnaireIdsList) and QSDTO.stepType "
+								+ "in (:stepTypeList) and QSDTO.status=true ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo")
+								.setParameterList("questionnaireIdsList", questionnaireIdsList)
+								.setParameterList("stepTypeList", Arrays.asList(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION, StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM))
+								.list();
 						if (questionnaireStepsList != null && !questionnaireStepsList.isEmpty()) {
 							for (QuestionnairesStepsDto questionnaireSteps : questionnaireStepsList) {
 
@@ -223,7 +219,8 @@ public class DashboardMetaDataDao {
 					activeTaskValuesList = session
 							.createQuery("from ActiveTaskAttrtibutesValuesDto ATAVDTO"
 									+ " where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true"
-									+ " and ATAVDTO.activeTaskId in (" + StringUtils.join(activeTaskIdsList, ',') + ")")
+									+ " and ATAVDTO.activeTaskId in (:idList)")
+							.setParameterList("idList", activeTaskIdsList)
 							.list();
 					if (activeTaskValuesList != null && !activeTaskValuesList.isEmpty()) {
 						int taskTypeId = 0;
@@ -290,10 +287,11 @@ public class DashboardMetaDataDao {
 
 				if (questionIdsList != null && !questionIdsList.isEmpty()) {
 					List<QuestionsDto> questionsList;
-					questionsList = session.createQuery(" from QuestionsDto QDTO where QDTO.id in (" + StringUtils.join(questionIdsList, ",")
-									+ ") and QDTO.status=true and QDTO.addLineChart=:addLineChart or QDTO.useStasticData=:useStasticData")
+					questionsList = session.createQuery(" from QuestionsDto QDTO where QDTO.id in (:idList) " +
+							"and QDTO.status=true and QDTO.addLineChart=:addLineChart or QDTO.useStasticData=:useStasticData")
 							.setString("addLineChart", StudyMetaDataConstants.YES)
 							.setString("useStasticData", StudyMetaDataConstants.YES)
+							.setParameterList("idList", questionIdsList)
 							.list();
 					for (QuestionsDto questionDto : questionsList) {
 						QuestionnairesStepsDto questionnaireSteps = (QuestionnairesStepsDto) activityMap
@@ -330,8 +328,8 @@ public class DashboardMetaDataDao {
 
 				if (formIdsList != null && !formIdsList.isEmpty()) {
 					List<FormDto> formDtoList = null;
-					formDtoList = session.createQuery(
-							"from FormDto FDTO where FDTO.formId in (" + StringUtils.join(formIdsList, ',') + ")")
+					formDtoList = session.createQuery("from FormDto FDTO where FDTO.formId in (:idList)")
+							.setParameterList("idList", formIdsList)
 							.list();
 					if (formDtoList != null && !formDtoList.isEmpty()) {
 						for (FormDto form : formDtoList) {
@@ -350,11 +348,11 @@ public class DashboardMetaDataDao {
 							if (!formQuestionIdsList.isEmpty()) {
 								List<QuestionsDto> formQuestionDtoList = null;
 								formQuestionDtoList = session
-										.createQuery("from QuestionsDto FQDTO where FQDTO.id in ("
-												+ StringUtils.join(formQuestionIdsList, ',') + ") and FQDTO.status=true"
+										.createQuery("from QuestionsDto FQDTO where FQDTO.id in (:idList) and FQDTO.status=true"
 												+ " and FQDTO.addLineChart=:addLineChart or FQDTO.useStasticData=:useStaticData")
 										.setString("addLineChart", StudyMetaDataConstants.YES)
 										.setString("useStaticData", StudyMetaDataConstants.YES)
+										.setParameterList("idList", formQuestionIdsList)
 										.list();
 								if (formQuestionDtoList != null && !formQuestionDtoList.isEmpty()) {
 									for (QuestionsDto questionDto : formQuestionDtoList) {

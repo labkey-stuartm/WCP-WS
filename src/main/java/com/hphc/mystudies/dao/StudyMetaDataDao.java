@@ -23,14 +23,7 @@
 package com.hphc.mystudies.dao;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1171,11 +1164,11 @@ public class StudyMetaDataDao {
 							List<QuestionnairesStepsDto> questionnairesStepsList = session
 									.createQuery("from QuestionnairesStepsDto QSDTO"
 											+ " where QSDTO.active=true and QSDTO.status=true"
-											+ " and QSDTO.questionnairesId in ("
-											+ StringUtils.join(questionnaireIdsList, ',') + ")"
-											+ " and QSDTO.stepType in ('"
-											+ StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION + "','"
-											+ StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM + "')")
+											+ " and QSDTO.questionnairesId in (:idList)"
+											+ " and QSDTO.stepType in (:stepTypeList)")
+									.setParameterList("idList", questionnaireIdsList)
+									.setParameterList("stepTypeList", Arrays.asList(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION,
+											StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM))
 									.list();
 							if (questionnairesStepsList != null && !questionnairesStepsList.isEmpty()) {
 
@@ -1198,8 +1191,9 @@ public class StudyMetaDataDao {
 									List<QuestionsDto> questionnsList = session
 											.createQuery("from QuestionsDto QDTO"
 													+ " where QDTO.active=true and QDTO.status=true"
-													+ " and QDTO.id in (" + StringUtils.join(questionIdsList, ',') + ")"
+													+ " and QDTO.id in (:idList)"
 													+ " and QDTO.responseType=10 and QDTO.useAnchorDate=true")
+											.setParameterList("idList", questionIdsList)
 											.setMaxResults(1).list();
 									if (questionnsList != null && !questionnsList.isEmpty()) {
 
@@ -1214,11 +1208,11 @@ public class StudyMetaDataDao {
 
 									List<Integer> formQuestionsList = new ArrayList<>();
 									List<FormMappingDto> formMappingList = session.createQuery(
-											"from FormMappingDto FMDTO" + " where FMDTO.formId in (select FDTO.formId"
-													+ " from FormDto FDTO" + " where FDTO.formId in ("
-													+ StringUtils.join(formIdsList, ',') + ")"
+											"from FormMappingDto FMDTO where FMDTO.formId in (select FDTO.formId"
+													+ " from FormDto FDTO where FDTO.formId in (:idList)"
 													+ " and FDTO.active=true) and FMDTO.active=true"
 													+ " ORDER BY FMDTO.formId, FMDTO.sequenceNo")
+											.setParameterList("idList", formIdsList)
 											.list();
 									if (formMappingList != null && !formMappingList.isEmpty()) {
 
@@ -1231,9 +1225,9 @@ public class StudyMetaDataDao {
 											List<QuestionsDto> questionnsList = session
 													.createQuery("from QuestionsDto QDTO"
 															+ " where QDTO.active=true and QDTO.status=true"
-															+ " and QDTO.id in ("
-															+ StringUtils.join(formQuestionsList, ',') + ")"
+															+ " and QDTO.id in (:formQuestionsList)"
 															+ " and QDTO.responseType=10 and QDTO.useAnchorDate=true")
+													.setParameterList("formQuestionsList", formQuestionsList)
 													.setMaxResults(1).list();
 											if (questionnsList != null && !questionnsList.isEmpty()) {
 
