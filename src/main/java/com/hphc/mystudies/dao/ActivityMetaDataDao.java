@@ -449,7 +449,7 @@ public class ActivityMetaDataDao {
 						+ " where ATAVDTO.activeTaskId= :id"
 						+ " and ATAVDTO.activeTaskMasterAttrId in (select ATMADTO.masterId"
 						+ " from ActiveTaskMasterAttributeDto ATMADTO"
-						+ " where ATMADTO.attributeType= :attributeType ORDER BY ATAVDTO.activeTaskMasterAttrId");
+						+ " where ATMADTO.attributeType= :attributeType) ORDER BY ATAVDTO.activeTaskMasterAttrId");
 				query.setInteger("id", activeTaskDto.getId());
 				query.setString("attributeType", StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE);
 				activeTaskAttrtibuteValuesList = query.list();
@@ -821,7 +821,7 @@ public class ActivityMetaDataDao {
 			if (activeTask.getScheduleType() != null && !activeTask.getScheduleType().isEmpty()
 					&& activeTask.getScheduleType().equals(StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE)) {
 				List<ActiveTaskFrequencyDto> activeTaskDailyFrequencyList = session
-						.createQuery("from ActiveTaskFrequencyDto ATFDTO" + " where ATFDTO.activeTaskId= :activeTaskId"
+						.createQuery("from ActiveTaskFrequencyDto ATFDTO where ATFDTO.activeTaskId= :activeTaskId"
 								+ " ORDER BY ATFDTO.frequencyTime ")
 						.setInteger(StudyMetaDataEnum.QF_ACTIVE_TASK_ID.value(), activeTask.getId()).list();
 				if (activeTaskDailyFrequencyList != null && !activeTaskDailyFrequencyList.isEmpty()) {

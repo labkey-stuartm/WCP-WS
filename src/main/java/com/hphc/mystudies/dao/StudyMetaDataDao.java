@@ -190,10 +190,11 @@ public class StudyMetaDataDao {
 					StudyMetaDataConstants.STUDY_AUTH_TYPE_PLATFORM);
 			if (StringUtils.isNotEmpty(platformType)) {
 				resourcesList = session
-						.createQuery("from ResourcesDto RDTO" + " where RDTO.studyId in ( select SDTO.id"
-								+ " from StudyDto SDTO" + " where SDTO.platform like '%" + platformType
-								+ "%' and SDTO.type= :type and SDTO.live=1)" + " ORDER BY RDTO.sequenceNo")
-						.setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT).list();
+						.createQuery("from ResourcesDto RDTO where RDTO.studyId in ( select SDTO.id"
+								+ " from StudyDto SDTO where SDTO.platform like :platformType and SDTO.type= :type and SDTO.live=1) ORDER BY RDTO.sequenceNo")
+						.setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT)
+						.setString("platformType", "%"+platformType+"%")
+						.list();
 				if (null != resourcesList && !resourcesList.isEmpty()) {
 					List<GatewayInfoResourceBean> resourceBeanList = new ArrayList<>();
 					for (ResourcesDto resource : resourcesList) {
@@ -253,9 +254,12 @@ public class StudyMetaDataDao {
 
 				// Get all configured studies from the WCP by platform supported
 				studiesList = session
-						.createQuery("from StudyDto SDTO" + " where SDTO.platform like '%" + platformType + "%'"
-								+ " and SDTO.appId='" + applicationId + "'" + " and SDTO.orgId='" + orgId + "' "
+						.createQuery("from StudyDto SDTO where SDTO.platform like :platformType"
+								+ " and SDTO.appId=:applicationId and SDTO.orgId=:orgId"
 								+ " and (SDTO.status= :status OR SDTO.live=1)")
+						.setString("platformType", "%"+platformType+"%")
+						.setString("applicationId", applicationId)
+						.setString("orgId", orgId)
 						.setString(StudyMetaDataEnum.QF_STATUS.value(), StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
 						.list();
 				/*
