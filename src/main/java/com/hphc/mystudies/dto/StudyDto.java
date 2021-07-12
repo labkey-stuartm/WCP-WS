@@ -186,6 +186,9 @@ public class StudyDto implements Serializable {
 	
 	@Column(name = "org_id")
 	private String orgId;
+	
+	@Column(name = "study_language")
+	private String studyLanguage;
 
 	public Integer getId() {
 		return id;
@@ -497,5 +500,13 @@ public class StudyDto implements Serializable {
 
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getStudyLanguage() {
+		return studyLanguage;
+	}
+
+	public void setStudyLanguage(String studyLanguage) {
+		this.studyLanguage = studyLanguage;
 	}
 }

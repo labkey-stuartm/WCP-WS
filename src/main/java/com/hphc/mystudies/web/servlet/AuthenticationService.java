@@ -28,6 +28,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 
@@ -40,19 +41,16 @@ import com.sun.jersey.core.util.Base64;
  */
 public class AuthenticationService {
 
-	public static final Logger LOGGER = Logger
-			.getLogger(AuthenticationService.class);
+	public static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil
-			.getAuthorizationProperties();
+	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
 	/**
 	 * Authenticate the provided authorization credentials
 	 * 
 	 * @author BTC
-	 * @param authCredentials
-	 *            the Basic Authorization
+	 * @param authCredentials the Basic Authorization
 	 * @return {@link Boolean}
 	 */
 	public boolean authenticate(String authCredentials) {
@@ -60,20 +58,28 @@ public class AuthenticationService {
 		boolean authenticationStatus = false;
 		String bundleIdAndAppToken = null;
 		try {
-			if (StringUtils.isNotEmpty(authCredentials)
-					&& authCredentials.contains("Basic")) {
-				final String encodedUserPassword = authCredentials
-						.replaceFirst("Basic" + " ", "");
+			if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
+				final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
 				byte[] decodedBytes = Base64.decode(encodedUserPassword);
 				bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
 				if (bundleIdAndAppToken.contains(":")) {
-					final StringTokenizer tokenizer = new StringTokenizer(
-							bundleIdAndAppToken, ":");
+					final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
 					final String bundleId = tokenizer.nextToken();
 					final String appToken = tokenizer.nextToken();
-					if (authPropMap.containsKey(bundleId)
-							&& authPropMap.containsKey(appToken)) {
-						authenticationStatus = true;
+					final String platformBundleId = authPropMap.get(bundleId);
+					final String platformAppToken = authPropMap.get(appToken);
+					if (authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)) {
+						if (StringUtils.isNotEmpty(platformBundleId) && StringUtils.isNotEmpty(platformAppToken)) {
+							final StringTokenizer appTokenTokenizer = new StringTokenizer(platformAppToken, ".");
+							final String platformTypeFromAppToken = appTokenTokenizer.nextToken();
+
+							final StringTokenizer bundleIdTokenizer = new StringTokenizer(platformBundleId, ".");
+							final String platformTypeFromBundleId = bundleIdTokenizer.nextToken();
+
+							if (StringUtils.equalsIgnoreCase(platformTypeFromAppToken, platformTypeFromBundleId)) {
+								authenticationStatus = true;
+							}
+						}
 					}
 				}
 			}
