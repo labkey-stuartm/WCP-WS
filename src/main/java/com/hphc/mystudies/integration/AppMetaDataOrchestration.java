@@ -113,7 +113,7 @@ public class AppMetaDataOrchestration {
 	public AppResponse feedback(String subject, String body) throws OrchestrationException {
 		LOGGER.info("INFO: AppMetaDataOrchestration - feedback() :: Starts");
 		AppResponse response = new AppResponse();
-		Boolean flag = false;
+		boolean flag = false;
 		try {
 			String feedbackSubject = "My Studies App Feedback: " + subject;
 			String feedbackBody = "<div>" + "<div><span>Hi</span></div><br>"
@@ -149,7 +149,7 @@ public class AppMetaDataOrchestration {
 			throws OrchestrationException {
 		LOGGER.info("INFO: AppMetaDataOrchestration - contactUsDetails() :: Starts");
 		AppResponse response = new AppResponse();
-		Boolean flag = false;
+		boolean flag = false;
 		try {
 			String contactUsSubject = "My Studies App HelpDesk: '" + subject + "'";
 			String contactUsContent = "<div>" + "<div><span>Hi</span></div><br>"

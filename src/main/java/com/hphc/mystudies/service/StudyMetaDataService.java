@@ -832,7 +832,7 @@ public class StudyMetaDataService {
 			@Context HttpServletResponse response) {
 		LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
 		StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
-		Boolean isValidFlag = false;
+		boolean isValidFlag = false;
 		try {
 			if (StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(studyVersion)) {
 				isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);

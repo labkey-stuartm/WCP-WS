@@ -177,11 +177,12 @@ public class AppMetaDataDao {
 				 */
 
 				notificationStudyTypeQuery = "from NotificationDto NDTO"
-						+ " where NDTO.notificationSubType in (:notificationTypeList) " + " and (NDTO.appId='" + appId
-						+ "' or NDTO.appId is null) and NDTO.notificationSent=true and NDTO.isActive=1"
+						+ " where NDTO.notificationSubType in (:notificationTypeList) and (NDTO.appId=:appId or NDTO.appId is null) "
+						+ " and NDTO.notificationSent=true and NDTO.isActive=1"
 						+ " ORDER BY NDTO.scheduleDate DESC";
 
 				notificationList = session.createQuery(notificationStudyTypeQuery)
+						.setString("appId", appId)
 						.setParameterList("notificationTypeList", notificationTypeList)
 						.setFirstResult(Integer.parseInt(skip)).setMaxResults(20).list();
 				if (notificationList != null && !notificationList.isEmpty()) {
@@ -334,7 +335,8 @@ public class AppMetaDataDao {
 			bundleId = StudyMetaDataUtil.getBundleIdFromAuthorization(authCredentials);
 			if (StringUtils.isNotEmpty(os)) {
 				session = sessionFactory.openSession();
-				appVersionDto = (AppVersionDto) session.getNamedQuery("AppVersionDto.findByBundleIdOsTypeAppVersion")
+				appVersionDto = (AppVersionDto) session.createQuery("FROM AppVersionDto AVDTO"
+						+ " WHERE AVDTO.bundleId= :bundleId AND AVDTO.osType= :osType ORDER BY AVDTO.appVersion DESC")
 						.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(), bundleId)
 						.setString(StudyMetaDataEnum.QF_OS_TYPE.value(), os).setMaxResults(1).uniqueResult();
 				if (appVersionDto != null) {
@@ -391,7 +393,8 @@ public class AppMetaDataDao {
 		StudyDto studyActivityStatus = null;
 		try {
 			session = sessionFactory.openSession();
-			studyVersionList = session.getNamedQuery("getStudyUpdatesDetailsByCurrentVersion")
+			studyVersionList = session.createQuery("from StudyVersionDto SVDTO"
+					+ " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)>=:studyVersion")
 					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
 					.setFloat(StudyMetaDataEnum.QF_STUDY_VERSION.value(), Float.valueOf(studyVersion)).list();
 			if (studyVersionList != null && !studyVersionList.isEmpty()) {
@@ -403,7 +406,8 @@ public class AppMetaDataDao {
 								: false);
 
 				// check whether activityUpdated or not
-				studyActivityStatus = (StudyDto) session.getNamedQuery("getActivityUpdatedOrNotByStudyIdAndVersion")
+				studyActivityStatus = (StudyDto) session.createQuery("from StudyDto SDTO"
+						+ " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version")
 						.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
 						.setFloat(StudyMetaDataEnum.QF_VERSION.value(), latestVersion.getStudyVersion()).uniqueResult();
 				if (studyActivityStatus != null && studyActivityStatus.getHasActivetaskDraft() != null
@@ -441,7 +445,7 @@ public class AppMetaDataDao {
 
 			// get the status of the latest study
 			studyDto = (StudyDto) session
-					.createQuery("from StudyDto SDTO" + " where SDTO.customStudyId= :customStudyId"
+					.createQuery("from StudyDto SDTO where SDTO.customStudyId= :customStudyId"
 							+ " ORDER BY SDTO.id DESC")
 					.setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId).setMaxResults(1).uniqueResult();
 			if (studyDto != null) {
@@ -502,11 +506,13 @@ public class AppMetaDataDao {
 		Transaction transaction = null;
 		String updateAppVersionResponse = "OOPS! Something went wrong.";
 		List<AppVersionDto> appVersionDtoList = null;
-		Boolean updateFlag = false;
+		boolean updateFlag = false;
 		AppVersionDto appVersionDto = new AppVersionDto();
 		try {
 			session = sessionFactory.openSession();
-			appVersionDtoList = session.getNamedQuery("AppVersionDto.findByBundleIdOsTypeAppVersion")
+			appVersionDtoList = session.createQuery("FROM AppVersionDto AVDTO"
+					+ " WHERE AVDTO.bundleId= :bundleId AND AVDTO.osType= :osType"
+					+ " ORDER BY AVDTO.appVersion DESC")
 					.setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(), bundleId)
 					.setString(StudyMetaDataEnum.QF_OS_TYPE.value(), osType).list();
 			if (appVersionDtoList != null && !appVersionDtoList.isEmpty()) {
@@ -604,8 +610,10 @@ public class AppMetaDataDao {
 		AppVersionInfo appVersionInfo = null;
 		try {
 			session = sessionFactory.openSession();
-			appVersionInfo = (AppVersionInfo) session.getNamedQuery("AppVersionInfo.findAll")
-					.setParameter("appId", appId).setParameter("orgId", orgId).uniqueResult();
+			appVersionInfo = (AppVersionInfo) session.createQuery("FROM AppVersionInfo where appId=:appId AND orgId=:orgId")
+					.setString("appId", appId)
+					.setString("orgId", orgId)
+					.uniqueResult();
 		} catch (Exception e) {
 			LOGGER.error("ERROR: AppMetaDataDao - getAppVersionInfo()", e);
 		}
