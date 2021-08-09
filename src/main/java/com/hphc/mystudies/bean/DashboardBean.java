@@ -26,30 +26,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides activity charts {@link ChartsBean} and statistics
- * {@link StatisticsBean} information.
- * 
- * @author BTC
+ * Provides activity charts {@link ChartsBean} and statistics {@link StatisticsBean} information.
  *
+ * @author BTC
  */
 public class DashboardBean {
 
-	private List<StatisticsBean> statistics = new ArrayList<>();
-	private List<ChartsBean> charts = new ArrayList<>();
+  private List<StatisticsBean> statistics = new ArrayList<>();
+  private List<ChartsBean> charts = new ArrayList<>();
 
-	public List<StatisticsBean> getStatistics() {
-		return statistics;
-	}
+  public List<StatisticsBean> getStatistics() {
+    return statistics;
+  }
 
-	public void setStatistics(List<StatisticsBean> statistics) {
-		this.statistics = statistics;
-	}
+  public void setStatistics(List<StatisticsBean> statistics) {
+    this.statistics = statistics;
+  }
 
-	public List<ChartsBean> getCharts() {
-		return charts;
-	}
+  public List<ChartsBean> getCharts() {
+    return charts;
+  }
 
-	public void setCharts(List<ChartsBean> charts) {
-		this.charts = charts;
-	}
+  public void setCharts(List<ChartsBean> charts) {
+    this.charts = charts;
+  }
 }

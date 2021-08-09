@@ -22,72 +22,69 @@
  */
 package com.hphc.mystudies.web.servlet;
 
+import com.hphc.mystudies.util.StudyMetaDataUtil;
+import com.sun.jersey.core.util.Base64;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hphc.mystudies.util.StudyMetaDataConstants;
-import com.hphc.mystudies.util.StudyMetaDataUtil;
-import com.sun.jersey.core.util.Base64;
-
 /**
- * Provides authentication to check requesting user is authorized to access
- * data.
- * 
- * @author BTC
+ * Provides authentication to check requesting user is authorized to access data.
  *
+ * @author BTC
  */
 public class AuthenticationService {
 
-	public static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
+  public static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
 
-	@SuppressWarnings("unchecked")
-	HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
+  @SuppressWarnings("unchecked")
+  HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
-	/**
-	 * Authenticate the provided authorization credentials
-	 * 
-	 * @author BTC
-	 * @param authCredentials the Basic Authorization
-	 * @return {@link Boolean}
-	 */
-	public boolean authenticate(String authCredentials) {
-		LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
-		boolean authenticationStatus = false;
-		String bundleIdAndAppToken = null;
-		try {
-			if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-				final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
-				byte[] decodedBytes = Base64.decode(encodedUserPassword);
-				bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
-				if (bundleIdAndAppToken.contains(":")) {
-					final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
-					final String bundleId = tokenizer.nextToken();
-					final String appToken = tokenizer.nextToken();
-					final String platformBundleId = authPropMap.get(bundleId);
-					final String platformAppToken = authPropMap.get(appToken);
-					if (authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)) {
-						if (StringUtils.isNotEmpty(platformBundleId) && StringUtils.isNotEmpty(platformAppToken)) {
-							final StringTokenizer appTokenTokenizer = new StringTokenizer(platformAppToken, ".");
-							final String platformTypeFromAppToken = appTokenTokenizer.nextToken();
+  /**
+   * Authenticate the provided authorization credentials
+   *
+   * @author BTC
+   * @param authCredentials the Basic Authorization
+   * @return {@link Boolean}
+   */
+  public boolean authenticate(String authCredentials) {
+    LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
+    boolean authenticationStatus = false;
+    String bundleIdAndAppToken = null;
+    try {
+      if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
+        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        byte[] decodedBytes = Base64.decode(encodedUserPassword);
+        bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
+        if (bundleIdAndAppToken.contains(":")) {
+          final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
+          final String bundleId = tokenizer.nextToken();
+          final String appToken = tokenizer.nextToken();
+          final String platformBundleId = authPropMap.get(bundleId);
+          final String platformAppToken = authPropMap.get(appToken);
+          if (authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)) {
+            if (StringUtils.isNotEmpty(platformBundleId)
+                && StringUtils.isNotEmpty(platformAppToken)) {
+              final StringTokenizer appTokenTokenizer = new StringTokenizer(platformAppToken, ".");
+              final String platformTypeFromAppToken = appTokenTokenizer.nextToken();
 
-							final StringTokenizer bundleIdTokenizer = new StringTokenizer(platformBundleId, ".");
-							final String platformTypeFromBundleId = bundleIdTokenizer.nextToken();
+              final StringTokenizer bundleIdTokenizer = new StringTokenizer(platformBundleId, ".");
+              final String platformTypeFromBundleId = bundleIdTokenizer.nextToken();
 
-							if (StringUtils.equalsIgnoreCase(platformTypeFromAppToken, platformTypeFromBundleId)) {
-								authenticationStatus = true;
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.error("AuthenticationService - authenticate() :: ERROR", e);
-			return authenticationStatus;
-		}
-		LOGGER.info("INFO: AuthenticationService - authenticate() - Ends");
-		return authenticationStatus;
-	}
+              if (StringUtils.equalsIgnoreCase(
+                  platformTypeFromAppToken, platformTypeFromBundleId)) {
+                authenticationStatus = true;
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("AuthenticationService - authenticate() :: ERROR", e);
+      return authenticationStatus;
+    }
+    LOGGER.info("INFO: AuthenticationService - authenticate() - Ends");
+    return authenticationStatus;
+  }
 }

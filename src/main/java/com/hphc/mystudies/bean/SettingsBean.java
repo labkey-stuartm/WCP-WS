@@ -24,37 +24,36 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides study settings details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class SettingsBean {
 
-	private boolean enrolling = false;
-	private String platform = "";
-	private boolean rejoin = false;
+  private boolean enrolling = false;
+  private String platform = "";
+  private boolean rejoin = false;
 
-	public boolean isEnrolling() {
-		return enrolling;
-	}
+  public boolean isEnrolling() {
+    return enrolling;
+  }
 
-	public void setEnrolling(boolean enrolling) {
-		this.enrolling = enrolling;
-	}
+  public void setEnrolling(boolean enrolling) {
+    this.enrolling = enrolling;
+  }
 
-	public String getPlatform() {
-		return platform;
-	}
+  public String getPlatform() {
+    return platform;
+  }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
 
-	public boolean isRejoin() {
-		return rejoin;
-	}
+  public boolean isRejoin() {
+    return rejoin;
+  }
 
-	public void setRejoin(boolean rejoin) {
-		this.rejoin = rejoin;
-	}
+  public void setRejoin(boolean rejoin) {
+    this.rejoin = rejoin;
+  }
 }

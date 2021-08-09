@@ -27,34 +27,31 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * Implements {@link ServletContextListener} interface to provide
- * {@link ServletContext} configuration for context initialization and to
- * destroy.
- * 
- * @author BTC
+ * Implements {@link ServletContextListener} interface to provide {@link ServletContext}
+ * configuration for context initialization and to destroy.
  *
+ * @author BTC
  */
 public class ServletContextHolder implements ServletContextListener {
 
-	private static ServletContext servletContext;
+  private static ServletContext servletContext;
 
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		setServletContext(sce.getServletContext());
-		HibernateUtil.getSessionFactory();
-	}
+  @Override
+  public void contextInitialized(ServletContextEvent sce) {
+    setServletContext(sce.getServletContext());
+    HibernateUtil.getSessionFactory();
+  }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		HibernateUtil.getSessionFactory().close();
-	}
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+    HibernateUtil.getSessionFactory().close();
+  }
 
-	public static ServletContext getServletContext() {
-		return servletContext;
-	}
+  public static ServletContext getServletContext() {
+    return servletContext;
+  }
 
-	public static void setServletContext(ServletContext servletContext) {
-		ServletContextHolder.servletContext = servletContext;
-	}
-
+  public static void setServletContext(ServletContext servletContext) {
+    ServletContextHolder.servletContext = servletContext;
+  }
 }

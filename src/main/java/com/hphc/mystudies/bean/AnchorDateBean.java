@@ -23,31 +23,29 @@
 package com.hphc.mystudies.bean;
 
 /**
- * Provides anchor date related information i.e. type of anchor date and
- * question details {@link QuestionInfoBean}.
- * 
- * @author BTC
+ * Provides anchor date related information i.e. type of anchor date and question details {@link
+ * QuestionInfoBean}.
  *
+ * @author BTC
  */
 public class AnchorDateBean {
 
-	private String type = "";
-	private QuestionInfoBean questionInfo = new QuestionInfoBean();
+  private String type = "";
+  private QuestionInfoBean questionInfo = new QuestionInfoBean();
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public QuestionInfoBean getQuestionInfo() {
-		return questionInfo;
-	}
+  public QuestionInfoBean getQuestionInfo() {
+    return questionInfo;
+  }
 
-	public void setQuestionInfo(QuestionInfoBean questionInfo) {
-		this.questionInfo = questionInfo;
-	}
-
+  public void setQuestionInfo(QuestionInfoBean questionInfo) {
+    this.questionInfo = questionInfo;
+  }
 }

@@ -26,28 +26,27 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides study activity metadata details {@link ActivitiesBean} in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class StudyActivityResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private ActivitiesBean activity = new ActivitiesBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private ActivitiesBean activity = new ActivitiesBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public ActivitiesBean getActivity() {
-		return activity;
-	}
+  public ActivitiesBean getActivity() {
+    return activity;
+  }
 
-	public void setActivity(ActivitiesBean activity) {
-		this.activity = activity;
-	}
+  public void setActivity(ActivitiesBean activity) {
+    this.activity = activity;
+  }
 }

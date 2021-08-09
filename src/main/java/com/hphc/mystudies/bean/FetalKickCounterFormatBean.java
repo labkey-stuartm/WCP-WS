@@ -26,30 +26,27 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides fetal kick count activity details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class FetalKickCounterFormatBean {
 
-	private Integer duration = Integer
-			.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);
-	private Integer kickCount = StudyMetaDataConstants.MAX_KICK_COUNT;
+  private Integer duration = Integer.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);
+  private Integer kickCount = StudyMetaDataConstants.MAX_KICK_COUNT;
 
-	public Integer getDuration() {
-		return duration;
-	}
+  public Integer getDuration() {
+    return duration;
+  }
 
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
+  public void setDuration(Integer duration) {
+    this.duration = duration;
+  }
 
-	public Integer getKickCount() {
-		return kickCount;
-	}
+  public Integer getKickCount() {
+    return kickCount;
+  }
 
-	public void setKickCount(Integer kickCount) {
-		this.kickCount = kickCount;
-	}
-
+  public void setKickCount(Integer kickCount) {
+    this.kickCount = kickCount;
+  }
 }

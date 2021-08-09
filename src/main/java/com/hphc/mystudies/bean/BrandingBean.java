@@ -24,47 +24,45 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides branding information of study.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class BrandingBean {
 
-	private String titleFont = "";
-	private String bgColor = "";
-	private String tintColor = "";
-	private String logo = "";
+  private String titleFont = "";
+  private String bgColor = "";
+  private String tintColor = "";
+  private String logo = "";
 
-	public String getTitleFont() {
-		return titleFont;
-	}
+  public String getTitleFont() {
+    return titleFont;
+  }
 
-	public void setTitleFont(String titleFont) {
-		this.titleFont = titleFont;
-	}
+  public void setTitleFont(String titleFont) {
+    this.titleFont = titleFont;
+  }
 
-	public String getBgColor() {
-		return bgColor;
-	}
+  public String getBgColor() {
+    return bgColor;
+  }
 
-	public void setBgColor(String bgColor) {
-		this.bgColor = bgColor;
-	}
+  public void setBgColor(String bgColor) {
+    this.bgColor = bgColor;
+  }
 
-	public String getTintColor() {
-		return tintColor;
-	}
+  public String getTintColor() {
+    return tintColor;
+  }
 
-	public void setTintColor(String tintColor) {
-		this.tintColor = tintColor;
-	}
+  public void setTintColor(String tintColor) {
+    this.tintColor = tintColor;
+  }
 
-	public String getLogo() {
-		return logo;
-	}
+  public String getLogo() {
+    return logo;
+  }
 
-	public void setLogo(String logo) {
-		this.logo = logo;
-	}
-
+  public void setLogo(String logo) {
+    this.logo = logo;
+  }
 }

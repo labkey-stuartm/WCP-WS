@@ -24,56 +24,54 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides study updates information.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class StudyUpdatesBean {
 
-	private Boolean consent = false;
-	private Boolean activities = false;
-	private Boolean resources = false;
-	private Boolean info = false;
-	private String status = "";
+  private Boolean consent = false;
+  private Boolean activities = false;
+  private Boolean resources = false;
+  private Boolean info = false;
+  private String status = "";
 
-	public Boolean getConsent() {
-		return consent;
-	}
+  public Boolean getConsent() {
+    return consent;
+  }
 
-	public void setConsent(Boolean consent) {
-		this.consent = consent;
-	}
+  public void setConsent(Boolean consent) {
+    this.consent = consent;
+  }
 
-	public Boolean getActivities() {
-		return activities;
-	}
+  public Boolean getActivities() {
+    return activities;
+  }
 
-	public void setActivities(Boolean activities) {
-		this.activities = activities;
-	}
+  public void setActivities(Boolean activities) {
+    this.activities = activities;
+  }
 
-	public Boolean getResources() {
-		return resources;
-	}
+  public Boolean getResources() {
+    return resources;
+  }
 
-	public void setResources(Boolean resources) {
-		this.resources = resources;
-	}
+  public void setResources(Boolean resources) {
+    this.resources = resources;
+  }
 
-	public Boolean getInfo() {
-		return info;
-	}
+  public Boolean getInfo() {
+    return info;
+  }
 
-	public void setInfo(Boolean info) {
-		this.info = info;
-	}
+  public void setInfo(Boolean info) {
+    this.info = info;
+  }
 
-	public String getStatus() {
-		return status;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
+  public void setStatus(String status) {
+    this.status = status;
+  }
 }

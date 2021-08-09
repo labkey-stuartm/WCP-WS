@@ -24,20 +24,18 @@ package com.hphc.mystudies.bean.appendix;
 
 /**
  * Provides resource context details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ResourceContextStructureBean {
 
-	private String dueDate = "";
+  private String dueDate = "";
 
-	public String getDueDate() {
-		return dueDate;
-	}
+  public String getDueDate() {
+    return dueDate;
+  }
 
-	public void setDueDate(String dueDate) {
-		this.dueDate = dueDate;
-	}
-
+  public void setDueDate(String dueDate) {
+    this.dueDate = dueDate;
+  }
 }

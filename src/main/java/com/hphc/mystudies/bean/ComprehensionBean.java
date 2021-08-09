@@ -23,23 +23,22 @@
 package com.hphc.mystudies.bean;
 
 /**
- * Provides comprehension details for the questionnaire type of activity
- * {@link QuestionnaireActivityStepsBean}
- * 
- * @author BTC
+ * Provides comprehension details for the questionnaire type of activity {@link
+ * QuestionnaireActivityStepsBean}
  *
+ * @author BTC
  */
 public class ComprehensionBean {
 
-	private QuestionnaireActivityStepsBean questionStepStructureBean = new QuestionnaireActivityStepsBean();
+  private QuestionnaireActivityStepsBean questionStepStructureBean =
+      new QuestionnaireActivityStepsBean();
 
-	public QuestionnaireActivityStepsBean getQuestionStepStructureBean() {
-		return questionStepStructureBean;
-	}
+  public QuestionnaireActivityStepsBean getQuestionStepStructureBean() {
+    return questionStepStructureBean;
+  }
 
-	public void setQuestionStepStructureBean(
-			QuestionnaireActivityStepsBean questionStepStructureBean) {
-		this.questionStepStructureBean = questionStepStructureBean;
-	}
-
+  public void setQuestionStepStructureBean(
+      QuestionnaireActivityStepsBean questionStepStructureBean) {
+    this.questionStepStructureBean = questionStepStructureBean;
+  }
 }

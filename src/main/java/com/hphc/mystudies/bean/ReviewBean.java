@@ -24,56 +24,54 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides consent review details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ReviewBean {
 
-	private String reasonForConsent = "";
-	private String reviewHTML = "";
-	private String consentByLAR = "";
-	private String additionalSignature = "";
-	private String[] signatures;
+  private String reasonForConsent = "";
+  private String reviewHTML = "";
+  private String consentByLAR = "";
+  private String additionalSignature = "";
+  private String[] signatures;
 
-	public String getReasonForConsent() {
-		return reasonForConsent;
-	}
+  public String getReasonForConsent() {
+    return reasonForConsent;
+  }
 
-	public void setReasonForConsent(String reasonForConsent) {
-		this.reasonForConsent = reasonForConsent;
-	}
+  public void setReasonForConsent(String reasonForConsent) {
+    this.reasonForConsent = reasonForConsent;
+  }
 
-	public String getReviewHTML() {
-		return reviewHTML;
-	}
+  public String getReviewHTML() {
+    return reviewHTML;
+  }
 
-	public void setReviewHTML(String reviewHTML) {
-		this.reviewHTML = reviewHTML;
-	}
+  public void setReviewHTML(String reviewHTML) {
+    this.reviewHTML = reviewHTML;
+  }
 
-	public String getConsentByLAR() {
-		return consentByLAR;
-	}
+  public String getConsentByLAR() {
+    return consentByLAR;
+  }
 
-	public void setConsentByLAR(String consentByLAR) {
-		this.consentByLAR = consentByLAR;
-	}
+  public void setConsentByLAR(String consentByLAR) {
+    this.consentByLAR = consentByLAR;
+  }
 
-	public String getAdditionalSignature() {
-		return additionalSignature;
-	}
+  public String getAdditionalSignature() {
+    return additionalSignature;
+  }
 
-	public String[] getSignatures() {
-		return signatures;
-	}
+  public String[] getSignatures() {
+    return signatures;
+  }
 
-	public void setAdditionalSignature(String additionalSignature) {
-		this.additionalSignature = additionalSignature;
-	}
+  public void setAdditionalSignature(String additionalSignature) {
+    this.additionalSignature = additionalSignature;
+  }
 
-	public void setSignatures(String[] signatures) {
-		this.signatures = signatures;
-	}
-
+  public void setSignatures(String[] signatures) {
+    this.signatures = signatures;
+  }
 }

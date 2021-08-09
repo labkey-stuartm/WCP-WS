@@ -24,29 +24,27 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides activity dashboard details
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class DashboardActivityBean {
 
-	private String activityId = "";
-	private String version = "";
+  private String activityId = "";
+  private String version = "";
 
-	public String getActivityId() {
-		return activityId;
-	}
+  public String getActivityId() {
+    return activityId;
+  }
 
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-	public String getVersion() {
-		return version;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
+  public void setVersion(String version) {
+    this.version = version;
+  }
 }

@@ -24,20 +24,18 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides tower of hanoi active task metadata details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class TowerOfHanoiFormatBean {
 
-	private Integer numberOfDisks = 0;
+  private Integer numberOfDisks = 0;
 
-	public Integer getNumberOfDisks() {
-		return numberOfDisks;
-	}
+  public Integer getNumberOfDisks() {
+    return numberOfDisks;
+  }
 
-	public void setNumberOfDisks(Integer numberOfDisks) {
-		this.numberOfDisks = numberOfDisks;
-	}
-
+  public void setNumberOfDisks(Integer numberOfDisks) {
+    this.numberOfDisks = numberOfDisks;
+  }
 }

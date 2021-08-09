@@ -22,35 +22,33 @@
  */
 package com.hphc.mystudies.bean;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hphc.mystudies.util.StudyMetaDataConstants;
-
 /**
  * Provides resource metadata details {@link ResourcesBean} in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ResourcesResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<ResourcesBean> resources = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private List<ResourcesBean> resources = new ArrayList<>();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public List<ResourcesBean> getResources() {
-		return resources;
-	}
+  public List<ResourcesBean> getResources() {
+    return resources;
+  }
 
-	public void setResources(List<ResourcesBean> resources) {
-		this.resources = resources;
-	}
+  public void setResources(List<ResourcesBean> resources) {
+    this.resources = resources;
+  }
 }
