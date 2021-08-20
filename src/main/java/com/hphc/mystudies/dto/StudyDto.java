@@ -188,6 +188,12 @@ public class StudyDto implements Serializable {
   @Column(name = "study_language")
   private String studyLanguage;
 
+  @Column(name = "multi_language_flag")
+  private Boolean multiLanguageFlag;
+
+  @Column(name = "selected_languages")
+  private String selectedLanguages;
+
   public Integer getId() {
     return id;
   }
@@ -506,5 +512,21 @@ public class StudyDto implements Serializable {
 
   public void setStudyLanguage(String studyLanguage) {
     this.studyLanguage = studyLanguage;
+  }
+
+  public Boolean getMultiLanguageFlag() {
+    return multiLanguageFlag;
+  }
+
+  public void setMultiLanguageFlag(Boolean multiLanguageFlag) {
+    this.multiLanguageFlag = multiLanguageFlag;
+  }
+
+  public String getSelectedLanguages() {
+    return selectedLanguages;
+  }
+
+  public void setSelectedLanguages(String selectedLanguages) {
+    this.selectedLanguages = selectedLanguages;
   }
 }

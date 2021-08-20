@@ -154,7 +154,8 @@ public class StudyMetaDataService {
       if (!StringUtils.isEmpty(authorization)
           && !StringUtils.isEmpty(applicationId)
           && !StringUtils.isEmpty(orgId)) {
-        studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
+        studyResponse =
+            studyMetaDataOrchestration.studyList(authorization, applicationId, orgId, language);
         if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -310,7 +311,7 @@ public class StudyMetaDataService {
 
         consentDocumentResponse =
             studyMetaDataOrchestration.consentDocument(
-                studyId, consentVersion, activityId, activityVersion);
+                studyId, consentVersion, activityId, activityVersion, language);
         if (!consentDocumentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -461,7 +462,7 @@ public class StudyMetaDataService {
               .build();
         }
 
-        studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId);
+        studyInfoResponse = studyMetaDataOrchestration.studyInfo(studyId, language);
         if (!studyInfoResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -1285,7 +1286,7 @@ public class StudyMetaDataService {
     LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
-      studyResponse = studyMetaDataOrchestration.study(studyId);
+      studyResponse = studyMetaDataOrchestration.study(studyId, language);
       if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
         StudyMetaDataUtil.getFailureResponse(
             ErrorCodes.STATUS_103,

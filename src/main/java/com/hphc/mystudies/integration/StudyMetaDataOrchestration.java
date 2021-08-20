@@ -105,12 +105,13 @@ public class StudyMetaDataOrchestration {
    * @return {@link StudyResponse}
    * @throws OrchestrationException
    */
-  public StudyResponse studyList(String authorization, String applicationId, String orgId)
+  public StudyResponse studyList(
+      String authorization, String applicationId, String orgId, String language)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
-      studyResponse = studyMetaDataDao.studyList(authorization, applicationId, orgId);
+      studyResponse = studyMetaDataDao.studyList(authorization, applicationId, orgId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - studyList() :: ERROR", e);
     }
@@ -152,13 +153,18 @@ public class StudyMetaDataOrchestration {
    * @throws OrchestrationException
    */
   public ConsentDocumentResponse consentDocument(
-      String studyId, String consentVersion, String activityId, String activityVersion)
+      String studyId,
+      String consentVersion,
+      String activityId,
+      String activityVersion,
+      String language)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Starts");
     ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
     try {
       consentDocumentResponse =
-          studyMetaDataDao.consentDocument(studyId, consentVersion, activityId, activityVersion);
+          studyMetaDataDao.consentDocument(
+              studyId, consentVersion, activityId, activityVersion, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - consentDocument() :: ERROR", e);
     }
@@ -194,11 +200,12 @@ public class StudyMetaDataOrchestration {
    * @return {@link StudyInfoResponse}
    * @throws OrchestrationException
    */
-  public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException {
+  public StudyInfoResponse studyInfo(String studyId, String language)
+      throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Starts");
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
     try {
-      studyInfoResponse = studyMetaDataDao.studyInfo(studyId);
+      studyInfoResponse = studyMetaDataDao.studyInfo(studyId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - studyInfo() :: ERROR", e);
     }
@@ -300,11 +307,11 @@ public class StudyMetaDataOrchestration {
    * @return {@link StudyResponse}
    * @throws OrchestrationException
    */
-  public StudyResponse study(String studyId) throws OrchestrationException {
+  public StudyResponse study(String studyId, String language) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
-      studyResponse = studyMetaDataDao.study(studyId);
+      studyResponse = studyMetaDataDao.study(studyId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - study() :: ERROR", e);
     }

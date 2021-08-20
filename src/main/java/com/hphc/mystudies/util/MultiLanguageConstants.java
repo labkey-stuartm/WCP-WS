@@ -2,7 +2,8 @@ package com.hphc.mystudies.util;
 
 public class MultiLanguageConstants {
   // multi languages
-  public static final String SPANISH = "Spanish";
+  public static final String ENGLISH = "en";
+  public static final String SPANISH = "es";
 
   // ERROR CONSTANTS
   public static final String FAILURE = "FAILURE";
