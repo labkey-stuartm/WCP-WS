@@ -91,11 +91,11 @@ public class StudyMetaDataService {
   /**
    * Get Gateway info and Gateway resources data
    *
-   * @author BTC
    * @param authorization the Basic Authorization
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context       {@link ServletContext}
+   * @param response      {@link HttpServletResponse}
    * @return {@link GatewayInfoResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -131,11 +131,11 @@ public class StudyMetaDataService {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param authorization the Basic Authorization
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context       {@link ServletContext}
+   * @param response      {@link HttpServletResponse}
    * @return {@link StudyResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -191,11 +191,11 @@ public class StudyMetaDataService {
   /**
    * Get eligibility and consent info for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Idetifier
-   * @param context {@link ServletContext}
+   * @param studyId  the Study Idetifier
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link EligibilityConsentResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -268,14 +268,14 @@ public class StudyMetaDataService {
    * Get consent document by passing the consent version or the activity id and activity version for
    * the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Identifier
-   * @param consentVersion the Consent Version
-   * @param activityId the Activity Identifier
+   * @param studyId         the Study Identifier
+   * @param consentVersion  the Consent Version
+   * @param activityId      the Activity Identifier
    * @param activityVersion the Activity Version
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context         {@link ServletContext}
+   * @param response        {@link HttpServletResponse}
    * @return {@link ConsentDocumentResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -352,11 +352,11 @@ public class StudyMetaDataService {
   /**
    * Get resources metadata for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Identifier
-   * @param context {@link ServletContext}
+   * @param studyId  the Study Identifier
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link ResourcesResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -427,11 +427,11 @@ public class StudyMetaDataService {
   /**
    * Get study metadata for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Identifier
-   * @param context {@link ServletContext}
+   * @param studyId  the Study Identifier
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyInfoResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -504,12 +504,12 @@ public class StudyMetaDataService {
   /**
    * Get all the activities for the provided study identifier
    *
-   * @author BTC
    * @param authorization the Basic Authorization
-   * @param studyId the Study Identifier
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param studyId       the Study Identifier
+   * @param context       {@link ServletContext}
+   * @param response      {@link HttpServletResponse}
    * @return {@link ActivityResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -523,7 +523,7 @@ public class StudyMetaDataService {
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
     ActivityResponse activityResponse = new ActivityResponse();
-    Boolean isValidFlag = false;
+    boolean isValidFlag = false;
     try {
       if (StringUtils.isNotEmpty(studyId)) {
         isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
@@ -541,7 +541,8 @@ public class StudyMetaDataService {
               .build();
         }
 
-        activityResponse = activityMetaDataOrchestration.studyActivityList(studyId, authorization);
+        activityResponse = activityMetaDataOrchestration.studyActivityList(studyId, authorization,
+            language);
         if (!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -582,14 +583,13 @@ public class StudyMetaDataService {
   /**
    * Get the activity metadata for the provided study and activity identifier
    *
-   * @author BTC
-   * @param studyId the Study Identifier
-   * @param activityId the Activity Identifier
+   * @param studyId         the Study Identifier
+   * @param activityId      the Activity Identifier
    * @param activityVersion the Activity Version
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
-   * @return {@link ActiveTaskActivityMetaDataResponse} or {@link
-   *     QuestionnaireActivityMetaDataResponse}
+   * @param context         {@link ServletContext}
+   * @param response        {@link HttpServletResponse}
+   * @return {@link ActiveTaskActivityMetaDataResponse} or {@link QuestionnaireActivityMetaDataResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -650,7 +650,7 @@ public class StudyMetaDataService {
         if (!isActivityTypeQuestionnaire) {
           activeTaskActivityMetaDataResponse =
               activityMetaDataOrchestration.studyActiveTaskActivityMetadata(
-                  studyId, activityId, activityVersion);
+                  studyId, activityId, activityVersion, language);
           if (!activeTaskActivityMetaDataResponse
               .getMessage()
               .equals(StudyMetaDataConstants.SUCCESS)) {
@@ -668,7 +668,7 @@ public class StudyMetaDataService {
         } else {
           questionnaireActivityMetaDataResponse =
               activityMetaDataOrchestration.studyQuestionnaireActivityMetadata(
-                  studyId, activityId, activityVersion);
+                  studyId, activityId, activityVersion, language);
           if (!questionnaireActivityMetaDataResponse
               .getMessage()
               .equals(StudyMetaDataConstants.SUCCESS)) {
@@ -712,11 +712,11 @@ public class StudyMetaDataService {
   /**
    * Get dashboard metadata for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Identifier
-   * @param context {@link ServletContext}
+   * @param studyId  the Study Identifier
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyDashboardResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -729,7 +729,7 @@ public class StudyMetaDataService {
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
-    Boolean isValidFlag = false;
+    boolean isValidFlag = false;
     try {
       if (StringUtils.isNotEmpty(studyId)) {
         isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
@@ -788,10 +788,10 @@ public class StudyMetaDataService {
   /**
    * Get terms and policy for the app
    *
-   * @author BTC
-   * @param context {@link ServletContext}
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link TermsPolicyResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -825,12 +825,12 @@ public class StudyMetaDataService {
   /**
    * Fetch available notifications
    *
-   * @author BTC
-   * @param skip the skip count
+   * @param skip          the skip count
    * @param authorization the Basic Authorization
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context       {@link ServletContext}
+   * @param response      {@link HttpServletResponse}
    * @return {@link NotificationsResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -888,11 +888,11 @@ public class StudyMetaDataService {
   /**
    * Provide feedback about the app
    *
-   * @author BTC
-   * @param params the feedback details
-   * @param context {@link ServletContext}
+   * @param params   the feedback details
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link AppResponse}
+   * @author BTC
    */
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -933,11 +933,11 @@ public class StudyMetaDataService {
   /**
    * Reach out to app owner
    *
-   * @author BTC
-   * @param params the contact details
-   * @param context {@link ServletContext}
+   * @param params   the contact details
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link AppResponse}
+   * @author BTC
    */
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -982,12 +982,12 @@ public class StudyMetaDataService {
   /**
    * Check for app updates
    *
-   * @author BTC
-   * @param appVersion the App Version
+   * @param appVersion    the App Version
    * @param authorization the Basic Authorization
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context       {@link ServletContext}
+   * @param response      {@link HttpServletResponse}
    * @return {@link AppUpdatesResponse}
+   * @author BTC
    */
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
@@ -1028,12 +1028,12 @@ public class StudyMetaDataService {
   /**
    * Check for study updates
    *
-   * @author BTC
-   * @param studyId the Study Identifier
+   * @param studyId      the Study Identifier
    * @param studyVersion the Study Version
-   * @param context {@link ServletContext}
-   * @param response {@link HttpServletResponse}
+   * @param context      {@link ServletContext}
+   * @param response     {@link HttpServletResponse}
    * @return {@link StudyUpdatesResponse}
+   * @author BTC
    */
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
@@ -1105,11 +1105,11 @@ public class StudyMetaDataService {
   /**
    * Update app version
    *
-   * @author BTC
-   * @param params the App Version Details
-   * @param context {@link ServletContext}
+   * @param params   the App Version Details
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return the success or failure
+   * @author BTC
    */
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -1194,11 +1194,11 @@ public class StudyMetaDataService {
   /**
    * Get eligibility and consent info for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the Study Idetifier
-   * @param context {@link ServletContext}
+   * @param studyId  the Study Idetifier
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link EligibilityConsentResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -1251,8 +1251,8 @@ public class StudyMetaDataService {
   /**
    * Ping application
    *
-   * @author BTC
    * @return It Works!
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -1268,11 +1268,11 @@ public class StudyMetaDataService {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param studyId
-   * @param context {@link ServletContext}
+   * @param context  {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyResponse}
+   * @author BTC
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)

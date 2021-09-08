@@ -49,18 +49,18 @@ public class ActivityMetaDataOrchestration {
   /**
    * Get all the activities for the provided study identifier
    *
-   * @author BTC
-   * @param studyId the study identifier
+   * @param studyId       the study identifier
    * @param authorization the Basic Authorization
    * @return {@link ActivityResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
-  public ActivityResponse studyActivityList(String studyId, String authorization)
+  public ActivityResponse studyActivityList(String studyId, String authorization, String language)
       throws OrchestrationException {
     LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityList() :: Starts");
     ActivityResponse activityResponse = new ActivityResponse();
     try {
-      activityResponse = activityMetaDataDao.studyActivityList(studyId, authorization);
+      activityResponse = activityMetaDataDao.studyActivityList(studyId, authorization, language);
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataOrchestration - studyActivityList() :: ERROR", e);
     }
@@ -71,22 +71,24 @@ public class ActivityMetaDataOrchestration {
   /**
    * Get the active task metadata for the provided activity version, study and activity identifier
    *
-   * @author BTC
-   * @param studyId the study identifier
-   * @param activityId the activity identifier
+   * @param studyId         the study identifier
+   * @param activityId      the activity identifier
    * @param activityVersion the activity version
    * @return {@link ActiveTaskActivityMetaDataResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
-      String studyId, String activityId, String activityVersion) throws OrchestrationException {
+      String studyId, String activityId, String activityVersion, String language)
+      throws OrchestrationException {
     LOGGER.info(
         "INFO: ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: Starts");
     ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse =
         new ActiveTaskActivityMetaDataResponse();
     try {
       activeTaskActivityMetaDataResponse =
-          activityMetaDataDao.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion);
+          activityMetaDataDao.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion,
+              language);
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: ERROR", e);
     }
@@ -95,17 +97,19 @@ public class ActivityMetaDataOrchestration {
   }
 
   /**
-   * Get the questionnaire metadata for the provided activity version, study and activity identifier
+   * Get the questionnaire metadata for the provided activity version, study and activity
+   * identifier
    *
-   * @author BTC
-   * @param studyId the study identifier
-   * @param activityId the activity identifier
+   * @param studyId         the study identifier
+   * @param activityId      the activity identifier
    * @param activityVersion the activity version
    * @return {@link QuestionnaireActivityMetaDataResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
-      String studyId, String activityId, String activityVersion) throws OrchestrationException {
+      String studyId, String activityId, String activityVersion, String language)
+      throws OrchestrationException {
     LOGGER.info(
         "INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Starts");
     QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse =
@@ -113,7 +117,7 @@ public class ActivityMetaDataOrchestration {
     try {
       questionnaireActivityMetaDataResponse =
           activityMetaDataDao.studyQuestionnaireActivityMetadata(
-              studyId, activityId, activityVersion);
+              studyId, activityId, activityVersion, language);
     } catch (Exception e) {
       LOGGER.error(
           "ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: ERROR", e);
