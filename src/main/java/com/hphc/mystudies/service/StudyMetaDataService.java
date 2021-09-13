@@ -747,7 +747,7 @@ public class StudyMetaDataService {
               .build();
         }
 
-        studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId);
+        studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId, language);
         if (!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,

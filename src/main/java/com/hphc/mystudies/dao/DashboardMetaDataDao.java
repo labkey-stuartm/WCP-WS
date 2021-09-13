@@ -34,9 +34,11 @@ import com.hphc.mystudies.dto.ActiveTaskCustomFrequenciesDto;
 import com.hphc.mystudies.dto.ActiveTaskDto;
 import com.hphc.mystudies.dto.ActiveTaskFormulaDto;
 import com.hphc.mystudies.dto.ActiveTaskFrequencyDto;
+import com.hphc.mystudies.dto.ActiveTaskLangBO;
 import com.hphc.mystudies.dto.ActiveTaskMasterAttributeDto;
 import com.hphc.mystudies.dto.FormDto;
 import com.hphc.mystudies.dto.FormMappingDto;
+import com.hphc.mystudies.dto.QuestionLangBO;
 import com.hphc.mystudies.dto.QuestionnairesCustomFrequenciesDto;
 import com.hphc.mystudies.dto.QuestionnairesDto;
 import com.hphc.mystudies.dto.QuestionnairesFrequenciesDto;
@@ -47,6 +49,7 @@ import com.hphc.mystudies.dto.StudyDto;
 import com.hphc.mystudies.dto.StudyVersionDto;
 import com.hphc.mystudies.exception.DAOException;
 import com.hphc.mystudies.util.HibernateUtil;
+import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import java.util.ArrayList;
@@ -73,6 +76,7 @@ public class DashboardMetaDataDao {
 
   SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
   Query query = null;
+  ActivityMetaDataDao activityMetaDataDao = new ActivityMetaDataDao();
 
   /**
    * Get dashboard metadata for the provided study identifier
@@ -83,7 +87,7 @@ public class DashboardMetaDataDao {
    * @throws DAOException
    */
   @SuppressWarnings("unchecked")
-  public StudyDashboardResponse studyDashboardInfo(String studyId) throws DAOException {
+  public StudyDashboardResponse studyDashboardInfo(String studyId, String language) throws DAOException {
     LOGGER.info("INFO: DashboardMetaDataDao - studyDashboardInfo() :: Starts");
     Session session = null;
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
@@ -333,7 +337,8 @@ public class DashboardMetaDataDao {
                           chartsList,
                           activeTaskDto.getShortTitle(),
                           taskTypeId,
-                          activeTaskMasterAttrIdNameMap);
+                          activeTaskMasterAttrIdNameMap,
+                          language);
                 }
 
                 if (activeTaskAttrDto.isUseForStatistic()) {
@@ -346,7 +351,8 @@ public class DashboardMetaDataDao {
                           formulaDtoList,
                           statisticImageList,
                           taskTypeId,
-                          activeTaskMasterAttrIdNameMap);
+                          activeTaskMasterAttrIdNameMap,
+                          language);
                 }
               }
             }
@@ -400,7 +406,8 @@ public class DashboardMetaDataDao {
                           chartsList,
                           questionnaireSteps.getStepShortTitle(),
                           0,
-                          null);
+                          null,
+                          language);
                 }
 
                 if (questionDto.getUseStasticData().equalsIgnoreCase(StudyMetaDataConstants.YES)) {
@@ -413,7 +420,8 @@ public class DashboardMetaDataDao {
                           formulaDtoList,
                           statisticImageList,
                           0,
-                          null);
+                          null,
+                          language);
                 }
               }
             }
@@ -499,7 +507,8 @@ public class DashboardMetaDataDao {
                                     chartsList,
                                     questionDto.getShortTitle(),
                                     0,
-                                    null);
+                                    null,
+                                    language);
                           }
 
                           if (questionDto
@@ -514,7 +523,8 @@ public class DashboardMetaDataDao {
                                     formulaDtoList,
                                     statisticImageList,
                                     0,
-                                    null);
+                                    null,
+                                    language);
                           }
                         }
                       }
@@ -564,7 +574,8 @@ public class DashboardMetaDataDao {
       List<ChartsBean> chartsList,
       String chartTitle,
       int taskTypeId,
-      Map activeTaskMasterAttrIdNameMap)
+      Map activeTaskMasterAttrIdNameMap,
+      String language)
       throws DAOException {
     LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Starts");
     ChartsBean chart = new ChartsBean();
@@ -573,8 +584,17 @@ public class DashboardMetaDataDao {
     try {
       if (activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)) {
         chart.setTitle(chartTitle);
-        chart.setDisplayName(
-            StringUtils.isEmpty(activeTask.getTitleChat()) ? "" : activeTask.getTitleChat());
+
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+          ActiveTaskLangBO activeTaskLangBO = activityMetaDataDao.getActiveTaskLangById(
+              activeTask.getActiveTaskId(), language);
+          chart.setDisplayName(
+              StringUtils.isEmpty(activeTaskLangBO.getChartTitle()) ? "" : activeTaskLangBO.getChartTitle());
+        }
+        else {
+          chart.setDisplayName(
+              StringUtils.isEmpty(activeTask.getTitleChat()) ? "" : activeTask.getTitleChat());
+        }
         chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
         chart.setScrollable(
             (StringUtils.isNotEmpty(activeTask.getRollbackChat())
@@ -611,8 +631,15 @@ public class DashboardMetaDataDao {
         chart.setDataSource(dataSource);
       } else {
         chart.setTitle(chartTitle);
-        chart.setDisplayName(
-            StringUtils.isEmpty(question.getChartTitle()) ? "" : question.getChartTitle());
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+          QuestionLangBO questionLangBO = activityMetaDataDao.getQuestionLangBo(question.getId(), language);
+          chart.setDisplayName(
+              StringUtils.isEmpty(questionLangBO.getChartTitle()) ? "" : questionLangBO.getChartTitle());
+        }
+        else {
+          chart.setDisplayName(
+              StringUtils.isEmpty(question.getChartTitle()) ? "" : question.getChartTitle());
+        }
         chart.setType(StudyMetaDataConstants.CHART_TYPE_LINE);
         chart.setScrollable(
             (StringUtils.isNotEmpty(question.getAllowRollbackChart())
@@ -672,7 +699,8 @@ public class DashboardMetaDataDao {
       List<ActiveTaskFormulaDto> formulaDtoList,
       List<StatisticImageListDto> statisticImageList,
       int taskTypeId,
-      Map activeTaskMasterAttrIdNameMap)
+      Map activeTaskMasterAttrIdNameMap,
+      String language)
       throws DAOException {
     LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Starts");
     StatisticsBean statistics = new StatisticsBean();
@@ -680,14 +708,23 @@ public class DashboardMetaDataDao {
     DashboardActivityBean activity = new DashboardActivityBean();
     try {
       if (activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)) {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)){
+          ActiveTaskLangBO activeTaskLangBO = activityMetaDataDao.getActiveTaskLangById(activeTask.getActiveTaskId(), language);
+          statistics.setDisplayName(
+              StringUtils.isEmpty(activeTaskLangBO.getStatName())
+                  ? ""
+                  : activeTaskLangBO.getStatName());
+        }
+        else {
+          statistics.setDisplayName(
+              StringUtils.isEmpty(activeTask.getDisplayNameStat())
+                  ? ""
+                  : activeTask.getDisplayNameStat());
+        }
         statistics.setTitle(
             StringUtils.isEmpty(activeTask.getIdentifierNameStat())
                 ? ""
                 : activeTask.getIdentifierNameStat());
-        statistics.setDisplayName(
-            StringUtils.isEmpty(activeTask.getDisplayNameStat())
-                ? ""
-                : activeTask.getDisplayNameStat());
         statistics.setStatType(
             StringUtils.isEmpty(activeTask.getUploadTypeStat())
                 ? ""
@@ -719,14 +756,22 @@ public class DashboardMetaDataDao {
         }
 
         dataSource.setType(activeTask.getActivityType());
-        statistics.setDataSource(dataSource);
       } else {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)){
+          QuestionLangBO questionLangBO = activityMetaDataDao.getQuestionLangBo(question.getId(), language);
+          statistics.setDisplayName(
+              StringUtils.isEmpty(questionLangBO.getStatDisplayName())
+                  ? ""
+                  : questionLangBO.getStatDisplayName());
+        }
+        else {
+          statistics.setDisplayName(
+              StringUtils.isEmpty(question.getStatDisplayName())
+                  ? ""
+                  : question.getStatDisplayName());
+        }
         statistics.setTitle(
             StringUtils.isEmpty(question.getStatShortName()) ? "" : question.getStatShortName());
-        statistics.setDisplayName(
-            StringUtils.isEmpty(question.getStatDisplayName())
-                ? ""
-                : question.getStatDisplayName());
         statistics.setStatType(
             question.getStatType() == null
                 ? ""
@@ -746,9 +791,8 @@ public class DashboardMetaDataDao {
         activity.setVersion(question.getActivityVersion());
         dataSource.setActivity(activity);
 
-        statistics.setDataSource(dataSource);
       }
-
+      statistics.setDataSource(dataSource);
       statisticsList.add(statistics);
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getStatisticsDetails() :: ERROR", e);
