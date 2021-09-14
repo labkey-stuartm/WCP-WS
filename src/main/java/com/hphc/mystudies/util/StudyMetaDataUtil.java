@@ -25,7 +25,9 @@ package com.hphc.mystudies.util;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -71,7 +73,7 @@ public class StudyMetaDataUtil {
 	private static final HashMap<String, String> authPropMap = StudyMetaDataUtil.authConfigMap;
 
 	/**
-	 * Get properties defined in messageResource and application property files
+	 * Get properties defined in application property files
 	 * 
 	 * @author BTC
 	 * @return the properties
@@ -83,13 +85,6 @@ public class StudyMetaDataUtil {
 		Enumeration<String> keys = null;
 		Enumeration<Object> objectKeys = null;
 		try {
-			ResourceBundle rb = ResourceBundle.getBundle("messageResource");
-			keys = rb.getKeys();
-			while (keys.hasMoreElements()) {
-				String key = keys.nextElement();
-				String value = rb.getString(key);
-				hm.put(key, value);
-			}
 			ServletContext context = ServletContextHolder.getServletContext();
 			Properties prop = new Properties();
 			prop.load(new FileInputStream(context.getInitParameter("property_file_location_path")));
@@ -690,12 +685,19 @@ public class StudyMetaDataUtil {
 	public static HashMap getAuthorizationProperties() {
 		LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
 		HashMap hashMap = new HashMap<String, String>();
-		ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
-		Enumeration<String> keys = rb.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			String value = rb.getString(key);
-			hashMap.put(key, value);
+		Enumeration<Object> objectKeys = null;
+		try {
+			ServletContext context = ServletContextHolder.getServletContext();
+			Properties prop = new Properties();
+			prop.load(new FileInputStream(context.getInitParameter("authorizationResource_file_location_path")));
+			objectKeys = prop.keys();
+			while (objectKeys.hasMoreElements()) {
+				String key = (String) objectKeys.nextElement();
+				String value = prop.getProperty(key);
+				hashMap.put(key, value);
+			}
+		} catch (Exception e) {
+			LOGGER.error("StudyMetaDataUtil - getAuthorizationProperties() - ERROR ", e);
 		}
 		LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
 		return hashMap;
