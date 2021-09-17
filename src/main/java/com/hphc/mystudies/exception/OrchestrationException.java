@@ -22,22 +22,16 @@
  */
 package com.hphc.mystudies.exception;
 
-/**
- * 
- * @author BTC
- *
- */
+/** @author BTC */
 public class OrchestrationException extends CommonException {
 
-	/**
-	 * 
-	 * @param pErrorCode
-	 * @param arg1
-	 */
-	public OrchestrationException(String pErrorCode, Throwable arg1) {
-		super(pErrorCode, arg1);
-	}
+  /**
+   * @param pErrorCode
+   * @param arg1
+   */
+  public OrchestrationException(String pErrorCode, Throwable arg1) {
+    super(pErrorCode, arg1);
+  }
 
-	private static final long serialVersionUID = 1081061948859074979L;
-
+  private static final long serialVersionUID = 1081061948859074979L;
 }

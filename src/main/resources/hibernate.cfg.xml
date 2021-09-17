@@ -8,7 +8,7 @@
 		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
-		<property name="show_sql">true</property>
+		<property name="show_sql">false</property>
 		<property name="hibernate.connection.autocommit">true</property>
 		<property name="hibernate.c3p0.min_size">5</property>
 		<property name="hibernate.c3p0.max_size">50</property>
@@ -92,5 +92,13 @@
 			class="com.hphc.mystudies.dto.ParticipantPropertiesBO" />
 		<mapping
 			class="com.hphc.mystudies.dto.ParticipantPropertiesDraftBO" />
+		<mapping
+			class="com.hphc.mystudies.dto.StudyLanguagePK" />
+		<mapping
+			class="com.hphc.mystudies.dto.StudyLanguageBO" />
+		<mapping
+			class="com.hphc.mystudies.dto.StudyPageLanguageBO" />
+		<mapping
+			class="com.hphc.mystudies.dto.ConsentLanguageBO" />
 	</session-factory>
 </hibernate-configuration>

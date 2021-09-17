@@ -22,54 +22,45 @@
  */
 package com.hphc.mystudies.integration;
 
-import java.util.HashMap;
-
-import org.apache.log4j.Logger;
-
 import com.hphc.mystudies.bean.StudyDashboardResponse;
 import com.hphc.mystudies.dao.DashboardMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
 
 /**
- * Dashboard metadata service that communicates with dashboard metadata
- * {@link DashboardMetaDataDao} repository.
- * 
- * @author BTC
+ * Dashboard metadata service that communicates with dashboard metadata {@link DashboardMetaDataDao}
+ * repository.
  *
+ * @author BTC
  */
 public class DashboardMetaDataOrchestration {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(DashboardMetaDataOrchestration.class);
+  private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataOrchestration.class);
 
-	@SuppressWarnings("unchecked")
-	HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
+  @SuppressWarnings("unchecked")
+  HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
 
-	DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
+  DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
 
-	/**
-	 * Get dashboard metadata for the provided study identifier
-	 * 
-	 * @author BTC
-	 * @param studyId
-	 *            the study identifier
-	 * @return {@link StudyDashboardResponse}
-	 * @throws OrchestrationException
-	 */
-	public StudyDashboardResponse studyDashboardInfo(String studyId)
-			throws OrchestrationException {
-		LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
-		StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
-		try {
-			studyDashboardResponse = dashboardMetaDataDao
-					.studyDashboardInfo(studyId);
-		} catch (Exception e) {
-			LOGGER.error(
-					"DashboardMetaDataOrchestration - studyDashboardInfo() :: ERROR",
-					e);
-		}
-		LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Ends");
-		return studyDashboardResponse;
-	}
+  /**
+   * Get dashboard metadata for the provided study identifier
+   *
+   * @author BTC
+   * @param studyId the study identifier
+   * @return {@link StudyDashboardResponse}
+   * @throws OrchestrationException
+   */
+  public StudyDashboardResponse studyDashboardInfo(String studyId, String language) throws OrchestrationException {
+    LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
+    StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
+    try {
+      studyDashboardResponse = dashboardMetaDataDao.studyDashboardInfo(studyId, language);
+    } catch (Exception e) {
+      LOGGER.error("DashboardMetaDataOrchestration - studyDashboardInfo() :: ERROR", e);
+    }
+    LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Ends");
+    return studyDashboardResponse;
+  }
 }

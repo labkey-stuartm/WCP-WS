@@ -22,35 +22,33 @@
  */
 package com.hphc.mystudies.bean;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hphc.mystudies.util.StudyMetaDataConstants;
-
 /**
  * Provides studies metadata details {@link StudyBean} in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class StudyResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<StudyBean> studies = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private List<StudyBean> studies = new ArrayList<>();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public List<StudyBean> getStudies() {
-		return studies;
-	}
+  public List<StudyBean> getStudies() {
+    return studies;
+  }
 
-	public void setStudies(List<StudyBean> studies) {
-		this.studies = studies;
-	}
+  public void setStudies(List<StudyBean> studies) {
+    this.studies = studies;
+  }
 }

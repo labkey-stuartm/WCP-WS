@@ -23,130 +23,128 @@
 package com.hphc.mystudies.bean;
 
 /**
- * Provides activity details like activity identifier, activity version,
- * activity title, activity type, frequency details
- * {@link ActivityFrequencyBean}, start and end time of activity etc
- * 
- * @author BTC
+ * Provides activity details like activity identifier, activity version, activity title, activity
+ * type, frequency details {@link ActivityFrequencyBean}, start and end time of activity etc
  *
+ * @author BTC
  */
 public class ActivitiesBean {
 
-	private String activityId = "";
-	private String activityVersion = "";
-	private String title = "";
-	private String type = "";
-	private String startTime = "";
-	private String endTime = "";
-	private Boolean branching = false;
-	private String lastModified = "";
-	private String state = "";
-	private String taskSubType = "";
-	private String schedulingType = "";
-	private ActivityAnchorDateBean anchorDate = new ActivityAnchorDateBean();
-	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
+  private String activityId = "";
+  private String activityVersion = "";
+  private String title = "";
+  private String type = "";
+  private String startTime = "";
+  private String endTime = "";
+  private Boolean branching = false;
+  private String lastModified = "";
+  private String state = "";
+  private String taskSubType = "";
+  private String schedulingType = "";
+  private ActivityAnchorDateBean anchorDate = new ActivityAnchorDateBean();
+  private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 
-	public String getActivityId() {
-		return activityId;
-	}
+  public String getActivityId() {
+    return activityId;
+  }
 
-	public String getTaskSubType() {
-		return taskSubType;
-	}
+  public String getTaskSubType() {
+    return taskSubType;
+  }
 
-	public void setTaskSubType(String taskSubType) {
-		this.taskSubType = taskSubType;
-	}
+  public void setTaskSubType(String taskSubType) {
+    this.taskSubType = taskSubType;
+  }
 
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-	public String getActivityVersion() {
-		return activityVersion;
-	}
+  public String getActivityVersion() {
+    return activityVersion;
+  }
 
-	public void setActivityVersion(String activityVersion) {
-		this.activityVersion = activityVersion;
-	}
+  public void setActivityVersion(String activityVersion) {
+    this.activityVersion = activityVersion;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getStartTime() {
-		return startTime;
-	}
+  public String getStartTime() {
+    return startTime;
+  }
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-	public String getEndTime() {
-		return endTime;
-	}
+  public String getEndTime() {
+    return endTime;
+  }
 
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 
-	public Boolean getBranching() {
-		return branching;
-	}
+  public Boolean getBranching() {
+    return branching;
+  }
 
-	public void setBranching(Boolean branching) {
-		this.branching = branching;
-	}
+  public void setBranching(Boolean branching) {
+    this.branching = branching;
+  }
 
-	public String getLastModified() {
-		return lastModified;
-	}
+  public String getLastModified() {
+    return lastModified;
+  }
 
-	public void setLastModified(String lastModified) {
-		this.lastModified = lastModified;
-	}
+  public void setLastModified(String lastModified) {
+    this.lastModified = lastModified;
+  }
 
-	public String getState() {
-		return state;
-	}
+  public String getState() {
+    return state;
+  }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+  public void setState(String state) {
+    this.state = state;
+  }
 
-	public ActivityFrequencyBean getFrequency() {
-		return frequency;
-	}
+  public ActivityFrequencyBean getFrequency() {
+    return frequency;
+  }
 
-	public void setFrequency(ActivityFrequencyBean frequency) {
-		this.frequency = frequency;
-	}
+  public void setFrequency(ActivityFrequencyBean frequency) {
+    this.frequency = frequency;
+  }
 
-	public String getSchedulingType() {
-		return schedulingType;
-	}
+  public String getSchedulingType() {
+    return schedulingType;
+  }
 
-	public void setSchedulingType(String schedulingType) {
-		this.schedulingType = schedulingType;
-	}
+  public void setSchedulingType(String schedulingType) {
+    this.schedulingType = schedulingType;
+  }
 
-	public ActivityAnchorDateBean getAnchorDate() {
-		return anchorDate;
-	}
+  public ActivityAnchorDateBean getAnchorDate() {
+    return anchorDate;
+  }
 
-	public void setAnchorDate(ActivityAnchorDateBean anchorDate) {
-		this.anchorDate = anchorDate;
-	}
+  public void setAnchorDate(ActivityAnchorDateBean anchorDate) {
+    this.anchorDate = anchorDate;
+  }
 }

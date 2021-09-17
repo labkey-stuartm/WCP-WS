@@ -22,36 +22,33 @@
  */
 package com.hphc.mystudies.bean;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hphc.mystudies.util.StudyMetaDataConstants;
-
 /**
- * Provides details about the activity {@link ActivitiesBean} and status in the
- * response.
- * 
- * @author BTC
+ * Provides details about the activity {@link ActivitiesBean} and status in the response.
  *
+ * @author BTC
  */
 public class ActivityResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<ActivitiesBean> activities = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private List<ActivitiesBean> activities = new ArrayList<>();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public List<ActivitiesBean> getActivities() {
-		return activities;
-	}
+  public List<ActivitiesBean> getActivities() {
+    return activities;
+  }
 
-	public void setActivities(List<ActivitiesBean> activities) {
-		this.activities = activities;
-	}
+  public void setActivities(List<ActivitiesBean> activities) {
+    this.activities = activities;
+  }
 }

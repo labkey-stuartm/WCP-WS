@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,41 +32,37 @@ import javax.persistence.Table;
 
 /**
  * Provides statistics image details for the identifier.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 @Entity
 @Table(name = "statistic_master_images")
 public class StatisticImageListDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3551713191125830055L;
+  /** */
+  private static final long serialVersionUID = 3551713191125830055L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "statistic_image_id")
-	private Integer statisticImageId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "statistic_image_id")
+  private Integer statisticImageId;
 
-	@Column(name = "value")
-	private String value;
+  @Column(name = "value")
+  private String value;
 
-	public Integer getStatisticImageId() {
-		return statisticImageId;
-	}
+  public Integer getStatisticImageId() {
+    return statisticImageId;
+  }
 
-	public void setStatisticImageId(Integer statisticImageId) {
-		this.statisticImageId = statisticImageId;
-	}
+  public void setStatisticImageId(Integer statisticImageId) {
+    this.statisticImageId = statisticImageId;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

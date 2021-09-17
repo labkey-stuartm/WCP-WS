@@ -26,20 +26,18 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides Enrollment Token is valid or not.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class EnrollmentTokenResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

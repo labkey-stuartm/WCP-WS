@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,130 +31,127 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Provides active task {@link ActiveTaskDto} frequency configuration details
- * for manually schedule type of frequency.
- * 
- * @author BTC
+ * Provides active task {@link ActiveTaskDto} frequency configuration details for manually schedule
+ * type of frequency.
  *
+ * @author BTC
  */
 @Entity
 @Table(name = "active_task_custom_frequencies")
 public class ActiveTaskCustomFrequenciesDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2349155974706024005L;
+  /** */
+  private static final long serialVersionUID = -2349155974706024005L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "frequency_start_date")
-	private String frequencyStartDate;
+  @Column(name = "frequency_start_date")
+  private String frequencyStartDate;
 
-	@Column(name = "frequency_end_date")
-	private String frequencyEndDate;
+  @Column(name = "frequency_end_date")
+  private String frequencyEndDate;
 
-	@Column(name = "frequency_time")
-	private String frequencyTime;
+  @Column(name = "frequency_time")
+  private String frequencyTime;
 
-	@Column(name = "active_task_id")
-	private Integer activeTaskId;
+  @Column(name = "active_task_id")
+  private Integer activeTaskId;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	@Column(name = "x_days_sign", length = 1)
-	private boolean xDaysSign = false;
+  @Column(name = "x_days_sign", length = 1)
+  private boolean xDaysSign = false;
 
-	@Column(name = "y_days_sign", length = 1)
-	private boolean yDaysSign = false;
+  @Column(name = "y_days_sign", length = 1)
+  private boolean yDaysSign = false;
 
-	@Column(name = "time_period_from_days")
-	private Integer timePeriodFromDays;
+  @Column(name = "time_period_from_days")
+  private Integer timePeriodFromDays;
 
-	@Column(name = "time_period_to_days")
-	private Integer timePeriodToDays;
+  @Column(name = "time_period_to_days")
+  private Integer timePeriodToDays;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getFrequencyStartDate() {
-		return frequencyStartDate;
-	}
+  public String getFrequencyStartDate() {
+    return frequencyStartDate;
+  }
 
-	public void setFrequencyStartDate(String frequencyStartDate) {
-		this.frequencyStartDate = frequencyStartDate;
-	}
+  public void setFrequencyStartDate(String frequencyStartDate) {
+    this.frequencyStartDate = frequencyStartDate;
+  }
 
-	public String getFrequencyEndDate() {
-		return frequencyEndDate;
-	}
+  public String getFrequencyEndDate() {
+    return frequencyEndDate;
+  }
 
-	public void setFrequencyEndDate(String frequencyEndDate) {
-		this.frequencyEndDate = frequencyEndDate;
-	}
+  public void setFrequencyEndDate(String frequencyEndDate) {
+    this.frequencyEndDate = frequencyEndDate;
+  }
 
-	public String getFrequencyTime() {
-		return frequencyTime;
-	}
+  public String getFrequencyTime() {
+    return frequencyTime;
+  }
 
-	public void setFrequencyTime(String frequencyTime) {
-		this.frequencyTime = frequencyTime;
-	}
+  public void setFrequencyTime(String frequencyTime) {
+    this.frequencyTime = frequencyTime;
+  }
 
-	public Integer getActiveTaskId() {
-		return activeTaskId;
-	}
+  public Integer getActiveTaskId() {
+    return activeTaskId;
+  }
 
-	public void setActiveTaskId(Integer activeTaskId) {
-		this.activeTaskId = activeTaskId;
-	}
+  public void setActiveTaskId(Integer activeTaskId) {
+    this.activeTaskId = activeTaskId;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public boolean isxDaysSign() {
-		return xDaysSign;
-	}
+  public boolean isxDaysSign() {
+    return xDaysSign;
+  }
 
-	public void setxDaysSign(boolean xDaysSign) {
-		this.xDaysSign = xDaysSign;
-	}
+  public void setxDaysSign(boolean xDaysSign) {
+    this.xDaysSign = xDaysSign;
+  }
 
-	public boolean isyDaysSign() {
-		return yDaysSign;
-	}
+  public boolean isyDaysSign() {
+    return yDaysSign;
+  }
 
-	public void setyDaysSign(boolean yDaysSign) {
-		this.yDaysSign = yDaysSign;
-	}
+  public void setyDaysSign(boolean yDaysSign) {
+    this.yDaysSign = yDaysSign;
+  }
 
-	public Integer getTimePeriodFromDays() {
-		return timePeriodFromDays;
-	}
+  public Integer getTimePeriodFromDays() {
+    return timePeriodFromDays;
+  }
 
-	public void setTimePeriodFromDays(Integer timePeriodFromDays) {
-		this.timePeriodFromDays = timePeriodFromDays;
-	}
+  public void setTimePeriodFromDays(Integer timePeriodFromDays) {
+    this.timePeriodFromDays = timePeriodFromDays;
+  }
 
-	public Integer getTimePeriodToDays() {
-		return timePeriodToDays;
-	}
+  public Integer getTimePeriodToDays() {
+    return timePeriodToDays;
+  }
 
-	public void setTimePeriodToDays(Integer timePeriodToDays) {
-		this.timePeriodToDays = timePeriodToDays;
-	}
+  public void setTimePeriodToDays(Integer timePeriodToDays) {
+    this.timePeriodToDays = timePeriodToDays;
+  }
 }

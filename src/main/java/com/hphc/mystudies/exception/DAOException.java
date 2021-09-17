@@ -22,22 +22,16 @@
  */
 package com.hphc.mystudies.exception;
 
-/**
- * 
- * @author BTC
- *
- */
+/** @author BTC */
 public class DAOException extends CommonException {
 
-	/**
-	 * 
-	 * @param pErrorCode
-	 * @param arg1
-	 */
-	public DAOException(String pErrorCode, Throwable arg1) {
-		super(pErrorCode, arg1);
-	}
+  /**
+   * @param pErrorCode
+   * @param arg1
+   */
+  public DAOException(String pErrorCode, Throwable arg1) {
+    super(pErrorCode, arg1);
+  }
 
-	private static final long serialVersionUID = 3618589435796185208L;
-
+  private static final long serialVersionUID = 3618589435796185208L;
 }

@@ -26,41 +26,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides information about pass score, comprehension questions
- * {@link QuestionnaireActivityStepsBean} and correct answers details
- * {@link CorrectAnswersBean}
- * 
- * @author BTC
+ * Provides information about pass score, comprehension questions {@link
+ * QuestionnaireActivityStepsBean} and correct answers details {@link CorrectAnswersBean}
  *
+ * @author BTC
  */
 public class ComprehensionDetailsBean {
 
-	private Integer passScore = 0;
-	private List<QuestionnaireActivityStepsBean> questions = new ArrayList<>();
-	private List<CorrectAnswersBean> correctAnswers = new ArrayList<>();
+  private Integer passScore = 0;
+  private List<QuestionnaireActivityStepsBean> questions = new ArrayList<>();
+  private List<CorrectAnswersBean> correctAnswers = new ArrayList<>();
 
-	public Integer getPassScore() {
-		return passScore;
-	}
+  public Integer getPassScore() {
+    return passScore;
+  }
 
-	public void setPassScore(Integer passScore) {
-		this.passScore = passScore;
-	}
+  public void setPassScore(Integer passScore) {
+    this.passScore = passScore;
+  }
 
-	public List<QuestionnaireActivityStepsBean> getQuestions() {
-		return questions;
-	}
+  public List<QuestionnaireActivityStepsBean> getQuestions() {
+    return questions;
+  }
 
-	public void setQuestions(List<QuestionnaireActivityStepsBean> questions) {
-		this.questions = questions;
-	}
+  public void setQuestions(List<QuestionnaireActivityStepsBean> questions) {
+    this.questions = questions;
+  }
 
-	public List<CorrectAnswersBean> getCorrectAnswers() {
-		return correctAnswers;
-	}
+  public List<CorrectAnswersBean> getCorrectAnswers() {
+    return correctAnswers;
+  }
 
-	public void setCorrectAnswers(List<CorrectAnswersBean> correctAnswers) {
-		this.correctAnswers = correctAnswers;
-	}
-
+  public void setCorrectAnswers(List<CorrectAnswersBean> correctAnswers) {
+    this.correctAnswers = correctAnswers;
+  }
 }

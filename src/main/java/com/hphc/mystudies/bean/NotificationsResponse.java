@@ -22,36 +22,33 @@
  */
 package com.hphc.mystudies.bean;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hphc.mystudies.util.StudyMetaDataConstants;
-
 /**
- * Provides study notification details {@link NotificationsBean} in the
- * response.
- * 
- * @author BTC
+ * Provides study notification details {@link NotificationsBean} in the response.
  *
+ * @author BTC
  */
 public class NotificationsResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<NotificationsBean> notifications = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private List<NotificationsBean> notifications = new ArrayList<>();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public List<NotificationsBean> getNotifications() {
-		return notifications;
-	}
+  public List<NotificationsBean> getNotifications() {
+    return notifications;
+  }
 
-	public void setNotifications(List<NotificationsBean> notifications) {
-		this.notifications = notifications;
-	}
+  public void setNotifications(List<NotificationsBean> notifications) {
+    this.notifications = notifications;
+  }
 }

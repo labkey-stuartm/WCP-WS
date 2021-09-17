@@ -24,20 +24,18 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides failure {@link ErrorBean} details in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class FailureResponse extends SuccessResponse {
 
-	private ErrorBean errors = new ErrorBean();
+  private ErrorBean errors = new ErrorBean();
 
-	public ErrorBean getErrors() {
-		return errors;
-	}
+  public ErrorBean getErrors() {
+    return errors;
+  }
 
-	public void setErrors(ErrorBean errors) {
-		this.errors = errors;
-	}
-
+  public void setErrors(ErrorBean errors) {
+    this.errors = errors;
+  }
 }

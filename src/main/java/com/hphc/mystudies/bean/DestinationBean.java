@@ -24,44 +24,47 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides destination details
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class DestinationBean {
 
-	private String condition = "";
-	private String operator = "";
-	private String destination = "";
+  private String condition = "";
+  private String operator = "";
+  private String destination = "";
 
-	public String getCondition() {
-		return condition;
-	}
+  public String getCondition() {
+    return condition;
+  }
 
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
+  public void setCondition(String condition) {
+    this.condition = condition;
+  }
 
-	public String getOperator() {
-		return operator;
-	}
+  public String getOperator() {
+    return operator;
+  }
 
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
 
-	public String getDestination() {
-		return destination;
-	}
+  public String getDestination() {
+    return destination;
+  }
 
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
+  public void setDestination(String destination) {
+    this.destination = destination;
+  }
 
-	@Override
-	public String toString() {
-		return "DestinationBean [condition=" + condition + ", operator="
-				+ operator + ", destination=" + destination + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "DestinationBean [condition="
+        + condition
+        + ", operator="
+        + operator
+        + ", destination="
+        + destination
+        + "]";
+  }
 }

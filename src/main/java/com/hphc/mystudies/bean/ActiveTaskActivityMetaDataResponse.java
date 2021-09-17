@@ -25,31 +25,29 @@ package com.hphc.mystudies.bean;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
- * Provides active task metadata details in response. i.e. status and metadata
- * information of activity {@link ActiveTaskActivityStructureBean}.
- * 
- * @author BTC
+ * Provides active task metadata details in response. i.e. status and metadata information of
+ * activity {@link ActiveTaskActivityStructureBean}.
  *
+ * @author BTC
  */
 public class ActiveTaskActivityMetaDataResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private ActiveTaskActivityStructureBean activity = new ActiveTaskActivityStructureBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private ActiveTaskActivityStructureBean activity = new ActiveTaskActivityStructureBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public ActiveTaskActivityStructureBean getActivity() {
-		return activity;
-	}
+  public ActiveTaskActivityStructureBean getActivity() {
+    return activity;
+  }
 
-	public void setActivity(ActiveTaskActivityStructureBean activity) {
-		this.activity = activity;
-	}
-
+  public void setActivity(ActiveTaskActivityStructureBean activity) {
+    this.activity = activity;
+  }
 }

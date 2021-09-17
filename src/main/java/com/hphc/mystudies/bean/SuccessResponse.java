@@ -26,20 +26,18 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides success status in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class SuccessResponse {
 
-	private String resultType = StudyMetaDataConstants.FAILURE;
+  private String resultType = StudyMetaDataConstants.FAILURE;
 
-	public String getResultType() {
-		return resultType;
-	}
+  public String getResultType() {
+    return resultType;
+  }
 
-	public void setResultType(String resultType) {
-		this.resultType = resultType;
-	}
-
+  public void setResultType(String resultType) {
+    this.resultType = resultType;
+  }
 }

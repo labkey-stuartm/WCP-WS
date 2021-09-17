@@ -26,31 +26,29 @@ import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
- * Provides questionnaire activity metadata details
- * {@link QuestionnaireActivityStructureBean} in response.
- * 
- * @author BTC
+ * Provides questionnaire activity metadata details {@link QuestionnaireActivityStructureBean} in
+ * response.
  *
+ * @author BTC
  */
 public class QuestionnaireActivityMetaDataResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private QuestionnaireActivityStructureBean activity = new QuestionnaireActivityStructureBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private QuestionnaireActivityStructureBean activity = new QuestionnaireActivityStructureBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public QuestionnaireActivityStructureBean getActivity() {
-		return activity;
-	}
+  public QuestionnaireActivityStructureBean getActivity() {
+    return activity;
+  }
 
-	public void setActivity(QuestionnaireActivityStructureBean activity) {
-		this.activity = activity;
-	}
-
+  public void setActivity(QuestionnaireActivityStructureBean activity) {
+    this.activity = activity;
+  }
 }

@@ -26,28 +26,27 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 /**
  * Provides study dashboard metadata details {@link DashboardBean} in response.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class StudyDashboardResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private DashboardBean dashboard = new DashboardBean();
+  private String message = StudyMetaDataConstants.FAILURE;
+  private DashboardBean dashboard = new DashboardBean();
 
-	public String getMessage() {
-		return message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public DashboardBean getDashboard() {
-		return dashboard;
-	}
+  public DashboardBean getDashboard() {
+    return dashboard;
+  }
 
-	public void setDashboard(DashboardBean dashboard) {
-		this.dashboard = dashboard;
-	}
+  public void setDashboard(DashboardBean dashboard) {
+    this.dashboard = dashboard;
+  }
 }

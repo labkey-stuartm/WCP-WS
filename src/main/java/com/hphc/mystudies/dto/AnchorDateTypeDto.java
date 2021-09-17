@@ -1,7 +1,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,93 +10,92 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the anchordatetype added by admin database table.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 @Entity
 @Table(name = "anchordate_type")
 public class AnchorDateTypeDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "custom_study_id")
-	private String customStudyId;
+  @Column(name = "custom_study_id")
+  private String customStudyId;
 
-	@Column(name = "study_id")
-	private Integer studyId;
+  @Column(name = "study_id")
+  private Integer studyId;
 
-	@Column(name = "name")
-	private String name;
+  @Column(name = "name")
+  private String name;
 
-	// 0-not used and 1- used
-	@Column(name = "has_anchortype_draft")
-	private Integer hasAnchortypeDraft = 0;
+  // 0-not used and 1- used
+  @Column(name = "has_anchortype_draft")
+  private Integer hasAnchortypeDraft = 0;
 
-	@Column(name = "version")
-	private Float version = 0f;
+  @Column(name = "version")
+  private Float version = 0f;
 
-	@Column(name = "participant_property")
-	private Boolean participantProperty = false;
+  @Column(name = "participant_property")
+  private Boolean participantProperty = false;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
+  public String getCustomStudyId() {
+    return customStudyId;
+  }
 
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
+  public void setCustomStudyId(String customStudyId) {
+    this.customStudyId = customStudyId;
+  }
 
-	public Integer getStudyId() {
-		return studyId;
-	}
+  public Integer getStudyId() {
+    return studyId;
+  }
 
-	public void setStudyId(Integer studyId) {
-		this.studyId = studyId;
-	}
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public Integer getHasAnchortypeDraft() {
-		return hasAnchortypeDraft;
-	}
+  public Integer getHasAnchortypeDraft() {
+    return hasAnchortypeDraft;
+  }
 
-	public void setHasAnchortypeDraft(Integer hasAnchortypeDraft) {
-		this.hasAnchortypeDraft = hasAnchortypeDraft;
-	}
+  public void setHasAnchortypeDraft(Integer hasAnchortypeDraft) {
+    this.hasAnchortypeDraft = hasAnchortypeDraft;
+  }
 
-	public Float getVersion() {
-		return version;
-	}
+  public Float getVersion() {
+    return version;
+  }
 
-	public void setVersion(Float version) {
-		this.version = version;
-	}
+  public void setVersion(Float version) {
+    this.version = version;
+  }
 
-	public Boolean getParticipantProperty() {
-		return participantProperty;
-	}
+  public Boolean getParticipantProperty() {
+    return participantProperty;
+  }
 
-	public void setParticipantProperty(Boolean participantProperty) {
-		this.participantProperty = participantProperty;
-	}
+  public void setParticipantProperty(Boolean participantProperty) {
+    this.participantProperty = participantProperty;
+  }
 }

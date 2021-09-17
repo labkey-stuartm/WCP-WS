@@ -24,38 +24,36 @@ package com.hphc.mystudies.bean;
 
 /**
  * Provides error details.
- * 
- * @author BTC
  *
+ * @author BTC
  */
 public class ErrorBean {
 
-	private String status = "";
-	private String title = "";
-	private String detail = "";
+  private String status = "";
+  private String title = "";
+  private String detail = "";
 
-	public String getStatus() {
-		return status;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getDetail() {
-		return detail;
-	}
+  public String getDetail() {
+    return detail;
+  }
 
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
+  public void setDetail(String detail) {
+    this.detail = detail;
+  }
 }
