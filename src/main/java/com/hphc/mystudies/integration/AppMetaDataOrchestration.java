@@ -59,9 +59,9 @@ public class AppMetaDataOrchestration {
   /**
    * Get terms and policy for the app
    *
-   * @author BTC
    * @return {@link TermsPolicyResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public TermsPolicyResponse termsPolicy() throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - termsPolicy() :: Starts");
@@ -78,18 +78,19 @@ public class AppMetaDataOrchestration {
   /**
    * Fetch available notifications
    *
-   * @author BTC
-   * @param skip the skip count
+   * @param skip          the skip count
    * @param authorization the Basic Authorization
    * @return {@link NotificationsResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
+  public NotificationsResponse notifications(String skip, String authorization, String appId,
+      String language)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
-      notificationsResponse = appMetaDataDao.notifications(skip, authorization, appId);
+      notificationsResponse = appMetaDataDao.notifications(skip, authorization, appId, language);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - notifications() :: ERROR", e);
     }
@@ -100,11 +101,11 @@ public class AppMetaDataOrchestration {
   /**
    * Notify admin's about the feedback
    *
-   * @author BTC
    * @param subject the Subject Details
-   * @param body the Body Details
+   * @param body    the Body Details
    * @return {@link AppResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public AppResponse feedback(String subject, String body) throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - feedback() :: Starts");
@@ -141,13 +142,13 @@ public class AppMetaDataOrchestration {
   /**
    * Notify admin's about the user contact information
    *
-   * @author BTC
-   * @param subject the Subject Details
-   * @param body the Body Details
+   * @param subject   the Subject Details
+   * @param body      the Body Details
    * @param firstName the First Name
-   * @param email the Email Details
+   * @param email     the Email Details
    * @return {@link AppResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public AppResponse contactUsDetails(String subject, String body, String firstName, String email)
       throws OrchestrationException {
@@ -203,11 +204,11 @@ public class AppMetaDataOrchestration {
   /**
    * Check for app updates
    *
-   * @author BTC
    * @param appVersion the App Version
-   * @param app the Basic Authorization
+   * @param app        the Basic Authorization
    * @return {@link AppUpdatesResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public AppUpdatesResponse appUpdates(String appVersion, String app)
       throws OrchestrationException {
@@ -225,11 +226,11 @@ public class AppMetaDataOrchestration {
   /**
    * Check for study updates
    *
-   * @author BTC
-   * @param studyId the Study Identifier
+   * @param studyId      the Study Identifier
    * @param studyVersion the Study Version
    * @return {@link StudyUpdatesResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
       throws OrchestrationException {
@@ -247,15 +248,15 @@ public class AppMetaDataOrchestration {
   /**
    * Update app version
    *
-   * @author BTC
-   * @param forceUpdate the Force Update Flag
-   * @param osType the Platform Type
-   * @param appVersion the App Version
-   * @param bundleId the Bundle Identifier
+   * @param forceUpdate   the Force Update Flag
+   * @param osType        the Platform Type
+   * @param appVersion    the App Version
+   * @param bundleId      the Bundle Identifier
    * @param customStudyId the Study Name
-   * @param message the Description about the Update
+   * @param message       the Description about the Update
    * @return the success or failure
    * @throws OrchestrationException
+   * @author BTC
    */
   public String updateAppVersionDetails(
       String forceUpdate,
@@ -362,13 +363,13 @@ public class AppMetaDataOrchestration {
           errorBean.setStatus(StudyMetaDataConstants.SUCCESS);
           errorResponse.setError(errorBean);
         } /*
-           * else {
-           *
-           * errorResponse.setError(new ErrorBean().setCode(ErrorCode.EC_112.code())
-           * .setMessage(ErrorCode.EC_112.errorMessage()));
-           *
-           * }
-           */
+         * else {
+         *
+         * errorResponse.setError(new ErrorBean().setCode(ErrorCode.EC_112.code())
+         * .setMessage(ErrorCode.EC_112.errorMessage()));
+         *
+         * }
+         */
       }
 
     } catch (Exception e) {

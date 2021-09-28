@@ -369,7 +369,7 @@ public class StudyMetaDataService {
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
-    Boolean isValidFlag = false;
+    boolean isValidFlag = false;
     try {
       if (StringUtils.isNotEmpty(studyId)) {
         isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
@@ -386,7 +386,7 @@ public class StudyMetaDataService {
                       language, MultiLanguageConstants.INVALID_STUDY_ID))
               .build();
         }
-        resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId);
+        resourcesResponse = studyMetaDataOrchestration.resourcesForStudy(studyId, language);
         if (!resourcesResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -747,7 +747,8 @@ public class StudyMetaDataService {
               .build();
         }
 
-        studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId, language);
+        studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId,
+            language);
         if (!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -847,7 +848,8 @@ public class StudyMetaDataService {
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
       if (StringUtils.isNotEmpty(skip)) {
-        notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization, appId);
+        notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization, appId,
+            language);
         if (!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,

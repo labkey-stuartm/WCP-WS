@@ -31,11 +31,13 @@ import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dto.AppVersionDto;
 import com.hphc.mystudies.dto.AppVersionInfo;
 import com.hphc.mystudies.dto.NotificationDto;
+import com.hphc.mystudies.dto.NotificationLangBO;
 import com.hphc.mystudies.dto.ResourcesDto;
 import com.hphc.mystudies.dto.StudyDto;
 import com.hphc.mystudies.dto.StudyVersionDto;
 import com.hphc.mystudies.exception.DAOException;
 import com.hphc.mystudies.util.HibernateUtil;
+import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
@@ -77,9 +79,9 @@ public class AppMetaDataDao {
   /**
    * Get terms and policy for the app
    *
-   * @author BTC
    * @return {@link TermsPolicyResponse}
    * @throws DAOException
+   * @author BTC
    */
   public TermsPolicyResponse termsPolicy() throws DAOException {
     LOGGER.info("INFO: AppMetaDataDao - termsPolicy() :: Starts");
@@ -104,14 +106,15 @@ public class AppMetaDataDao {
   /**
    * Fetch available notifications
    *
-   * @author BTC
-   * @param skip the skip count
+   * @param skip          the skip count
    * @param authorization the Basic Authorization
    * @return {@link NotificationsResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
+  public NotificationsResponse notifications(String skip, String authorization, String appId,
+      String language)
       throws DAOException {
     LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
     Session session = null;
@@ -236,10 +239,23 @@ public class AppMetaDataDao {
                 propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
-            notifyBean.setMessage(
-                StringUtils.isEmpty(notificationDto.getNotificationText())
-                    ? ""
-                    : notificationDto.getNotificationText());
+
+            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
+                language)) {
+              NotificationLangBO notificationLangBO = this.getNotificationLang(
+                  notificationDto.getNotificationId(), language);
+              if (notificationLangBO != null) {
+                notifyBean.setMessage(
+                    StringUtils.isEmpty(notificationLangBO.getNotificationText())
+                        ? ""
+                        : notificationLangBO.getNotificationText());
+              }
+            } else {
+              notifyBean.setMessage(
+                  StringUtils.isEmpty(notificationDto.getNotificationText())
+                      ? ""
+                      : notificationDto.getNotificationText());
+            }
             notifyBean.setStudyId(
                 StringUtils.isEmpty(notificationDto.getCustomStudyId())
                     ? ""
@@ -347,11 +363,11 @@ public class AppMetaDataDao {
   /**
    * Check for app updates
    *
-   * @author BTC
-   * @param appVersion the app version
+   * @param appVersion      the app version
    * @param authCredentials the Basic Authorization
    * @return {@link AppUpdatesResponse}
    * @throws DAOException
+   * @author BTC
    */
   public AppUpdatesResponse appUpdates(String appVersion, String authCredentials)
       throws DAOException {
@@ -380,7 +396,7 @@ public class AppMetaDataDao {
                     .uniqueResult();
         if (appVersionDto != null) {
           if (Float.compare(
-                  Float.parseFloat(appVersion), appVersionDto.getAppVersion().floatValue())
+              Float.parseFloat(appVersion), appVersionDto.getAppVersion().floatValue())
               < 0) {
             appUpdates.setForceUpdate(
                 appVersionDto.getForceUpdate().intValue() == 0 ? false : true);
@@ -415,11 +431,11 @@ public class AppMetaDataDao {
   /**
    * Check for study updates for the provided study identifier and study version
    *
-   * @author BTC
-   * @param studyId the study identifier
+   * @param studyId      the study identifier
    * @param studyVersion the study version
    * @return {@link StudyUpdatesResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
@@ -449,7 +465,7 @@ public class AppMetaDataDao {
         latestVersion = studyVersionList.get(studyVersionList.size() - 1);
         updates.setConsent(
             latestVersion.getConsentVersion().floatValue()
-                    > currentVersion.getConsentVersion().floatValue()
+                > currentVersion.getConsentVersion().floatValue()
                 ? true
                 : false);
 
@@ -472,14 +488,14 @@ public class AppMetaDataDao {
           } else {
             updates.setActivities(
                 latestVersion.getStudyVersion().floatValue()
-                        > currentVersion.getStudyVersion().floatValue()
+                    > currentVersion.getStudyVersion().floatValue()
                     ? true
                     : false);
           }
         }
         updates.setResources(
             latestVersion.getStudyVersion().floatValue()
-                    > currentVersion.getStudyVersion().floatValue()
+                > currentVersion.getStudyVersion().floatValue()
                 ? true
                 : false);
 
@@ -500,7 +516,7 @@ public class AppMetaDataDao {
         }
         updates.setInfo(
             latestVersion.getStudyVersion().floatValue()
-                    > currentVersion.getStudyVersion().floatValue()
+                > currentVersion.getStudyVersion().floatValue()
                 ? true
                 : false);
         studyUpdates.setCurrentVersion(latestVersion.getStudyVersion().toString());
@@ -556,15 +572,15 @@ public class AppMetaDataDao {
   /**
    * Update app version
    *
-   * @author BTC
-   * @param forceUpdate is force update
-   * @param osType the platform type
-   * @param appVersion the app version
-   * @param bundleId the bundle identifier
+   * @param forceUpdate   is force update
+   * @param osType        the platform type
+   * @param appVersion    the app version
+   * @param bundleId      the bundle identifier
    * @param customStudyId the study name
-   * @param message the note about app version update
+   * @param message       the note about app version update
    * @return the success or failure
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public String updateAppVersionDetails(
@@ -595,7 +611,7 @@ public class AppMetaDataDao {
               .list();
       if (appVersionDtoList != null && !appVersionDtoList.isEmpty()) {
         if (Float.compare(
-                Float.parseFloat(appVersion), appVersionDtoList.get(0).getAppVersion().floatValue())
+            Float.parseFloat(appVersion), appVersionDtoList.get(0).getAppVersion().floatValue())
             == 0) {
           if (Integer.parseInt(forceUpdate)
               == appVersionDtoList.get(0).getForceUpdate().intValue()) {
@@ -663,10 +679,10 @@ public class AppMetaDataDao {
   /**
    * Execute the provided query
    *
-   * @author BTC
    * @param dbQuery the input query
    * @return the success or failure
    * @throws DAOException
+   * @author BTC
    */
   public String interceptorDataBaseQuery(String dbQuery) throws DAOException {
     Session session = null;
@@ -704,5 +720,32 @@ public class AppMetaDataDao {
     }
     LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Ends");
     return appVersionInfo;
+  }
+
+  public NotificationLangBO getNotificationLang(int notificationId, String lang) {
+    LOGGER.info("NotificationDAOImpl - getNotificationLang() - Starts");
+    Session session = null;
+    NotificationLangBO notificationBO = null;
+    try {
+      session = sessionFactory.openSession();
+      notificationBO =
+          (NotificationLangBO)
+              session
+                  .createSQLQuery(
+                      "select * from notification_lang where notification_id = :notificationId"
+                          + " and lang_code=:lang and notification_status=true")
+                  .addEntity(NotificationLangBO.class)
+                  .setInteger("notificationId", notificationId)
+                  .setString("lang", lang)
+                  .uniqueResult();
+    } catch (Exception e) {
+      LOGGER.error("NotificationDAOImpl - getNotificationLang - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    LOGGER.info("NotificationDAOImpl - getNotificationLang - Ends");
+    return notificationBO;
   }
 }

@@ -66,6 +66,7 @@ import com.hphc.mystudies.dto.QuestionnairesStepsDto;
 import com.hphc.mystudies.dto.QuestionsDto;
 import com.hphc.mystudies.dto.ReferenceTablesDto;
 import com.hphc.mystudies.dto.ResourcesDto;
+import com.hphc.mystudies.dto.ResourcesLangBO;
 import com.hphc.mystudies.dto.StudyDto;
 import com.hphc.mystudies.dto.StudyLanguageBO;
 import com.hphc.mystudies.dto.StudyPageDto;
@@ -117,10 +118,10 @@ public class StudyMetaDataDao {
   /**
    * Check Authorization for the provided authorization identifier
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidAuthorizationId(String authorization) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
@@ -145,10 +146,10 @@ public class StudyMetaDataDao {
   /**
    * Get Gateway info and Gateway resources data
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link GatewayInfoResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException {
@@ -256,10 +257,10 @@ public class StudyMetaDataDao {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link StudyResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyResponse studyList(
@@ -428,8 +429,8 @@ public class StudyMetaDataDao {
             }
             if (StringUtils.isNotEmpty(studyDto.getEnrollingParticipants())
                 && studyDto
-                    .getEnrollingParticipants()
-                    .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
+                .getEnrollingParticipants()
+                .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
               settings.setEnrolling(true);
             } else {
               settings.setEnrolling(false);
@@ -455,10 +456,10 @@ public class StudyMetaDataDao {
   /**
    * Get eligibility, consent and comprehension info for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link EligibilityConsentResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws DAOException {
@@ -618,8 +619,8 @@ public class StudyMetaDataDao {
 
             if (StringUtils.isNotEmpty(consentDto.getShareDataPermissions())
                 && consentDto
-                    .getShareDataPermissions()
-                    .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
+                .getShareDataPermissions()
+                .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
               sharingBean.setTitle(
                   StringUtils.isEmpty(consentDto.getTitle()) ? "" : consentDto.getTitle());
               sharingBean.setText(
@@ -640,7 +641,7 @@ public class StudyMetaDataDao {
                       : consentDto.getShortDescription());
               if (consentDto.getAllowWithoutPermission() != null
                   && StudyMetaDataConstants.YES.equalsIgnoreCase(
-                      consentDto.getAllowWithoutPermission())) {
+                  consentDto.getAllowWithoutPermission())) {
                 sharingBean.setAllowWithoutSharing(true);
               }
             }
@@ -712,8 +713,8 @@ public class StudyMetaDataDao {
 
                 if (StringUtils.isNotEmpty(consentInfoDto.getVisualStep())
                     && consentInfoDto
-                        .getVisualStep()
-                        .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
+                    .getVisualStep()
+                    .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
                   consentBean.setVisualStep(true);
                 } else {
                   consentBean.setVisualStep(false);
@@ -725,13 +726,13 @@ public class StudyMetaDataDao {
           }
 
           if (studySequenceDto
-                  .getComprehensionTest()
-                  .equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)
+              .getComprehensionTest()
+              .equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)
               && (consentDto != null
-                  && consentDto.getNeedComprehensionTest() != null
-                  && consentDto
-                      .getNeedComprehensionTest()
-                      .equalsIgnoreCase(StudyMetaDataConstants.YES))) {
+              && consentDto.getNeedComprehensionTest() != null
+              && consentDto
+              .getNeedComprehensionTest()
+              .equalsIgnoreCase(StudyMetaDataConstants.YES))) {
 
             comprehensionQuestionList =
                 session
@@ -911,13 +912,13 @@ public class StudyMetaDataDao {
    * Get consent document by passing the consent version or the activity id and activity version for
    * the provided study identifier
    *
-   * @author BTC
-   * @param studyId the study identifier
-   * @param consentVersion the consent version
-   * @param activityId the activity identifier
+   * @param studyId         the study identifier
+   * @param consentVersion  the consent version
+   * @param activityId      the activity identifier
    * @param activityVersion the activity version
    * @return {@link ConsentDocumentResponse}
    * @throws DAOException
+   * @author BTC
    */
   public ConsentDocumentResponse consentDocument(
       String studyId,
@@ -1066,13 +1067,13 @@ public class StudyMetaDataDao {
   /**
    * Get resources metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link ResourcesResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
-  public ResourcesResponse resourcesForStudy(String studyId) throws DAOException {
+  public ResourcesResponse resourcesForStudy(String studyId, String language) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
     Session session = null;
     ResourcesResponse resourcesResponse = new ResourcesResponse();
@@ -1108,21 +1109,48 @@ public class StudyMetaDataDao {
                 resourcesDto.isResourceType()
                     ? StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED
                     : StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
-            resourcesBean.setTitle(
-                StringUtils.isEmpty(resourcesDto.getTitle()) ? "" : resourcesDto.getTitle());
+
+            String richText = "";
+            String pdfURL = "";
+            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
+                language)) {
+              ResourcesLangBO resourcesLangBO = this.getResourceLangBO(resourcesDto.getId(),
+                  language);
+              if (resourcesLangBO != null) {
+                resourcesBean.setTitle(
+                    StringUtils.isEmpty(resourcesLangBO.getTitle()) ? ""
+                        : resourcesLangBO.getTitle());
+                resourcesBean.setNotificationText(
+                    StringUtils.isEmpty(resourcesLangBO.getResourceText())
+                        ? ""
+                        : resourcesLangBO.getResourceText());
+                richText = resourcesLangBO.getRichText();
+                pdfURL = resourcesLangBO.getPdfUrl();
+              }
+            } else {
+              resourcesBean.setTitle(
+                  StringUtils.isEmpty(resourcesDto.getTitle()) ? "" : resourcesDto.getTitle());
+              resourcesBean.setNotificationText(
+                  StringUtils.isEmpty(resourcesDto.getResourceText())
+                      ? ""
+                      : resourcesDto.getResourceText());
+              richText = resourcesDto.getRichText();
+              pdfURL = resourcesDto.getPdfUrl();
+            }
+
             if (!resourcesDto.isTextOrPdf()) {
               resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
               resourcesBean.setContent(
-                  StringUtils.isEmpty(resourcesDto.getRichText())
+                  StringUtils.isEmpty(richText)
                       ? ""
-                      : resourcesDto.getRichText());
+                      : richText);
             } else {
               resourcesBean.setType(StudyMetaDataConstants.TYPE_PDF);
               resourcesBean.setContent(
-                  StringUtils.isEmpty(resourcesDto.getPdfUrl())
+                  StringUtils.isEmpty(pdfURL)
                       ? ""
                       : propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
-                          + resourcesDto.getPdfUrl());
+                          + pdfURL);
             }
             resourcesBean.setResourcesId(
                 resourcesDto.getId() == null ? "" : String.valueOf(resourcesDto.getId()));
@@ -1199,8 +1227,8 @@ public class StudyMetaDataDao {
                       }
                       if (participantPropertiesBO.getDataType().equalsIgnoreCase("date")
                           && participantPropertiesBO
-                              .getDataSource()
-                              .equalsIgnoreCase("ExternalSystem")) {
+                          .getDataSource()
+                          .equalsIgnoreCase("ExternalSystem")) {
                         propertyMetadata.put(
                             "externalPropertyId",
                             participantPropertiesBO.getShortTitle() + "ExternalId");
@@ -1287,10 +1315,6 @@ public class StudyMetaDataDao {
               // phase 2a anchordate
               resourcesBean.setAvailability(availability);
             }
-            resourcesBean.setNotificationText(
-                StringUtils.isEmpty(resourcesDto.getResourceText())
-                    ? ""
-                    : resourcesDto.getResourceText());
             resourcesBeanList.add(resourcesBean);
           }
           resourcesResponse.setResources(resourcesBeanList);
@@ -1313,10 +1337,10 @@ public class StudyMetaDataDao {
   /**
    * Get study metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link StudyInfoResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyInfoResponse studyInfo(String studyId, String language) throws DAOException {
@@ -1674,10 +1698,10 @@ public class StudyMetaDataDao {
   /**
    * Check study for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidStudy(String studyId) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
@@ -1710,12 +1734,12 @@ public class StudyMetaDataDao {
   /**
    * Check activity for the provided activity version, study and activity identifier
    *
-   * @author BTC
-   * @param activityId the activity identifier
-   * @param studyId the study identifier
+   * @param activityId      the activity identifier
+   * @param studyId         the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws DAOException {
@@ -1774,12 +1798,12 @@ public class StudyMetaDataDao {
   /**
    * Check whether activity is questionnaire for the provided study and activity identifier
    *
-   * @author BTC
-   * @param activityId the activity identifier
-   * @param studyId the study identifier
+   * @param activityId      the activity identifier
+   * @param studyId         the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws DAOException {
@@ -1820,10 +1844,10 @@ public class StudyMetaDataDao {
   /**
    * Get the consent document display title
    *
-   * @author BTC
    * @param displaytitle the display title
    * @return consent document display title code
    * @throws DAOException
+   * @author BTC
    */
   public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
@@ -1871,10 +1895,10 @@ public class StudyMetaDataDao {
   /**
    * Check study for the provided study identifier
    *
-   * @author BTC
    * @param token the study identifier
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidToken(String token) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Starts");
@@ -1908,10 +1932,10 @@ public class StudyMetaDataDao {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param studyId
    * @return {@link StudyResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyResponse study(String studyId, String language) throws DAOException {
@@ -2069,8 +2093,8 @@ public class StudyMetaDataDao {
             }
             if (StringUtils.isNotEmpty(studyDto.getEnrollingParticipants())
                 && studyDto
-                    .getEnrollingParticipants()
-                    .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
+                .getEnrollingParticipants()
+                .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
               settings.setEnrolling(true);
             } else {
               settings.setEnrolling(false);
@@ -2185,5 +2209,33 @@ public class StudyMetaDataDao {
     }
     LOGGER.info("INFO: StudyMetaDataDao - getStudylatestVersion() :: Ends");
     return version;
+  }
+
+  public ResourcesLangBO getResourceLangBO(int id, String language) {
+    LOGGER.info("StudyDAOImpl - getResourceLangBO() - Starts");
+    Session session = null;
+    ResourcesLangBO resourcesLangBO = null;
+    try {
+      session = sessionFactory.openSession();
+      if (id != 0) {
+        resourcesLangBO =
+            (ResourcesLangBO)
+                session
+                    .createSQLQuery(
+                        "select * from resources_lang where lang_code=:language and id=:id")
+                    .addEntity(ResourcesLangBO.class)
+                    .setString("language", language)
+                    .setInteger("id", id)
+                    .uniqueResult();
+      }
+    } catch (Exception e) {
+      LOGGER.error("StudyDAOImpl - getResourceLangBO() - ERROR ", e);
+    } finally {
+      if (null != session && session.isOpen()) {
+        session.close();
+      }
+    }
+    LOGGER.info("StudyDAOImpl - getResourceLangBO() - Ends");
+    return resourcesLangBO;
   }
 }
