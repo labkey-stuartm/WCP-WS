@@ -75,6 +75,7 @@ import com.hphc.mystudies.dto.StudySequenceDto;
 import com.hphc.mystudies.dto.StudyVersionDto;
 import com.hphc.mystudies.exception.DAOException;
 import com.hphc.mystudies.util.HibernateUtil;
+import com.hphc.mystudies.util.MultiLanguageCodes;
 import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstantsSpanish;
@@ -296,6 +297,7 @@ public class StudyMetaDataDao {
           List<StudyBean> studyBeanList = new ArrayList<>();
           for (StudyDto studyDto : studiesList) {
             StudyLanguageBO studyLanguageBO = null;
+            StudyBean studyBean = new StudyBean();
             if (StringUtils.isNotBlank(language)
                 && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
                 && studyDto.getMultiLanguageFlag() != null
@@ -309,28 +311,66 @@ public class StudyMetaDataDao {
                           .setString("studyId", studyDto.getId().toString())
                           .setString("langCode", language)
                           .uniqueResult();
-            }
-
-            StudyBean studyBean = new StudyBean();
-            studyBean.setStudyVersion(
-                studyDto.getVersion() == null
-                    ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
-                    : studyDto.getVersion().toString());
-            if (studyLanguageBO != null) {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyLanguageBO.getStudyTagline())
                       ? ""
                       : studyLanguageBO.getStudyTagline());
               studyBean.setTitle(
                   StringUtils.isEmpty(studyLanguageBO.getName()) ? "" : studyLanguageBO.getName());
-            } else {
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyLanguageBO.getResearchSponsor())
+                      ? ""
+                      : studyLanguageBO.getResearchSponsor());
+              try {
+                Field idField =
+                    StudyMetaDataConstantsSpanish.class.getField(
+                        "id_" + studyLanguageBO.getCategory());
+                try {
+                  studyBean.setCategory(idField.get(null).toString());
+                } catch (IllegalAccessException e) {
+                  LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
+                }
+              } catch (NoSuchFieldException e) {
+                LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
+              }
+            }
+            else {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyDto.getStudyTagline())
                       ? ""
                       : studyDto.getStudyTagline());
               studyBean.setTitle(StringUtils.isEmpty(studyDto.getName()) ? "" : studyDto.getName());
-            }
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyDto.getResearchSponsor())
+                      ? ""
+                      : studyDto.getResearchSponsor());
 
+              if (StringUtils.isNotEmpty(studyDto.getCategory())
+                  && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+                List<ReferenceTablesDto> referenceTablesList =
+                    session
+                        .createQuery(
+                            "from ReferenceTablesDto RTDTO"
+                                + " where RTDTO.id IN ("
+                                + studyDto.getCategory()
+                                + ")")
+                        .list();
+                if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
+                  for (ReferenceTablesDto reference : referenceTablesList) {
+                    if (reference
+                        .getCategory()
+                        .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
+                      studyBean.setCategory(
+                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    }
+                  }
+                }
+              }
+            }
+            studyBean.setStudyVersion(
+                studyDto.getVersion() == null
+                    ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
+                    : studyDto.getVersion().toString());
             switch (studyDto.getStatus()) {
               case StudyMetaDataConstants.STUDY_STATUS_ACTIVE:
                 studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
@@ -357,55 +397,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
                     : studyDto.getCustomStudyId());
-
-            studyBean.setStudyLanguage(
-                StringUtils.isEmpty(studyDto.getStudyLanguage())
-                    ? "English"
-                    : studyDto.getStudyLanguage());
-
-            studyBean.setSponsorName(
-                StringUtils.isEmpty(studyDto.getResearchSponsor())
-                    ? ""
-                    : studyDto.getResearchSponsor());
-
-            if (StringUtils.isNotEmpty(studyDto.getCategory())
-                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-              List<ReferenceTablesDto> referenceTablesList =
-                  session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO"
-                              + " where RTDTO.id IN ("
-                              + studyDto.getCategory()
-                              + ")")
-                      .list();
-              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                for (ReferenceTablesDto reference : referenceTablesList) {
-                  if (reference
-                      .getCategory()
-                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    if (StringUtils.isEmpty(studyDto.getStudyLanguage())
-                        || StringUtils.equals(studyDto.getStudyLanguage(), "English")) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                    } else {
-                      try {
-                        Field idField =
-                            StudyMetaDataConstantsSpanish.class.getField(
-                                "id_" + studyDto.getCategory());
-                        try {
-                          studyBean.setCategory(idField.get(null).toString());
-                        } catch (IllegalAccessException e) {
-                          LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                        }
-                      } catch (NoSuchFieldException e) {
-                        LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
+            studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
             SettingsBean settings = new SettingsBean();
             if (studyDto.getPlatform().contains(",")) {
               settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ALL);
