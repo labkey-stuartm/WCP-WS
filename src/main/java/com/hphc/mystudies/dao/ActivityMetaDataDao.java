@@ -117,7 +117,7 @@ public class ActivityMetaDataDao {
   /**
    * Get all the activities for the provided study identifier and authorization credentials
    *
-   * @param studyId       the study identifier
+   * @param studyId the study identifier
    * @param authorization the Basic Authorization
    * @return {@link ActivityResponse}
    * @throws DAOException
@@ -187,10 +187,10 @@ public class ActivityMetaDataDao {
             if (isSupporting) {
               ActivitiesBean activityBean = new ActivitiesBean();
 
-              if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-                  language)) {
-                ActiveTaskLangBO activeTaskLangBO = this.getActiveTaskLangById(
-                    activeTaskDto.getId(), language);
+              if (StringUtils.isNotBlank(language)
+                  && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                ActiveTaskLangBO activeTaskLangBO =
+                    this.getActiveTaskLangById(activeTaskDto.getId(), language);
                 if (activeTaskLangBO != null) {
                   activityBean.setTitle(
                       StringUtils.isEmpty(activeTaskLangBO.getDisplayName())
@@ -386,8 +386,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the activity metadata for the provided activity version, study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link ActiveTaskActivityMetaDataResponse}
    * @throws DAOException
@@ -432,11 +432,10 @@ public class ActivityMetaDataDao {
   }
 
   /**
-   * Get the questionnaire metadata for the provided activity version, study and activity
-   * identifier
+   * Get the questionnaire metadata for the provided activity version, study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link QuestionnaireActivityMetaDataResponse}
    * @throws DAOException
@@ -489,8 +488,8 @@ public class ActivityMetaDataDao {
       activeTaskLangBO =
           (ActiveTaskLangBO)
               session
-                  .createSQLQuery(
-                      "select * from active_task_lang where id=:id and lang_code=:language")
+                  .createQuery(
+                      "from ActiveTaskLangBO ATLB where ATLB.activeTaskLangPK.id=:id and ATLB.activeTaskLangPK.langCode=:language")
                   .setInteger("id", id)
                   .setString("language", language)
                   .uniqueResult();
@@ -508,9 +507,9 @@ public class ActivityMetaDataDao {
   /**
    * Get active task metadata for the provided study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
-   * @param session         {@link Session}
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
+   * @param session {@link Session}
    * @param activityVersion the activity version
    * @return {@link ActiveTaskActivityStructureBean}
    * @throws DAOException
@@ -638,18 +637,18 @@ public class ActivityMetaDataDao {
               for (ActiveTaskMasterAttributeDto masterAttributeDto : activeTaskMaterList) {
                 if (!skipLoopFlag
                     && attributeDto
-                    .getActiveTaskMasterAttrId()
-                    .equals(masterAttributeDto.getMasterId())
+                        .getActiveTaskMasterAttrId()
+                        .equals(masterAttributeDto.getMasterId())
                     && taskDto.getActiveTaskListId().equals(masterAttributeDto.getTaskTypeId())) {
                   activeTaskActiveTaskStep.setType(StudyMetaDataConstants.ACTIVITY_ACTIVE_TASK);
                   activeTaskActiveTaskStep.setResultType(
                       StringUtils.isEmpty(taskDto.getType()) ? "" : taskDto.getType());
                   activeTaskActiveTaskStep.setKey(activeTaskDto.getShortTitle());
 
-                  if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-                      language)) {
-                    ActiveTaskLangBO activeTaskLangBO = this.getActiveTaskLangById(
-                        activeTaskDto.getId(), language);
+                  if (StringUtils.isNotBlank(language)
+                      && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                    ActiveTaskLangBO activeTaskLangBO =
+                        this.getActiveTaskLangById(activeTaskDto.getId(), language);
                     if (activeTaskLangBO != null) {
                       activeTaskActiveTaskStep.setText(
                           StringUtils.isEmpty(activeTaskLangBO.getInstruction())
@@ -726,9 +725,9 @@ public class ActivityMetaDataDao {
   /**
    * Get questionnaire metadata for the provided study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
-   * @param session         {@link Session}
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
+   * @param session {@link Session}
    * @param activityVersion the activity version
    * @return {@link QuestionnaireActivityStructureBean}
    * @throws DAOException
@@ -965,9 +964,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for the provided frequency type
    *
-   * @param activeTask       {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param frequencyDetails {@link ActivityFrequencyBean}
-   * @param session          {@link Session}
+   * @param session {@link Session}
    * @return {@link ActivityFrequencyBean}
    * @throws DAOException
    * @author BTC
@@ -1010,7 +1009,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for one time frequency
    *
-   * @param activeTask     {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1045,9 +1044,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for daily frequency
    *
-   * @param activeTask     {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
-   * @param session        {@link Session}
+   * @param session {@link Session}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
    * @author BTC
@@ -1139,7 +1138,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for weekly frequency
    *
-   * @param activeTask     {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1180,26 +1179,26 @@ public class ActivityMetaDataDao {
 
           weekEndDate = StudyMetaDataUtil.addWeeksToDate(activeTaskStartDate, 1);
           if ((StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))
               || (StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))) {
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))) {
             flag = true;
           }
 
           if (flag) {
             activeTaskEndDate = weekEndDate;
             if ((StudyMetaDataConstants.SDF_DATE
-                .parse(weekEndDate)
-                .equals(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        activeTask.getActiveTaskLifetimeEnd())))
+                    .parse(weekEndDate)
+                    .equals(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            activeTask.getActiveTaskLifetimeEnd())))
                 || (StudyMetaDataConstants.SDF_DATE
-                .parse(weekEndDate)
-                .after(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        activeTask.getActiveTaskLifetimeEnd())))) {
+                    .parse(weekEndDate)
+                    .after(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            activeTask.getActiveTaskLifetimeEnd())))) {
               activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
               skipLoop = true;
             }
@@ -1228,7 +1227,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for monthly frequency
    *
-   * @param activeTask     {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1255,26 +1254,26 @@ public class ActivityMetaDataDao {
 
           monthEndDate = StudyMetaDataUtil.addMonthsToDate(activeTaskStartDate, 1);
           if ((StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))
               || (StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))) {
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))) {
             flag = true;
           }
 
           if (flag) {
             activeTaskEndDate = monthEndDate;
             if ((StudyMetaDataConstants.SDF_DATE
-                .parse(monthEndDate)
-                .equals(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        activeTask.getActiveTaskLifetimeEnd())))
+                    .parse(monthEndDate)
+                    .equals(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            activeTask.getActiveTaskLifetimeEnd())))
                 || (StudyMetaDataConstants.SDF_DATE
-                .parse(monthEndDate)
-                .after(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        activeTask.getActiveTaskLifetimeEnd())))) {
+                    .parse(monthEndDate)
+                    .after(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            activeTask.getActiveTaskLifetimeEnd())))) {
               activeTaskEndDate = activeTask.getActiveTaskLifetimeEnd();
               skipLoop = true;
             }
@@ -1302,9 +1301,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for manually schedule frequency
    *
-   * @param activeTask     {@link ActiveTaskDto}
+   * @param activeTask {@link ActiveTaskDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
-   * @param session        {@link Session}
+   * @param session {@link Session}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
    * @author BTC
@@ -1363,9 +1362,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for the provided frequency type
    *
-   * @param questionaire     {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param frequencyDetails {@link ActivityFrequencyBean}
-   * @param session          {@link Session}
+   * @param session {@link Session}
    * @return {@link ActivityFrequencyBean}
    * @throws DAOException
    * @author BTC
@@ -1407,7 +1406,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for one time frequency
    *
-   * @param questionaire   {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1444,9 +1443,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for daily frequency
    *
-   * @param questionaire   {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
-   * @param session        {@link Session}
+   * @param session {@link Session}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
    * @author BTC
@@ -1463,8 +1462,8 @@ public class ActivityMetaDataDao {
       if (questionaire.getScheduleType() != null
           && !questionaire.getScheduleType().isEmpty()
           && questionaire
-          .getScheduleType()
-          .equals(StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE)) {
+              .getScheduleType()
+              .equals(StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE)) {
         dailyFrequencyList =
             session
                 .createQuery(
@@ -1543,7 +1542,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for weekly frequency
    *
-   * @param questionaire   {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1560,7 +1559,7 @@ public class ActivityMetaDataDao {
           && StringUtils.isNotEmpty(questionaire.getDayOfTheWeek())) {
         Integer repeatCount =
             (questionaire.getRepeatQuestionnaire() == null
-                || questionaire.getRepeatQuestionnaire() == 0)
+                    || questionaire.getRepeatQuestionnaire() == 0)
                 ? 1
                 : questionaire.getRepeatQuestionnaire();
         String questionaireDay = questionaire.getDayOfTheWeek();
@@ -1587,25 +1586,25 @@ public class ActivityMetaDataDao {
 
           weekEndDate = StudyMetaDataUtil.addWeeksToDate(questionaireStartDate, 1);
           if ((StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .equals(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))
               || (StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))) {
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .before(StudyMetaDataConstants.SDF_DATE.parse(weekEndDate)))) {
             flag = true;
           }
 
           if (flag) {
             questionaireEndDate = weekEndDate;
             if ((StudyMetaDataConstants.SDF_DATE
-                .parse(weekEndDate)
-                .equals(
-                    StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))
+                    .parse(weekEndDate)
+                    .equals(
+                        StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))
                 || (StudyMetaDataConstants.SDF_DATE
-                .parse(weekEndDate)
-                .after(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        questionaire.getStudyLifetimeEnd())))) {
+                    .parse(weekEndDate)
+                    .after(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            questionaire.getStudyLifetimeEnd())))) {
               questionaireEndDate = questionaire.getStudyLifetimeEnd();
               skipLoop = true;
             }
@@ -1634,7 +1633,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for monthly frequency
    *
-   * @param questionaire   {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
@@ -1650,7 +1649,7 @@ public class ActivityMetaDataDao {
           && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
         Integer repeatCount =
             (questionaire.getRepeatQuestionnaire() == null
-                || questionaire.getRepeatQuestionnaire() == 0)
+                    || questionaire.getRepeatQuestionnaire() == 0)
                 ? 1
                 : questionaire.getRepeatQuestionnaire();
         String questionaireStartDate = questionaire.getStudyLifetimeStart();
@@ -1663,25 +1662,25 @@ public class ActivityMetaDataDao {
 
           monthEndDate = StudyMetaDataUtil.addMonthsToDate(questionaireStartDate, 1);
           if ((StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .equals(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))
               || (StudyMetaDataConstants.SDF_DATE
-              .parse(StudyMetaDataUtil.getCurrentDate())
-              .before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))) {
+                  .parse(StudyMetaDataUtil.getCurrentDate())
+                  .before(StudyMetaDataConstants.SDF_DATE.parse(monthEndDate)))) {
             flag = true;
           }
 
           if (flag) {
             questionaireEndDate = monthEndDate;
             if ((StudyMetaDataConstants.SDF_DATE
-                .parse(monthEndDate)
-                .equals(
-                    StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))
+                    .parse(monthEndDate)
+                    .equals(
+                        StudyMetaDataConstants.SDF_DATE.parse(questionaire.getStudyLifetimeEnd())))
                 || (StudyMetaDataConstants.SDF_DATE
-                .parse(monthEndDate)
-                .after(
-                    StudyMetaDataConstants.SDF_DATE.parse(
-                        questionaire.getStudyLifetimeEnd())))) {
+                    .parse(monthEndDate)
+                    .after(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            questionaire.getStudyLifetimeEnd())))) {
               questionaireEndDate = questionaire.getStudyLifetimeEnd();
               skipLoop = true;
             }
@@ -1709,9 +1708,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire frequency details for manually schedule frequency
    *
-   * @param questionaire   {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param runDetailsBean {@link List<ActivityFrequencyScheduleBean>}
-   * @param session        {@link Session}
+   * @param session {@link Session}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
    * @author BTC
@@ -1769,17 +1768,17 @@ public class ActivityMetaDataDao {
   /**
    * Get the questionnaire step details for the provided type
    *
-   * @param type                               the questionnaire step type
-   * @param instructionsDtoList                {@link List<InstructionsDto>}
-   * @param questionsDtoList                   {@link List<QuestionsDto>}
-   * @param formsList                          {@link List<FormMappingDto>}
-   * @param sequenceNoMap                      {@link Map<String, Integer>}
-   * @param stepsSequenceTreeMap               {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
-   * @param session                            {@link Session}
-   * @param questionnaireStepDetailsMap        {@link Map<String, QuestionnairesStepsDto>}
+   * @param type the questionnaire step type
+   * @param instructionsDtoList {@link List<InstructionsDto>}
+   * @param questionsDtoList {@link List<QuestionsDto>}
+   * @param formsList {@link List<FormMappingDto>}
+   * @param sequenceNoMap {@link Map<String, Integer>}
+   * @param stepsSequenceTreeMap {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
+   * @param session {@link Session}
+   * @param questionnaireStepDetailsMap {@link Map<String, QuestionnairesStepsDto>}
    * @param questionResponseTypeMasterInfoList
-   * @param questionaireStepsList              {@link List<QuestionResponsetypeMasterInfoDto>}
-   * @param questionnaireDto                   {@link QuestionnairesDto}
+   * @param questionaireStepsList {@link List<QuestionResponsetypeMasterInfoDto>}
+   * @param questionnaireDto {@link QuestionnairesDto}
    * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
    * @throws DAOException
    * @author BTC
@@ -1851,9 +1850,9 @@ public class ActivityMetaDataDao {
   /**
    * Get instruction metadata
    *
-   * @param instructionsDtoList         {@link List<InstructionsDto>}
-   * @param sequenceNoMap               {@link Map<String, Integer>}
-   * @param stepsSequenceTreeMap        {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
+   * @param instructionsDtoList {@link List<InstructionsDto>}
+   * @param sequenceNoMap {@link Map<String, Integer>}
+   * @param stepsSequenceTreeMap {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
    * @param questionnaireStepDetailsMap {@link Map<String, QuestionnairesStepsDto>}
    * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
    * @throws DAOException
@@ -1873,7 +1872,7 @@ public class ActivityMetaDataDao {
           QuestionnairesStepsDto instructionStepDetails =
               questionnaireStepDetailsMap.get(
                   (instructionsDto.getId()
-                      + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION)
+                          + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION)
                       .toString());
           QuestionnaireActivityStepsBean instructionBean = new QuestionnaireActivityStepsBean();
 
@@ -1886,29 +1885,35 @@ public class ActivityMetaDataDao {
                   : instructionStepDetails.getStepShortTitle());
 
           if (StringUtils.isNotBlank(language) && !"en".equals(language)) {
-            InstructionsLangBO instructionsLangBO = this.getInstructionLangBo(
-                instructionsDto.getId(), language);
+            InstructionsLangBO instructionsLangBO =
+                this.getInstructionLangBo(instructionsDto.getId(), language);
             if (instructionsLangBO != null) {
               instructionBean.setTitle(
                   StringUtils.isEmpty(instructionsLangBO.getInstructionTitle())
                       ? ""
                       : instructionsLangBO.getInstructionTitle());
+
+              instructionBean.setText(
+                  StringUtils.isEmpty(instructionsLangBO.getInstructionText())
+                      ? ""
+                      : instructionsLangBO.getInstructionText());
             }
           } else {
             instructionBean.setTitle(
                 StringUtils.isEmpty(instructionsDto.getInstructionTitle())
                     ? ""
                     : instructionsDto.getInstructionTitle());
+
+            instructionBean.setText(
+                StringUtils.isEmpty(instructionsDto.getInstructionText())
+                    ? ""
+                    : instructionsDto.getInstructionText());
           }
-          instructionBean.setText(
-              StringUtils.isEmpty(instructionsDto.getInstructionText())
-                  ? ""
-                  : instructionsDto.getInstructionText());
           instructionBean.setSkippable(
               (StringUtils.isEmpty(instructionStepDetails.getSkiappable())
-                  || instructionStepDetails
-                  .getSkiappable()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || instructionStepDetails
+                          .getSkiappable()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           instructionBean.setGroupName("");
@@ -1923,7 +1928,7 @@ public class ActivityMetaDataDao {
           dest.setCondition("");
           dest.setDestination(
               (instructionStepDetails.getDestinationStepType() == null
-                  || instructionStepDetails.getDestinationStepType().isEmpty())
+                      || instructionStepDetails.getDestinationStepType().isEmpty())
                   ? ""
                   : instructionStepDetails.getDestinationStepType());
           destinations.add(dest);
@@ -1932,7 +1937,7 @@ public class ActivityMetaDataDao {
           stepsSequenceTreeMap.put(
               sequenceNoMap.get(
                   (instructionsDto.getId()
-                      + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION)
+                          + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_INSTRUCTION)
                       .toString()),
               instructionBean);
         }
@@ -1947,14 +1952,14 @@ public class ActivityMetaDataDao {
   /**
    * Get question metadata
    *
-   * @param questionsDtoList                   {@link List<QuestionsDto>}
-   * @param sequenceNoMap                      {@link Map<String, Integer>}
-   * @param stepsSequenceTreeMap               {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
-   * @param session                            {@link Session}
-   * @param questionnaireStepDetailsMap        {@link Map<String, QuestionnairesStepsDto>}
+   * @param questionsDtoList {@link List<QuestionsDto>}
+   * @param sequenceNoMap {@link Map<String, Integer>}
+   * @param stepsSequenceTreeMap {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
+   * @param session {@link Session}
+   * @param questionnaireStepDetailsMap {@link Map<String, QuestionnairesStepsDto>}
    * @param questionResponseTypeMasterInfoList {@link List<QuestionResponsetypeMasterInfoDto>}
-   * @param questionaireStepsList              {@link List<QuestionnairesStepsDto>}
-   * @param questionnaireDto                   {@link QuestionnairesDto}
+   * @param questionaireStepsList {@link List<QuestionnairesStepsDto>}
+   * @param questionnaireDto {@link QuestionnairesDto}
    * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
    * @throws DAOException
    * @author BTC
@@ -2000,8 +2005,8 @@ public class ActivityMetaDataDao {
             questionBean.setResultType("");
           }
 
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-              language)) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
             QuestionLangBO questionLangBO = this.getQuestionLangBo(questionsDto.getId(), language);
             if (questionLangBO != null) {
               questionBean.setText(
@@ -2009,7 +2014,8 @@ public class ActivityMetaDataDao {
                       ? ""
                       : questionLangBO.getDescription());
               questionBean.setTitle(
-                  StringUtils.isEmpty(questionLangBO.getQuestion()) ? ""
+                  StringUtils.isEmpty(questionLangBO.getQuestion())
+                      ? ""
                       : questionLangBO.getQuestion());
             }
           } else {
@@ -2027,9 +2033,9 @@ public class ActivityMetaDataDao {
                   : questionStepDetails.getStepShortTitle());
           questionBean.setSkippable(
               (StringUtils.isEmpty(questionStepDetails.getSkiappable())
-                  || questionStepDetails
-                  .getSkiappable()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || questionStepDetails
+                          .getSkiappable()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           questionBean.setGroupName("");
@@ -2080,14 +2086,14 @@ public class ActivityMetaDataDao {
                   } else {
                     destination.setDestination(
                         (questionStepDetails.getDestinationStepType() == null
-                            || questionStepDetails.getDestinationStepType().isEmpty())
+                                || questionStepDetails.getDestinationStepType().isEmpty())
                             ? ""
                             : questionStepDetails.getDestinationStepType());
                   }
                 } else {
                   destination.setDestination(
                       (questionStepDetails.getDestinationStepType() == null
-                          || questionStepDetails.getDestinationStepType().isEmpty())
+                              || questionStepDetails.getDestinationStepType().isEmpty())
                           ? ""
                           : questionStepDetails.getDestinationStepType());
                 }
@@ -2097,7 +2103,7 @@ public class ActivityMetaDataDao {
           }
 
           if (Arrays.asList(StudyMetaDataConstants.CB_RESPONSE_TYPE.split(","))
-              .contains(questionBean.getResultType())
+                  .contains(questionBean.getResultType())
               && questionnaireDto.getBranching()) {
             QuestionReponseTypeDto reponseType =
                 (QuestionReponseTypeDto)
@@ -2111,8 +2117,8 @@ public class ActivityMetaDataDao {
             if (reponseType != null
                 && StringUtils.isNotEmpty(reponseType.getFormulaBasedLogic())
                 && reponseType
-                .getFormulaBasedLogic()
-                .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
+                    .getFormulaBasedLogic()
+                    .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
               boolean isValueOfXSaved = false;
               if (destinationConditionList != null
                   && !destinationConditionList.isEmpty()
@@ -2160,7 +2166,7 @@ public class ActivityMetaDataDao {
           destination.setCondition("");
           destination.setDestination(
               (questionStepDetails.getDestinationStepType() == null
-                  || questionStepDetails.getDestinationStepType().isEmpty())
+                      || questionStepDetails.getDestinationStepType().isEmpty())
                   ? ""
                   : questionStepDetails.getDestinationStepType());
           destinationsList.add(destination);
@@ -2205,14 +2211,14 @@ public class ActivityMetaDataDao {
               } else {
                 otherDestination.setDestination(
                     (questionStepDetails.getDestinationStepType() == null
-                        || questionStepDetails.getDestinationStepType().isEmpty())
+                            || questionStepDetails.getDestinationStepType().isEmpty())
                         ? ""
                         : questionStepDetails.getDestinationStepType());
               }
             } else {
               otherDestination.setDestination(
                   (questionStepDetails.getDestinationStepType() == null
-                      || questionStepDetails.getDestinationStepType().isEmpty())
+                          || questionStepDetails.getDestinationStepType().isEmpty())
                       ? ""
                       : questionStepDetails.getDestinationStepType());
             }
@@ -2247,11 +2253,11 @@ public class ActivityMetaDataDao {
   /**
    * Get form metadata
    *
-   * @param formsList                          {@link List<FormMappingDto>}
-   * @param sequenceNoMap                      {@link Map<String, Integer>}
-   * @param session                            {@link Session}
-   * @param stepsSequenceTreeMap               {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
-   * @param questionnaireStepDetailsMap        {@link Map<String, QuestionnairesStepsDto>}
+   * @param formsList {@link List<FormMappingDto>}
+   * @param sequenceNoMap {@link Map<String, Integer>}
+   * @param session {@link Session}
+   * @param stepsSequenceTreeMap {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
+   * @param questionnaireStepDetailsMap {@link Map<String, QuestionnairesStepsDto>}
    * @param questionResponseTypeMasterInfoList {@link List<QuestionResponsetypeMasterInfoDto>}
    * @return {@link SortedMap<Integer, QuestionnaireActivityStepsBean>}
    * @throws DAOException
@@ -2281,7 +2287,7 @@ public class ActivityMetaDataDao {
           QuestionnairesStepsDto formStepDetails =
               questionnaireStepDetailsMap.get(
                   (formsList.get(0).getFormId()
-                      + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
+                          + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .toString());
           QuestionnaireActivityStepsBean formBean = new QuestionnaireActivityStepsBean();
           List<QuestionnaireActivityStepsBean> formSteps = new ArrayList<>();
@@ -2297,25 +2303,23 @@ public class ActivityMetaDataDao {
           formBean.setText("");
           formBean.setSkippable(
               (StringUtils.isEmpty(formStepDetails.getSkiappable())
-                  || formStepDetails
-                  .getSkiappable()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || formStepDetails
+                          .getSkiappable()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           formBean.setGroupName("");
           formBean.setRepeatable(
               (formStepDetails.getRepeatable() == null
-                  || StudyMetaDataConstants.NO.equalsIgnoreCase(
-                  formStepDetails.getRepeatable()))
+                      || StudyMetaDataConstants.NO.equalsIgnoreCase(
+                          formStepDetails.getRepeatable()))
                   ? false
                   : true);
 
           if (StringUtils.isNotBlank(language) && MultiLanguageConstants.ENGLISH.equals(language)) {
             FormLangBO formLangBO = this.getFormLangBo(formStepDetails.getStepId(), language);
             formBean.setRepeatableText(
-                formLangBO.getRepeatableText() == null
-                    ? ""
-                    : formLangBO.getRepeatableText());
+                formLangBO.getRepeatableText() == null ? "" : formLangBO.getRepeatableText());
           } else {
             formBean.setRepeatableText(
                 formStepDetails.getRepeatableText() == null
@@ -2328,7 +2332,7 @@ public class ActivityMetaDataDao {
           dest.setCondition("");
           dest.setDestination(
               (formStepDetails.getDestinationStepType() == null
-                  || formStepDetails.getDestinationStepType().isEmpty())
+                      || formStepDetails.getDestinationStepType().isEmpty())
                   ? ""
                   : formStepDetails.getDestinationStepType());
           destinations.add(dest);
@@ -2370,9 +2374,9 @@ public class ActivityMetaDataDao {
                       : formQuestionDto.getQuestion());
               formQuestionBean.setSkippable(
                   (StringUtils.isEmpty(formQuestionDto.getSkippable())
-                      || formQuestionDto
-                      .getSkippable()
-                      .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                          || formQuestionDto
+                              .getSkippable()
+                              .equalsIgnoreCase(StudyMetaDataConstants.NO))
                       ? false
                       : true);
               formQuestionBean.setGroupName("");
@@ -2386,7 +2390,7 @@ public class ActivityMetaDataDao {
 
               if (StringUtils.isNotEmpty(formQuestionDto.getAllowHealthKit())
                   && StudyMetaDataConstants.YES.equalsIgnoreCase(
-                  formQuestionDto.getAllowHealthKit())
+                      formQuestionDto.getAllowHealthKit())
                   && StringUtils.isNotEmpty(formQuestionDto.getHealthkitDatatype())) {
                 formQuestionBean.setHealthDataKey(formQuestionDto.getHealthkitDatatype().trim());
               }
@@ -2403,7 +2407,7 @@ public class ActivityMetaDataDao {
           stepsSequenceTreeMap.put(
               sequenceNoMap.get(
                   (formsList.get(0).getFormId()
-                      + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
+                          + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .toString()),
               formBean);
         }
@@ -2418,8 +2422,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the fetal kick counter metadata
    *
-   * @param attributeValues        {@link ActiveTaskAttrtibutesValuesDto}
-   * @param masterAttributeValue   {@link ActiveTaskMasterAttributeDto}
+   * @param attributeValues {@link ActiveTaskAttrtibutesValuesDto}
+   * @param masterAttributeValue {@link ActiveTaskMasterAttributeDto}
    * @param fetalKickCounterFormat {@link FetalKickCounterFormatBean}
    * @return {@link FetalKickCounterFormatBean}
    * @throws DAOException
@@ -2450,7 +2454,7 @@ public class ActivityMetaDataDao {
       } else {
         fetalKickCounterFormat.setKickCount(
             (StringUtils.isEmpty(attributeValues.getAttributeVal())
-                || "0".equals(attributeValues.getAttributeVal()))
+                    || "0".equals(attributeValues.getAttributeVal()))
                 ? StudyMetaDataConstants.MAX_KICK_COUNT
                 : Integer.parseInt(attributeValues.getAttributeVal()));
       }
@@ -2464,8 +2468,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the spatial span memory metadata
    *
-   * @param attributeValues         {@link ActiveTaskAttrtibutesValuesDto}
-   * @param masterAttributeValue    {@link ActiveTaskMasterAttributeDto}
+   * @param attributeValues {@link ActiveTaskAttrtibutesValuesDto}
+   * @param masterAttributeValue {@link ActiveTaskMasterAttributeDto}
    * @param spatialSpanMemoryFormat {@link SpatialSpanMemoryFormatBean}
    * @return {@link SpatialSpanMemoryFormatBean}
    * @throws DAOException
@@ -2519,8 +2523,8 @@ public class ActivityMetaDataDao {
           spatialSpanMemoryFormat.setRequireReversal(
               StringUtils.isNotEmpty(attributeValues.getAttributeVal())
                   && attributeValues
-                  .getAttributeVal()
-                  .equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y));
+                      .getAttributeVal()
+                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y));
           break;
       }
     } catch (Exception e) {
@@ -2558,9 +2562,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the question metadata for the provided question result type
    *
-   * @param questionDto        {@link QuestionsDto}
+   * @param questionDto {@link QuestionsDto}
    * @param questionResultType the question result type
-   * @param session            {@link Session}
+   * @param session {@link Session}
    * @return {@link Map<String, Object>}
    * @throws DAOException
    * @author BTC
@@ -2590,29 +2594,32 @@ public class ActivityMetaDataDao {
             questionFormat = this.formatQuestionScaleDetails(reponseType, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
-            questionFormat = this.formatQuestionContinuousScaleDetails(reponseType, language,
-                questionLangBO);
+            questionFormat =
+                this.formatQuestionContinuousScaleDetails(reponseType, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
-            questionFormat = this.formatQuestionTextScaleDetails(questionDto, reponseType, session,
-                language, questionLangBO);
+            questionFormat =
+                this.formatQuestionTextScaleDetails(
+                    questionDto, reponseType, session, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_VALUE_PICKER:
-            questionFormat = this.formatQuestionValuePickerDetails(questionDto, session, language,
-                questionLangBO);
+            questionFormat =
+                this.formatQuestionValuePickerDetails(
+                    questionDto, session, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
-            questionFormat = this.formatQuestionImageChoiceDetails(questionDto, session, language,
-                questionLangBO);
+            questionFormat =
+                this.formatQuestionImageChoiceDetails(
+                    questionDto, session, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
             questionFormat =
-                this.formatQuestionTextChoiceDetails(questionDto, reponseType, session, language,
-                    questionLangBO);
+                this.formatQuestionTextChoiceDetails(
+                    questionDto, reponseType, session, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_NUMERIC:
-            questionFormat = this.formatQuestionNumericDetails(reponseType, language,
-                questionLangBO);
+            questionFormat =
+                this.formatQuestionNumericDetails(reponseType, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_DATE:
             questionFormat = this.formatQuestionDateDetails(reponseType);
@@ -2621,8 +2628,8 @@ public class ActivityMetaDataDao {
             questionFormat = this.formatQuestionTextDetails(reponseType, language, questionLangBO);
             break;
           case StudyMetaDataConstants.QUESTION_EMAIL:
-            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-                language)) {
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
               if (questionLangBO != null) {
                 questionFormat.put(
                     "placeholder",
@@ -2658,8 +2665,8 @@ public class ActivityMetaDataDao {
                 (reponseType == null || reponseType.getMeasurementSystem() == null)
                     ? ""
                     : reponseType.getMeasurementSystem());
-            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-                language)) {
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
               if (questionLangBO != null) {
                 questionFormat.put(
                     "placeholder",
@@ -2682,7 +2689,7 @@ public class ActivityMetaDataDao {
                 "useCurrentLocation",
                 reponseType != null
                     && (reponseType.getUseCurrentLocation() != null
-                    && reponseType.getUseCurrentLocation()));
+                        && reponseType.getUseCurrentLocation()));
             break;
           default:
             break;
@@ -2703,8 +2710,8 @@ public class ActivityMetaDataDao {
    * @throws DAOException
    * @author BTC
    */
-  public Map<String, Object> formatQuestionScaleDetails(QuestionReponseTypeDto reponseType,
-      String language, QuestionLangBO questionLangBO)
+  public Map<String, Object> formatQuestionScaleDetails(
+      QuestionReponseTypeDto reponseType, String language, QuestionLangBO questionLangBO)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -2886,15 +2893,18 @@ public class ActivityMetaDataDao {
    *
    * @param questionDto {@link QuestionsDto}
    * @param reponseType {@link QuestionReponseTypeDto}
-   * @param session     {@link Session}
+   * @param session {@link Session}
    * @return {@link Map<String, Object>}
    * @throws DAOException
    * @author BTC
    */
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionTextScaleDetails(
-      QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session,
-      String language, QuestionLangBO questionLangBO)
+      QuestionsDto questionDto,
+      QuestionReponseTypeDto reponseType,
+      Session session,
+      String language,
+      QuestionLangBO questionLangBO)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -2911,8 +2921,8 @@ public class ActivityMetaDataDao {
         int i = 0;
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
           LinkedHashMap<String, Object> textScaleMap = new LinkedHashMap<>();
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-              language)) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
@@ -2929,8 +2939,8 @@ public class ActivityMetaDataDao {
               textScaleMap.put("text", "");
             }
           } else {
-            textScaleMap.put("text",
-                StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
+            textScaleMap.put(
+                "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           }
           textScaleMap.put(
               "value", StringUtils.isEmpty(subType.getValue()) ? "" : subType.getValue());
@@ -2939,7 +2949,7 @@ public class ActivityMetaDataDao {
           textScaleMap.put(
               "exclusive",
               (subType.getExclusive() == null
-                  || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))
+                      || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))
                   ? true
                   : false);
           textChoicesList.add(textScaleMap);
@@ -2966,7 +2976,7 @@ public class ActivityMetaDataDao {
    * Get the value picker response type metadata from the provided question details
    *
    * @param questionDto {@link QuestionsDto}
-   * @param session     {@link Session}
+   * @param session {@link Session}
    * @return {@link Map<String, Object>}
    * @throws DAOException
    * @author BTC
@@ -2991,8 +3001,8 @@ public class ActivityMetaDataDao {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
           LinkedHashMap<String, Object> valuePickerMap = new LinkedHashMap<>();
 
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-              language)) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
@@ -3022,7 +3032,7 @@ public class ActivityMetaDataDao {
           valuePickerMap.put(
               "exclusive",
               (StringUtils.isEmpty(subType.getExclusive())
-                  || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))
+                      || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.YES))
                   ? true
                   : false);
           valuePickerList.add(valuePickerMap);
@@ -3041,7 +3051,7 @@ public class ActivityMetaDataDao {
    * Get the image choice response type metadata from the provided question details
    *
    * @param questionDto {@link QuestionsDto}
-   * @param session     {@link Session}
+   * @param session {@link Session}
    * @return {@link Map<String, Object>}
    * @throws DAOException
    * @author BTC
@@ -3080,8 +3090,8 @@ public class ActivityMetaDataDao {
                       propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + subType.getSelectedImage()));
 
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-              language)) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
@@ -3116,20 +3126,22 @@ public class ActivityMetaDataDao {
   }
 
   /**
-   * Get the text choice response type metadata from the provided question and response type
-   * details
+   * Get the text choice response type metadata from the provided question and response type details
    *
    * @param questionDto {@link QuestionsDto}
    * @param reponseType {@link QuestionReponseTypeDto}
-   * @param session     {@link Session}
+   * @param session {@link Session}
    * @return {@link Map<String, Object>}
    * @throws DAOException
    * @author BTC
    */
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionTextChoiceDetails(
-      QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session,
-      String language, QuestionLangBO questionLangBO)
+      QuestionsDto questionDto,
+      QuestionReponseTypeDto reponseType,
+      Session session,
+      String language,
+      QuestionLangBO questionLangBO)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -3147,8 +3159,8 @@ public class ActivityMetaDataDao {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
           LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
 
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(
-              language)) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
@@ -3176,7 +3188,7 @@ public class ActivityMetaDataDao {
           textChoiceMap.put(
               "exclusive",
               (subType.getExclusive() == null
-                  || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           textChoiceMapList.add(textChoiceMap);
@@ -3216,9 +3228,9 @@ public class ActivityMetaDataDao {
         textChoiceMap.put(
             "exclusive",
             (otherReponseSubType.getOtherExclusive() == null
-                || otherReponseSubType
-                .getOtherExclusive()
-                .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                    || otherReponseSubType
+                        .getOtherExclusive()
+                        .equalsIgnoreCase(StudyMetaDataConstants.NO))
                 ? false
                 : true);
         if (StringUtils.isNotEmpty(otherReponseSubType.getOtherIncludeText())
@@ -3232,17 +3244,17 @@ public class ActivityMetaDataDao {
           textChoiceOtherMap.put(
               "isMandatory",
               (otherReponseSubType.getOtherParticipantFill() == null
-                  || otherReponseSubType
-                  .getOtherParticipantFill()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || otherReponseSubType
+                          .getOtherParticipantFill()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           textChoiceOtherMap.put(
               "textfieldReq",
               (otherReponseSubType.getOtherIncludeText() == null
-                  || otherReponseSubType
-                  .getOtherIncludeText()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO))
+                      || otherReponseSubType
+                          .getOtherIncludeText()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
                   ? false
                   : true);
           textChoiceMap.put("other", textChoiceOtherMap);
@@ -3278,8 +3290,8 @@ public class ActivityMetaDataDao {
    * @throws DAOException
    * @author BTC
    */
-  public Map<String, Object> formatQuestionNumericDetails(QuestionReponseTypeDto reponseType,
-      String language, QuestionLangBO questionLangBO)
+  public Map<String, Object> formatQuestionNumericDetails(
+      QuestionReponseTypeDto reponseType, String language, QuestionLangBO questionLangBO)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -3366,9 +3378,9 @@ public class ActivityMetaDataDao {
       if (reponseType != null
           && StringUtils.isNotEmpty(reponseType.getStyle())
           && reponseType
-          .getStyle()
-          .equalsIgnoreCase(
-              StudyMetaDataConstants.QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE)) {
+              .getStyle()
+              .equalsIgnoreCase(
+                  StudyMetaDataConstants.QUESTION_RESPONSE_MASTERDATA_TYPE_DATE_DATE)) {
         dateFormat = StudyMetaDataConstants.SDF_DATE_PATTERN;
       } else {
         dateFormat = StudyMetaDataConstants.SDF_DATE_TIME_PATTERN;
@@ -3417,8 +3429,8 @@ public class ActivityMetaDataDao {
    * @throws DAOException
    * @author BTC
    */
-  public Map<String, Object> formatQuestionTextDetails(QuestionReponseTypeDto reponseType,
-      String language, QuestionLangBO questionLangBO)
+  public Map<String, Object> formatQuestionTextDetails(
+      QuestionReponseTypeDto reponseType, String language, QuestionLangBO questionLangBO)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
@@ -3436,8 +3448,8 @@ public class ActivityMetaDataDao {
       questionFormat.put(
           "multipleLines",
           (reponseType == null
-              || reponseType.getMultipleLines() == null
-              || !reponseType.getMultipleLines())
+                  || reponseType.getMultipleLines() == null
+                  || !reponseType.getMultipleLines())
               ? false
               : true);
 
@@ -3469,7 +3481,6 @@ public class ActivityMetaDataDao {
             (reponseType == null || StringUtils.isEmpty(reponseType.getInvalidMessage()))
                 ? "Invalid Input. Please try again."
                 : reponseType.getInvalidMessage());
-
       }
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
@@ -3482,8 +3493,8 @@ public class ActivityMetaDataDao {
    * Get the active task start and end date time for the provided frequency type
    *
    * @param activeTaskDto {@link ActiveTaskDto}
-   * @param activityBean  {@link ActivitiesBean}
-   * @param session       {@link Session}
+   * @param activityBean {@link ActivitiesBean}
+   * @param session {@link Session}
    * @return {@link ActivitiesBean}
    * @throws DAOException
    * @author BTC
@@ -3510,14 +3521,14 @@ public class ActivityMetaDataDao {
                   + StudyMetaDataConstants.DEFAULT_MAX_TIME;
       if (StringUtils.isNotEmpty(activeTaskDto.getFrequency())) {
         if ((activeTaskDto
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME))
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME))
             || (activeTaskDto
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY))
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY))
             || (activeTaskDto
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))) {
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))) {
 
           ActiveTaskFrequencyDto activeTaskFrequency =
               (ActiveTaskFrequencyDto)
@@ -3540,8 +3551,8 @@ public class ActivityMetaDataDao {
                       + activeTaskFrequency.getFrequencyTime();
             }
             if (!activeTaskDto
-                .getFrequency()
-                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+                    .getFrequency()
+                    .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
                 && !activeTaskFrequency.isStudyLifeTime()) {
               endDateTime =
                   activeTaskDto.getActiveTaskLifetimeEnd()
@@ -3642,8 +3653,8 @@ public class ActivityMetaDataDao {
                 endDate
                     + " "
                     + activeTaskCustomFrequencyList
-                    .get(activeTaskCustomFrequencyList.size() - 1)
-                    .getFrequencyTime();
+                        .get(activeTaskCustomFrequencyList.size() - 1)
+                        .getFrequencyTime();
           }
           if (StringUtils.isNotEmpty(startDate)) {
             activityBean.setStartTime(
@@ -3673,7 +3684,7 @@ public class ActivityMetaDataDao {
    *
    * @param questionaire {@link QuestionnairesDto}
    * @param activityBean {@link ActivitiesBean}
-   * @param session      {@link Session}
+   * @param session {@link Session}
    * @return {@link ActivitiesBean}
    * @throws DAOException
    * @author BTC
@@ -3697,14 +3708,14 @@ public class ActivityMetaDataDao {
               : questionaire.getStudyLifetimeEnd() + " " + StudyMetaDataConstants.DEFAULT_MAX_TIME;
       if (StringUtils.isNotEmpty(questionaire.getFrequency())) {
         if ((questionaire
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME))
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME))
             || (questionaire
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY))
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY))
             || (questionaire
-            .getFrequency()
-            .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))) {
+                .getFrequency()
+                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY))) {
 
           QuestionnairesFrequenciesDto questionnairesFrequency =
               (QuestionnairesFrequenciesDto)
@@ -3720,8 +3731,8 @@ public class ActivityMetaDataDao {
                     + " "
                     + questionnairesFrequency.getFrequencyTime();
             if (!questionaire
-                .getFrequency()
-                .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+                    .getFrequency()
+                    .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
                 && !questionnairesFrequency.getIsStudyLifeTime()) {
               endDateTime =
                   questionaire.getStudyLifetimeEnd()
@@ -3824,8 +3835,8 @@ public class ActivityMetaDataDao {
                 endDate
                     + " "
                     + questionnaireCustomFrequencyList
-                    .get(questionnaireCustomFrequencyList.size() - 1)
-                    .getFrequencyTime();
+                        .get(questionnaireCustomFrequencyList.size() - 1)
+                        .getFrequencyTime();
           }
           if (StringUtils.isNotEmpty(startDate)) {
             activityBean.setStartTime(
@@ -3886,8 +3897,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the destination step identifier for the provided response sub type
    *
-   * @param destinationBean       {@link DestinationBean}
-   * @param destinationDto        {@link QuestionResponseSubTypeDto}
+   * @param destinationBean {@link DestinationBean}
+   * @param destinationDto {@link QuestionResponseSubTypeDto}
    * @param questionaireStepsList {@link List<QuestionnairesStepsDto>}
    * @return {@link DestinationBean}
    * @throws DAOException
@@ -3949,7 +3960,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the step count for the scale response type
    *
-   * @param step     the step value
+   * @param step the step value
    * @param maxValue the maximum value
    * @param minValue the minimum value
    * @return {@link Integer}
@@ -3985,7 +3996,7 @@ public class ActivityMetaDataDao {
   /**
    * Get the step size for the scale response type
    *
-   * @param step     the step value
+   * @param step the step value
    * @param maxValue the maximum value
    * @param minValue the minimum value
    * @return {@link Integer}
@@ -4008,9 +4019,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the default value for the scale response type
    *
-   * @param step         the step value
-   * @param maxValue     the maximum value
-   * @param minValue     the minimum value
+   * @param step the step value
+   * @param maxValue the maximum value
+   * @param minValue the minimum value
    * @param defaultValue the default value
    * @return {@link Integer}
    * @throws DAOException
@@ -4033,8 +4044,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the maximum fraction digits for the continuous scale response type
    *
-   * @param maxValue             the maximum value
-   * @param minValue             the minimum value
+   * @param maxValue the maximum value
+   * @param minValue the minimum value
    * @param actualFractionDigits the fraction digits
    * @return {@link Integer}
    * @throws DAOException
@@ -4086,8 +4097,8 @@ public class ActivityMetaDataDao {
   /**
    * Get the default value for continuous scale response type
    *
-   * @param maxValue     the maximum value
-   * @param minValue     the minimum value
+   * @param maxValue the maximum value
+   * @param minValue the minimum value
    * @param defaultValue the default value
    * @return {@link Integer}
    * @throws DAOException
@@ -4161,9 +4172,9 @@ public class ActivityMetaDataDao {
   /**
    * Get the conditional branching destinations by solving for x
    *
-   * @param reponseType      {@link QuestionReponseTypeDto}
+   * @param reponseType {@link QuestionReponseTypeDto}
    * @param destinationsList {@link List<DestinationBean>}
-   * @param questionBean     {@link QuestionnaireActivityStepsBean}
+   * @param questionBean {@link QuestionnaireActivityStepsBean}
    * @return {@link List<DestinationBean>}
    * @throws DAOException
    * @author BTC
@@ -4200,11 +4211,11 @@ public class ActivityMetaDataDao {
         // Check the expression contains '=', if yes replace it with
         // '==' to evaluate the expression
         if (!reponseType
-            .getConditionFormula()
-            .contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)
+                .getConditionFormula()
+                .contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)
             && !reponseType
-            .getConditionFormula()
-            .contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)
+                .getConditionFormula()
+                .contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)
             && reponseType.getConditionFormula().contains("=")) {
           conditionFormula =
               reponseType
@@ -4495,9 +4506,9 @@ public class ActivityMetaDataDao {
    * Get the conditional branching format
    *
    * @param destinationsList {@link List<DestinationBean>}
-   * @param valueOfX         the X value
-   * @param trueOperator     the true condition operator
-   * @param falseOperator    the false condition operator
+   * @param valueOfX the X value
+   * @param trueOperator the true condition operator
+   * @param falseOperator the false condition operator
    * @return {@link List<DestinationBean>}
    * @throws DAOException
    * @author BTC
@@ -4528,7 +4539,7 @@ public class ActivityMetaDataDao {
    * Format the X value by response type and response sub type
    *
    * @param destinationsList {@link List<DestinationBean>}
-   * @param questionBean     {@link QuestionnaireActivityStepsBean}
+   * @param questionBean {@link QuestionnaireActivityStepsBean}
    * @return {@link List<DestinationBean>}
    * @throws DAOException
    * @author BTC
@@ -4596,8 +4607,8 @@ public class ActivityMetaDataDao {
    * Format the X value by input format
    *
    * @param destinationsList {@link List<DestinationBean>}
-   * @param stringFormat     the format
-   * @param questionBean     {@link QuestionnaireActivityStepsBean}
+   * @param stringFormat the format
+   * @param questionBean {@link QuestionnaireActivityStepsBean}
    * @return {@link List<DestinationBean>}
    * @throws DAOException
    * @author BTC
@@ -4678,8 +4689,8 @@ public class ActivityMetaDataDao {
    * Get the questionnaire start and end date time for the provided frequency type
    *
    * @param activeTaskDto {@link ActiveTaskDto}
-   * @param activityBean  {@link ActivitiesBean}
-   * @param session       {@link Session}
+   * @param activityBean {@link ActivitiesBean}
+   * @param session {@link Session}
    * @return {@link ActivitiesBean}
    * @throws DAOException
    * @author BTC
@@ -4810,11 +4821,11 @@ public class ActivityMetaDataDao {
             start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
-                    .get(manuallyScheduleFrequencyList.size() - 1)
-                    .isyDaysSign()
+                        .get(manuallyScheduleFrequencyList.size() - 1)
+                        .isyDaysSign()
                     ? -manuallyScheduleFrequencyList
-                    .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getTimePeriodToDays()
+                        .get(manuallyScheduleFrequencyList.size() - 1)
+                        .getTimePeriodToDays()
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
@@ -4860,8 +4871,8 @@ public class ActivityMetaDataDao {
             }
             if (activeTaskDto.getFrequency().equals(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY)
                 || activeTaskDto
-                .getFrequency()
-                .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
+                    .getFrequency()
+                    .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
               // start.setDateOfMonth(questionnairesFrequency.getFrequencyDate());
               end.setTime(taskFrequencyDto.getFrequencyTime());
             }
@@ -4913,20 +4924,20 @@ public class ActivityMetaDataDao {
   /**
    * Get the active task frequency details for manually schedule frequency
    *
-   * @param questionaire         {@link QuestionnairesDto}
+   * @param questionaire {@link QuestionnairesDto}
    * @param anchorRunDetailsBean {@link List<ActivityFrequencyAnchorRunsBean>}
-   * @param session              {@link Session}
+   * @param session {@link Session}
    * @return {@link List<ActivityFrequencyScheduleBean>}
    * @throws DAOException
    * @author BTC
    */
   @SuppressWarnings("unchecked")
   public List<ActivityFrequencyAnchorRunsBean>
-  getQuestionnaireFrequencyAncorDetailsForManuallySchedule(
-      QuestionnairesDto questionaire,
-      List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
-      Session session)
-      throws DAOException {
+      getQuestionnaireFrequencyAncorDetailsForManuallySchedule(
+          QuestionnairesDto questionaire,
+          List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
+          Session session)
+          throws DAOException {
     LOGGER.info(
         "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Starts");
     try {
@@ -4972,7 +4983,7 @@ public class ActivityMetaDataDao {
    *
    * @param questionaire {@link QuestionnairesDto}
    * @param activityBean {@link ActivitiesBean}
-   * @param session      {@link Session}
+   * @param session {@link Session}
    * @return {@link ActivitiesBean}
    * @throws DAOException
    * @author BTC
@@ -5105,11 +5116,11 @@ public class ActivityMetaDataDao {
             start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
-                    .get(manuallyScheduleFrequencyList.size() - 1)
-                    .isyDaysSign()
+                        .get(manuallyScheduleFrequencyList.size() - 1)
+                        .isyDaysSign()
                     ? -manuallyScheduleFrequencyList
-                    .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getTimePeriodToDays()
+                        .get(manuallyScheduleFrequencyList.size() - 1)
+                        .getTimePeriodToDays()
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
@@ -5160,8 +5171,8 @@ public class ActivityMetaDataDao {
             }
             if (questionaire.getFrequency().equals(StudyMetaDataConstants.FREQUENCY_TYPE_MONTHLY)
                 || questionaire
-                .getFrequency()
-                .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
+                    .getFrequency()
+                    .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
               // start.setDateOfMonth(questionnairesFrequency.getFrequencyDate());
               end.setTime(questionnairesFrequency.getFrequencyTime());
             }
@@ -5259,8 +5270,8 @@ public class ActivityMetaDataDao {
       instructionsLangBO =
           (InstructionsLangBO)
               session
-                  .createSQLQuery(
-                      "select * from instructions_lang where lang_code=:language and id=:id")
+                  .createQuery(
+                      "from InstructionsLangBO ILB where ILB.instructionLangPK.langCode=:language and ILB.instructionLangPK.id=:id")
                   .setString("language", language)
                   .setInteger("id", instructionId)
                   .uniqueResult();
@@ -5279,8 +5290,8 @@ public class ActivityMetaDataDao {
       formLangBO =
           (FormLangBO)
               session
-                  .createSQLQuery(
-                      "select * from form_lang where lang_code=:language and form_id=:id")
+                  .createQuery(
+                      "from FormLangBO FLB where FLB.formLangPK.langCode=:language and FLB.formLangPK.formId=:id")
                   .setString("language", language)
                   .setInteger("id", formId)
                   .uniqueResult();
@@ -5299,8 +5310,8 @@ public class ActivityMetaDataDao {
       questionLangBO =
           (QuestionLangBO)
               session
-                  .createSQLQuery(
-                      "from question_lang where lang_code=:language and id=:id")
+                  .createQuery(
+                      "from QuestionLangBO QLB where QLB.questionLangPK.langCode=:language and QLB.questionLangPK.id=:id")
                   .setString("language", language)
                   .setInteger("id", id)
                   .uniqueResult();

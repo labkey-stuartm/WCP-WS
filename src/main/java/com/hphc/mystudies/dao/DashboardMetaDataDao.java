@@ -87,7 +87,8 @@ public class DashboardMetaDataDao {
    * @throws DAOException
    */
   @SuppressWarnings("unchecked")
-  public StudyDashboardResponse studyDashboardInfo(String studyId, String language) throws DAOException {
+  public StudyDashboardResponse studyDashboardInfo(String studyId, String language)
+      throws DAOException {
     LOGGER.info("INFO: DashboardMetaDataDao - studyDashboardInfo() :: Starts");
     Session session = null;
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
@@ -586,12 +587,15 @@ public class DashboardMetaDataDao {
         chart.setTitle(chartTitle);
 
         if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-          ActiveTaskLangBO activeTaskLangBO = activityMetaDataDao.getActiveTaskLangById(
-              activeTask.getActiveTaskId(), language);
-          chart.setDisplayName(
-              StringUtils.isEmpty(activeTaskLangBO.getChartTitle()) ? "" : activeTaskLangBO.getChartTitle());
-        }
-        else {
+          ActiveTaskLangBO activeTaskLangBO =
+              activityMetaDataDao.getActiveTaskLangById(activeTask.getActiveTaskId(), language);
+          if (activeTaskLangBO != null) {
+            chart.setDisplayName(
+                StringUtils.isEmpty(activeTaskLangBO.getChartTitle())
+                    ? ""
+                    : activeTaskLangBO.getChartTitle());
+          }
+        } else {
           chart.setDisplayName(
               StringUtils.isEmpty(activeTask.getTitleChat()) ? "" : activeTask.getTitleChat());
         }
@@ -632,11 +636,15 @@ public class DashboardMetaDataDao {
       } else {
         chart.setTitle(chartTitle);
         if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-          QuestionLangBO questionLangBO = activityMetaDataDao.getQuestionLangBo(question.getId(), language);
-          chart.setDisplayName(
-              StringUtils.isEmpty(questionLangBO.getChartTitle()) ? "" : questionLangBO.getChartTitle());
-        }
-        else {
+          QuestionLangBO questionLangBO =
+              activityMetaDataDao.getQuestionLangBo(question.getId(), language);
+          if (questionLangBO != null) {
+            chart.setDisplayName(
+                StringUtils.isEmpty(questionLangBO.getChartTitle())
+                    ? ""
+                    : questionLangBO.getChartTitle());
+          }
+        } else {
           chart.setDisplayName(
               StringUtils.isEmpty(question.getChartTitle()) ? "" : question.getChartTitle());
         }
@@ -708,32 +716,41 @@ public class DashboardMetaDataDao {
     DashboardActivityBean activity = new DashboardActivityBean();
     try {
       if (activityType.equalsIgnoreCase(StudyMetaDataConstants.ACTIVITY_TYPE_ACTIVE_TASK)) {
-        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)){
-          ActiveTaskLangBO activeTaskLangBO = activityMetaDataDao.getActiveTaskLangById(activeTask.getActiveTaskId(), language);
-          statistics.setDisplayName(
-              StringUtils.isEmpty(activeTaskLangBO.getStatName())
-                  ? ""
-                  : activeTaskLangBO.getStatName());
-        }
-        else {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+          ActiveTaskLangBO activeTaskLangBO =
+              activityMetaDataDao.getActiveTaskLangById(activeTask.getActiveTaskId(), language);
+          if (activeTaskLangBO != null) {
+            statistics.setDisplayName(
+                StringUtils.isEmpty(activeTaskLangBO.getStatName())
+                    ? ""
+                    : activeTaskLangBO.getStatName());
+            statistics.setUnit(
+                StringUtils.isEmpty(activeTaskLangBO.getDisplayUnitStat())
+                    ? ""
+                    : activeTaskLangBO.getDisplayUnitStat());
+          }
+        } else {
           statistics.setDisplayName(
               StringUtils.isEmpty(activeTask.getDisplayNameStat())
                   ? ""
                   : activeTask.getDisplayNameStat());
+
+          statistics.setUnit(
+              StringUtils.isEmpty(activeTask.getDisplayUnitStat())
+                  ? ""
+                  : activeTask.getDisplayUnitStat());
         }
         statistics.setTitle(
             StringUtils.isEmpty(activeTask.getIdentifierNameStat())
                 ? ""
                 : activeTask.getIdentifierNameStat());
+
         statistics.setStatType(
             StringUtils.isEmpty(activeTask.getUploadTypeStat())
                 ? ""
                 : this.getStatisticsType(
                     Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
-        statistics.setUnit(
-            StringUtils.isEmpty(activeTask.getDisplayUnitStat())
-                ? ""
-                : activeTask.getDisplayUnitStat());
+
         statistics.setCalculation(
             StringUtils.isEmpty(activeTask.getFormulaAppliedStat())
                 ? ""
@@ -757,18 +774,30 @@ public class DashboardMetaDataDao {
 
         dataSource.setType(activeTask.getActivityType());
       } else {
-        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)){
-          QuestionLangBO questionLangBO = activityMetaDataDao.getQuestionLangBo(question.getId(), language);
-          statistics.setDisplayName(
-              StringUtils.isEmpty(questionLangBO.getStatDisplayName())
-                  ? ""
-                  : questionLangBO.getStatDisplayName());
-        }
-        else {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+          QuestionLangBO questionLangBO =
+              activityMetaDataDao.getQuestionLangBo(question.getId(), language);
+          if (questionLangBO != null) {
+            statistics.setDisplayName(
+                StringUtils.isEmpty(questionLangBO.getStatDisplayName())
+                    ? ""
+                    : questionLangBO.getStatDisplayName());
+
+            statistics.setUnit(
+                StringUtils.isEmpty(questionLangBO.getStatDisplayUnits())
+                    ? ""
+                    : questionLangBO.getStatDisplayUnits());
+          }
+        } else {
           statistics.setDisplayName(
               StringUtils.isEmpty(question.getStatDisplayName())
                   ? ""
                   : question.getStatDisplayName());
+
+          statistics.setUnit(
+              StringUtils.isEmpty(question.getStatDisplayUnits())
+                  ? ""
+                  : question.getStatDisplayUnits());
         }
         statistics.setTitle(
             StringUtils.isEmpty(question.getStatShortName()) ? "" : question.getStatShortName());
@@ -776,10 +805,7 @@ public class DashboardMetaDataDao {
             question.getStatType() == null
                 ? ""
                 : this.getStatisticsType(question.getStatType(), statisticImageList));
-        statistics.setUnit(
-            StringUtils.isEmpty(question.getStatDisplayUnits())
-                ? ""
-                : question.getStatDisplayUnits());
+
         statistics.setCalculation(
             question.getStatFormula() == null
                 ? ""
@@ -790,7 +816,6 @@ public class DashboardMetaDataDao {
         activity.setActivityId(question.getActivityId());
         activity.setVersion(question.getActivityVersion());
         dataSource.setActivity(activity);
-
       }
       statistics.setDataSource(dataSource);
       statisticsList.add(statistics);

@@ -43,8 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
- * Study metadata service that communicates with study metadata {@link StudyMetaDataDao}
- * repository.
+ * Study metadata service that communicates with study metadata {@link StudyMetaDataDao} repository.
  *
  * @author BTC
  */
@@ -128,12 +127,12 @@ public class StudyMetaDataOrchestration {
    * @throws OrchestrationException
    * @author BTC
    */
-  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId)
+  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId, String language)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Starts");
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     try {
-      eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId);
+      eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR", e);
     }
@@ -145,9 +144,9 @@ public class StudyMetaDataOrchestration {
    * Get consent document by passing the consent version or the activity identifier and activity
    * version for the provided study identifier
    *
-   * @param studyId         the study identifier
-   * @param consentVersion  the consent version
-   * @param activityId      the activity identifier
+   * @param studyId the study identifier
+   * @param consentVersion the consent version
+   * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link ConsentDocumentResponse}
    * @throws OrchestrationException
@@ -238,8 +237,8 @@ public class StudyMetaDataOrchestration {
   /**
    * Check activity for the provided study and activity identifier
    *
-   * @param activityId      the activity identifier
-   * @param studyId         the study identifier
+   * @param activityId the activity identifier
+   * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws OrchestrationException
@@ -261,8 +260,8 @@ public class StudyMetaDataOrchestration {
   /**
    * Check whether activity is questionnaire for the provided study and activity identifier
    *
-   * @param activityId      the activity identifier
-   * @param studyId         the study identifier
+   * @param activityId the activity identifier
+   * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws OrchestrationException

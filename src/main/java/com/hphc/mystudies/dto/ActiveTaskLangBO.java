@@ -51,6 +51,15 @@ public class ActiveTaskLangBO implements Serializable {
   @Column(name = "modified_on")
   private String modifiedOn;
 
+  @Column(name = "display_units_stat")
+  private String displayUnitStat;
+
+  @Column(name = "display_units_stat2")
+  private String displayUnitStat2;
+
+  @Column(name = "display_units_stat3")
+  private String displayUnitStat3;
+
   public ActiveTaskLangPK getActiveTaskLangPK() {
     return activeTaskLangPK;
   }
@@ -161,5 +170,29 @@ public class ActiveTaskLangBO implements Serializable {
 
   public void setModifiedOn(String modifiedOn) {
     this.modifiedOn = modifiedOn;
+  }
+
+  public String getDisplayUnitStat() {
+    return displayUnitStat;
+  }
+
+  public void setDisplayUnitStat(String displayUnitStat) {
+    this.displayUnitStat = displayUnitStat;
+  }
+
+  public String getDisplayUnitStat2() {
+    return displayUnitStat2;
+  }
+
+  public void setDisplayUnitStat2(String displayUnitStat2) {
+    this.displayUnitStat2 = displayUnitStat2;
+  }
+
+  public String getDisplayUnitStat3() {
+    return displayUnitStat3;
+  }
+
+  public void setDisplayUnitStat3(String displayUnitStat3) {
+    this.displayUnitStat3 = displayUnitStat3;
   }
 }

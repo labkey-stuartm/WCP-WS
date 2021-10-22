@@ -92,8 +92,8 @@ public class StudyMetaDataService {
    * Get Gateway info and Gateway resources data
    *
    * @param authorization the Basic Authorization
-   * @param context       {@link ServletContext}
-   * @param response      {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link GatewayInfoResponse}
    * @author BTC
    */
@@ -132,8 +132,8 @@ public class StudyMetaDataService {
    * Get all the configured studies from the WCP
    *
    * @param authorization the Basic Authorization
-   * @param context       {@link ServletContext}
-   * @param response      {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link StudyResponse}
    * @author BTC
    */
@@ -191,8 +191,8 @@ public class StudyMetaDataService {
   /**
    * Get eligibility and consent info for the provided study identifier
    *
-   * @param studyId  the Study Idetifier
-   * @param context  {@link ServletContext}
+   * @param studyId the Study Idetifier
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link EligibilityConsentResponse}
    * @author BTC
@@ -226,7 +226,8 @@ public class StudyMetaDataService {
               .build();
         }
 
-        eligibilityConsentResponse = studyMetaDataOrchestration.eligibilityConsentMetadata(studyId);
+        eligibilityConsentResponse =
+            studyMetaDataOrchestration.eligibilityConsentMetadata(studyId, language);
         if (!eligibilityConsentResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -268,12 +269,12 @@ public class StudyMetaDataService {
    * Get consent document by passing the consent version or the activity id and activity version for
    * the provided study identifier
    *
-   * @param studyId         the Study Identifier
-   * @param consentVersion  the Consent Version
-   * @param activityId      the Activity Identifier
+   * @param studyId the Study Identifier
+   * @param consentVersion the Consent Version
+   * @param activityId the Activity Identifier
    * @param activityVersion the Activity Version
-   * @param context         {@link ServletContext}
-   * @param response        {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link ConsentDocumentResponse}
    * @author BTC
    */
@@ -352,8 +353,8 @@ public class StudyMetaDataService {
   /**
    * Get resources metadata for the provided study identifier
    *
-   * @param studyId  the Study Identifier
-   * @param context  {@link ServletContext}
+   * @param studyId the Study Identifier
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link ResourcesResponse}
    * @author BTC
@@ -427,8 +428,8 @@ public class StudyMetaDataService {
   /**
    * Get study metadata for the provided study identifier
    *
-   * @param studyId  the Study Identifier
-   * @param context  {@link ServletContext}
+   * @param studyId the Study Identifier
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyInfoResponse}
    * @author BTC
@@ -505,9 +506,9 @@ public class StudyMetaDataService {
    * Get all the activities for the provided study identifier
    *
    * @param authorization the Basic Authorization
-   * @param studyId       the Study Identifier
-   * @param context       {@link ServletContext}
-   * @param response      {@link HttpServletResponse}
+   * @param studyId the Study Identifier
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link ActivityResponse}
    * @author BTC
    */
@@ -541,8 +542,8 @@ public class StudyMetaDataService {
               .build();
         }
 
-        activityResponse = activityMetaDataOrchestration.studyActivityList(studyId, authorization,
-            language);
+        activityResponse =
+            activityMetaDataOrchestration.studyActivityList(studyId, authorization, language);
         if (!activityResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -583,12 +584,13 @@ public class StudyMetaDataService {
   /**
    * Get the activity metadata for the provided study and activity identifier
    *
-   * @param studyId         the Study Identifier
-   * @param activityId      the Activity Identifier
+   * @param studyId the Study Identifier
+   * @param activityId the Activity Identifier
    * @param activityVersion the Activity Version
-   * @param context         {@link ServletContext}
-   * @param response        {@link HttpServletResponse}
-   * @return {@link ActiveTaskActivityMetaDataResponse} or {@link QuestionnaireActivityMetaDataResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
+   * @return {@link ActiveTaskActivityMetaDataResponse} or {@link
+   *     QuestionnaireActivityMetaDataResponse}
    * @author BTC
    */
   @GET
@@ -712,8 +714,8 @@ public class StudyMetaDataService {
   /**
    * Get dashboard metadata for the provided study identifier
    *
-   * @param studyId  the Study Identifier
-   * @param context  {@link ServletContext}
+   * @param studyId the Study Identifier
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyDashboardResponse}
    * @author BTC
@@ -747,8 +749,8 @@ public class StudyMetaDataService {
               .build();
         }
 
-        studyDashboardResponse = dashboardMetaDataOrchestration.studyDashboardInfo(studyId,
-            language);
+        studyDashboardResponse =
+            dashboardMetaDataOrchestration.studyDashboardInfo(studyId, language);
         if (!studyDashboardResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -789,7 +791,7 @@ public class StudyMetaDataService {
   /**
    * Get terms and policy for the app
    *
-   * @param context  {@link ServletContext}
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link TermsPolicyResponse}
    * @author BTC
@@ -826,10 +828,10 @@ public class StudyMetaDataService {
   /**
    * Fetch available notifications
    *
-   * @param skip          the skip count
+   * @param skip the skip count
    * @param authorization the Basic Authorization
-   * @param context       {@link ServletContext}
-   * @param response      {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link NotificationsResponse}
    * @author BTC
    */
@@ -848,8 +850,8 @@ public class StudyMetaDataService {
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
       if (StringUtils.isNotEmpty(skip)) {
-        notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization, appId,
-            language);
+        notificationsResponse =
+            appMetaDataOrchestration.notifications(skip, authorization, appId, language);
         if (!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103,
@@ -890,8 +892,8 @@ public class StudyMetaDataService {
   /**
    * Provide feedback about the app
    *
-   * @param params   the feedback details
-   * @param context  {@link ServletContext}
+   * @param params the feedback details
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link AppResponse}
    * @author BTC
@@ -935,8 +937,8 @@ public class StudyMetaDataService {
   /**
    * Reach out to app owner
    *
-   * @param params   the contact details
-   * @param context  {@link ServletContext}
+   * @param params the contact details
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link AppResponse}
    * @author BTC
@@ -984,10 +986,10 @@ public class StudyMetaDataService {
   /**
    * Check for app updates
    *
-   * @param appVersion    the App Version
+   * @param appVersion the App Version
    * @param authorization the Basic Authorization
-   * @param context       {@link ServletContext}
-   * @param response      {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link AppUpdatesResponse}
    * @author BTC
    */
@@ -1030,10 +1032,10 @@ public class StudyMetaDataService {
   /**
    * Check for study updates
    *
-   * @param studyId      the Study Identifier
+   * @param studyId the Study Identifier
    * @param studyVersion the Study Version
-   * @param context      {@link ServletContext}
-   * @param response     {@link HttpServletResponse}
+   * @param context {@link ServletContext}
+   * @param response {@link HttpServletResponse}
    * @return {@link StudyUpdatesResponse}
    * @author BTC
    */
@@ -1107,8 +1109,8 @@ public class StudyMetaDataService {
   /**
    * Update app version
    *
-   * @param params   the App Version Details
-   * @param context  {@link ServletContext}
+   * @param params the App Version Details
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return the success or failure
    * @author BTC
@@ -1196,8 +1198,8 @@ public class StudyMetaDataService {
   /**
    * Get eligibility and consent info for the provided study identifier
    *
-   * @param studyId  the Study Idetifier
-   * @param context  {@link ServletContext}
+   * @param studyId the Study Idetifier
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link EligibilityConsentResponse}
    * @author BTC
@@ -1271,7 +1273,7 @@ public class StudyMetaDataService {
    * Get all the configured studies from the WCP
    *
    * @param studyId
-   * @param context  {@link ServletContext}
+   * @param context {@link ServletContext}
    * @param response {@link HttpServletResponse}
    * @return {@link StudyResponse}
    * @author BTC
