@@ -280,19 +280,38 @@ public class StudyMetaDataDao {
         session = sessionFactory.openSession();
 
         // Get all configured studies from the WCP by platform supported
-        studiesList =
-            session
-                .createQuery(
-                    "from StudyDto SDTO where SDTO.platform like :platformType"
-                        + " and SDTO.appId=:applicationId and SDTO.orgId=:orgId"
-                        + " and (SDTO.status= :status OR SDTO.live=1)")
-                .setString("platformType", "%" + platformType + "%")
-                .setString("applicationId", applicationId)
-                .setString("orgId", orgId)
-                .setString(
-                    StudyMetaDataEnum.QF_STATUS.value(),
-                    StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
-                .list();
+        if (StringUtils.isNotBlank(language) && !MultiLanguageCodes.ENGLISH.getKey().equals(language)) {
+          studiesList =
+              session
+                  .createQuery(
+                      "from StudyDto SDTO where SDTO.platform like :platformType"
+                          + " and SDTO.appId=:applicationId and SDTO.orgId=:orgId"
+                          + " and (SDTO.status= :status OR SDTO.live=1) and SDTO.multiLanguageFlag=:multiLanguageFlag "
+                          + "and SDTO.selectedLanguages like :language")
+                  .setString("platformType", "%" + platformType + "%")
+                  .setString("applicationId", applicationId)
+                  .setString("orgId", orgId)
+                  .setBoolean("multiLanguageFlag", true)
+                  .setString("language", "%"+language+"%")
+                  .setString(
+                      StudyMetaDataEnum.QF_STATUS.value(),
+                      StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
+                  .list();
+        } else {
+          studiesList =
+              session
+                  .createQuery(
+                      "from StudyDto SDTO where SDTO.platform like :platformType"
+                          + " and SDTO.appId=:applicationId and SDTO.orgId=:orgId"
+                          + " and (SDTO.status= :status OR SDTO.live=1)")
+                  .setString("platformType", "%" + platformType + "%")
+                  .setString("applicationId", applicationId)
+                  .setString("orgId", orgId)
+                  .setString(
+                      StudyMetaDataEnum.QF_STATUS.value(),
+                      StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)
+                  .list();
+        }
         if (null != studiesList && !studiesList.isEmpty()) {
           List<StudyBean> studyBeanList = new ArrayList<>();
           for (StudyDto studyDto : studiesList) {
