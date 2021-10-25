@@ -124,5 +124,13 @@
       class="com.hphc.mystudies.dto.FormLangBO"/>
     <mapping
       class="com.hphc.mystudies.dto.FormLangPK"/>
+      <mapping
+      class="com.hphc.mystudies.dto.EligibilityTestLangBo"/>
+      <mapping
+      class="com.hphc.mystudies.dto.ConsentInfoLangBO"/>
+      <mapping
+      class="com.hphc.mystudies.dto.ComprehensionQuestionLangBO"/>
+      <mapping
+      class="com.hphc.mystudies.dto.ComprehensionResponseLangBo"/>
   </session-factory>
 </hibernate-configuration>

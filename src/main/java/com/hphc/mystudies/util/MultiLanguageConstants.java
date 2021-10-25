@@ -4,6 +4,8 @@ public class MultiLanguageConstants {
   // multi languages
   public static final String ENGLISH = "en";
   public static final String SPANISH = "es";
+  public static final String ELIGIBILITY_TEXT = "ELIGIBILITY_TEXT";
+  public static final String COMPREHENSION_TEXT = "COMPREHENSION_TEXT";
 
   // ERROR CONSTANTS
   public static final String FAILURE = "FAILURE";
