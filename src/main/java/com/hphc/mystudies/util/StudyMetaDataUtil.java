@@ -1099,4 +1099,41 @@ public class StudyMetaDataUtil {
     byte[] data = inputString.getBytes(StandardCharsets.UTF_8);
     return java.util.Base64.getEncoder().encodeToString(data);
   }
+
+  public static String getMultiLanguageText(String language, String fieldName) {
+    LOGGER.info("INFO: StudyMetaDataUtil - getMultiLanguageText() :: starts");
+    String outputText = "";
+    if (language == null) {
+      language = "";
+    }
+    switch (language) {
+      case MultiLanguageConstants.SPANISH:
+        try {
+          Field idField = StudyMetaDataConstantsSpanish.class.getField(fieldName);
+          try {
+            outputText = (String) idField.get(null);
+          } catch (IllegalAccessException e) {
+            LOGGER.error(
+                "ERROR: StudyMetaDataUtil - getMultiLanguageText() - Spanish Inner try block", e);
+          }
+        } catch (NoSuchFieldException e) {
+          LOGGER.error(
+              "ERROR: StudyMetaDataUtil - getMultiLanguageText() - Spanish Outer try block", e);
+        }
+        break;
+      default:
+        try {
+          Field idField = StudyMetaDataConstants.class.getField(fieldName);
+          try {
+            outputText = (String) idField.get(null);
+          } catch (IllegalAccessException e) {
+            LOGGER.error("ERROR: StudyMetaDataUtil - getMultiLanguageText() - Inner try block", e);
+          }
+        } catch (NoSuchFieldException e) {
+          LOGGER.error("ERROR: StudyMetaDataUtil - getMultiLanguageText() - Outer try block", e);
+        }
+    }
+    LOGGER.info("INFO: StudyMetaDataUtil - getMultiLanguageText() :: ends");
+    return outputText;
+  }
 }

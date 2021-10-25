@@ -20,8 +20,8 @@ public class StudyMetaDataConstantsSpanish {
   public static final String id_9 = "Productos emisores de radiación";
   public static final String id_10 = "El consumo de tabaco";
 
-  public static final String ELIGIBILITY_TEXT_SPANISH =
+  public static final String ELIGIBILITY_TEXT =
       "Responda estas preguntas para determinar su elegibilidad para el estudio:";
-  public static final String COMPREHENSION_TEXT_SPANISH =
+  public static final String COMPREHENSION_TEXT =
       "Realice esta prueba de comprensión para evaluar su comprensión del estudio:";
 }
