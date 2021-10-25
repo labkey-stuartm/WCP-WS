@@ -1333,6 +1333,22 @@ public class StudyMetaDataDao {
           List<ResourcesBean> resourcesBeanList = new ArrayList<>();
           for (ResourcesDto resourcesDto : resourcesDtoList) {
 
+            ResourcesLangBO resourcesLang = null;
+            if (StringUtils.isNotBlank(language)
+                && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                && studyDto.getMultiLanguageFlag() != null
+                && studyDto.getMultiLanguageFlag()
+                && studyDto.getSelectedLanguages().contains(language)) {
+              resourcesLang =
+                  (ResourcesLangBO)
+                      session
+                          .createQuery(
+                              "from ResourcesLangBO where resourcesLangPK.id= :resourceId AND resourcesLangPK.langCode= :langCode")
+                          .setString("resourceId", resourcesDto.getId().toString())
+                          .setString("langCode", language)
+                          .uniqueResult();
+            }
+
             ResourcesBean resourcesBean = new ResourcesBean();
             resourcesBean.setAudience(
                 resourcesDto.isResourceType()
@@ -1341,22 +1357,15 @@ public class StudyMetaDataDao {
 
             String richText = "";
             String pdfURL = "";
-            if (StringUtils.isNotBlank(language)
-                && !MultiLanguageConstants.ENGLISH.equals(language)) {
-              ResourcesLangBO resourcesLangBO =
-                  this.getResourceLangBO(resourcesDto.getId(), language);
-              if (resourcesLangBO != null) {
-                resourcesBean.setTitle(
-                    StringUtils.isEmpty(resourcesLangBO.getTitle())
-                        ? ""
-                        : resourcesLangBO.getTitle());
-                resourcesBean.setNotificationText(
-                    StringUtils.isEmpty(resourcesLangBO.getResourceText())
-                        ? ""
-                        : resourcesLangBO.getResourceText());
-                richText = resourcesLangBO.getRichText();
-                pdfURL = resourcesLangBO.getPdfUrl();
-              }
+            if (resourcesLang != null) {
+              resourcesBean.setTitle(
+                  StringUtils.isEmpty(resourcesLang.getTitle()) ? "" : resourcesLang.getTitle());
+              resourcesBean.setNotificationText(
+                  StringUtils.isEmpty(resourcesLang.getResourceText())
+                      ? ""
+                      : resourcesLang.getResourceText());
+              richText = resourcesLang.getRichText();
+              pdfURL = resourcesLang.getPdfUrl();
             } else {
               resourcesBean.setTitle(
                   StringUtils.isEmpty(resourcesDto.getTitle()) ? "" : resourcesDto.getTitle());
@@ -2435,33 +2444,5 @@ public class StudyMetaDataDao {
     }
     LOGGER.info("INFO: StudyMetaDataDao - getStudylatestVersion() :: Ends");
     return version;
-  }
-
-  public ResourcesLangBO getResourceLangBO(int id, String language) {
-    LOGGER.info("StudyDAOImpl - getResourceLangBO() - Starts");
-    Session session = null;
-    ResourcesLangBO resourcesLangBO = null;
-    try {
-      session = sessionFactory.openSession();
-      if (id != 0) {
-        resourcesLangBO =
-            (ResourcesLangBO)
-                session
-                    .createSQLQuery(
-                        "select * from resources_lang where lang_code=:language and id=:id")
-                    .addEntity(ResourcesLangBO.class)
-                    .setString("language", language)
-                    .setInteger("id", id)
-                    .uniqueResult();
-      }
-    } catch (Exception e) {
-      LOGGER.error("StudyDAOImpl - getResourceLangBO() - ERROR ", e);
-    } finally {
-      if (null != session && session.isOpen()) {
-        session.close();
-      }
-    }
-    LOGGER.info("StudyDAOImpl - getResourceLangBO() - Ends");
-    return resourcesLangBO;
   }
 }
