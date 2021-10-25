@@ -343,24 +343,6 @@ public class StudyMetaDataDao {
                   StringUtils.isEmpty(studyLanguageBO.getResearchSponsor())
                       ? ""
                       : studyLanguageBO.getResearchSponsor());
-              List<ReferenceTablesDto> referenceTablesList =
-                  session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO"
-                              + " where RTDTO.id IN ("
-                              + studyLanguageBO.getCategory()
-                              + ")")
-                      .list();
-              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                for (ReferenceTablesDto reference : referenceTablesList) {
-                  if (reference
-                      .getCategory()
-                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    studyBean.setCategory(
-                        StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                  }
-                }
-              }
             } else {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyDto.getStudyTagline())
@@ -371,25 +353,24 @@ public class StudyMetaDataDao {
                   StringUtils.isEmpty(studyDto.getResearchSponsor())
                       ? ""
                       : studyDto.getResearchSponsor());
-
-              if (StringUtils.isNotEmpty(studyDto.getCategory())
-                  && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-                List<ReferenceTablesDto> referenceTablesList =
-                    session
-                        .createQuery(
-                            "from ReferenceTablesDto RTDTO"
-                                + " where RTDTO.id IN ("
-                                + studyDto.getCategory()
-                                + ")")
-                        .list();
-                if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                  for (ReferenceTablesDto reference : referenceTablesList) {
-                    if (reference
-                        .getCategory()
-                        .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                    }
+            }
+            if (StringUtils.isNotEmpty(studyDto.getCategory())
+                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+              List<ReferenceTablesDto> referenceTablesList =
+                  session
+                      .createQuery(
+                          "from ReferenceTablesDto RTDTO"
+                              + " where RTDTO.id IN ("
+                              + studyDto.getCategory()
+                              + ")")
+                      .list();
+              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
+                for (ReferenceTablesDto reference : referenceTablesList) {
+                  if (reference
+                      .getCategory()
+                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
+                    studyBean.setCategory(
+                        StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
                   }
                 }
               }
@@ -2235,26 +2216,6 @@ public class StudyMetaDataDao {
                   StringUtils.isEmpty(studyLanguageBO.getResearchSponsor())
                       ? ""
                       : studyLanguageBO.getResearchSponsor());
-              if (StringUtils.isNotEmpty(studyLanguageBO.getCategory())
-                  && StringUtils.isNotEmpty(studyLanguageBO.getResearchSponsor())) {
-                List<ReferenceTablesDto> referenceTablesList =
-                    session
-                        .createQuery(
-                            "from ReferenceTablesDto RTDTO where RTDTO.id IN ("
-                                + studyLanguageBO.getCategory()
-                                + ")")
-                        .list();
-                if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                  for (ReferenceTablesDto reference : referenceTablesList) {
-                    if (reference
-                        .getCategory()
-                        .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                    }
-                  }
-                }
-              }
             } else {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyDto.getStudyTagline())
@@ -2265,23 +2226,23 @@ public class StudyMetaDataDao {
                   StringUtils.isEmpty(studyDto.getResearchSponsor())
                       ? ""
                       : studyDto.getResearchSponsor());
-
-              if (StringUtils.isNotEmpty(studyDto.getCategory())
-                  && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-                List<ReferenceTablesDto> referenceTablesList =
-                    session
-                        .createQuery(
-                            "from ReferenceTablesDto RTDTO where RTDTO.id IN ("
-                                + studyDto.getCategory()
-                                + ")")
-                        .list();
-                if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                  for (ReferenceTablesDto reference : referenceTablesList) {
-                    if (reference
-                        .getCategory()
-                        .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+            }
+            if (StringUtils.isNotEmpty(studyDto.getCategory())
+                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+              List<ReferenceTablesDto> referenceTablesList =
+                  session
+                      .createQuery(
+                          "from ReferenceTablesDto RTDTO where RTDTO.id IN ("
+                              + studyDto.getCategory()
+                              + ")")
+                      .list();
+              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
+                for (ReferenceTablesDto reference : referenceTablesList) {
+                  if (reference
+                      .getCategory()
+                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
+                    studyBean.setCategory(
+                        StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
 //                      else {
 //                        try {
 //                          Field idField =
@@ -2296,7 +2257,6 @@ public class StudyMetaDataDao {
 //                          LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
 //                        }
 //                      }
-                    }
                   }
                 }
               }
