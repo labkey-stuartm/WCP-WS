@@ -132,5 +132,9 @@
       class="com.hphc.mystudies.dto.ComprehensionQuestionLangBO"/>
       <mapping
       class="com.hphc.mystudies.dto.ComprehensionResponseLangBo"/>
+    <mapping
+      class="com.hphc.mystudies.dto.QuestionnaireLangDto"/>
+    <mapping
+      class="com.hphc.mystudies.dto.QuestionnaireLangPK"/>
   </session-factory>
 </hibernate-configuration>
