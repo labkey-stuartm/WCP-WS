@@ -5277,11 +5277,11 @@ public class ActivityMetaDataDao {
               new ActivityFrequencyAnchorRunsBean();
           activityFrequencyAnchorRunsBean.setStartDays(
               customFrequencyDto.isxDaysSign()
-                  ? -customFrequencyDto.getTimePeriodFromDays()
+                  ? (customFrequencyDto.getTimePeriodFromDays()!=null?-customFrequencyDto.getTimePeriodFromDays():null)
                   : customFrequencyDto.getTimePeriodFromDays());
           activityFrequencyAnchorRunsBean.setEndDays(
               customFrequencyDto.isyDaysSign()
-                  ? -customFrequencyDto.getTimePeriodToDays()
+                  ? (customFrequencyDto.getTimePeriodToDays()!=null?-customFrequencyDto.getTimePeriodToDays():null)
                   : customFrequencyDto.getTimePeriodToDays());
           activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
