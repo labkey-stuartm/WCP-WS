@@ -59,6 +59,7 @@ import com.hphc.mystudies.dto.QuestionLangBO;
 import com.hphc.mystudies.dto.QuestionReponseTypeDto;
 import com.hphc.mystudies.dto.QuestionResponseSubTypeDto;
 import com.hphc.mystudies.dto.QuestionResponsetypeMasterInfoDto;
+import com.hphc.mystudies.dto.QuestionnaireLangDto;
 import com.hphc.mystudies.dto.QuestionnairesCustomFrequenciesDto;
 import com.hphc.mystudies.dto.QuestionnairesDto;
 import com.hphc.mystudies.dto.QuestionnairesFrequenciesDto;
@@ -303,8 +304,18 @@ public class ActivityMetaDataDao {
           for (QuestionnairesDto questionaire : questionnairesList) {
 
             ActivitiesBean activityBean = new ActivitiesBean();
-            activityBean.setTitle(
-                StringUtils.isEmpty(questionaire.getTitle()) ? "" : questionaire.getTitle());
+
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
+              QuestionnaireLangDto questionnaireLangDto = this.getQuestionnairesLangById(questionaire.getId(), language);
+              if (questionnaireLangDto!=null) {
+                activityBean.setTitle(
+                    StringUtils.isEmpty(questionnaireLangDto.getTitle()) ? "" : questionnaireLangDto.getTitle());
+              }
+            } else {
+              activityBean.setTitle(
+                  StringUtils.isEmpty(questionaire.getTitle()) ? "" : questionaire.getTitle());
+            }
             activityBean.setType(StudyMetaDataConstants.ACTIVITY_QUESTIONNAIRE);
             activityBean.setState(
                 questionaire.getActive()
@@ -504,6 +515,30 @@ public class ActivityMetaDataDao {
     return activeTaskLangBO;
   }
 
+  public QuestionnaireLangDto getQuestionnairesLangById(int id, String language) {
+    LOGGER.info("StudyActiveTasksDAOImpl - getQuestionnairesLangById() - Starts");
+    Session session = null;
+    QuestionnaireLangDto questionnaireLangDto = null;
+    try {
+      session = sessionFactory.openSession();
+      questionnaireLangDto =
+          (QuestionnaireLangDto)
+              session
+                  .createQuery(
+                      "from QuestionnaireLangDto QLD where QLD.questionnaireLangPK.id=:id and QLD.questionnaireLangPK.langCode=:language")
+                  .setInteger("id", id)
+                  .setString("language", language)
+                  .uniqueResult();
+    } catch (Exception e) {
+      LOGGER.error("StudyActiveTasksDAOImpl - getQuestionnairesLangById() - ERROR", e);
+    } finally {
+      if (null != session && session.isOpen()) {
+        session.close();
+      }
+    }
+    LOGGER.info("StudyActiveTasksDAOImpl - getQuestionnairesLangById() - Ends");
+    return questionnaireLangDto;
+  }
   /**
    * Get active task metadata for the provided study and activity identifier
    *
