@@ -10,11 +10,13 @@ import javax.persistence.Table;
 @Table(name = "question_lang")
 public class QuestionLangBO implements Serializable {
 
-  @EmbeddedId
-  private QuestionLangPK questionLangPK;
+  @EmbeddedId private QuestionLangPK questionLangPK;
 
   @Column(name = "questionnaire_id")
   private Integer questionnaireId;
+
+  @Column(name = "form_id")
+  private Integer formId;
 
   @Column(name = "question")
   private String question;
@@ -41,10 +43,10 @@ public class QuestionLangBO implements Serializable {
   private Integer modifiedBy;
 
   @Column(name = "active")
-  private Boolean active;
+  private Boolean active = true;
 
   @Column(name = "status")
-  private Boolean status;
+  private Boolean status= false;
 
   @Column(name = "min_desc")
   private String minDescription;
@@ -57,6 +59,9 @@ public class QuestionLangBO implements Serializable {
 
   @Column(name = "placeholder_text")
   private String placeholderText;
+
+  @Column(name = "unit")
+  private String unit;
 
   @Column(name = "invalid_message")
   private String invalidMessage;
@@ -72,6 +77,15 @@ public class QuestionLangBO implements Serializable {
 
   @Column(name = "other_text")
   private String otherText;
+
+  @Column(name = "other_placeholder_text")
+  private String otherPlaceholderText;
+
+  @Column(name = "text_choice_description")
+  private String textChoiceDescription;
+
+  @Column(name = "other_description")
+  private String otherDescription;
 
   public String getOtherText() {
     return otherText;
@@ -240,5 +254,44 @@ public class QuestionLangBO implements Serializable {
   public void setResponseTypeId(Integer responseTypeId) {
     this.responseTypeId = responseTypeId;
   }
-}
 
+  public String getUnit() {
+    return unit;
+  }
+
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
+
+  public String getOtherPlaceholderText() {
+    return otherPlaceholderText;
+  }
+
+  public void setOtherPlaceholderText(String otherPlaceholderText) {
+    this.otherPlaceholderText = otherPlaceholderText;
+  }
+
+  public String getOtherDescription() {
+    return otherDescription;
+  }
+
+  public void setOtherDescription(String otherDescription) {
+    this.otherDescription = otherDescription;
+  }
+
+  public String getTextChoiceDescription() {
+    return textChoiceDescription;
+  }
+
+  public void setTextChoiceDescription(String textChoiceDescription) {
+    this.textChoiceDescription = textChoiceDescription;
+  }
+
+  public Integer getFormId() {
+    return formId;
+  }
+
+  public void setFormId(Integer formId) {
+    this.formId = formId;
+  }
+}

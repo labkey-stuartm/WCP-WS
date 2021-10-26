@@ -789,7 +789,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesDto QDTO"
                           + " where QDTO.customStudyId= :customStudyId and QDTO.shortTitle= :shortTitle"
-                          + " and QDTO.status=true and ROUND(QDTO.version, 1)= :version ORDER BY QDTO.id DESC")
+                          + " and QDTO.status=true and QDTO.live=1 and ROUND(QDTO.version, 1)= :version ORDER BY QDTO.id DESC")
                   .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                   .setString(
                       StudyMetaDataEnum.QF_SHORT_TITLE.value(),
@@ -2067,12 +2067,10 @@ public class ActivityMetaDataDao {
                   ? ""
                   : questionStepDetails.getStepShortTitle());
           questionBean.setSkippable(
-              (StringUtils.isEmpty(questionStepDetails.getSkiappable())
-                      || questionStepDetails
-                          .getSkiappable()
-                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                  ? false
-                  : true);
+              !StringUtils.isEmpty(questionStepDetails.getSkiappable())
+                  && !questionStepDetails
+                  .getSkiappable()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
           questionBean.setGroupName("");
           questionBean.setRepeatable(false);
           questionBean.setRepeatableText(
@@ -2337,24 +2335,22 @@ public class ActivityMetaDataDao {
           formBean.setTitle("");
           formBean.setText("");
           formBean.setSkippable(
-              (StringUtils.isEmpty(formStepDetails.getSkiappable())
-                      || formStepDetails
-                          .getSkiappable()
-                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                  ? false
-                  : true);
+              !StringUtils.isEmpty(formStepDetails.getSkiappable())
+                  && !formStepDetails
+                  .getSkiappable()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
           formBean.setGroupName("");
           formBean.setRepeatable(
-              (formStepDetails.getRepeatable() == null
-                      || StudyMetaDataConstants.NO.equalsIgnoreCase(
-                          formStepDetails.getRepeatable()))
-                  ? false
-                  : true);
+              formStepDetails.getRepeatable() != null
+                  && !StudyMetaDataConstants.NO.equalsIgnoreCase(
+                  formStepDetails.getRepeatable()));
 
-          if (StringUtils.isNotBlank(language) && MultiLanguageConstants.ENGLISH.equals(language)) {
-            FormLangBO formLangBO = this.getFormLangBo(formStepDetails.getStepId(), language);
-            formBean.setRepeatableText(
-                formLangBO.getRepeatableText() == null ? "" : formLangBO.getRepeatableText());
+          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+            FormLangBO formLangBO = this.getFormLangBo(formStepDetails.getInstructionFormId(), language);
+            if (formLangBO!=null) {
+              formBean.setRepeatableText(
+                  formLangBO.getRepeatableText() == null ? "" : formLangBO.getRepeatableText());
+            }
           } else {
             formBean.setRepeatableText(
                 formStepDetails.getRepeatableText() == null
@@ -2403,24 +2399,34 @@ public class ActivityMetaDataDao {
                   StringUtils.isEmpty(formQuestionDto.getShortTitle())
                       ? ""
                       : formQuestionDto.getShortTitle());
-              formQuestionBean.setTitle(
-                  StringUtils.isEmpty(formQuestionDto.getQuestion())
-                      ? ""
-                      : formQuestionDto.getQuestion());
+              if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                QuestionLangBO questionLangBO = this.getQuestionLangBo(formQuestionDto.getId(), language);
+                formQuestionBean.setTitle(
+                    StringUtils.isEmpty(questionLangBO.getQuestion())
+                        ? ""
+                        : questionLangBO.getQuestion());
+                formQuestionBean.setText(
+                    StringUtils.isEmpty(questionLangBO.getDescription())
+                        ? ""
+                        : questionLangBO.getDescription());
+              } else {
+                formQuestionBean.setTitle(
+                    StringUtils.isEmpty(formQuestionDto.getQuestion())
+                        ? ""
+                        : formQuestionDto.getQuestion());
+                formQuestionBean.setText(
+                    StringUtils.isEmpty(formQuestionDto.getDescription())
+                        ? ""
+                        : formQuestionDto.getDescription());
+              }
               formQuestionBean.setSkippable(
-                  (StringUtils.isEmpty(formQuestionDto.getSkippable())
-                          || formQuestionDto
-                              .getSkippable()
-                              .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                      ? false
-                      : true);
+                  !StringUtils.isEmpty(formQuestionDto.getSkippable())
+                      && !formQuestionDto
+                      .getSkippable()
+                      .equalsIgnoreCase(StudyMetaDataConstants.NO));
               formQuestionBean.setGroupName("");
               formQuestionBean.setRepeatable(false);
               formQuestionBean.setRepeatableText("");
-              formQuestionBean.setText(
-                  StringUtils.isEmpty(formQuestionDto.getDescription())
-                      ? ""
-                      : formQuestionDto.getDescription());
               formQuestionBean.setHealthDataKey("");
 
               if (StringUtils.isNotEmpty(formQuestionDto.getAllowHealthKit())
@@ -2961,7 +2967,7 @@ public class ActivityMetaDataDao {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
-                String[] dispArray = displayText.split("|");
+                String[] dispArray = displayText.split("//|");
                 if (dispArray.length > i) {
                   textScaleMap.put("text", dispArray[i]);
                 } else {
@@ -3041,7 +3047,7 @@ public class ActivityMetaDataDao {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
-                String[] dispArray = displayText.split("|");
+                String[] dispArray = displayText.split("\\|");
                 if (dispArray.length > i) {
                   valuePickerMap.put("text", dispArray[i]);
                 } else {
@@ -3057,9 +3063,6 @@ public class ActivityMetaDataDao {
             valuePickerMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           }
-
-          valuePickerMap.put(
-              "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           valuePickerMap.put(
               "value", StringUtils.isEmpty(subType.getValue()) ? "" : subType.getValue());
           valuePickerMap.put(
@@ -3130,7 +3133,7 @@ public class ActivityMetaDataDao {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
-                String[] dispArray = displayText.split("|");
+                String[] dispArray = displayText.split("\\|");
                 if (dispArray.length > i) {
                   imageChoiceMap.put("text", dispArray[i]);
                 } else {
@@ -3199,27 +3202,37 @@ public class ActivityMetaDataDao {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
-                String[] dispArray = displayText.split("|");
+                String[] dispArray = displayText.split("\\|");
                 if (dispArray.length > i) {
                   textChoiceMap.put("text", dispArray[i]);
                 } else {
                   textChoiceMap.put("text", "");
                 }
+
+                String descText = questionLangBO.getTextChoiceDescription();
+                String[] descArray = descText.split("\\|");
+                if (descArray.length > i) {
+                  textChoiceMap.put("detail", descArray[i]);
+                } else {
+                  textChoiceMap.put("detail", "");
+                }
               } catch (IndexOutOfBoundsException e) {
                 textChoiceMap.put("text", "");
+                textChoiceMap.put("detail", "");
               }
             } else {
               textChoiceMap.put("text", "");
+              textChoiceMap.put("detail", "");
             }
           } else {
             textChoiceMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
+            textChoiceMap.put(
+                "detail",
+                StringUtils.isEmpty(subType.getDescription()) ? "" : subType.getDescription());
           }
           textChoiceMap.put(
               "value", StringUtils.isEmpty(subType.getValue()) ? "" : subType.getValue());
-          textChoiceMap.put(
-              "detail",
-              StringUtils.isEmpty(subType.getDescription()) ? "" : subType.getDescription());
           textChoiceMap.put(
               "exclusive",
               (subType.getExclusive() == null
@@ -3255,43 +3268,56 @@ public class ActivityMetaDataDao {
             StringUtils.isEmpty(otherReponseSubType.getOtherValue())
                 ? ""
                 : otherReponseSubType.getOtherValue());
-        textChoiceMap.put(
-            "detail",
-            StringUtils.isEmpty(otherReponseSubType.getOtherDescription())
-                ? ""
-                : otherReponseSubType.getOtherDescription());
+        if (StringUtils.isNotBlank(language)
+            && !MultiLanguageConstants.ENGLISH.equals(language)) {
+          textChoiceMap.put(
+              "detail",
+              StringUtils.isEmpty(questionLangBO.getOtherDescription())
+                  ? ""
+                  : questionLangBO.getOtherDescription());
+        } else {
+          textChoiceMap.put(
+              "detail",
+              StringUtils.isEmpty(otherReponseSubType.getOtherDescription())
+                  ? ""
+                  : otherReponseSubType.getOtherDescription());
+        }
         textChoiceMap.put(
             "exclusive",
-            (otherReponseSubType.getOtherExclusive() == null
-                    || otherReponseSubType
-                        .getOtherExclusive()
-                        .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                ? false
-                : true);
+            otherReponseSubType.getOtherExclusive() != null
+                && !otherReponseSubType
+                .getOtherExclusive()
+                .equalsIgnoreCase(StudyMetaDataConstants.NO));
         if (StringUtils.isNotEmpty(otherReponseSubType.getOtherIncludeText())
             && otherReponseSubType.getOtherIncludeText().equals(StudyMetaDataConstants.YES)) {
           LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
-          textChoiceOtherMap.put(
-              "placeholder",
-              StringUtils.isEmpty(otherReponseSubType.getOtherPlaceholderText())
-                  ? ""
-                  : otherReponseSubType.getOtherPlaceholderText());
+
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
+            textChoiceOtherMap.put(
+                "placeholder",
+                StringUtils.isEmpty(questionLangBO.getOtherPlaceholderText())
+                    ? ""
+                    : questionLangBO.getOtherPlaceholderText());
+          } else {
+            textChoiceOtherMap.put(
+                "placeholder",
+                StringUtils.isEmpty(otherReponseSubType.getOtherPlaceholderText())
+                    ? ""
+                    : otherReponseSubType.getOtherPlaceholderText());
+          }
           textChoiceOtherMap.put(
               "isMandatory",
-              (otherReponseSubType.getOtherParticipantFill() == null
-                      || otherReponseSubType
-                          .getOtherParticipantFill()
-                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                  ? false
-                  : true);
+              otherReponseSubType.getOtherParticipantFill() != null
+                  && !otherReponseSubType
+                  .getOtherParticipantFill()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
           textChoiceOtherMap.put(
               "textfieldReq",
-              (otherReponseSubType.getOtherIncludeText() == null
-                      || otherReponseSubType
-                          .getOtherIncludeText()
-                          .equalsIgnoreCase(StudyMetaDataConstants.NO))
-                  ? false
-                  : true);
+              otherReponseSubType.getOtherIncludeText() != null
+                  && !otherReponseSubType
+                  .getOtherIncludeText()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
           textChoiceMap.put("other", textChoiceOtherMap);
         } else {
           LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
@@ -3378,12 +3404,13 @@ public class ActivityMetaDataDao {
         } else {
           questionFormat.put("placeholder", "");
         }
+      } else {
+        questionFormat.put(
+            "placeholder",
+            (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))
+                ? ""
+                : reponseType.getPlaceholder());
       }
-      questionFormat.put(
-          "placeholder",
-          (reponseType == null || StringUtils.isEmpty(reponseType.getPlaceholder()))
-              ? ""
-              : reponseType.getPlaceholder());
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
     }
