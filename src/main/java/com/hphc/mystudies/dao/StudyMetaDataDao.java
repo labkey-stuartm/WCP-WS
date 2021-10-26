@@ -81,7 +81,6 @@ import com.hphc.mystudies.util.HibernateUtil;
 import com.hphc.mystudies.util.MultiLanguageCodes;
 import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
-import com.hphc.mystudies.util.StudyMetaDataConstantsSpanish;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.ArrayList;
@@ -405,7 +404,8 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
                     : studyDto.getCustomStudyId());
-            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
               studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
             } else {
               studyBean.setStudyLanguage("English");
@@ -652,7 +652,7 @@ public class StudyMetaDataDao {
                   session
                       .createQuery(
                           " from ConsentDto CDTO"
-                              + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version")
+                              + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version AND CDTO.live=1")
                       .setString(
                           StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
                           studyVersionDto.getCustomStudyId())
@@ -733,7 +733,7 @@ public class StudyMetaDataDao {
                 session
                     .createQuery(
                         "from ConsentInfoDto CIDTO"
-                            + " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version"
+                            + " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version and CIDTO.live=1"
                             + " ORDER BY CIDTO.sequenceNo")
                     .setString(
                         StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
@@ -1208,7 +1208,7 @@ public class StudyMetaDataDao {
                     session
                         .createQuery(
                             " from ConsentDto CDTO"
-                                + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version")
+                                + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version and CDTO.live=1")
                         .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                         .setFloat(
                             StudyMetaDataEnum.QF_VERSION.value(),
@@ -2243,25 +2243,12 @@ public class StudyMetaDataDao {
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
                     studyBean.setCategory(
                         StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-//                      else {
-//                        try {
-//                          Field idField =
-//                              StudyMetaDataConstantsSpanish.class.getField(
-//                                  "id_" + studyDto.getCategory());
-//                          try {
-//                            studyBean.setCategory(idField.get(null).toString());
-//                          } catch (IllegalAccessException e) {
-//                            LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-//                          }
-//                        } catch (NoSuchFieldException e) {
-//                          LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-//                        }
-//                      }
                   }
                 }
               }
             }
-            if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
               studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
             } else {
               studyBean.setStudyLanguage("English");
