@@ -368,8 +368,15 @@ public class StudyMetaDataDao {
                   if (reference
                       .getCategory()
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    studyBean.setCategory(
-                        StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    if (StringUtils.isNotBlank(language)
+                        && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
+                      studyBean.setCategory(
+                          StudyMetaDataUtil.getMultiLanguageText(
+                              language, "id_" + studyDto.getCategory()));
+                    } else {
+                      studyBean.setCategory(
+                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    }
                   }
                 }
               }
@@ -2241,8 +2248,15 @@ public class StudyMetaDataDao {
                   if (reference
                       .getCategory()
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    studyBean.setCategory(
-                        StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    if (StringUtils.isNotBlank(language)
+                        && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
+                      studyBean.setCategory(
+                          StudyMetaDataUtil.getMultiLanguageText(
+                              language, "id_" + studyDto.getCategory()));
+                    } else {
+                      studyBean.setCategory(
+                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    }
                   }
                 }
               }
