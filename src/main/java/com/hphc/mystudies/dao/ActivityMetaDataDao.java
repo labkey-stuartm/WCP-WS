@@ -2967,7 +2967,7 @@ public class ActivityMetaDataDao {
             if (questionLangBO != null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
-                String[] dispArray = displayText.split("//|");
+                String[] dispArray = displayText.split("\\|");
                 if (dispArray.length > i) {
                   textScaleMap.put("text", dispArray[i]);
                 } else {
