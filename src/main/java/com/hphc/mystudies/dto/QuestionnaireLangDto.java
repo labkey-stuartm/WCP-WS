@@ -10,8 +10,7 @@ import javax.persistence.Table;
 @Table(name = "questionnaires_lang")
 public class QuestionnaireLangDto implements Serializable {
 
-  @EmbeddedId
-  private QuestionnaireLangPK questionnaireLangPK;
+  @EmbeddedId private QuestionnaireLangPK questionnaireLangPK;
 
   @Column(name = "study_id")
   private Integer studyId;

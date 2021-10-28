@@ -46,7 +46,7 @@ public class QuestionLangBO implements Serializable {
   private Boolean active = true;
 
   @Column(name = "status")
-  private Boolean status= false;
+  private Boolean status = false;
 
   @Column(name = "min_desc")
   private String minDescription;

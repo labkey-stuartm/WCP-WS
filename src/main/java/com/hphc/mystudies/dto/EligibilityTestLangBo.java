@@ -11,13 +11,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "eligibility_test_lang")
 @NamedQueries({
-    @NamedQuery(
-        name = "EligibilityTestLangBo.findById",
-        query =
-            "SELECT ETB FROM EligibilityTestLangBo ETB WHERE ETB.active = true AND ETB.eligibilityTestLangPK.id=:eligibilityTestId ORDER BY ETB.sequenceNo"),
-    @NamedQuery(
-        name = "EligibilityTestLangBo.deleteById",
-        query = "UPDATE EligibilityTestLangBo SET active = false WHERE eligibilityTestLangPK.id=:eligibilityTestId")
+  @NamedQuery(
+      name = "EligibilityTestLangBo.findById",
+      query =
+          "SELECT ETB FROM EligibilityTestLangBo ETB WHERE ETB.active = true AND ETB.eligibilityTestLangPK.id=:eligibilityTestId ORDER BY ETB.sequenceNo"),
+  @NamedQuery(
+      name = "EligibilityTestLangBo.deleteById",
+      query =
+          "UPDATE EligibilityTestLangBo SET active = false WHERE eligibilityTestLangPK.id=:eligibilityTestId")
 })
 public class EligibilityTestLangBo implements Serializable {
 

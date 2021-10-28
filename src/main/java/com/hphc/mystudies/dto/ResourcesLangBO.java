@@ -10,8 +10,7 @@ import javax.persistence.Table;
 @Table(name = "resources_lang")
 public class ResourcesLangBO implements Serializable {
 
-  @EmbeddedId
-  private ResourcesLangPK resourcesLangPK;
+  @EmbeddedId private ResourcesLangPK resourcesLangPK;
 
   @Column(name = "sequence_no")
   private Integer sequenceNo = 0;

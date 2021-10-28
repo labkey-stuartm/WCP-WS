@@ -13,8 +13,7 @@ public class ResourcesLangPK implements Serializable {
   @Column(name = "lang_code")
   private String langCode;
 
-  public ResourcesLangPK() {
-  }
+  public ResourcesLangPK() {}
 
   public ResourcesLangPK(Integer id, String langCode) {
     this.id = id;

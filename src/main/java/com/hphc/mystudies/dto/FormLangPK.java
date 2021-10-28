@@ -18,8 +18,7 @@ public class FormLangPK implements Serializable {
     this.langCode = langCode;
   }
 
-  public FormLangPK() {
-  }
+  public FormLangPK() {}
 
   public Integer getFormId() {
     return formId;

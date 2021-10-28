@@ -10,8 +10,7 @@ import javax.persistence.Table;
 @Table(name = "form_lang")
 public class FormLangBO implements Serializable {
 
-  @EmbeddedId
-  private FormLangPK formLangPK;
+  @EmbeddedId private FormLangPK formLangPK;
 
   @Column(name = "questionnaire_id")
   private Integer questionnaireId;

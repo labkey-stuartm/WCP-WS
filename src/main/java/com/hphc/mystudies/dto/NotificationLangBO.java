@@ -10,8 +10,7 @@ import javax.persistence.Table;
 @Table(name = "notification_lang")
 public class NotificationLangBO implements Serializable {
 
-  @EmbeddedId
-  private NotificationLangPK notificationLangPK;
+  @EmbeddedId private NotificationLangPK notificationLangPK;
 
   @Column(name = "notification_text")
   private String notificationText;

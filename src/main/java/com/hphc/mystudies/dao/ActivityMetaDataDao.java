@@ -307,10 +307,13 @@ public class ActivityMetaDataDao {
 
             if (StringUtils.isNotBlank(language)
                 && !MultiLanguageConstants.ENGLISH.equals(language)) {
-              QuestionnaireLangDto questionnaireLangDto = this.getQuestionnairesLangById(questionaire.getId(), language);
-              if (questionnaireLangDto!=null) {
+              QuestionnaireLangDto questionnaireLangDto =
+                  this.getQuestionnairesLangById(questionaire.getId(), language);
+              if (questionnaireLangDto != null) {
                 activityBean.setTitle(
-                    StringUtils.isEmpty(questionnaireLangDto.getTitle()) ? "" : questionnaireLangDto.getTitle());
+                    StringUtils.isEmpty(questionnaireLangDto.getTitle())
+                        ? ""
+                        : questionnaireLangDto.getTitle());
               }
             } else {
               activityBean.setTitle(
@@ -2069,8 +2072,8 @@ public class ActivityMetaDataDao {
           questionBean.setSkippable(
               !StringUtils.isEmpty(questionStepDetails.getSkiappable())
                   && !questionStepDetails
-                  .getSkiappable()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                      .getSkiappable()
+                      .equalsIgnoreCase(StudyMetaDataConstants.NO));
           questionBean.setGroupName("");
           questionBean.setRepeatable(false);
           questionBean.setRepeatableText(
@@ -2336,18 +2339,17 @@ public class ActivityMetaDataDao {
           formBean.setText("");
           formBean.setSkippable(
               !StringUtils.isEmpty(formStepDetails.getSkiappable())
-                  && !formStepDetails
-                  .getSkiappable()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                  && !formStepDetails.getSkiappable().equalsIgnoreCase(StudyMetaDataConstants.NO));
           formBean.setGroupName("");
           formBean.setRepeatable(
               formStepDetails.getRepeatable() != null
-                  && !StudyMetaDataConstants.NO.equalsIgnoreCase(
-                  formStepDetails.getRepeatable()));
+                  && !StudyMetaDataConstants.NO.equalsIgnoreCase(formStepDetails.getRepeatable()));
 
-          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-            FormLangBO formLangBO = this.getFormLangBo(formStepDetails.getInstructionFormId(), language);
-            if (formLangBO!=null) {
+          if (StringUtils.isNotBlank(language)
+              && !MultiLanguageConstants.ENGLISH.equals(language)) {
+            FormLangBO formLangBO =
+                this.getFormLangBo(formStepDetails.getInstructionFormId(), language);
+            if (formLangBO != null) {
               formBean.setRepeatableText(
                   formLangBO.getRepeatableText() == null ? "" : formLangBO.getRepeatableText());
             }
@@ -2399,8 +2401,10 @@ public class ActivityMetaDataDao {
                   StringUtils.isEmpty(formQuestionDto.getShortTitle())
                       ? ""
                       : formQuestionDto.getShortTitle());
-              if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-                QuestionLangBO questionLangBO = this.getQuestionLangBo(formQuestionDto.getId(), language);
+              if (StringUtils.isNotBlank(language)
+                  && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                QuestionLangBO questionLangBO =
+                    this.getQuestionLangBo(formQuestionDto.getId(), language);
                 formQuestionBean.setTitle(
                     StringUtils.isEmpty(questionLangBO.getQuestion())
                         ? ""
@@ -2422,8 +2426,8 @@ public class ActivityMetaDataDao {
               formQuestionBean.setSkippable(
                   !StringUtils.isEmpty(formQuestionDto.getSkippable())
                       && !formQuestionDto
-                      .getSkippable()
-                      .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                          .getSkippable()
+                          .equalsIgnoreCase(StudyMetaDataConstants.NO));
               formQuestionBean.setGroupName("");
               formQuestionBean.setRepeatable(false);
               formQuestionBean.setRepeatableText("");
@@ -3268,8 +3272,7 @@ public class ActivityMetaDataDao {
             StringUtils.isEmpty(otherReponseSubType.getOtherValue())
                 ? ""
                 : otherReponseSubType.getOtherValue());
-        if (StringUtils.isNotBlank(language)
-            && !MultiLanguageConstants.ENGLISH.equals(language)) {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
           textChoiceMap.put(
               "detail",
               StringUtils.isEmpty(questionLangBO.getOtherDescription())
@@ -3286,8 +3289,8 @@ public class ActivityMetaDataDao {
             "exclusive",
             otherReponseSubType.getOtherExclusive() != null
                 && !otherReponseSubType
-                .getOtherExclusive()
-                .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                    .getOtherExclusive()
+                    .equalsIgnoreCase(StudyMetaDataConstants.NO));
         if (StringUtils.isNotEmpty(otherReponseSubType.getOtherIncludeText())
             && otherReponseSubType.getOtherIncludeText().equals(StudyMetaDataConstants.YES)) {
           LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
@@ -3310,14 +3313,14 @@ public class ActivityMetaDataDao {
               "isMandatory",
               otherReponseSubType.getOtherParticipantFill() != null
                   && !otherReponseSubType
-                  .getOtherParticipantFill()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                      .getOtherParticipantFill()
+                      .equalsIgnoreCase(StudyMetaDataConstants.NO));
           textChoiceOtherMap.put(
               "textfieldReq",
               otherReponseSubType.getOtherIncludeText() != null
                   && !otherReponseSubType
-                  .getOtherIncludeText()
-                  .equalsIgnoreCase(StudyMetaDataConstants.NO));
+                      .getOtherIncludeText()
+                      .equalsIgnoreCase(StudyMetaDataConstants.NO));
           textChoiceMap.put("other", textChoiceOtherMap);
         } else {
           LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
@@ -5304,11 +5307,15 @@ public class ActivityMetaDataDao {
               new ActivityFrequencyAnchorRunsBean();
           activityFrequencyAnchorRunsBean.setStartDays(
               customFrequencyDto.isxDaysSign()
-                  ? (customFrequencyDto.getTimePeriodFromDays()!=null?-customFrequencyDto.getTimePeriodFromDays():null)
+                  ? (customFrequencyDto.getTimePeriodFromDays() != null
+                      ? -customFrequencyDto.getTimePeriodFromDays()
+                      : null)
                   : customFrequencyDto.getTimePeriodFromDays());
           activityFrequencyAnchorRunsBean.setEndDays(
               customFrequencyDto.isyDaysSign()
-                  ? (customFrequencyDto.getTimePeriodToDays()!=null?-customFrequencyDto.getTimePeriodToDays():null)
+                  ? (customFrequencyDto.getTimePeriodToDays() != null
+                      ? -customFrequencyDto.getTimePeriodToDays()
+                      : null)
                   : customFrequencyDto.getTimePeriodToDays());
           activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);

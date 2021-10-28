@@ -18,8 +18,7 @@ public class QuestionLangPK implements Serializable {
     this.langCode = langCode;
   }
 
-  public QuestionLangPK() {
-  }
+  public QuestionLangPK() {}
 
   public Integer getId() {
     return id;

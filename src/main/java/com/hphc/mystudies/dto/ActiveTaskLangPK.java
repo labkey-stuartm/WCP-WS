@@ -18,9 +18,7 @@ public class ActiveTaskLangPK implements Serializable {
     this.langCode = langCode;
   }
 
-  public ActiveTaskLangPK() {
-
-  }
+  public ActiveTaskLangPK() {}
 
   public Integer getId() {
     return id;

@@ -18,8 +18,7 @@ public class NotificationLangPK implements Serializable {
     this.langCode = langCode;
   }
 
-  public NotificationLangPK() {
-  }
+  public NotificationLangPK() {}
 
   public Integer getNotificationId() {
     return notificationId;

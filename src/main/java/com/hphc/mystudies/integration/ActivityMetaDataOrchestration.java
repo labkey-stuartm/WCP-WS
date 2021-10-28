@@ -49,7 +49,7 @@ public class ActivityMetaDataOrchestration {
   /**
    * Get all the activities for the provided study identifier
    *
-   * @param studyId       the study identifier
+   * @param studyId the study identifier
    * @param authorization the Basic Authorization
    * @return {@link ActivityResponse}
    * @throws OrchestrationException
@@ -71,8 +71,8 @@ public class ActivityMetaDataOrchestration {
   /**
    * Get the active task metadata for the provided activity version, study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link ActiveTaskActivityMetaDataResponse}
    * @throws OrchestrationException
@@ -87,8 +87,8 @@ public class ActivityMetaDataOrchestration {
         new ActiveTaskActivityMetaDataResponse();
     try {
       activeTaskActivityMetaDataResponse =
-          activityMetaDataDao.studyActiveTaskActivityMetadata(studyId, activityId, activityVersion,
-              language);
+          activityMetaDataDao.studyActiveTaskActivityMetadata(
+              studyId, activityId, activityVersion, language);
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: ERROR", e);
     }
@@ -97,11 +97,10 @@ public class ActivityMetaDataOrchestration {
   }
 
   /**
-   * Get the questionnaire metadata for the provided activity version, study and activity
-   * identifier
+   * Get the questionnaire metadata for the provided activity version, study and activity identifier
    *
-   * @param studyId         the study identifier
-   * @param activityId      the activity identifier
+   * @param studyId the study identifier
+   * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link QuestionnaireActivityMetaDataResponse}
    * @throws OrchestrationException

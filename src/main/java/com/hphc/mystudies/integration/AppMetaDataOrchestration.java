@@ -78,14 +78,14 @@ public class AppMetaDataOrchestration {
   /**
    * Fetch available notifications
    *
-   * @param skip          the skip count
+   * @param skip the skip count
    * @param authorization the Basic Authorization
    * @return {@link NotificationsResponse}
    * @throws OrchestrationException
    * @author BTC
    */
-  public NotificationsResponse notifications(String skip, String authorization, String appId,
-      String language)
+  public NotificationsResponse notifications(
+      String skip, String authorization, String appId, String language)
       throws OrchestrationException {
     LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
@@ -102,7 +102,7 @@ public class AppMetaDataOrchestration {
    * Notify admin's about the feedback
    *
    * @param subject the Subject Details
-   * @param body    the Body Details
+   * @param body the Body Details
    * @return {@link AppResponse}
    * @throws OrchestrationException
    * @author BTC
@@ -142,10 +142,10 @@ public class AppMetaDataOrchestration {
   /**
    * Notify admin's about the user contact information
    *
-   * @param subject   the Subject Details
-   * @param body      the Body Details
+   * @param subject the Subject Details
+   * @param body the Body Details
    * @param firstName the First Name
-   * @param email     the Email Details
+   * @param email the Email Details
    * @return {@link AppResponse}
    * @throws OrchestrationException
    * @author BTC
@@ -205,7 +205,7 @@ public class AppMetaDataOrchestration {
    * Check for app updates
    *
    * @param appVersion the App Version
-   * @param app        the Basic Authorization
+   * @param app the Basic Authorization
    * @return {@link AppUpdatesResponse}
    * @throws OrchestrationException
    * @author BTC
@@ -226,7 +226,7 @@ public class AppMetaDataOrchestration {
   /**
    * Check for study updates
    *
-   * @param studyId      the Study Identifier
+   * @param studyId the Study Identifier
    * @param studyVersion the Study Version
    * @return {@link StudyUpdatesResponse}
    * @throws OrchestrationException
@@ -248,12 +248,12 @@ public class AppMetaDataOrchestration {
   /**
    * Update app version
    *
-   * @param forceUpdate   the Force Update Flag
-   * @param osType        the Platform Type
-   * @param appVersion    the App Version
-   * @param bundleId      the Bundle Identifier
+   * @param forceUpdate the Force Update Flag
+   * @param osType the Platform Type
+   * @param appVersion the App Version
+   * @param bundleId the Bundle Identifier
    * @param customStudyId the Study Name
-   * @param message       the Description about the Update
+   * @param message the Description about the Update
    * @return the success or failure
    * @throws OrchestrationException
    * @author BTC
@@ -363,13 +363,13 @@ public class AppMetaDataOrchestration {
           errorBean.setStatus(StudyMetaDataConstants.SUCCESS);
           errorResponse.setError(errorBean);
         } /*
-         * else {
-         *
-         * errorResponse.setError(new ErrorBean().setCode(ErrorCode.EC_112.code())
-         * .setMessage(ErrorCode.EC_112.errorMessage()));
-         *
-         * }
-         */
+           * else {
+           *
+           * errorResponse.setError(new ErrorBean().setCode(ErrorCode.EC_112.code())
+           * .setMessage(ErrorCode.EC_112.errorMessage()));
+           *
+           * }
+           */
       }
 
     } catch (Exception e) {
