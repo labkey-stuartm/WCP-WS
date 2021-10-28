@@ -52,7 +52,8 @@ public class DashboardMetaDataOrchestration {
    * @return {@link StudyDashboardResponse}
    * @throws OrchestrationException
    */
-  public StudyDashboardResponse studyDashboardInfo(String studyId, String language) throws OrchestrationException {
+  public StudyDashboardResponse studyDashboardInfo(String studyId, String language)
+      throws OrchestrationException {
     LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
     try {

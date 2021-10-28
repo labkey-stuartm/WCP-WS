@@ -18,8 +18,7 @@ public class InstructionLangPK implements Serializable {
     this.langCode = langCode;
   }
 
-  public InstructionLangPK() {
-  }
+  public InstructionLangPK() {}
 
   public Integer getId() {
     return id;

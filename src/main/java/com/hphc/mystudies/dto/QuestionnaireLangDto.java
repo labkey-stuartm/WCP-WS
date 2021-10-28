@@ -7,19 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "form_lang")
-public class FormLangBO implements Serializable {
+@Table(name = "questionnaires_lang")
+public class QuestionnaireLangDto implements Serializable {
 
-  @EmbeddedId private FormLangPK formLangPK;
+  @EmbeddedId private QuestionnaireLangPK questionnaireLangPK;
 
-  @Column(name = "questionnaire_id")
-  private Integer questionnaireId;
+  @Column(name = "study_id")
+  private Integer studyId;
 
-  @Column(name = "repeatable_text")
-  private String repeatableText;
-
-  @Column(name = "active")
-  private Boolean active;
+  @Column(name = "title")
+  private String title;
 
   @Column(name = "created_by")
   private Integer createdBy;
@@ -33,20 +30,34 @@ public class FormLangBO implements Serializable {
   @Column(name = "modified_on")
   private String modifiedOn;
 
-  public FormLangPK getFormLangPK() {
-    return formLangPK;
+  @Column(name = "active")
+  private Boolean active;
+
+  @Column(name = "status")
+  private Boolean status;
+
+  public QuestionnaireLangPK getQuestionnaireLangPK() {
+    return questionnaireLangPK;
   }
 
-  public void setFormLangPK(FormLangPK formLangPK) {
-    this.formLangPK = formLangPK;
+  public void setQuestionnaireLangPK(QuestionnaireLangPK questionnaireLangPK) {
+    this.questionnaireLangPK = questionnaireLangPK;
   }
 
-  public Boolean getActive() {
-    return active;
+  public Integer getStudyId() {
+    return studyId;
   }
 
-  public void setActive(Boolean active) {
-    this.active = active;
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public Integer getCreatedBy() {
@@ -81,19 +92,19 @@ public class FormLangBO implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public String getRepeatableText() {
-    return repeatableText;
+  public Boolean getActive() {
+    return active;
   }
 
-  public void setRepeatableText(String repeatableText) {
-    this.repeatableText = repeatableText;
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
-  public Integer getQuestionnaireId() {
-    return questionnaireId;
+  public Boolean getStatus() {
+    return status;
   }
 
-  public void setQuestionnaireId(Integer questionnaireId) {
-    this.questionnaireId = questionnaireId;
+  public void setStatus(Boolean status) {
+    this.status = status;
   }
 }

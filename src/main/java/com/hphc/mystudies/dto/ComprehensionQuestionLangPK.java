@@ -5,27 +5,27 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class FormLangPK implements Serializable {
+public class ComprehensionQuestionLangPK implements Serializable {
 
-  @Column(name = "form_id")
-  private Integer formId;
+  @Column(name = "id")
+  private Integer id;
 
   @Column(name = "lang_code")
   private String langCode;
 
-  public FormLangPK(Integer formId, String langCode) {
-    this.formId = formId;
+  public ComprehensionQuestionLangPK(Integer id, String langCode) {
+    this.id = id;
     this.langCode = langCode;
   }
 
-  public FormLangPK() {}
+  public ComprehensionQuestionLangPK() {}
 
-  public Integer getFormId() {
-    return formId;
+  public Integer getId() {
+    return id;
   }
 
-  public void setFormId(Integer formId) {
-    this.formId = formId;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public String getLangCode() {

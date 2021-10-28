@@ -7,19 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "form_lang")
-public class FormLangBO implements Serializable {
+@Table(name = "notification_lang")
+public class NotificationLangBO implements Serializable {
 
-  @EmbeddedId private FormLangPK formLangPK;
+  @EmbeddedId private NotificationLangPK notificationLangPK;
 
-  @Column(name = "questionnaire_id")
-  private Integer questionnaireId;
+  @Column(name = "notification_text")
+  private String notificationText;
 
-  @Column(name = "repeatable_text")
-  private String repeatableText;
-
-  @Column(name = "active")
-  private Boolean active;
+  @Column(name = "study_id")
+  private Integer studyId;
 
   @Column(name = "created_by")
   private Integer createdBy;
@@ -33,20 +30,23 @@ public class FormLangBO implements Serializable {
   @Column(name = "modified_on")
   private String modifiedOn;
 
-  public FormLangPK getFormLangPK() {
-    return formLangPK;
+  @Column(name = "notification_status", length = 1)
+  private Boolean notificationStatus = false;
+
+  public NotificationLangPK getNotificationLangPK() {
+    return notificationLangPK;
   }
 
-  public void setFormLangPK(FormLangPK formLangPK) {
-    this.formLangPK = formLangPK;
+  public void setNotificationLangPK(NotificationLangPK notificationLangPK) {
+    this.notificationLangPK = notificationLangPK;
   }
 
-  public Boolean getActive() {
-    return active;
+  public String getNotificationText() {
+    return notificationText;
   }
 
-  public void setActive(Boolean active) {
-    this.active = active;
+  public void setNotificationText(String notificationText) {
+    this.notificationText = notificationText;
   }
 
   public Integer getCreatedBy() {
@@ -81,19 +81,19 @@ public class FormLangBO implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public String getRepeatableText() {
-    return repeatableText;
+  public Integer getStudyId() {
+    return studyId;
   }
 
-  public void setRepeatableText(String repeatableText) {
-    this.repeatableText = repeatableText;
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
   }
 
-  public Integer getQuestionnaireId() {
-    return questionnaireId;
+  public Boolean getNotificationStatus() {
+    return notificationStatus;
   }
 
-  public void setQuestionnaireId(Integer questionnaireId) {
-    this.questionnaireId = questionnaireId;
+  public void setNotificationStatus(Boolean notificationStatus) {
+    this.notificationStatus = notificationStatus;
   }
 }

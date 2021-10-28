@@ -59,10 +59,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Check Authorization for the provided authorization identifier
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link Boolean}
    * @throws OrchestrationException
+   * @author BTC
    */
   public boolean isValidAuthorizationId(String authorization) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
@@ -79,10 +79,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Get Gateway info and Gateway resources data
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link GatewayInfoResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization)
       throws OrchestrationException {
@@ -100,10 +100,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link StudyResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public StudyResponse studyList(
       String authorization, String applicationId, String orgId, String language)
@@ -122,17 +122,17 @@ public class StudyMetaDataOrchestration {
   /**
    * Get eligibility and consent info for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link EligibilityConsentResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
-  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId)
+  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId, String language)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Starts");
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     try {
-      eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId);
+      eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR", e);
     }
@@ -144,13 +144,13 @@ public class StudyMetaDataOrchestration {
    * Get consent document by passing the consent version or the activity identifier and activity
    * version for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @param consentVersion the consent version
    * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link ConsentDocumentResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public ConsentDocumentResponse consentDocument(
       String studyId,
@@ -175,16 +175,17 @@ public class StudyMetaDataOrchestration {
   /**
    * Get resources metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link ResourcesResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
-  public ResourcesResponse resourcesForStudy(String studyId) throws OrchestrationException {
+  public ResourcesResponse resourcesForStudy(String studyId, String language)
+      throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     try {
-      resourcesResponse = studyMetaDataDao.resourcesForStudy(studyId);
+      resourcesResponse = studyMetaDataDao.resourcesForStudy(studyId, language);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - resourcesForStudy() :: ERROR", e);
     }
@@ -195,10 +196,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Get study metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link StudyInfoResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public StudyInfoResponse studyInfo(String studyId, String language)
       throws OrchestrationException {
@@ -216,10 +217,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Check study for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link Boolean}
    * @throws OrchestrationException
+   * @author BTC
    */
   public boolean isValidStudy(String studyId) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
@@ -236,12 +237,12 @@ public class StudyMetaDataOrchestration {
   /**
    * Check activity for the provided study and activity identifier
    *
-   * @author BTC
    * @param activityId the activity identifier
    * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws OrchestrationException
+   * @author BTC
    */
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws OrchestrationException {
@@ -259,12 +260,12 @@ public class StudyMetaDataOrchestration {
   /**
    * Check whether activity is questionnaire for the provided study and activity identifier
    *
-   * @author BTC
    * @param activityId the activity identifier
    * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws OrchestrationException
+   * @author BTC
    */
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws OrchestrationException {
@@ -282,10 +283,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Check Enrollment Token is valid or not.
    *
-   * @author BTC
    * @param token
    * @return {@link Boolean}
    * @throws OrchestrationException
+   * @author BTC
    */
   public boolean isValidToken(String token) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Starts");
@@ -302,10 +303,10 @@ public class StudyMetaDataOrchestration {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param studyId
    * @return {@link StudyResponse}
    * @throws OrchestrationException
+   * @author BTC
    */
   public StudyResponse study(String studyId, String language) throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");

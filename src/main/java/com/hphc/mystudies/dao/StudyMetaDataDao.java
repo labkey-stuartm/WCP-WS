@@ -47,14 +47,17 @@ import com.hphc.mystudies.bean.StudyResponse;
 import com.hphc.mystudies.bean.WithdrawalConfigBean;
 import com.hphc.mystudies.dto.ActiveTaskDto;
 import com.hphc.mystudies.dto.AnchorDateTypeDto;
+import com.hphc.mystudies.dto.ComprehensionQuestionLangBO;
+import com.hphc.mystudies.dto.ComprehensionResponseLangBo;
 import com.hphc.mystudies.dto.ComprehensionTestQuestionDto;
 import com.hphc.mystudies.dto.ComprehensionTestResponseDto;
 import com.hphc.mystudies.dto.ConsentDto;
 import com.hphc.mystudies.dto.ConsentInfoDto;
-import com.hphc.mystudies.dto.ConsentLanguageBO;
+import com.hphc.mystudies.dto.ConsentInfoLangBO;
 import com.hphc.mystudies.dto.ConsentMasterInfoDto;
 import com.hphc.mystudies.dto.EligibilityDto;
 import com.hphc.mystudies.dto.EligibilityTestDto;
+import com.hphc.mystudies.dto.EligibilityTestLangBo;
 import com.hphc.mystudies.dto.EnrollmentTokenDto;
 import com.hphc.mystudies.dto.FormMappingDto;
 import com.hphc.mystudies.dto.GatewayInfoDto;
@@ -66,6 +69,7 @@ import com.hphc.mystudies.dto.QuestionnairesStepsDto;
 import com.hphc.mystudies.dto.QuestionsDto;
 import com.hphc.mystudies.dto.ReferenceTablesDto;
 import com.hphc.mystudies.dto.ResourcesDto;
+import com.hphc.mystudies.dto.ResourcesLangBO;
 import com.hphc.mystudies.dto.StudyDto;
 import com.hphc.mystudies.dto.StudyLanguageBO;
 import com.hphc.mystudies.dto.StudyPageDto;
@@ -74,12 +78,11 @@ import com.hphc.mystudies.dto.StudySequenceDto;
 import com.hphc.mystudies.dto.StudyVersionDto;
 import com.hphc.mystudies.exception.DAOException;
 import com.hphc.mystudies.util.HibernateUtil;
+import com.hphc.mystudies.util.MultiLanguageCodes;
 import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
-import com.hphc.mystudies.util.StudyMetaDataConstantsSpanish;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -117,10 +120,10 @@ public class StudyMetaDataDao {
   /**
    * Check Authorization for the provided authorization identifier
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidAuthorizationId(String authorization) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
@@ -145,10 +148,10 @@ public class StudyMetaDataDao {
   /**
    * Get Gateway info and Gateway resources data
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link GatewayInfoResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException {
@@ -256,10 +259,10 @@ public class StudyMetaDataDao {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param authorization the Basic Authorization
    * @return {@link StudyResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyResponse studyList(
@@ -295,6 +298,7 @@ public class StudyMetaDataDao {
           List<StudyBean> studyBeanList = new ArrayList<>();
           for (StudyDto studyDto : studiesList) {
             StudyLanguageBO studyLanguageBO = null;
+            StudyBean studyBean = new StudyBean();
             if (StringUtils.isNotBlank(language)
                 && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
                 && studyDto.getMultiLanguageFlag() != null
@@ -308,28 +312,59 @@ public class StudyMetaDataDao {
                           .setString("studyId", studyDto.getId().toString())
                           .setString("langCode", language)
                           .uniqueResult();
-            }
-
-            StudyBean studyBean = new StudyBean();
-            studyBean.setStudyVersion(
-                studyDto.getVersion() == null
-                    ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
-                    : studyDto.getVersion().toString());
-            if (studyLanguageBO != null) {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyLanguageBO.getStudyTagline())
                       ? ""
                       : studyLanguageBO.getStudyTagline());
               studyBean.setTitle(
                   StringUtils.isEmpty(studyLanguageBO.getName()) ? "" : studyLanguageBO.getName());
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyLanguageBO.getResearchSponsor())
+                      ? ""
+                      : studyLanguageBO.getResearchSponsor());
             } else {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyDto.getStudyTagline())
                       ? ""
                       : studyDto.getStudyTagline());
               studyBean.setTitle(StringUtils.isEmpty(studyDto.getName()) ? "" : studyDto.getName());
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyDto.getResearchSponsor())
+                      ? ""
+                      : studyDto.getResearchSponsor());
             }
-
+            if (StringUtils.isNotEmpty(studyDto.getCategory())
+                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+              List<ReferenceTablesDto> referenceTablesList =
+                  session
+                      .createQuery(
+                          "from ReferenceTablesDto RTDTO"
+                              + " where RTDTO.id IN ("
+                              + studyDto.getCategory()
+                              + ")")
+                      .list();
+              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
+                for (ReferenceTablesDto reference : referenceTablesList) {
+                  if (reference
+                      .getCategory()
+                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
+                    if (StringUtils.isNotBlank(language)
+                        && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
+                      studyBean.setCategory(
+                          StudyMetaDataUtil.getMultiLanguageText(
+                              language, "id_" + studyDto.getCategory()));
+                    } else {
+                      studyBean.setCategory(
+                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    }
+                  }
+                }
+              }
+            }
+            studyBean.setStudyVersion(
+                studyDto.getVersion() == null
+                    ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
+                    : studyDto.getVersion().toString());
             switch (studyDto.getStatus()) {
               case StudyMetaDataConstants.STUDY_STATUS_ACTIVE:
                 studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
@@ -356,55 +391,12 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
                     : studyDto.getCustomStudyId());
-
-            studyBean.setStudyLanguage(
-                StringUtils.isEmpty(studyDto.getStudyLanguage())
-                    ? "English"
-                    : studyDto.getStudyLanguage());
-
-            studyBean.setSponsorName(
-                StringUtils.isEmpty(studyDto.getResearchSponsor())
-                    ? ""
-                    : studyDto.getResearchSponsor());
-
-            if (StringUtils.isNotEmpty(studyDto.getCategory())
-                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-              List<ReferenceTablesDto> referenceTablesList =
-                  session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO"
-                              + " where RTDTO.id IN ("
-                              + studyDto.getCategory()
-                              + ")")
-                      .list();
-              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                for (ReferenceTablesDto reference : referenceTablesList) {
-                  if (reference
-                      .getCategory()
-                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    if (StringUtils.isEmpty(studyDto.getStudyLanguage())
-                        || StringUtils.equals(studyDto.getStudyLanguage(), "English")) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                    } else {
-                      try {
-                        Field idField =
-                            StudyMetaDataConstantsSpanish.class.getField(
-                                "id_" + studyDto.getCategory());
-                        try {
-                          studyBean.setCategory(idField.get(null).toString());
-                        } catch (IllegalAccessException e) {
-                          LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                        }
-                      } catch (NoSuchFieldException e) {
-                        LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                      }
-                    }
-                  }
-                }
-              }
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
+              studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
+            } else {
+              studyBean.setStudyLanguage("English");
             }
-
             SettingsBean settings = new SettingsBean();
             if (studyDto.getPlatform().contains(",")) {
               settings.setPlatform(StudyMetaDataConstants.STUDY_PLATFORM_ALL);
@@ -455,13 +447,14 @@ public class StudyMetaDataDao {
   /**
    * Get eligibility, consent and comprehension info for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link EligibilityConsentResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
-  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws DAOException {
+  public EligibilityConsentResponse eligibilityConsentMetadata(String studyId, String language)
+      throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Starts");
     Session session = null;
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
@@ -507,6 +500,22 @@ public class StudyMetaDataDao {
                     .uniqueResult();
         if (studySequenceDto != null) {
 
+          StudyLanguageBO studyLanguage = null;
+          if (StringUtils.isNotBlank(language)
+              && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+              && studyDto.getMultiLanguageFlag() != null
+              && studyDto.getMultiLanguageFlag()
+              && studyDto.getSelectedLanguages().contains(language)) {
+            studyLanguage =
+                (StudyLanguageBO)
+                    session
+                        .createQuery(
+                            "from StudyLanguageBO SLBO where SLBO.studyLanguagePK.study_id= :studyId AND SLBO.studyLanguagePK.langCode= :langCode")
+                        .setString("studyId", studyDto.getId().toString())
+                        .setString("langCode", language)
+                        .uniqueResult();
+          }
+
           if (studySequenceDto
               .getEligibility()
               .equalsIgnoreCase(StudyMetaDataConstants.STUDY_SEQUENCE_Y)) {
@@ -517,8 +526,8 @@ public class StudyMetaDataDao {
                         .createQuery("from EligibilityDto EDTO" + " where EDTO.studyId =:studyId ")
                         .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                         .uniqueResult();
-            if (eligibilityDto != null) {
 
+            if (eligibilityDto != null) {
               EligibilityBean eligibility = new EligibilityBean();
               if (null != eligibilityDto.getEligibilityMechanism()) {
                 switch (eligibilityDto.getEligibilityMechanism()) {
@@ -536,10 +545,18 @@ public class StudyMetaDataDao {
                     break;
                 }
               }
-              eligibility.setTokenTitle(
-                  StringUtils.isEmpty(eligibilityDto.getInstructionalText())
-                      ? ""
-                      : eligibilityDto.getInstructionalText());
+
+              if (studyLanguage != null) {
+                eligibility.setTokenTitle(
+                    StringUtils.isEmpty(studyLanguage.getInstructionalText())
+                        ? ""
+                        : studyLanguage.getInstructionalText());
+              } else {
+                eligibility.setTokenTitle(
+                    StringUtils.isEmpty(eligibilityDto.getInstructionalText())
+                        ? ""
+                        : eligibilityDto.getInstructionalText());
+              }
 
               eligibilityTestList =
                   session
@@ -554,18 +571,41 @@ public class StudyMetaDataDao {
 
                 List<HashMap<String, Object>> correctAnswers = new ArrayList<>();
                 for (EligibilityTestDto eligibilityTest : eligibilityTestList) {
+
+                  EligibilityTestLangBo eligibilityTestLang = null;
+                  if (StringUtils.isNotBlank(language)
+                      && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                      && studyDto.getMultiLanguageFlag() != null
+                      && studyDto.getMultiLanguageFlag()
+                      && studyDto.getSelectedLanguages().contains(language)) {
+
+                    eligibilityTestLang =
+                        (EligibilityTestLangBo)
+                            session
+                                .createQuery(
+                                    "from EligibilityTestLangBo where eligibilityTestLangPK.id=:eligibilityTestId AND eligibilityTestLangPK.langCode= :langCode")
+                                .setString("eligibilityTestId", eligibilityTest.getId().toString())
+                                .setString("langCode", language)
+                                .uniqueResult();
+                  }
+
                   QuestionnaireActivityStepsBean questionStep =
                       new QuestionnaireActivityStepsBean();
                   questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
                   questionStep.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
                   questionStep.setKey(eligibilityTest.getShortTitle());
-                  questionStep.setTitle(eligibilityTest.getQuestion());
-                  if (StringUtils.isEmpty(studyDto.getStudyLanguage())
-                      || StringUtils.equals(studyDto.getStudyLanguage(), "English")) {
-                    questionStep.setText(StudyMetaDataConstants.ELIGIBILITY_TEXT);
+
+                  if (eligibilityTestLang != null
+                      && StringUtils.isNotBlank(eligibilityTestLang.getQuestion())) {
+
+                    questionStep.setTitle(eligibilityTestLang.getQuestion());
                   } else {
-                    questionStep.setText(StudyMetaDataConstantsSpanish.ELIGIBILITY_TEXT_SPANISH);
+                    questionStep.setTitle(eligibilityTest.getQuestion());
                   }
+
+                  questionStep.setText(
+                      StudyMetaDataUtil.getMultiLanguageText(
+                          language, MultiLanguageConstants.ELIGIBILITY_TEXT));
                   questionStep.setSkippable(false);
                   questionStep.setGroupName("");
                   questionStep.setRepeatable(false);
@@ -599,7 +639,7 @@ public class StudyMetaDataDao {
                   session
                       .createQuery(
                           " from ConsentDto CDTO"
-                              + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version")
+                              + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version AND CDTO.live=1")
                       .setString(
                           StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
                           studyVersionDto.getCustomStudyId())
@@ -620,24 +660,47 @@ public class StudyMetaDataDao {
                 && consentDto
                     .getShareDataPermissions()
                     .equalsIgnoreCase(StudyMetaDataConstants.YES)) {
-              sharingBean.setTitle(
-                  StringUtils.isEmpty(consentDto.getTitle()) ? "" : consentDto.getTitle());
-              sharingBean.setText(
-                  StringUtils.isEmpty(consentDto.getTaglineDescription())
-                      ? ""
-                      : consentDto.getTaglineDescription());
-              sharingBean.setLearnMore(
-                  StringUtils.isEmpty(consentDto.getLearnMoreText())
-                      ? ""
-                      : consentDto.getLearnMoreText());
-              sharingBean.setLongDesc(
-                  StringUtils.isEmpty(consentDto.getLongDescription())
-                      ? ""
-                      : consentDto.getLongDescription());
-              sharingBean.setShortDesc(
-                  StringUtils.isEmpty(consentDto.getShortDescription())
-                      ? ""
-                      : consentDto.getShortDescription());
+              if (studyLanguage != null) {
+                sharingBean.setTitle(
+                    StringUtils.isEmpty(studyLanguage.geteConsentTitle())
+                        ? ""
+                        : studyLanguage.geteConsentTitle());
+                sharingBean.setText(
+                    StringUtils.isEmpty(studyLanguage.getTaglineDescription())
+                        ? ""
+                        : studyLanguage.getTaglineDescription());
+                sharingBean.setLearnMore(
+                    StringUtils.isEmpty(studyLanguage.getLearnMoreText())
+                        ? ""
+                        : studyLanguage.getLearnMoreText());
+                sharingBean.setLongDesc(
+                    StringUtils.isEmpty(studyLanguage.getLongDescription())
+                        ? ""
+                        : studyLanguage.getLongDescription());
+                sharingBean.setShortDesc(
+                    StringUtils.isEmpty(studyLanguage.getShortDescription())
+                        ? ""
+                        : studyLanguage.getShortDescription());
+              } else {
+                sharingBean.setTitle(
+                    StringUtils.isEmpty(consentDto.getTitle()) ? "" : consentDto.getTitle());
+                sharingBean.setText(
+                    StringUtils.isEmpty(consentDto.getTaglineDescription())
+                        ? ""
+                        : consentDto.getTaglineDescription());
+                sharingBean.setLearnMore(
+                    StringUtils.isEmpty(consentDto.getLearnMoreText())
+                        ? ""
+                        : consentDto.getLearnMoreText());
+                sharingBean.setLongDesc(
+                    StringUtils.isEmpty(consentDto.getLongDescription())
+                        ? ""
+                        : consentDto.getLongDescription());
+                sharingBean.setShortDesc(
+                    StringUtils.isEmpty(consentDto.getShortDescription())
+                        ? ""
+                        : consentDto.getShortDescription());
+              }
               if (consentDto.getAllowWithoutPermission() != null
                   && StudyMetaDataConstants.YES.equalsIgnoreCase(
                       consentDto.getAllowWithoutPermission())) {
@@ -657,7 +720,7 @@ public class StudyMetaDataDao {
                 session
                     .createQuery(
                         "from ConsentInfoDto CIDTO"
-                            + " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version"
+                            + " where CIDTO.customStudyId =:customStudyId and ROUND(CIDTO.version, 1)=:version and CIDTO.live=1"
                             + " ORDER BY CIDTO.sequenceNo")
                     .setString(
                         StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
@@ -670,21 +733,74 @@ public class StudyMetaDataDao {
               List<ConsentBean> consentBeanList = new ArrayList<>();
               for (ConsentInfoDto consentInfoDto : consentInfoDtoList) {
 
+                ConsentInfoLangBO consentInfoLang = null;
+                if (StringUtils.isNotBlank(language)
+                    && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                    && studyDto.getMultiLanguageFlag() != null
+                    && studyDto.getMultiLanguageFlag()
+                    && studyDto.getSelectedLanguages().contains(language)) {
+
+                  consentInfoLang =
+                      (ConsentInfoLangBO)
+                          session
+                              .createQuery(
+                                  "from ConsentInfoLangBO where consentInfoLangPK.id=:consentInfoId AND consentInfoLangPK.langCode= :langCode")
+                              .setString("consentInfoId", consentInfoDto.getId().toString())
+                              .setString("langCode", language)
+                              .uniqueResult();
+                }
+
                 ConsentBean consentBean = new ConsentBean();
-                consentBean.setText(
-                    StringUtils.isEmpty(consentInfoDto.getBriefSummary())
-                        ? ""
-                        : consentInfoDto
-                            .getBriefSummary()
-                            .replaceAll("&#34;", "\"")
-                            .replaceAll("&#39;", "'"));
-                consentBean.setTitle(
-                    StringUtils.isEmpty(consentInfoDto.getDisplayTitle())
-                        ? ""
-                        : consentInfoDto
-                            .getDisplayTitle()
-                            .replaceAll("&#34;", "\"")
-                            .replaceAll("&#39;", "'"));
+                if (consentInfoLang != null) {
+                  consentBean.setText(
+                      StringUtils.isEmpty(consentInfoLang.getBriefSummary())
+                          ? ""
+                          : consentInfoLang
+                              .getBriefSummary()
+                              .replaceAll("&#34;", "\"")
+                              .replaceAll("&#39;", "'"));
+                  consentBean.setTitle(
+                      StringUtils.isEmpty(consentInfoLang.getDisplayTitle())
+                          ? ""
+                          : consentInfoLang
+                              .getDisplayTitle()
+                              .replaceAll("&#34;", "\"")
+                              .replaceAll("&#39;", "'"));
+                  consentBean.setHtml(
+                      StringUtils.isEmpty(consentInfoLang.getElaborated())
+                          ? ""
+                          : consentInfoLang
+                              .getElaborated()
+                              .replaceAll("&#34;", "'")
+                              .replaceAll("em>", "i>")
+                              .replaceAll(
+                                  "<a", "<a style='text-decoration:underline;color:blue;'"));
+                } else {
+                  consentBean.setText(
+                      StringUtils.isEmpty(consentInfoDto.getBriefSummary())
+                          ? ""
+                          : consentInfoDto
+                              .getBriefSummary()
+                              .replaceAll("&#34;", "\"")
+                              .replaceAll("&#39;", "'"));
+                  consentBean.setTitle(
+                      StringUtils.isEmpty(consentInfoDto.getDisplayTitle())
+                          ? ""
+                          : consentInfoDto
+                              .getDisplayTitle()
+                              .replaceAll("&#34;", "\"")
+                              .replaceAll("&#39;", "'"));
+                  consentBean.setHtml(
+                      StringUtils.isEmpty(consentInfoDto.getElaborated())
+                          ? ""
+                          : consentInfoDto
+                              .getElaborated()
+                              .replaceAll("&#34;", "'")
+                              .replaceAll("em>", "i>")
+                              .replaceAll(
+                                  "<a", "<a style='text-decoration:underline;color:blue;'"));
+                }
+
                 if (consentInfoDto.getConsentItemTitleId() != null) {
                   if (consentMasterInfoList != null && !consentMasterInfoList.isEmpty()) {
                     for (ConsentMasterInfoDto masterInfo : consentMasterInfoList) {
@@ -699,14 +815,6 @@ public class StudyMetaDataDao {
                   consentBean.setType(StudyMetaDataConstants.CONSENT_TYPE_CUSTOM.toLowerCase());
                 }
                 consentBean.setDescription("");
-                consentBean.setHtml(
-                    StringUtils.isEmpty(consentInfoDto.getElaborated())
-                        ? ""
-                        : consentInfoDto
-                            .getElaborated()
-                            .replaceAll("&#34;", "'")
-                            .replaceAll("em>", "i>")
-                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
                 consentBean.setUrl(
                     StringUtils.isEmpty(consentInfoDto.getUrl()) ? "" : consentInfoDto.getUrl());
 
@@ -754,17 +862,37 @@ public class StudyMetaDataDao {
               List<CorrectAnswersBean> correctAnswerBeanList = new ArrayList<>();
               for (ComprehensionTestQuestionDto comprehensionQuestionDto :
                   comprehensionQuestionList) {
+
+                ComprehensionQuestionLangBO comprehensionQuestionLang = null;
+                if (StringUtils.isNotBlank(language)
+                    && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                    && studyDto.getMultiLanguageFlag() != null
+                    && studyDto.getMultiLanguageFlag()
+                    && studyDto.getSelectedLanguages().contains(language)) {
+                  comprehensionQuestionLang =
+                      (ComprehensionQuestionLangBO)
+                          session
+                              .createQuery(
+                                  "from ComprehensionQuestionLangBO where comprehensionQuestionLangPK.id= :comprehensionQuestionId AND comprehensionQuestionLangPK.langCode= :langCode")
+                              .setString(
+                                  "comprehensionQuestionId",
+                                  comprehensionQuestionDto.getId().toString())
+                              .setString("langCode", language)
+                              .uniqueResult();
+                }
+
                 QuestionnaireActivityStepsBean questionStep = new QuestionnaireActivityStepsBean();
                 questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
                 questionStep.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
                 questionStep.setKey(comprehensionQuestionDto.getId().toString());
-                questionStep.setTitle(comprehensionQuestionDto.getQuestionText());
-                if (StringUtils.isEmpty(studyDto.getStudyLanguage())
-                    || StringUtils.equals(studyDto.getStudyLanguage(), "English")) {
-                  questionStep.setText(StudyMetaDataConstants.COMPREHENSION_TEXT);
+                if (comprehensionQuestionLang != null) {
+                  questionStep.setTitle(comprehensionQuestionLang.getQuestionText());
                 } else {
-                  questionStep.setText(StudyMetaDataConstantsSpanish.COMPREHENSION_TEXT_SPANISH);
+                  questionStep.setTitle(comprehensionQuestionDto.getQuestionText());
                 }
+                questionStep.setText(
+                    StudyMetaDataUtil.getMultiLanguageText(
+                        language, MultiLanguageConstants.COMPREHENSION_TEXT));
                 questionStep.setSkippable(false);
                 questionStep.setGroupName("");
                 questionStep.setRepeatable(false);
@@ -787,23 +915,61 @@ public class StudyMetaDataDao {
                   StringBuilder sb = new StringBuilder();
 
                   for (ComprehensionTestResponseDto compResp : comprehensionTestResponseList) {
+
+                    ComprehensionResponseLangBo comprehensionResponseLang = null;
+                    if (StringUtils.isNotBlank(language)
+                        && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                        && studyDto.getMultiLanguageFlag() != null
+                        && studyDto.getMultiLanguageFlag()
+                        && studyDto.getSelectedLanguages().contains(language)) {
+                      comprehensionResponseLang =
+                          (ComprehensionResponseLangBo)
+                              session
+                                  .createQuery(
+                                      "from ComprehensionResponseLangBo where comprehensionResponseLangPK.id= :comprehensionResponseLangId AND comprehensionResponseLangPK.langCode= :langCode")
+                                  .setString(
+                                      "comprehensionResponseLangId", compResp.getId().toString())
+                                  .setString("langCode", language)
+                                  .uniqueResult();
+                    }
+
                     if (compResp.getCorrectAnswer()) {
-                      sb.append(
-                          StringUtils.isEmpty(sb)
-                              ? compResp.getResponseOption().trim()
-                              : "&@##@&" + compResp.getResponseOption().trim());
+                      if (comprehensionResponseLang != null) {
+                        sb.append(
+                            StringUtils.isEmpty(sb)
+                                ? comprehensionResponseLang.getResponseOption().trim()
+                                : "&@##@&" + comprehensionResponseLang.getResponseOption().trim());
+                      } else {
+                        sb.append(
+                            StringUtils.isEmpty(sb)
+                                ? compResp.getResponseOption().trim()
+                                : "&@##@&" + compResp.getResponseOption().trim());
+                      }
                     }
                     LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
-                    textChoiceMap.put(
-                        "text",
-                        StringUtils.isEmpty(compResp.getResponseOption().trim())
-                            ? ""
-                            : compResp.getResponseOption().trim());
-                    textChoiceMap.put(
-                        "value",
-                        StringUtils.isEmpty(compResp.getResponseOption().trim())
-                            ? ""
-                            : compResp.getResponseOption().trim());
+                    if (comprehensionResponseLang != null) {
+                      textChoiceMap.put(
+                          "text",
+                          StringUtils.isEmpty(comprehensionResponseLang.getResponseOption().trim())
+                              ? ""
+                              : comprehensionResponseLang.getResponseOption().trim());
+                      textChoiceMap.put(
+                          "value",
+                          StringUtils.isEmpty(comprehensionResponseLang.getResponseOption().trim())
+                              ? ""
+                              : comprehensionResponseLang.getResponseOption().trim());
+                    } else {
+                      textChoiceMap.put(
+                          "text",
+                          StringUtils.isEmpty(compResp.getResponseOption().trim())
+                              ? ""
+                              : compResp.getResponseOption().trim());
+                      textChoiceMap.put(
+                          "value",
+                          StringUtils.isEmpty(compResp.getResponseOption().trim())
+                              ? ""
+                              : compResp.getResponseOption().trim());
+                    }
                     textChoiceMap.put("detail", "");
                     textChoiceMap.put("exclusive", false);
                     textChoiceMapList.add(textChoiceMap);
@@ -843,20 +1009,39 @@ public class StudyMetaDataDao {
             if (consentDto
                 .getConsentDocType()
                 .equals(StudyMetaDataConstants.CONSENT_DOC_TYPE_NEW)) {
-              reviewBean.setReviewHTML(
-                  StringUtils.isEmpty(consentDto.getConsentDocContent())
-                      ? ""
-                      : consentDto
-                          .getConsentDocContent()
-                          .replaceAll("&#34;", "'")
-                          .replaceAll("em>", "i>")
-                          .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+              if (studyLanguage != null) {
+                reviewBean.setReviewHTML(
+                    StringUtils.isEmpty(studyLanguage.getConsentDocContent())
+                        ? ""
+                        : studyLanguage
+                            .getConsentDocContent()
+                            .replaceAll("&#34;", "'")
+                            .replaceAll("em>", "i>")
+                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+              } else {
+                reviewBean.setReviewHTML(
+                    StringUtils.isEmpty(consentDto.getConsentDocContent())
+                        ? ""
+                        : consentDto
+                            .getConsentDocContent()
+                            .replaceAll("&#34;", "'")
+                            .replaceAll("em>", "i>")
+                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+              }
             }
 
-            reviewBean.setReasonForConsent(
-                StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
-                    ? consentDto.getAggrementOfConsent()
-                    : StudyMetaDataConstants.REASON_FOR_CONSENT);
+            if (studyLanguage != null) {
+              reviewBean.setReasonForConsent(
+                  StringUtils.isNotEmpty(studyLanguage.getAgreementOfConsent())
+                      ? studyLanguage.getAgreementOfConsent()
+                      : StudyMetaDataConstants.REASON_FOR_CONSENT);
+            } else {
+              reviewBean.setReasonForConsent(
+                  StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
+                      ? consentDto.getAggrementOfConsent()
+                      : StudyMetaDataConstants.REASON_FOR_CONSENT);
+            }
+
             reviewBean.setConsentByLAR(
                 StringUtils.isNotEmpty(consentDto.getConsentByLAR())
                     ? consentDto.getConsentByLAR()
@@ -867,24 +1052,46 @@ public class StudyMetaDataDao {
                     : "No");
             if (StringUtils.isNotBlank(consentDto.getAdditionalSignature())
                 && StringUtils.equals(consentDto.getAdditionalSignature(), "Yes")) {
-              if (StringUtils.isNotBlank(consentDto.getSignatureOne())
-                  && StringUtils.isNotBlank(consentDto.getSignatureTwo())
-                  && StringUtils.isNotBlank(consentDto.getSignatureThree())) {
-                String[] signatures = new String[3];
-                signatures[0] = consentDto.getSignatureOne();
-                signatures[1] = consentDto.getSignatureTwo();
-                signatures[2] = consentDto.getSignatureThree();
-                reviewBean.setSignatures(signatures);
-              } else if (StringUtils.isNotBlank(consentDto.getSignatureOne())
-                  && StringUtils.isNotBlank(consentDto.getSignatureTwo())) {
-                String[] signatures = new String[2];
-                signatures[0] = consentDto.getSignatureOne();
-                signatures[1] = consentDto.getSignatureTwo();
-                reviewBean.setSignatures(signatures);
-              } else if (StringUtils.isNotBlank(consentDto.getSignatureOne())) {
-                String[] signatures = new String[1];
-                signatures[0] = consentDto.getSignatureOne();
-                reviewBean.setSignatures(signatures);
+              if (studyLanguage != null) {
+                if (StringUtils.isNotBlank(studyLanguage.getSignatureOne())
+                    && StringUtils.isNotBlank(studyLanguage.getSignatureTwo())
+                    && StringUtils.isNotBlank(studyLanguage.getSignatureThree())) {
+                  String[] signatures = new String[3];
+                  signatures[0] = studyLanguage.getSignatureOne();
+                  signatures[1] = studyLanguage.getSignatureTwo();
+                  signatures[2] = studyLanguage.getSignatureThree();
+                  reviewBean.setSignatures(signatures);
+                } else if (StringUtils.isNotBlank(studyLanguage.getSignatureOne())
+                    && StringUtils.isNotBlank(studyLanguage.getSignatureTwo())) {
+                  String[] signatures = new String[2];
+                  signatures[0] = studyLanguage.getSignatureOne();
+                  signatures[1] = studyLanguage.getSignatureTwo();
+                  reviewBean.setSignatures(signatures);
+                } else if (StringUtils.isNotBlank(studyLanguage.getSignatureOne())) {
+                  String[] signatures = new String[1];
+                  signatures[0] = studyLanguage.getSignatureOne();
+                  reviewBean.setSignatures(signatures);
+                }
+              } else {
+                if (StringUtils.isNotBlank(consentDto.getSignatureOne())
+                    && StringUtils.isNotBlank(consentDto.getSignatureTwo())
+                    && StringUtils.isNotBlank(consentDto.getSignatureThree())) {
+                  String[] signatures = new String[3];
+                  signatures[0] = consentDto.getSignatureOne();
+                  signatures[1] = consentDto.getSignatureTwo();
+                  signatures[2] = consentDto.getSignatureThree();
+                  reviewBean.setSignatures(signatures);
+                } else if (StringUtils.isNotBlank(consentDto.getSignatureOne())
+                    && StringUtils.isNotBlank(consentDto.getSignatureTwo())) {
+                  String[] signatures = new String[2];
+                  signatures[0] = consentDto.getSignatureOne();
+                  signatures[1] = consentDto.getSignatureTwo();
+                  reviewBean.setSignatures(signatures);
+                } else if (StringUtils.isNotBlank(consentDto.getSignatureOne())) {
+                  String[] signatures = new String[1];
+                  signatures[0] = consentDto.getSignatureOne();
+                  reviewBean.setSignatures(signatures);
+                }
               }
             }
             consent.setReview(reviewBean);
@@ -911,13 +1118,13 @@ public class StudyMetaDataDao {
    * Get consent document by passing the consent version or the activity id and activity version for
    * the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @param consentVersion the consent version
    * @param activityId the activity identifier
    * @param activityVersion the activity version
    * @return {@link ConsentDocumentResponse}
    * @throws DAOException
+   * @author BTC
    */
   public ConsentDocumentResponse consentDocument(
       String studyId,
@@ -988,7 +1195,7 @@ public class StudyMetaDataDao {
                     session
                         .createQuery(
                             " from ConsentDto CDTO"
-                                + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version")
+                                + " where CDTO.customStudyId =:customStudyId and ROUND(CDTO.version, 1)=:version and CDTO.live=1")
                         .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                         .setFloat(
                             StudyMetaDataEnum.QF_VERSION.value(),
@@ -1003,17 +1210,17 @@ public class StudyMetaDataDao {
                         .uniqueResult();
           }
 
-          ConsentLanguageBO consentLanguage = null;
+          StudyLanguageBO studyLanguage = null;
           if (StringUtils.isNotBlank(language)
               && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
               && studyDto.getMultiLanguageFlag() != null
               && studyDto.getMultiLanguageFlag()
               && studyDto.getSelectedLanguages().contains(language)) {
-            consentLanguage =
-                (ConsentLanguageBO)
+            studyLanguage =
+                (StudyLanguageBO)
                     session
                         .createQuery(
-                            "from ConsentLanguageBO CL where CL.studyId= :studyId AND CL.langCode= :langCode")
+                            "from StudyLanguageBO SLBO where SLBO.studyLanguagePK.study_id= :studyId AND SLBO.studyLanguagePK.langCode= :langCode")
                         .setString("studyId", studyDto.getId().toString())
                         .setString("langCode", language)
                         .uniqueResult();
@@ -1026,11 +1233,11 @@ public class StudyMetaDataDao {
                 (consent.getVersion() == null)
                     ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
                     : String.valueOf(consent.getVersion()));
-            if (consentLanguage != null) {
+            if (studyLanguage != null) {
               consentDocumentBean.setContent(
-                  StringUtils.isEmpty(consentLanguage.getConsentDocContent())
+                  StringUtils.isEmpty(studyLanguage.getConsentDocContent())
                       ? ""
-                      : consentLanguage
+                      : studyLanguage
                           .getConsentDocContent()
                           .replaceAll("&#34;", "'")
                           .replaceAll("em>", "i>")
@@ -1066,13 +1273,13 @@ public class StudyMetaDataDao {
   /**
    * Get resources metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link ResourcesResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
-  public ResourcesResponse resourcesForStudy(String studyId) throws DAOException {
+  public ResourcesResponse resourcesForStudy(String studyId, String language) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
     Session session = null;
     ResourcesResponse resourcesResponse = new ResourcesResponse();
@@ -1103,26 +1310,59 @@ public class StudyMetaDataDao {
           List<ResourcesBean> resourcesBeanList = new ArrayList<>();
           for (ResourcesDto resourcesDto : resourcesDtoList) {
 
+            ResourcesLangBO resourcesLang = null;
+            if (StringUtils.isNotBlank(language)
+                && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                && studyDto.getMultiLanguageFlag() != null
+                && studyDto.getMultiLanguageFlag()
+                && studyDto.getSelectedLanguages().contains(language)) {
+              resourcesLang =
+                  (ResourcesLangBO)
+                      session
+                          .createQuery(
+                              "from ResourcesLangBO where resourcesLangPK.id= :resourceId AND resourcesLangPK.langCode= :langCode")
+                          .setString("resourceId", resourcesDto.getId().toString())
+                          .setString("langCode", language)
+                          .uniqueResult();
+            }
+
             ResourcesBean resourcesBean = new ResourcesBean();
             resourcesBean.setAudience(
                 resourcesDto.isResourceType()
                     ? StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_LIMITED
                     : StudyMetaDataConstants.RESOURCE_AUDIENCE_TYPE_ALL);
-            resourcesBean.setTitle(
-                StringUtils.isEmpty(resourcesDto.getTitle()) ? "" : resourcesDto.getTitle());
+
+            String richText = "";
+            String pdfURL = "";
+            if (resourcesLang != null) {
+              resourcesBean.setTitle(
+                  StringUtils.isEmpty(resourcesLang.getTitle()) ? "" : resourcesLang.getTitle());
+              resourcesBean.setNotificationText(
+                  StringUtils.isEmpty(resourcesLang.getResourceText())
+                      ? ""
+                      : resourcesLang.getResourceText());
+              richText = resourcesLang.getRichText();
+              pdfURL = resourcesLang.getPdfUrl();
+            } else {
+              resourcesBean.setTitle(
+                  StringUtils.isEmpty(resourcesDto.getTitle()) ? "" : resourcesDto.getTitle());
+              resourcesBean.setNotificationText(
+                  StringUtils.isEmpty(resourcesDto.getResourceText())
+                      ? ""
+                      : resourcesDto.getResourceText());
+              richText = resourcesDto.getRichText();
+              pdfURL = resourcesDto.getPdfUrl();
+            }
+
             if (!resourcesDto.isTextOrPdf()) {
               resourcesBean.setType(StudyMetaDataConstants.TYPE_TEXT);
-              resourcesBean.setContent(
-                  StringUtils.isEmpty(resourcesDto.getRichText())
-                      ? ""
-                      : resourcesDto.getRichText());
+              resourcesBean.setContent(StringUtils.isEmpty(richText) ? "" : richText);
             } else {
               resourcesBean.setType(StudyMetaDataConstants.TYPE_PDF);
               resourcesBean.setContent(
-                  StringUtils.isEmpty(resourcesDto.getPdfUrl())
+                  StringUtils.isEmpty(pdfURL)
                       ? ""
-                      : propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
-                          + resourcesDto.getPdfUrl());
+                      : propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH) + pdfURL);
             }
             resourcesBean.setResourcesId(
                 resourcesDto.getId() == null ? "" : String.valueOf(resourcesDto.getId()));
@@ -1287,10 +1527,6 @@ public class StudyMetaDataDao {
               // phase 2a anchordate
               resourcesBean.setAvailability(availability);
             }
-            resourcesBean.setNotificationText(
-                StringUtils.isEmpty(resourcesDto.getResourceText())
-                    ? ""
-                    : resourcesDto.getResourceText());
             resourcesBeanList.add(resourcesBean);
           }
           resourcesResponse.setResources(resourcesBeanList);
@@ -1313,10 +1549,10 @@ public class StudyMetaDataDao {
   /**
    * Get study metadata for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link StudyInfoResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyInfoResponse studyInfo(String studyId, String language) throws DAOException {
@@ -1369,7 +1605,7 @@ public class StudyMetaDataDao {
                   session
                       .createQuery(
                           "from StudyLanguageBO SLBO where SLBO.studyLanguagePK.study_id= :studyId AND SLBO.studyLanguagePK.langCode= :langCode")
-                      .setString("studyId", studyDto.getId().toString())
+                      .setInteger("studyId", studyDto.getId())
                       .setString("langCode", language)
                       .uniqueResult();
           if (studyLanguage != null) {
@@ -1674,10 +1910,10 @@ public class StudyMetaDataDao {
   /**
    * Check study for the provided study identifier
    *
-   * @author BTC
    * @param studyId the study identifier
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidStudy(String studyId) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
@@ -1710,12 +1946,12 @@ public class StudyMetaDataDao {
   /**
    * Check activity for the provided activity version, study and activity identifier
    *
-   * @author BTC
    * @param activityId the activity identifier
    * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws DAOException {
@@ -1774,12 +2010,12 @@ public class StudyMetaDataDao {
   /**
    * Check whether activity is questionnaire for the provided study and activity identifier
    *
-   * @author BTC
    * @param activityId the activity identifier
    * @param studyId the study identifier
    * @param activityVersion the activity version
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws DAOException {
@@ -1820,10 +2056,10 @@ public class StudyMetaDataDao {
   /**
    * Get the consent document display title
    *
-   * @author BTC
    * @param displaytitle the display title
    * @return consent document display title code
    * @throws DAOException
+   * @author BTC
    */
   public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
@@ -1871,10 +2107,10 @@ public class StudyMetaDataDao {
   /**
    * Check study for the provided study identifier
    *
-   * @author BTC
    * @param token the study identifier
    * @return {@link Boolean}
    * @throws DAOException
+   * @author BTC
    */
   public boolean isValidToken(String token) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Starts");
@@ -1908,10 +2144,10 @@ public class StudyMetaDataDao {
   /**
    * Get all the configured studies from the WCP
    *
-   * @author BTC
    * @param studyId
    * @return {@link StudyResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyResponse study(String studyId, String language) throws DAOException {
@@ -1963,14 +2199,54 @@ public class StudyMetaDataDao {
                       : studyLanguageBO.getStudyTagline());
               studyBean.setTitle(
                   StringUtils.isEmpty(studyLanguageBO.getName()) ? "" : studyLanguageBO.getName());
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyLanguageBO.getResearchSponsor())
+                      ? ""
+                      : studyLanguageBO.getResearchSponsor());
             } else {
               studyBean.setTagline(
                   StringUtils.isEmpty(studyDto.getStudyTagline())
                       ? ""
                       : studyDto.getStudyTagline());
               studyBean.setTitle(StringUtils.isEmpty(studyDto.getName()) ? "" : studyDto.getName());
+              studyBean.setSponsorName(
+                  StringUtils.isEmpty(studyDto.getResearchSponsor())
+                      ? ""
+                      : studyDto.getResearchSponsor());
             }
-
+            if (StringUtils.isNotEmpty(studyDto.getCategory())
+                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
+              List<ReferenceTablesDto> referenceTablesList =
+                  session
+                      .createQuery(
+                          "from ReferenceTablesDto RTDTO where RTDTO.id IN ("
+                              + studyDto.getCategory()
+                              + ")")
+                      .list();
+              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
+                for (ReferenceTablesDto reference : referenceTablesList) {
+                  if (reference
+                      .getCategory()
+                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
+                    if (StringUtils.isNotBlank(language)
+                        && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
+                      studyBean.setCategory(
+                          StudyMetaDataUtil.getMultiLanguageText(
+                              language, "id_" + studyDto.getCategory()));
+                    } else {
+                      studyBean.setCategory(
+                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
+                    }
+                  }
+                }
+              }
+            }
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
+              studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
+            } else {
+              studyBean.setStudyLanguage("English");
+            }
             switch (studyDto.getStatus()) {
               case StudyMetaDataConstants.STUDY_STATUS_ACTIVE:
                 studyBean.setStatus(StudyMetaDataConstants.STUDY_ACTIVE);
@@ -1998,53 +2274,6 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
                     : studyDto.getCustomStudyId());
-
-            studyBean.setStudyLanguage(
-                StringUtils.isEmpty(studyDto.getStudyLanguage())
-                    ? "English"
-                    : studyDto.getStudyLanguage());
-
-            studyBean.setSponsorName(
-                StringUtils.isEmpty(studyDto.getResearchSponsor())
-                    ? ""
-                    : studyDto.getResearchSponsor());
-
-            if (StringUtils.isNotEmpty(studyDto.getCategory())
-                && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-              List<ReferenceTablesDto> referenceTablesList =
-                  session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO where RTDTO.id IN ("
-                              + studyDto.getCategory()
-                              + ")")
-                      .list();
-              if (null != referenceTablesList && !referenceTablesList.isEmpty()) {
-                for (ReferenceTablesDto reference : referenceTablesList) {
-                  if (reference
-                      .getCategory()
-                      .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    if (StringUtils.isEmpty(studyDto.getStudyLanguage())
-                        || StringUtils.equals(studyDto.getStudyLanguage(), "English")) {
-                      studyBean.setCategory(
-                          StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                    } else {
-                      try {
-                        Field idField =
-                            StudyMetaDataConstantsSpanish.class.getField(
-                                "id_" + studyDto.getCategory());
-                        try {
-                          studyBean.setCategory(idField.get(null).toString());
-                        } catch (IllegalAccessException e) {
-                          LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                        }
-                      } catch (NoSuchFieldException e) {
-                        LOGGER.error("StudyMetaDataDao - studyList() :: ERROR", e);
-                      }
-                    }
-                  }
-                }
-              }
-            }
 
             SettingsBean settings = new SettingsBean();
             if (studyDto.getPlatform().contains(",")) {

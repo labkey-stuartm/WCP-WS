@@ -31,11 +31,14 @@ import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dto.AppVersionDto;
 import com.hphc.mystudies.dto.AppVersionInfo;
 import com.hphc.mystudies.dto.NotificationDto;
+import com.hphc.mystudies.dto.NotificationLangBO;
 import com.hphc.mystudies.dto.ResourcesDto;
+import com.hphc.mystudies.dto.ResourcesLangBO;
 import com.hphc.mystudies.dto.StudyDto;
 import com.hphc.mystudies.dto.StudyVersionDto;
 import com.hphc.mystudies.exception.DAOException;
 import com.hphc.mystudies.util.HibernateUtil;
+import com.hphc.mystudies.util.MultiLanguageConstants;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
@@ -77,9 +80,9 @@ public class AppMetaDataDao {
   /**
    * Get terms and policy for the app
    *
-   * @author BTC
    * @return {@link TermsPolicyResponse}
    * @throws DAOException
+   * @author BTC
    */
   public TermsPolicyResponse termsPolicy() throws DAOException {
     LOGGER.info("INFO: AppMetaDataDao - termsPolicy() :: Starts");
@@ -104,15 +107,15 @@ public class AppMetaDataDao {
   /**
    * Fetch available notifications
    *
-   * @author BTC
    * @param skip the skip count
    * @param authorization the Basic Authorization
    * @return {@link NotificationsResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
-      throws DAOException {
+  public NotificationsResponse notifications(
+      String skip, String authorization, String appId, String language) throws DAOException {
     LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
     Session session = null;
     NotificationsResponse notificationsResponse = new NotificationsResponse();
@@ -135,21 +138,6 @@ public class AppMetaDataDao {
       if (StringUtils.isNotEmpty(bundleIdType) && StringUtils.isNotEmpty(deviceType)) {
         platformType = deviceType.substring(0, 1).toUpperCase();
         session = sessionFactory.openSession();
-        /*
-         * appVersion = (AppVersionDto) session
-         * .getNamedQuery("AppVersionDto.findByBundleIdOsType")
-         * .setString(StudyMetaDataEnum.QF_BUNDLE_ID.value(), bundleIdType)
-         * .setString(StudyMetaDataEnum.QF_OS_TYPE.value(),
-         * deviceType).setMaxResults(1).uniqueResult(); if (appVersion != null) { if
-         * (StringUtils.isNotEmpty(appVersion.getCustomStudyId())) { customStudyQuery =
-         * " and NDTO.customStudyId in (select SDTO.customStudyId" +
-         * " from StudyDto SDTO" + " where SDTO.type='" +
-         * StudyMetaDataConstants.STUDY_TYPE_SD + "' and SDTO.platform like '%" +
-         * platformType + "%'" + " and SDTO.customStudyId='" +
-         * appVersion.getCustomStudyId() + "')" + " and NDTO.notificationType='" +
-         * StudyMetaDataConstants.NOTIFICATION_TYPE_ST + "'"; }
-         */
-
         List<String> notificationTypeList =
             Arrays.asList(
                 StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL,
@@ -159,29 +147,6 @@ public class AppMetaDataDao {
                 StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT);
 
         // Get criteria for the Standalone Study
-        /*
-         * notificationStudyTypeQuery = "from NotificationDto NDTO" +
-         * " where NDTO.notificationSubType in (:notificationTypeList) " +
-         * customStudyQuery + " and NDTO.notificationSent=true or NDTO.anchorDate=true"
-         * + " ORDER BY NDTO.notificationId DESC";
-         */
-
-        /*
-         * notificationStudyTypeQuery = "from NotificationDto NDTO" +
-         * " where NDTO.notificationSubType in (:notificationTypeList) " +
-         * " and NDTO.appId='" + appId +
-         * "' or NDTO.appId is null and NDTO.notificationSent=true" +
-         * " ORDER BY NDTO.notificationId DESC";
-         */
-
-        /*
-         * notificationStudyTypeQuery = "from NotificationDto NDTO" +
-         * " where NDTO.notificationSubType in (:notificationTypeList) " +
-         * " and NDTO.appId='" + appId +
-         * "' or NDTO.appId is null and NDTO.notificationSent=true" +
-         * " ORDER BY NDTO.scheduleDate DESC";
-         */
-
         notificationStudyTypeQuery =
             "from NotificationDto NDTO"
                 + " where NDTO.notificationSubType in (:notificationTypeList) and (NDTO.appId=:appId or NDTO.appId is null) "
@@ -236,10 +201,52 @@ public class AppMetaDataDao {
                 propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
-            notifyBean.setMessage(
-                StringUtils.isEmpty(notificationDto.getNotificationText())
-                    ? ""
-                    : notificationDto.getNotificationText());
+
+            if (StringUtils.isNotBlank(language)
+                && !MultiLanguageConstants.ENGLISH.equals(language)) {
+              if (StringUtils.equals(
+                  notificationDto.getNotificationSubType(),
+                  StudyMetaDataConstants.NOTIFICATION_SUBTYPE_RESOURCE)) {
+                ResourcesLangBO resourcesLang =
+                    (ResourcesLangBO)
+                        session
+                            .createQuery(
+                                "from ResourcesLangBO where resourcesLangPK.id= :id AND resourcesLangPK.langCode= :langCode")
+                            .setString("id", notificationDto.getResourceId().toString())
+                            .setString("langCode", language)
+                            .uniqueResult();
+                if (resourcesLang != null) {
+                  notifyBean.setMessage(
+                      StringUtils.isEmpty(resourcesLang.getResourceText())
+                          ? ""
+                          : resourcesLang.getResourceText());
+                } else {
+                  notifyBean.setMessage(
+                      StringUtils.isEmpty(notificationDto.getNotificationText())
+                          ? ""
+                          : notificationDto.getNotificationText());
+                }
+              } else {
+                NotificationLangBO notificationLangBO =
+                    this.getNotificationLang(notificationDto.getNotificationId(), language);
+                if (notificationLangBO != null) {
+                  notifyBean.setMessage(
+                      StringUtils.isEmpty(notificationLangBO.getNotificationText())
+                          ? ""
+                          : notificationLangBO.getNotificationText());
+                } else {
+                  notifyBean.setMessage(
+                      StringUtils.isEmpty(notificationDto.getNotificationText())
+                          ? ""
+                          : notificationDto.getNotificationText());
+                }
+              }
+            } else {
+              notifyBean.setMessage(
+                  StringUtils.isEmpty(notificationDto.getNotificationText())
+                      ? ""
+                      : notificationDto.getNotificationText());
+            }
             notifyBean.setStudyId(
                 StringUtils.isEmpty(notificationDto.getCustomStudyId())
                     ? ""
@@ -261,31 +268,13 @@ public class AppMetaDataDao {
             notificationIdsList.add(notificationDto.getNotificationId());
             notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
             hashMap.put(notificationDto.getNotificationId(), scheduledDate + " " + scheduledTime);
-
-            // scheduleDateTimes.add(scheduledDate + " " + scheduledTime);
-            // notificationTreeMap.put(scheduledDate + " " + scheduledTime, notifyBean);
           }
 
-          /*
-           * Collections.sort(notificationIdsList, Collections.reverseOrder()); for
-           * (Integer notificationId : notificationIdsList) {
-           * notifyList.add(notificationTreeMap .get(notificationId)); }
-           */
-          /*
-           * Collections.sort(scheduleDateTimes, new Comparator<String>() {
-           *
-           * @Override public int compare(String dateTimeOne, String dateTimeTwo) { return
-           * dateTimeTwo.compareTo(dateTimeOne); }
-           *
-           * }); for (String dateTime : scheduleDateTimes) {
-           * notifyList.add(notificationTreeMap.get(dateTime)); }
-           */
           LinkedHashMap<Integer, String> sortedMap = sortHashMapByValues(hashMap);
           for (Integer id : sortedMap.keySet()) {
             notifyList.add(notificationTreeMap.get(id));
           }
         }
-        /* } */
       }
 
       notificationsResponse.setNotifications(notifyList);
@@ -307,10 +296,6 @@ public class AppMetaDataDao {
     LinkedHashMap<Integer, String> sortedMap = new LinkedHashMap<>();
     Iterator<String> valueIt = null;
     Iterator<Integer> keyIt = null;
-
-    /*
-     * Collections.sort(mapValues); Collections.sort(mapKeys);
-     */
 
     Collections.sort(mapKeys, Collections.reverseOrder());
 
@@ -347,11 +332,11 @@ public class AppMetaDataDao {
   /**
    * Check for app updates
    *
-   * @author BTC
    * @param appVersion the app version
    * @param authCredentials the Basic Authorization
    * @return {@link AppUpdatesResponse}
    * @throws DAOException
+   * @author BTC
    */
   public AppUpdatesResponse appUpdates(String appVersion, String authCredentials)
       throws DAOException {
@@ -415,11 +400,11 @@ public class AppMetaDataDao {
   /**
    * Check for study updates for the provided study identifier and study version
    *
-   * @author BTC
    * @param studyId the study identifier
    * @param studyVersion the study version
    * @return {@link StudyUpdatesResponse}
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
@@ -556,7 +541,6 @@ public class AppMetaDataDao {
   /**
    * Update app version
    *
-   * @author BTC
    * @param forceUpdate is force update
    * @param osType the platform type
    * @param appVersion the app version
@@ -565,6 +549,7 @@ public class AppMetaDataDao {
    * @param message the note about app version update
    * @return the success or failure
    * @throws DAOException
+   * @author BTC
    */
   @SuppressWarnings("unchecked")
   public String updateAppVersionDetails(
@@ -663,10 +648,10 @@ public class AppMetaDataDao {
   /**
    * Execute the provided query
    *
-   * @author BTC
    * @param dbQuery the input query
    * @return the success or failure
    * @throws DAOException
+   * @author BTC
    */
   public String interceptorDataBaseQuery(String dbQuery) throws DAOException {
     Session session = null;
@@ -704,5 +689,32 @@ public class AppMetaDataDao {
     }
     LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Ends");
     return appVersionInfo;
+  }
+
+  public NotificationLangBO getNotificationLang(int notificationId, String lang) {
+    LOGGER.info("NotificationDAOImpl - getNotificationLang() - Starts");
+    Session session = null;
+    NotificationLangBO notificationBO = null;
+    try {
+      session = sessionFactory.openSession();
+      notificationBO =
+          (NotificationLangBO)
+              session
+                  .createSQLQuery(
+                      "select * from notification_lang where notification_id = :notificationId"
+                          + " and lang_code=:lang and notification_status=true")
+                  .addEntity(NotificationLangBO.class)
+                  .setInteger("notificationId", notificationId)
+                  .setString("lang", lang)
+                  .uniqueResult();
+    } catch (Exception e) {
+      LOGGER.error("NotificationDAOImpl - getNotificationLang - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    LOGGER.info("NotificationDAOImpl - getNotificationLang - Ends");
+    return notificationBO;
   }
 }
