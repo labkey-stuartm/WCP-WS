@@ -348,7 +348,7 @@ public class StudyMetaDataDao {
                   if (reference
                       .getCategory()
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    if (StringUtils.isNotBlank(language)
+                    if (studyLanguageBO!=null && StringUtils.isNotBlank(language)
                         && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
                       studyBean.setCategory(
                           StudyMetaDataUtil.getMultiLanguageText(
@@ -391,7 +391,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
                     : studyDto.getCustomStudyId());
-            if (StringUtils.isNotBlank(language)
+            if (studyLanguageBO!=null && StringUtils.isNotBlank(language)
                 && !MultiLanguageConstants.ENGLISH.equals(language)) {
               studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
             } else {
@@ -2228,7 +2228,7 @@ public class StudyMetaDataDao {
                   if (reference
                       .getCategory()
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
-                    if (StringUtils.isNotBlank(language)
+                    if (studyLanguageBO!=null && StringUtils.isNotBlank(language)
                         && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)) {
                       studyBean.setCategory(
                           StudyMetaDataUtil.getMultiLanguageText(
@@ -2241,7 +2241,7 @@ public class StudyMetaDataDao {
                 }
               }
             }
-            if (StringUtils.isNotBlank(language)
+            if (studyLanguageBO!=null && StringUtils.isNotBlank(language)
                 && !MultiLanguageConstants.ENGLISH.equals(language)) {
               studyBean.setStudyLanguage(MultiLanguageCodes.getValue(language));
             } else {
