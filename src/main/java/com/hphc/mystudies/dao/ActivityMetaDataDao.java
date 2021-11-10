@@ -189,7 +189,10 @@ public class ActivityMetaDataDao {
               ActivitiesBean activityBean = new ActivitiesBean();
 
               if (StringUtils.isNotBlank(language)
-                  && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                  && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                  && studyDto.getMultiLanguageFlag() != null
+                  && studyDto.getMultiLanguageFlag()
+                  && studyDto.getSelectedLanguages().contains(language)) {
                 ActiveTaskLangBO activeTaskLangBO =
                     this.getActiveTaskLangById(activeTaskDto.getId(), language);
                 if (activeTaskLangBO != null) {
@@ -306,7 +309,10 @@ public class ActivityMetaDataDao {
             ActivitiesBean activityBean = new ActivitiesBean();
 
             if (StringUtils.isNotBlank(language)
-                && !MultiLanguageConstants.ENGLISH.equals(language)) {
+                && !StringUtils.equals(language, MultiLanguageConstants.ENGLISH)
+                && studyDto.getMultiLanguageFlag() != null
+                && studyDto.getMultiLanguageFlag()
+                && studyDto.getSelectedLanguages().contains(language)) {
               QuestionnaireLangDto questionnaireLangDto =
                   this.getQuestionnairesLangById(questionaire.getId(), language);
               if (questionnaireLangDto != null) {
@@ -692,6 +698,11 @@ public class ActivityMetaDataDao {
                           StringUtils.isEmpty(activeTaskLangBO.getInstruction())
                               ? ""
                               : activeTaskLangBO.getInstruction());
+                    } else {
+                      activeTaskActiveTaskStep.setText(
+                          StringUtils.isEmpty(activeTaskDto.getInstruction())
+                              ? ""
+                              : activeTaskDto.getInstruction());
                     }
                   } else {
                     activeTaskActiveTaskStep.setText(
@@ -2055,6 +2066,13 @@ public class ActivityMetaDataDao {
                   StringUtils.isEmpty(questionLangBO.getQuestion())
                       ? ""
                       : questionLangBO.getQuestion());
+            } else {
+              questionBean.setText(
+                  StringUtils.isEmpty(questionsDto.getDescription())
+                      ? ""
+                      : questionsDto.getDescription());
+              questionBean.setTitle(
+                  StringUtils.isEmpty(questionsDto.getQuestion()) ? "" : questionsDto.getQuestion());
             }
           } else {
             questionBean.setText(
@@ -2352,6 +2370,11 @@ public class ActivityMetaDataDao {
             if (formLangBO != null) {
               formBean.setRepeatableText(
                   formLangBO.getRepeatableText() == null ? "" : formLangBO.getRepeatableText());
+            } else {
+              formBean.setRepeatableText(
+                  formStepDetails.getRepeatableText() == null
+                      ? ""
+                      : formStepDetails.getRepeatableText());
             }
           } else {
             formBean.setRepeatableText(
@@ -2405,14 +2428,25 @@ public class ActivityMetaDataDao {
                   && !MultiLanguageConstants.ENGLISH.equals(language)) {
                 QuestionLangBO questionLangBO =
                     this.getQuestionLangBo(formQuestionDto.getId(), language);
-                formQuestionBean.setTitle(
-                    StringUtils.isEmpty(questionLangBO.getQuestion())
-                        ? ""
-                        : questionLangBO.getQuestion());
-                formQuestionBean.setText(
-                    StringUtils.isEmpty(questionLangBO.getDescription())
-                        ? ""
-                        : questionLangBO.getDescription());
+                if (questionLangBO!=null) {
+                  formQuestionBean.setTitle(
+                      StringUtils.isEmpty(questionLangBO.getQuestion())
+                          ? ""
+                          : questionLangBO.getQuestion());
+                  formQuestionBean.setText(
+                      StringUtils.isEmpty(questionLangBO.getDescription())
+                          ? ""
+                          : questionLangBO.getDescription());
+                } else {
+                  formQuestionBean.setTitle(
+                      StringUtils.isEmpty(formQuestionDto.getQuestion())
+                          ? ""
+                          : formQuestionDto.getQuestion());
+                  formQuestionBean.setText(
+                      StringUtils.isEmpty(formQuestionDto.getDescription())
+                          ? ""
+                          : formQuestionDto.getDescription());
+                }
               } else {
                 formQuestionBean.setTitle(
                     StringUtils.isEmpty(formQuestionDto.getQuestion())
@@ -2674,16 +2708,12 @@ public class ActivityMetaDataDao {
             break;
           case StudyMetaDataConstants.QUESTION_EMAIL:
             if (StringUtils.isNotBlank(language)
-                && !MultiLanguageConstants.ENGLISH.equals(language)) {
-              if (questionLangBO != null) {
-                questionFormat.put(
-                    "placeholder",
-                    (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
-                        ? ""
-                        : questionLangBO.getPlaceholderText());
-              } else {
-                questionFormat.put("placeholder", "");
-              }
+                && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
+              questionFormat.put(
+                  "placeholder",
+                  (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
+                      ? ""
+                      : questionLangBO.getPlaceholderText());
             } else {
               questionFormat.put(
                   "placeholder",
@@ -2711,16 +2741,12 @@ public class ActivityMetaDataDao {
                     ? ""
                     : reponseType.getMeasurementSystem());
             if (StringUtils.isNotBlank(language)
-                && !MultiLanguageConstants.ENGLISH.equals(language)) {
-              if (questionLangBO != null) {
-                questionFormat.put(
+                && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
+              questionFormat.put(
                     "placeholder",
                     (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
                         ? ""
                         : questionLangBO.getPlaceholderText());
-              } else {
-                questionFormat.put("placeholder", "");
-              }
             } else {
               questionFormat.put(
                   "placeholder",
@@ -2794,8 +2820,7 @@ public class ActivityMetaDataDao {
               ? false
               : true);
 
-      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-        if (questionLangBO != null) {
+      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
           questionFormat.put(
               "maxDesc",
               (StringUtils.isEmpty(questionLangBO.getMaxDescription()))
@@ -2806,10 +2831,6 @@ public class ActivityMetaDataDao {
               (StringUtils.isEmpty(questionLangBO.getMinDescription()))
                   ? ""
                   : questionLangBO.getMinDescription());
-        } else {
-          questionFormat.put("maxDesc", "");
-          questionFormat.put("minDesc", "");
-        }
       } else {
         questionFormat.put(
             "maxDesc",
@@ -2884,8 +2905,7 @@ public class ActivityMetaDataDao {
               ? false
               : true);
 
-      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-        if (questionLangBO != null) {
+      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
           questionFormat.put(
               "maxDesc",
               (StringUtils.isEmpty(questionLangBO.getMaxDescription()))
@@ -2896,10 +2916,6 @@ public class ActivityMetaDataDao {
               (StringUtils.isEmpty(questionLangBO.getMinDescription()))
                   ? ""
                   : questionLangBO.getMinDescription());
-        } else {
-          questionFormat.put("maxDesc", "");
-          questionFormat.put("minDesc", "");
-        }
       } else {
         questionFormat.put(
             "maxDesc",
@@ -2967,8 +2983,7 @@ public class ActivityMetaDataDao {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
           LinkedHashMap<String, Object> textScaleMap = new LinkedHashMap<>();
           if (StringUtils.isNotBlank(language)
-              && !MultiLanguageConstants.ENGLISH.equals(language)) {
-            if (questionLangBO != null) {
+              && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
                 String[] dispArray = displayText.split("\\|");
@@ -2980,9 +2995,6 @@ public class ActivityMetaDataDao {
               } catch (IndexOutOfBoundsException e) {
                 textScaleMap.put("text", "");
               }
-            } else {
-              textScaleMap.put("text", "");
-            }
           } else {
             textScaleMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
@@ -3047,8 +3059,7 @@ public class ActivityMetaDataDao {
           LinkedHashMap<String, Object> valuePickerMap = new LinkedHashMap<>();
 
           if (StringUtils.isNotBlank(language)
-              && !MultiLanguageConstants.ENGLISH.equals(language)) {
-            if (questionLangBO != null) {
+              && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
                 String[] dispArray = displayText.split("\\|");
@@ -3060,9 +3071,6 @@ public class ActivityMetaDataDao {
               } catch (IndexOutOfBoundsException e) {
                 valuePickerMap.put("text", "");
               }
-            } else {
-              valuePickerMap.put("text", "");
-            }
           } else {
             valuePickerMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
@@ -3133,8 +3141,7 @@ public class ActivityMetaDataDao {
                           + subType.getSelectedImage()));
 
           if (StringUtils.isNotBlank(language)
-              && !MultiLanguageConstants.ENGLISH.equals(language)) {
-            if (questionLangBO != null) {
+              && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
                 String[] dispArray = displayText.split("\\|");
@@ -3146,9 +3153,6 @@ public class ActivityMetaDataDao {
               } catch (IndexOutOfBoundsException e) {
                 imageChoiceMap.put("text", "");
               }
-            } else {
-              imageChoiceMap.put("text", "");
-            }
           } else {
             imageChoiceMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
@@ -3202,8 +3206,7 @@ public class ActivityMetaDataDao {
           LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
 
           if (StringUtils.isNotBlank(language)
-              && !MultiLanguageConstants.ENGLISH.equals(language)) {
-            if (questionLangBO != null) {
+              && !MultiLanguageConstants.ENGLISH.equals(language)  && questionLangBO!=null) {
               try {
                 String displayText = questionLangBO.getDisplayText();
                 String[] dispArray = displayText.split("\\|");
@@ -3224,10 +3227,6 @@ public class ActivityMetaDataDao {
                 textChoiceMap.put("text", "");
                 textChoiceMap.put("detail", "");
               }
-            } else {
-              textChoiceMap.put("text", "");
-              textChoiceMap.put("detail", "");
-            }
           } else {
             textChoiceMap.put(
                 "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
@@ -3263,22 +3262,27 @@ public class ActivityMetaDataDao {
           && otherReponseSubType.getOtherType().equals("on")) {
         LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
         textChoiceMap.put(
-            "text",
-            StringUtils.isEmpty(otherReponseSubType.getOtherText())
-                ? ""
-                : otherReponseSubType.getOtherText());
-        textChoiceMap.put(
             "value",
             StringUtils.isEmpty(otherReponseSubType.getOtherValue())
                 ? ""
                 : otherReponseSubType.getOtherValue());
-        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
+        if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
+          textChoiceMap.put(
+              "text",
+              StringUtils.isEmpty(questionLangBO.getOtherText())
+                  ? ""
+                  : questionLangBO.getOtherText());
           textChoiceMap.put(
               "detail",
               StringUtils.isEmpty(questionLangBO.getOtherDescription())
                   ? ""
                   : questionLangBO.getOtherDescription());
         } else {
+          textChoiceMap.put(
+              "text",
+              StringUtils.isEmpty(otherReponseSubType.getOtherText())
+                  ? ""
+                  : otherReponseSubType.getOtherText());
           textChoiceMap.put(
               "detail",
               StringUtils.isEmpty(otherReponseSubType.getOtherDescription())
@@ -3296,7 +3300,7 @@ public class ActivityMetaDataDao {
           LinkedHashMap<String, Object> textChoiceOtherMap = new LinkedHashMap<>();
 
           if (StringUtils.isNotBlank(language)
-              && !MultiLanguageConstants.ENGLISH.equals(language)) {
+              && !MultiLanguageConstants.ENGLISH.equals(language) && questionLangBO!=null) {
             textChoiceOtherMap.put(
                 "placeholder",
                 StringUtils.isEmpty(questionLangBO.getOtherPlaceholderText())
@@ -3397,16 +3401,13 @@ public class ActivityMetaDataDao {
                 : Double.parseDouble(reponseType.getMaxValue()));
       }
 
-      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-        if (questionLangBO != null) {
-          questionFormat.put(
-              "placeholder",
-              (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
-                  ? ""
-                  : questionLangBO.getPlaceholderText());
-        } else {
-          questionFormat.put("placeholder", "");
-        }
+      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)
+          && questionLangBO!=null) {
+        questionFormat.put(
+            "placeholder",
+            (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
+                ? ""
+                : questionLangBO.getPlaceholderText());
       } else {
         questionFormat.put(
             "placeholder",
@@ -3518,8 +3519,8 @@ public class ActivityMetaDataDao {
               ? false
               : true);
 
-      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
-        if (questionLangBO != null) {
+      if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)
+          && questionLangBO!=null) {
           questionFormat.put(
               "placeholder",
               (StringUtils.isEmpty(questionLangBO.getPlaceholderText()))
@@ -3530,11 +3531,6 @@ public class ActivityMetaDataDao {
               (StringUtils.isEmpty(questionLangBO.getInvalidMessage()))
                   ? "Invalid Input. Please try again."
                   : questionLangBO.getInvalidMessage());
-
-        } else {
-          questionFormat.put("placeholder", "");
-          questionFormat.put("invalidMessage", "");
-        }
       } else {
         questionFormat.put(
             "placeholder",

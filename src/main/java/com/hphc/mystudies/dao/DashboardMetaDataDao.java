@@ -594,6 +594,9 @@ public class DashboardMetaDataDao {
                 StringUtils.isEmpty(activeTaskLangBO.getChartTitle())
                     ? ""
                     : activeTaskLangBO.getChartTitle());
+          } else {
+            chart.setDisplayName(
+                StringUtils.isEmpty(activeTask.getTitleChat()) ? "" : activeTask.getTitleChat());
           }
         } else {
           chart.setDisplayName(
@@ -643,6 +646,9 @@ public class DashboardMetaDataDao {
                 StringUtils.isEmpty(questionLangBO.getChartTitle())
                     ? ""
                     : questionLangBO.getChartTitle());
+          } else {
+            chart.setDisplayName(
+                StringUtils.isEmpty(question.getChartTitle()) ? "" : question.getChartTitle());
           }
         } else {
           chart.setDisplayName(
@@ -728,6 +734,16 @@ public class DashboardMetaDataDao {
                 StringUtils.isEmpty(activeTaskLangBO.getDisplayUnitStat())
                     ? ""
                     : activeTaskLangBO.getDisplayUnitStat());
+          } else {
+            statistics.setDisplayName(
+                StringUtils.isEmpty(activeTask.getDisplayNameStat())
+                    ? ""
+                    : activeTask.getDisplayNameStat());
+
+            statistics.setUnit(
+                StringUtils.isEmpty(activeTask.getDisplayUnitStat())
+                    ? ""
+                    : activeTask.getDisplayUnitStat());
           }
         } else {
           statistics.setDisplayName(
@@ -787,6 +803,16 @@ public class DashboardMetaDataDao {
                 StringUtils.isEmpty(questionLangBO.getStatDisplayUnits())
                     ? ""
                     : questionLangBO.getStatDisplayUnits());
+          } else {
+            statistics.setDisplayName(
+                StringUtils.isEmpty(question.getStatDisplayName())
+                    ? ""
+                    : question.getStatDisplayName());
+
+            statistics.setUnit(
+                StringUtils.isEmpty(question.getStatDisplayUnits())
+                    ? ""
+                    : question.getStatDisplayUnits());
           }
         } else {
           statistics.setDisplayName(
