@@ -1933,7 +1933,7 @@ public class ActivityMetaDataDao {
                   ? ""
                   : instructionStepDetails.getStepShortTitle());
 
-          if (StringUtils.isNotBlank(language) && !"en".equals(language)) {
+          if (StringUtils.isNotBlank(language) && !MultiLanguageConstants.ENGLISH.equals(language)) {
             InstructionsLangBO instructionsLangBO =
                 this.getInstructionLangBo(instructionsDto.getId(), language);
             if (instructionsLangBO != null) {
@@ -1946,6 +1946,17 @@ public class ActivityMetaDataDao {
                   StringUtils.isEmpty(instructionsLangBO.getInstructionText())
                       ? ""
                       : instructionsLangBO.getInstructionText());
+            }
+            else {
+              instructionBean.setTitle(
+                  StringUtils.isEmpty(instructionsDto.getInstructionTitle())
+                      ? ""
+                      : instructionsDto.getInstructionTitle());
+
+              instructionBean.setText(
+                  StringUtils.isEmpty(instructionsDto.getInstructionText())
+                      ? ""
+                      : instructionsDto.getInstructionText());
             }
           } else {
             instructionBean.setTitle(
