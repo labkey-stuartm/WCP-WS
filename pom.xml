@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.hphc.mystudies</groupId>
 	<artifactId>StudyMetaData</artifactId>
-	<version>21.7-SNAPSHOT</version>
+	<version>21.11-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>StudyMetaData</name>
 	<description>HPHCI My Studies Web Services</description>
